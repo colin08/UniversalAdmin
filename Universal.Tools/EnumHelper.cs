@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace Universal.Tools
     /// <summary>
     /// 枚举帮助类
     /// </summary>
-    public class EnumHelper
+    public static class EnumHelper
     {
         private static Dictionary<string, Dictionary<int, string>> _EnumList = new Dictionary<string, Dictionary<int, string>>(); //枚举缓存池
         private static Dictionary<string, Dictionary<long, string>> _LEnumList = new Dictionary<string, Dictionary<long, string>>(); //枚举缓存池
@@ -91,6 +92,21 @@ namespace Universal.Tools
             }
 
             return _LEnumList[keyName];
+        }
+
+        /// <summary>
+        /// 获取枚举的备注属性数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetDescription<T>(this T value)
+        {
+            var memInfo = value.GetType().GetMember(value.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false).Cast<DescriptionAttribute>();
+            if (attributes.Any())
+                return attributes.First().Description;
+            return "";
         }
         /// <summary>
         /// 获取枚举值对应的显示名称

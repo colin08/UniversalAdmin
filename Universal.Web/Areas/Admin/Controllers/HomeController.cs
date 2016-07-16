@@ -19,6 +19,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         // GET: Admin/Home
+        [AdminPermissionAttribute("其他","后台管理首页")]
         public ActionResult Index()
         {
             return View();

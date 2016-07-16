@@ -180,6 +180,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
+      <Project>{0568b903-5079-4390-880d-de68862e1462}</Project>
+      <Name>Universal.DataCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Universal.Framework\Universal.Web.Framework.csproj">
       <Project>{3df7ca62-7579-4dd2-8687-990267daf92d}</Project>
       <Name>Universal.Web.Framework</Name>

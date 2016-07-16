@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Linq;
 using Universal.Tools;
+using System.Data.Entity;
 
 namespace Universal.Web.Framework
 {
@@ -37,9 +36,9 @@ namespace Universal.Web.Framework
             WorkContext.Controller = RouteData.Values["controller"].ToString().ToLower();
             //设置当前动作方法名
             WorkContext.Action = RouteData.Values["action"].ToString().ToLower();
-            WorkContext.PageKey = string.Format("/admin/{0}/{1}", WorkContext.Controller, WorkContext.Action).ToLower();
+            WorkContext.PageKey = string.Format("{0}/{1}", WorkContext.Controller, WorkContext.Action).ToLower();
             //用户
-            //WorkContext.UserInfo = GetUserInfo();
+            WorkContext.UserInfo = GetUserInfo();
         }
 
 
@@ -54,41 +53,40 @@ namespace Universal.Web.Framework
                 return;
 
             //判断是否登陆
-            //if (!IsLogin())
-            //{
-            //    if (WorkContext.PageKey.ToLower() != "/admin/account/login")
-            //    {
-            //        //IOHelper.WriteLogs(filterContext.HttpContext.Request.UserAgent.ToString());
-            //        if (WebHelper.IsAjax())
-            //        {
-            //            WorkContext.AjaxStringEntity.msg = 0;
-            //            WorkContext.AjaxStringEntity.msgbox = "请重新登陆";
-            //            filterContext.Result = Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
-            //        }
-            //        else
-            //        {
-            //            filterContext.Result = View("OutFram");
-            //        }
-            //    }
-            //}
+            if (!IsLogin())
+            {
+                if (WorkContext.PageKey.ToLower() != "home/login")
+                {
+                    if (WebHelper.IsAjax())
+                    {
+                        WorkContext.AjaxStringEntity.msg = 0;
+                        WorkContext.AjaxStringEntity.msgbox = "请重新登陆";
+                        filterContext.Result = Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        filterContext.Result = View("Login");
+                    }
+                }
+            }
 
             //验证是否有权限
-            //if (WorkContext.AdminInfo != null)
-            //{
-            //    if (!new BLL.ManagerRole().CheckAdminPower(WorkContext.AdminInfo.Manager_RoleId, WorkContext.AdminInfo.Manager_RoleType, WorkContext.PageKey))
-            //    {
-            //        if (WebHelper.IsAjax())
-            //        {
-            //            WorkContext.AjaxStringEntity.msg = 0;
-            //            WorkContext.AjaxStringEntity.msgbox = "您没有权限进行此操作";
-            //            filterContext.Result = Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
-            //        }
-            //        else
-            //        {
-            //            filterContext.Result = PromptView("您没有权限访问此页面");
-            //        }
-            //    }
-            //}
+            if (WorkContext.UserInfo != null)
+            {
+                if (!CheckAdminPower(""))
+                {
+                    if (WebHelper.IsAjax())
+                    {
+                        WorkContext.AjaxStringEntity.msg = 0;
+                        WorkContext.AjaxStringEntity.msgbox = "您没有权限进行此操作";
+                        filterContext.Result = Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        filterContext.Result = PromptView("您没有权限访问此页面");
+                    }
+                }
+            }
 
         }
 
@@ -100,6 +98,7 @@ namespace Universal.Web.Framework
         protected override void OnException(ExceptionContext filterContext)
         {
             string error_msg = filterContext.Exception.Message;
+            ExceptionInDB.ToInDB(filterContext.Exception);
             if (WorkContext.IsHttpAjax)
             {
                 WorkContext.AjaxStringEntity.msg = 0;
@@ -143,33 +142,31 @@ namespace Universal.Web.Framework
 
 
 
-        //TODO : 操作日志
-        ///// <summary>
-        ///// 添加操作日志
-        ///// </summary>
-        ///// <param name="LogType">操作类别</param>
-        ///// <param name="obj">操作对象</param>
-        ///// <param name="detail">介绍内容</param>
-        //protected void AddAdminLogs(EFData.Model.SysLogType LogType, string obj, string detail, int user_id = 0)
-        //{
-        //    using (Site.EFData.EFDBContext db = new EFData.EFDBContext())
-        //    {
-        //        if (WorkContext.UserInfo != null)
-        //        {
-        //            user_id = WorkContext.UserInfo.ID;
-        //        }
-        //        var entity = new EFData.Model.SysLog()
-        //        {
-        //            AddTime = DateTime.Now,
-        //            Detail = detail,
-        //            LogType = LogType,
-        //            SysUserID = user_id,
-        //            ToObj = obj
-        //        };
-        //        db.SysLogs.Add(entity);
-        //        db.SaveChanges();
-        //    }
-        //}
+        /// <summary>
+        /// 添加操作日志
+        /// </summary>
+        /// <param name="LogType">操作类别</param>
+        /// <param name="obj">操作对象</param>
+        /// <param name="detail">介绍内容</param>
+        protected void AddAdminLogs(DataCore.Entity.SysLogMethodType LogType, string detail, int user_id = 0)
+        {
+            using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+            {
+                if (WorkContext.UserInfo != null)
+                {
+                    user_id = WorkContext.UserInfo.ID;
+                }
+                var entity = new DataCore.Entity.SysLogMethod()
+                {
+                    AddTime = DateTime.Now,
+                    Detail = detail,
+                    SysUserID = user_id,
+                    Type = LogType
+                };
+                db.SysLogMethods.Add(entity);
+                db.SaveChanges();
+            }
+        }
 
 
         #region 提示信息视图
@@ -218,25 +215,25 @@ namespace Universal.Web.Framework
             else
             {
                 //检查COOKIE
-                //int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Login_UserID));
-                //string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
-                //if (uid != 0 && !string.IsNullOrWhiteSpace(upwd))
-                //{
-                //    using (Site.EFData.EFDBContext db = new EFData.EFDBContext())
-                //    {
-                //        Site.EFData.Model.SysUser model = db.SysUsers.FirstOrDefault(s => s.ID == uid & s.Password == upwd);
-                //        if (model != null)
-                //        {
-                //            if (model.Status)
-                //            {
-                //                Session[SessionKey.Admin_User_Info] = model;
-                //                return true;
-                //            }
-                //            return false;
-                //        }
-                //        return false;
-                //    }
-                //}
+                int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Login_UserID));
+                string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
+                if (uid != 0 && !string.IsNullOrWhiteSpace(upwd))
+                {
+                    using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+                    {
+                        DataCore.Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
+                        if (model != null)
+                        {
+                            if (model.Status)
+                            {
+                                Session[SessionKey.Admin_User_Info] = model;
+                                return true;
+                            }
+                            return false;
+                        }
+                        return false;
+                    }
+                }
                 return false;
             }
         }
@@ -246,31 +243,44 @@ namespace Universal.Web.Framework
         /// 获取登陆用户的信息
         /// </summary>
         /// <returns></returns>
-        //protected EFData.Model.SysUser GetUserInfo()
-        //{
-        //    if (IsLogin())
-        //    {
-        //        EFData.Model.SysUser model = Session[SessionKey.Admin_User_Info] as EFData.Model.SysUser;
-        //        if (model != null)
-        //        {
-        //            if (model.Status)
-        //                return model;
-        //            else
-        //                return null;
-        //        }
-        //        return null;
-        //    }
-        //    return null;
-        //}
+        protected DataCore.Entity.SysUser GetUserInfo()
+        {
+            if (IsLogin())
+            {
+                DataCore.Entity.SysUser model = Session[SessionKey.Admin_User_Info] as DataCore.Entity.SysUser;
+                if (model != null)
+                {
+                    if (model.Status)
+                        return model;
+                    else
+                        return null;
+                }
+                return null;
+            }
+            return null;
+        }
+
+
+        #endregion
+
+        #region 验证权限
 
         /// <summary>
-        /// 验证权限
+        /// 校验用户权限
         /// </summary>
         /// <param name="PageKey"></param>
         /// <returns></returns>
-        protected bool CheckUserPower(string PageKey)
+        protected bool CheckAdminPower(string PageKey)
         {
-            return true;
+            if (string.IsNullOrWhiteSpace(PageKey))
+                PageKey = WorkContext.PageKey;
+
+            if (WorkContext.UserInfo.IsAdmin)
+                return true;
+
+            var result = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey).FirstOrDefault();
+
+            return result == null ? false : true;
         }
 
         #endregion

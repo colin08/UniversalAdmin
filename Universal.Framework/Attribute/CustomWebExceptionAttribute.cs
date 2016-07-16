@@ -21,9 +21,8 @@ namespace Universal.Web.Framework
                 return;
             }
             HttpException httpException = new HttpException(null, exception);
-            //filterContext.Exception.Message可获取错误信息
 
-            //TODO:将异常信息保存到数据库
+            ExceptionInDB.ToInDB(exception);
 
             /*
              * 1、根据对应的HTTP错误码跳转到错误页面

@@ -18,8 +18,8 @@ namespace Universal.Web.Framework
         {
             //异常信息
             string error_msg = actionExecutedContext.Exception.Message;
-
-            //TODO:将异常信息保存到数据库
+            
+            ExceptionInDB.ToInDB(actionExecutedContext.Exception);
 
             WebAjaxEntity<string> model = new WebAjaxEntity<string>();
             model.msgbox = error_msg;
