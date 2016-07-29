@@ -17,6 +17,14 @@ ul {
   margin-top: 0;
 }
 
+/**
+    表单验证消息
+*/
+.field-validation-error
+{
+    color:#dd514c
+}
+
 .admin-icon-yellow {
   color: #ffbe40;
 }

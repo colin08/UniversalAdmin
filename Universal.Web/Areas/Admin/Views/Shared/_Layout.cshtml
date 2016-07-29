@@ -28,7 +28,7 @@
     <meta name="msapplication-TileColor" content="#0e90d2">
 
     <link rel="stylesheet" href="~/Assets/css/amazeui.min.css">
-
+    <link rel="stylesheet" href="~/Assets/css/admin.css">
     <!--头部放置js/css-->
     @RenderSection("head", required: false)
 
@@ -40,35 +40,106 @@
       以获得更好的体验！</p>
     <![endif]-->
 
-    <header class="am-topbar am-topbar-inverse admin-header">
-        <div class="am-topbar-brand">
-            <strong>Admin</strong> <small>后台信息管理</small>
-        </div>
-        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-                <li style="display:none"><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
-                <li class="am-dropdown" data-am-dropdown>
-                    <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-                        <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
-                    </a>
-                    <ul class="am-dropdown-content">
-                        <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
-                        <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li>
-                        <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+<header class="am-topbar am-topbar-inverse admin-header">
+    <div class="am-topbar-brand">
+        <strong>Admin</strong> <small>后台信息管理</small>
+    </div>
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <li style="display:none"><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="am-icon-users"></span> @WorkContext.UserInfo.NickName <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="@Url.Action("LoginOut", "Home", new { Area = "admin" })"><span class="am-icon-power-off"></span> 退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<div class="am-cf admin-main">
+    <!-- sidebar start -->
+    <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+        <div class="am-offcanvas-bar admin-offcanvas-bar">
+            <ul class="am-list admin-sidebar-list">
+                <li><a href="@Url.Action("Index", "Home", new { Area="Admin"})"><span class="am-icon-home"></span> 首页</a></li>
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-font-awesome"></span> 页面模块 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
+                        <li><a href="admin-user.html" class="am-cf"><span class="am-icon-check"></span> 个人资料<span class="am-icon-star am-fr am-margin-right admin-icon-yellow"></span></a></li>
+                        <li><a href="admin-help.html"><span class="am-icon-puzzle-piece"></span> 帮助页</a></li>
+                        <li><a href="admin-gallery.html"><span class="am-icon-th"></span> 相册页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
+                        <li><a href="admin-log.html"><span class="am-icon-calendar"></span> 系统日志</a></li>
+                        <li><a href="admin-404.html"><span class="am-icon-bug"></span> 404</a></li>
                     </ul>
                 </li>
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nava'}"><span class="am-icon-font-awesome"></span> 页面模块 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nava">
+                        <li><a href="admin-user.html" class="am-cf"><span class="am-icon-check"></span> 个人资料<span class="am-icon-star am-fr am-margin-right admin-icon-yellow"></span></a></li>
+                        <li><a href="admin-help.html"><span class="am-icon-puzzle-piece"></span> 帮助页</a></li>
+                        <li><a href="admin-gallery.html"><span class="am-icon-th"></span> 相册页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
+                        <li><a href="admin-log.html"><span class="am-icon-calendar"></span> 系统日志</a></li>
+                        <li><a href="admin-404.html"><span class="am-icon-bug"></span> 404</a></li>
+                    </ul>
+                </li>
+                
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav-user'}"><span class="am-icon-users"></span> 后台用户管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav-user">
+                        <!-- am-in 删掉就折叠了-->
+                        <li><a href="@Url.Action("Index","SysUser",new { Area="Admin"})"><span class="am-icon-user"></span> 用户列表</a></li>
+                        <li><a href="@Url.Action("Index","SysRole",new { Area="Admin"})"><span class="am-icon-user-secret"></span> 用户组</a></li>
+                    </ul>
+                </li>
+                <li><a href="admin-table.html"><span class="am-icon-table"></span> 表格</a></li>
+                <li><a href="admin-form.html"><span class="am-icon-wpforms"></span> 表单</a></li>
+
             </ul>
+            <div class="am-panel am-panel-default admin-sidebar-panel">
+                <div class="am-panel-bd">
+                    <p><span class="am-icon-bookmark"></span> 公告</p>
+                    <p>这里啥都没有</p>
+                </div>
+            </div>
         </div>
-    </header>
+    </div>
+    <!-- sidebar end -->
 
     @RenderBody()
+    
+</div>
+
+    <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 
 
-    @{ 
-        Html.RenderPartial("_FootInc");
-    }
-
+    <!--[if lt IE 9]>
+    <script src="~/Assets/js/jquery.min.1.11.1.js"></script>
+    <script src="~/Assets/js/modernizr.js"></script>
+    <script src="~/Assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <script src="~/Assets/js/jquery.min.js"></script>
+    <!--<![endif]-->
+    <script src="~/Assets/js/amazeui.min.js"></script>
+    <script src="~/Assets/js/jquery.nicescroll.js"></script>
+    <script src="~/Assets/js/app.js"></script>
+    <script src="~/Assets/js/tools.js"></script>
+    <script src="~/Assets/plug/layer/layer.js"></script>
+    <script>
+        $('#admin-offcanvas,.admin-content').niceScroll({
+            cursorcolor: "#ccc",//#CC0071 光标颜色 
+            cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0 
+            touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备 
+            cursorwidth: "5px", //像素光标的宽度 
+            cursorborder: "0", //     游标边框css定义 
+            cursorborderradius: "5px",//以像素为光标边界半径 
+            autohidemode: false //是否隐藏滚动条 
+        });
+    </script>
     @RenderSection("scripts", required: false)
 
 </body>

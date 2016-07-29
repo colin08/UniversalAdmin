@@ -65,7 +65,7 @@ namespace Universal.Web.Framework
                     }
                     else
                     {
-                        filterContext.Result = RedirectToAction("Login");
+                        filterContext.Result = RedirectToAction("Login","Home");
                     }
                 }
             }
@@ -148,24 +148,28 @@ namespace Universal.Web.Framework
         /// <param name="LogType">操作类别</param>
         /// <param name="obj">操作对象</param>
         /// <param name="detail">介绍内容</param>
-        protected void AddAdminLogs(DataCore.Entity.SysLogMethodType LogType, string detail, int user_id = 0)
+        protected void AddAdminLogs(DataCore.EFDBContext db,DataCore.Entity.SysLogMethodType LogType, string detail, int user_id = 0)
         {
-            using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+            if (WorkContext.UserInfo != null)
             {
-                if (WorkContext.UserInfo != null)
-                {
-                    user_id = WorkContext.UserInfo.ID;
-                }
-                var entity = new DataCore.Entity.SysLogMethod()
-                {
-                    AddTime = DateTime.Now,
-                    Detail = detail,
-                    SysUserID = user_id,
-                    Type = LogType
-                };
+                user_id = WorkContext.UserInfo.ID;
+            }
+            var entity = new DataCore.Entity.SysLogMethod()
+            {
+                AddTime = DateTime.Now,
+                Detail = detail,
+                SysUserID = user_id,
+                Type = LogType
+            };
+            if (db == null)
+            {
+                db = new DataCore.EFDBContext();
                 db.SysLogMethods.Add(entity);
                 db.SaveChanges();
             }
+            else
+                db.SysLogMethods.Add(entity);
+            
         }
 
 

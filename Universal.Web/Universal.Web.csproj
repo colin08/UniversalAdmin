@@ -133,7 +133,18 @@
     <Content Include="Assets\js\handlebars.min.js" />
     <Content Include="Assets\js\jquery.min.1.11.1.js" />
     <Content Include="Assets\js\jquery.min.js" />
+    <Content Include="Assets\js\jquery.nicescroll.js" />
     <Content Include="Assets\js\modernizr.js" />
+    <Content Include="Assets\js\tools.js" />
+    <Content Include="Assets\plug\layer\layer.js" />
+    <Content Include="Assets\plug\layer\skin\default\icon-ext.png" />
+    <Content Include="Assets\plug\layer\skin\default\icon.png" />
+    <Content Include="Assets\plug\layer\skin\default\loading-0.gif" />
+    <Content Include="Assets\plug\layer\skin\default\loading-1.gif" />
+    <Content Include="Assets\plug\layer\skin\default\loading-2.gif" />
+    <Content Include="Assets\plug\layer\skin\layer.css" />
+    <Content Include="Assets\plug\laypage\laypage.js" />
+    <Content Include="Assets\plug\laypage\skin\laypage.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -143,7 +154,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
+    <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -168,6 +185,10 @@
     <Content Include="Assets\fonts\fontawesome-webfont.woff2" />
     <Content Include="Assets\fonts\FontAwesome.otf" />
     <Content Include="Areas\Admin\Views\Shared\_FootInc.cshtml" />
+    <Content Include="Areas\Admin\Views\SysUser\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SysUser\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SysRole\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SysRole\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -177,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Views\Tools\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

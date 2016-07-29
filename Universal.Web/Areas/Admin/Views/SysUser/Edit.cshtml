@@ -1,0 +1,131 @@
+﻿@model Universal.DataCore.Entity.SysUser
+@{
+    ViewBag.Title = "编辑后台账户";
+}
+
+<!-- content start -->
+<div class="admin-content">
+    <div class="admin-content-body">
+        <div class="am-cf am-padding am-padding-bottom-0">
+            <ol class="am-breadcrumb">
+                <li><a href="@Url.Action("Index", "Home", new { Area = "Admin" })" class="am-icon-home am-text-lg">首页</a></li>
+                <li><a href="@Url.Action("Index", "SysUser", new { Area = "Admin" })">后台用户列表</a></li>
+                <li class="am-active">编辑后台账户</li>
+            </ol>
+        </div>
+        <hr>
+
+        <form class="am-form" method="post">
+            @Html.HiddenFor(p=>p.ID)
+            @Html.AntiForgeryToken()
+            <div class="am-tabs am-margin" data-am-tabs>
+                <ul class="am-tabs-nav am-nav am-nav-tabs">
+                    <li class="am-active"><a href="#tab1">基本信息</a></li>
+                </ul>
+                <div class="am-tabs-bd">
+                    <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.SysRoleID)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.DropDownListFor(p => p.SysRoleID, ViewData["sysuser_role"] as List<SelectListItem>, new Dictionary<string, object> { { "data-am-selected", "{btnSize: 'sm'}" } })
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.SysRoleID)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.UserName)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.UserName, Model.ID == 0 ? (object)new { placeholder = "3-10位字母或数字组成" } : (object)new { disabled = "disabled" }) 
+                            </div> 
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.UserName)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Password)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.PasswordFor(p => p.Password, Model.ID == 0 ? (object)new { placeholder = "最大长度30" } : (object)new { value="litdev"})
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Password)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p=>p.NickName) </div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.NickName, new { placeholder = "昵称" })
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.NickName)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Gender)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                <div class="am-btn-group" data-am-button>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.Gender, 1, new { @checked = true }) 男
+                                    </label>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.Gender, 2) 女
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Status)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                <div class="am-btn-group" data-am-button>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.Status, true) 正常
+                                    </label>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.Status, false) 禁用
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.IsAdmin)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                <div class="am-btn-group" data-am-button>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.IsAdmin, true) 是
+                                    </label>
+                                    <label class="am-btn am-btn-default am-btn-xs">
+                                        @Html.RadioButtonFor(x => x.IsAdmin, false) 否
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="am-margin">
+                <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                <button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- content end -->
+
+@section scripts
+{
+    <script>
+        $(function () {
+            @if (Model.Msg == -1)
+            {
+                @:layer.msg('@Model.MsgBox', {icon:5}, function () {location.href = '@Model.RedirectUrl';})
+            }
+            else if(Model.Msg == -2)
+            {
+                @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+            }else if(Model.Msg == 1)
+            {
+                @:layer.msg('@Model.MsgBox', {icon:1}, function () {location.href = '@Model.RedirectUrl';})
+            }
+        });
+    </script>
+}

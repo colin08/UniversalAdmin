@@ -32,9 +32,30 @@ namespace Universal.Tests
             //var roleroute2 = new DataCore.Entity.SysRoleRoute() { SysRoleID = role.ID, SysRoute = route2 };
             //db.SysRoleRoutes.Add(roleroute);
             //db.SysRoleRoutes.Add(roleroute2);
-            //db.SaveChanges();
+
+            //添加用户
+            var entity = db.SysRoles.Find(2);
+            string pwd = SecureHelper.MD5("admin");
+            for (int i = 0; i < 30; i++)
+            {
+                var user = new DataCore.Entity.SysUser() {
+                    Avatar = "",
+                    Gender = DataCore.Entity.UserGender.男,
+                    IsAdmin = true,
+                    LastLoginTime = DateTime.Now,
+                    NickName = "编辑用户" + (i + 1).ToString(),
+                    Password = pwd,
+                    RegTime = DateTime.Now,
+                    Status = true,
+                    SysRole = entity,
+                    UserName = "edit"+(i+1).ToString()
+                };
+                db.SysUsers.Add(user);
+            }
+
+            db.SaveChanges();
             db.Dispose();
-            Assert.Fail();
+            Assert.AreEqual(1, 1);
         }
     }
 }

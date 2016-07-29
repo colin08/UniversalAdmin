@@ -35,7 +35,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         {
                             if (model.Status && model.IsAdmin)
                             {
-                                AddAdminLogs(DataCore.Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
+                                AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
                                 Session[SessionKey.Admin_User_Info] = model;
                                 Session.Timeout = 60; //一小时不操作，session就过期
                                 model.LastLoginTime = DateTime.Now;
@@ -107,9 +107,8 @@ namespace Universal.Web.Areas.Admin.Controllers
                         WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password);
                     }
                     model.LastLoginTime = DateTime.Now;
+                    AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
                     db.SaveChanges();
-                    AddAdminLogs(DataCore.Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
-
                     return RedirectToAction("Index","Home");
                 }
             }
@@ -124,6 +123,19 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 登出
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult LoginOut()
+        {
+            WebHelper.SetCookie(CookieKey.Is_Remeber, "", -1);
+            WebHelper.SetCookie(CookieKey.Login_UserID, "", -1);
+            WebHelper.SetCookie(CookieKey.Login_UserPassword, "", -1);
+            Session[SessionKey.Admin_User_Info] = null;
+            return RedirectToAction("Login", "Home");
         }
 
 

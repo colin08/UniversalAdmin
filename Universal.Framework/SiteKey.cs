@@ -19,7 +19,7 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 后台分页默认每页大小
         /// </summary>
-        public static readonly int AdminDefaultPageSize = 18;
+        public static readonly int AdminDefaultPageSize = 12;
 
     }
 

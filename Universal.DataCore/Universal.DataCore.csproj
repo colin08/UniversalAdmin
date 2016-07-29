@@ -52,6 +52,7 @@
     <Compile Include="EFDBContext.cs" />
     <Compile Include="Entity\AppVersion.cs" />
     <Compile Include="Entity\BaseAdminEntity.cs" />
+    <Compile Include="Entity\BaseAdminFrom.cs" />
     <Compile Include="Entity\Feedback.cs" />
     <Compile Include="Entity\SysLogException.cs" />
     <Compile Include="Entity\SysLogMethod.cs" />
