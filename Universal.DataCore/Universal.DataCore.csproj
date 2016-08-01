@@ -58,9 +58,9 @@
     <Compile Include="Entity\SysLogMethod.cs" />
     <Compile Include="Entity\SysRoleRoute.cs" />
     <Compile Include="Entity\SysRoute.cs" />
-    <Compile Include="Migrations\201607160326493_frist.cs" />
-    <Compile Include="Migrations\201607160326493_frist.Designer.cs">
-      <DependentUpon>201607160326493_frist.cs</DependentUpon>
+    <Compile Include="Migrations\201608010229454_frist.cs" />
+    <Compile Include="Migrations\201608010229454_frist.Designer.cs">
+      <DependentUpon>201608010229454_frist.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,8 +78,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607160326493_frist.resx">
-      <DependentUpon>201607160326493_frist.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201608010229454_frist.resx">
+      <DependentUpon>201608010229454_frist.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

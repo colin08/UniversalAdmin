@@ -77,7 +77,6 @@ namespace Universal.DataCore.Migrations
                         Password = c.String(nullable: false, maxLength: 255),
                         Status = c.Boolean(nullable: false),
                         Avatar = c.String(),
-                        IsAdmin = c.Boolean(nullable: false),
                         SysRoleID = c.Int(nullable: false),
                         RegTime = c.DateTime(nullable: false),
                         LastLoginTime = c.DateTime(nullable: false),

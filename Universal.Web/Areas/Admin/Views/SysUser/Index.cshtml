@@ -49,7 +49,6 @@
                             <th class="table-author">性别</th>
                             <th class="table-author">所属组</th>
                             <th class="table-author">状态</th>
-                            <th class="table-author">可管理后台</th>
                             <th class="table-title">注册时间</th>
                             <th class="table-set">操作</th>
                         </tr>
@@ -65,7 +64,6 @@
                                 <td>@item.Gender</td>
                                 <td>@item.SysRole.RoleName</td>
                                 <td class="@(item.Status ?"am-success":"am-danger") "><span class="@(item.Status ? "am-icon-check" : "am-icon-close")"></span></td>
-                                <td class="@(item.IsAdmin?"":"am-disabled")"><span class="@(item.IsAdmin?"am-icon-check":"am-icon-close")"></span></td>
                                 <td class="am-hide-sm-only">@item.RegTime</td>
                                 <td>
                                     <div class="am-btn-toolbar">

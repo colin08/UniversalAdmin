@@ -60,13 +60,7 @@ namespace Universal.DataCore.Entity
         /// </summary>
         [Display(Name = "头像")]
         public string Avatar { get; set; }
-
-        /// <summary>
-        /// 是否可以管理后台
-        /// </summary>
-        [Required, Display(Name = "可管理后台")]
-        public bool IsAdmin { get; set; }
-
+        
 
         /// <summary>
         /// 所属用户组ID

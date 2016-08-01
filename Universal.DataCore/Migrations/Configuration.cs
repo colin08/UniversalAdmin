@@ -20,7 +20,7 @@ namespace Universal.DataCore.Migrations
             //组
             var SysRoles = new List<Entity.SysRole>
             {
-                new Entity.SysRole(){ AddTime=DateTime.Now, RoleName="管理员", RoleDesc="管理员组"},
+                new Entity.SysRole(){ AddTime=DateTime.Now, RoleName="管理员", RoleDesc="管理员组",IsAdmin = true},
                 new Entity.SysRole(){ AddTime=DateTime.Now,RoleName="编辑用户",RoleDesc="编辑用户组" }
             };
             SysRoles.ForEach(s => context.SysRoles.AddOrUpdate(p => p.RoleName, s));
@@ -28,14 +28,12 @@ namespace Universal.DataCore.Migrations
 
             //用户
             var SysUser = new Entity.SysUser();
-            SysUser.IsAdmin = true;
             SysUser.LastLoginTime = DateTime.Now;
             SysUser.RegTime = DateTime.Now;
             SysUser.NickName = "超级管理员";
             SysUser.Password = SecureHelper.MD5("admin");
             SysUser.Status = true;
             SysUser.SysRole = context.SysRoles.Where(s => s.RoleName == "管理员").First();
-            SysUser.SysRoleID = SysUser.SysRole.ID;
             SysUser.UserName = "admin";
             SysUser.Gender = Entity.UserGender.男;
             SysUser.Avatar = "";

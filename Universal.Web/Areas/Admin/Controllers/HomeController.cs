@@ -33,7 +33,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         DataCore.Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
                         if (model != null)
                         {
-                            if (model.Status && model.IsAdmin)
+                            if (model.Status)
                             {
                                 AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
                                 Session[SessionKey.Admin_User_Info] = model;
@@ -78,12 +78,6 @@ namespace Universal.Web.Areas.Admin.Controllers
                     if (model == null)
                     {
                         ModelState.AddModelError("user_name", "用户名或密码错误");
-                        return View(viewModelLogin);
-                    }
-
-                    if (!model.IsAdmin)
-                    {
-                        ModelState.AddModelError("user_name", "该账户不允许登陆后台");
                         return View(viewModelLogin);
                     }
 

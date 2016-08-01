@@ -140,7 +140,6 @@ namespace Universal.Web.Areas.Admin.Controllers
                     if (entity.Password != "litdev")
                         user.Password = SecureHelper.MD5(entity.Password);
                     user.NickName = entity.NickName;
-                    user.IsAdmin = entity.IsAdmin;
                     user.Gender = entity.Gender;
                     user.Status = entity.Status;
                     user.SysRoleID = entity.SysRoleID;

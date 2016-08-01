@@ -279,7 +279,7 @@ namespace Universal.Web.Framework
             if (string.IsNullOrWhiteSpace(PageKey))
                 PageKey = WorkContext.PageKey;
 
-            if (WorkContext.UserInfo.IsAdmin)
+            if (WorkContext.UserInfo.SysRole.IsAdmin)
                 return true;
 
             var result = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey).FirstOrDefault();
