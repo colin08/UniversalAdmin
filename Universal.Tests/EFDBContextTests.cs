@@ -38,22 +38,25 @@ namespace Universal.Tests
             string pwd = SecureHelper.MD5("admin");
             for (int i = 0; i < 30; i++)
             {
-                var user = new DataCore.Entity.SysUser() {
+                var user = new DataCore.Entity.SysUser()
+                {
                     Avatar = "",
                     Gender = DataCore.Entity.UserGender.男,
-                    IsAdmin = true,
                     LastLoginTime = DateTime.Now,
                     NickName = "编辑用户" + (i + 1).ToString(),
                     Password = pwd,
                     RegTime = DateTime.Now,
                     Status = true,
                     SysRole = entity,
-                    UserName = "edit"+(i+1).ToString()
+                    UserName = "edit" + (i + 1).ToString()
                 };
                 db.SysUsers.Add(user);
             }
 
             db.SaveChanges();
+
+            //var group = db.SysRoutes.GroupBy(p => p.Tag).ToList();
+
             db.Dispose();
             Assert.AreEqual(1, 1);
         }

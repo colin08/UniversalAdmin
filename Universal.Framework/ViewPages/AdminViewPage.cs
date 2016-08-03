@@ -30,22 +30,24 @@ namespace Universal.Web.Framework
         /// </summary>
         /// <param name="PageKey">页面标示符 /controller/action  小写</param>
         /// <returns></returns>
-        protected bool CheckAdminPower(string PageKey)
+        protected bool CheckAdminPower(string PageKey, bool isPost)
         {
-            //BLL.ManagerRole bll = new BLL.ManagerRole();
-            //return bll.CheckAdminPower(WorkContext.AdminInfo.Manager_RoleId, WorkContext.AdminInfo.Manager_RoleType, PageKey);
-            return true;
-        }
-
-        /// <summary>
-        /// 验证管理员权限
-        /// </summary>
-        /// <returns></returns>
-        protected bool CheckPower(int role_id, int role_type, int pa_id)
-        {
-            //BLL.ManagerRole bll = new BLL.ManagerRole();
-            //return bll.CheckAdminPower(role_id, role_type, pa_id);
-            return true;
+            if (string.IsNullOrWhiteSpace(PageKey))
+            {
+                isPost = WorkContext.IsHttpPost;
+                PageKey = WorkContext.PageKey;
+            }
+            if (WorkContext.UserInfo.SysRole.IsAdmin)
+                return true;
+            var result = true;
+            var db = new DataCore.EFDBContext();
+            if (db.SysRoutes.Count(p => p.IsPost == isPost && p.Route == PageKey) > 0)
+            {
+                var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
+                result = entity == null ? false : true;
+            }
+            db.Dispose();
+            return result;
         }
     }
 

@@ -18,8 +18,14 @@
             <div class="am-u-sm-12 am-u-md-6">
                 <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                        <a class="am-btn am-btn-default" href="@Url.Action("Edit","SysUser",new { Area="Admin"})"><span class="am-icon-plus"></span> 新增 </a>
-                        <a class="am-btn am-btn-default" href="javascript:void(0)" onclick="del('/Admin/SysUser/Del',1)"><span class="am-icon-trash-o"></span> 删除 </a>
+                        @if(CheckAdminPower("sysuser/edit",true))
+                        {
+                        @:<a class="am-btn am-btn-default" href="@Url.Action("Edit","SysUser",new { Area="Admin"})"><span class="am-icon-plus"></span> 新增 </a>
+                        }
+                        @if(CheckAdminPower("sysuser/del",true))
+                        {
+                        @:<a class="am-btn am-btn-default" href="javascript:void(0)" onclick="del('/Admin/SysUser/Del',1)"><span class="am-icon-trash-o"></span> 删除 </a>
+                        }
                     </div>
                 </div>
             </div>
@@ -68,7 +74,10 @@
                                 <td>
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/Admin/SysUser/Edit?id=@item.ID"><span class="am-icon-pencil-square-o"></span> 编辑</a>
+                                            @if(CheckAdminPower("sysuser/edit",false))
+                                            {
+                                            @:<a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/Admin/SysUser/Edit?id=@item.ID"><span class="am-icon-pencil-square-o"></span> 编辑</a>
+                                            }
                                         </div>
                                     </div>
                                 </td>

@@ -13,13 +13,23 @@
                 <li class="am-active">List</li>
             </ol>
         </div>
+        @if(CheckAdminPower("sysrole/updateroute", true))
+        {
+           @:<a class="am-btn am-btn-secondary am-radius" style="margin-left:20px;" onclick="update()" id="a_update_route">更新权限路由数据</a>
+        }
         <hr>
         <div class="am-g">
             <div class="am-u-sm-12 am-u-md-6">
                 <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                        <a class="am-btn am-btn-default" href="@Url.Action("Edit","SysRole",new { Area="Admin"})"><span class="am-icon-plus"></span> 新增 </a>
-                        <a class="am-btn am-btn-default" href="javascript:void(0)" onclick="del('/Admin/SysRole/Del',1)"><span class="am-icon-trash-o"></span> 删除 </a>
+                        @if(CheckAdminPower("sysrole/edit",false))
+                        {
+                        @:<a class="am-btn am-btn-default" href="@Url.Action("Edit","SysRole",new { Area="Admin"})"><span class="am-icon-plus"></span> 新增 </a>
+                        }
+                        @if(CheckAdminPower("sysrole/del",true))
+                        {
+                        @:<a class="am-btn am-btn-default" href="javascript:void(0)" onclick="del('/Admin/SysRole/Del',1)"><span class="am-icon-trash-o"></span> 删除 </a>
+                        }
                     </div>
                 </div>
             </div>
@@ -57,7 +67,10 @@
                                 <td>
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/Admin/SysRole/Edit?id=@item.ID"><span class="am-icon-pencil-square-o"></span> 编辑</a>
+                                            @if(CheckAdminPower("sysrole/edit",false))
+                                            {
+                                            @:<a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/Admin/SysRole/Edit?id=@item.ID"><span class="am-icon-pencil-square-o"></span> 编辑</a>
+                                            }
                                         </div>
                                     </div>
                                 </td>
@@ -83,6 +96,29 @@
 {
     <script src="~/Assets/plug/laypage/laypage.js"></script>
     <script>
+
+        @if(CheckAdminPower("sysrole/updateroute", true))
+        {
+        <text>
+        function update()
+        {
+            $("#a_update_route").attr('disabled',"true");
+            $("#a_update_route").text("更新中....");
+            $.post("/admin/SysRole/UpdateRoute", { "a":1 }, function (result) {
+                $("#a_update_route").removeAttr("disabled");
+                if(result.msg == 1)
+                {
+                    $("#a_update_route").text("更新完毕");
+                }
+                else
+                {
+                    $("#a_update_route").text("更新失败!");
+                }
+                
+            });
+        }
+        </text>
+        }
 
         function WordSearch()
         {

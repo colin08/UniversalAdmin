@@ -14,6 +14,11 @@ namespace Universal.Web.Framework
         public bool IsHttpAjax;
 
         /// <summary>
+        /// 当前请求是否为Post请求
+        /// </summary>
+        public bool IsHttpPost;
+
+        /// <summary>
         /// 当前的SessionId
         /// </summary>
         public string SessionId;

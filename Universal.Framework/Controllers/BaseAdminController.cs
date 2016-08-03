@@ -26,6 +26,7 @@ namespace Universal.Web.Framework
             base.Initialize(requestContext);
             WorkContext.SessionId = Session.SessionID;
             WorkContext.IsHttpAjax = WebHelper.IsAjax();
+            WorkContext.IsHttpPost = WebHelper.IsPost();
             WorkContext.IP = WebHelper.GetIP();
             WorkContext.Url = WebHelper.GetUrl();
             WorkContext.UrlReferrer = WebHelper.GetUrlReferrer();
@@ -73,7 +74,7 @@ namespace Universal.Web.Framework
             //验证是否有权限
             if (WorkContext.UserInfo != null)
             {
-                if (!CheckAdminPower(""))
+                if (!CheckAdminPower("",false))
                 {
                     if (WebHelper.IsAjax())
                     {
@@ -274,17 +275,24 @@ namespace Universal.Web.Framework
         /// </summary>
         /// <param name="PageKey"></param>
         /// <returns></returns>
-        protected bool CheckAdminPower(string PageKey)
+        protected bool CheckAdminPower(string PageKey,bool isPost)
         {
             if (string.IsNullOrWhiteSpace(PageKey))
+            {
+                isPost = WorkContext.IsHttpPost;
                 PageKey = WorkContext.PageKey;
-
+            }
             if (WorkContext.UserInfo.SysRole.IsAdmin)
                 return true;
-
-            var result = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey).FirstOrDefault();
-
-            return result == null ? false : true;
+            var result = true;
+            var db = new DataCore.EFDBContext();
+            if(db.SysRoutes.Count(p=>p.IsPost == isPost && p.Route == PageKey)>0)
+            {
+                var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
+                result = entity == null ? false : true;
+            }
+            db.Dispose();
+            return result;
         }
 
         #endregion

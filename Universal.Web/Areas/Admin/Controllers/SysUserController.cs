@@ -18,6 +18,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <param name="role">筛选：组ID</param>
         /// <param name="word">筛选：关键字</param>
         /// <returns></returns>
+        [AdminPermissionAttribute("后台用户", "后台用户首页")]
         public ActionResult Index(int page = 1, int role = 0, string word = "")
         {
             word = WebHelper.UrlDecode(word);
@@ -55,6 +56,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id">用户ID</param>
         /// <returns></returns>
+        [AdminPermissionAttribute("后台用户", "后台用户编辑页面")]
         public ActionResult Edit(int? id)
         {
 
@@ -86,6 +88,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminPermissionAttribute("后台用户", "保存后台用户首页编辑信息")]
         public ActionResult Edit(DataCore.Entity.SysUser entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
@@ -162,6 +165,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 删除用户
         /// </summary>
         [HttpPost]
+        [AdminPermissionAttribute("后台用户", "删除后台用户")]
         public JsonResult Del(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

@@ -90,8 +90,11 @@
                 </div>
             </div>
             <div class="am-margin">
-                <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
-                <button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+                @if(CheckAdminPower("sysuser/edit",true))
+                {
+                @:<button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                @:<button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+                }
             </div>
         </form>
     </div>

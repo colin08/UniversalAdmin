@@ -3,6 +3,11 @@
     ViewBag.Title = "编辑用户组";
 }
 
+@section head
+{
+    <link href="~/Assets/plug/ztree/css/metroStyle/metroStyle.css" rel="stylesheet" />
+}
+
 <!-- content start -->
 <div class="admin-content">
     <div class="admin-content-body">
@@ -17,10 +22,12 @@
 
         <form class="am-form" method="post">
             @Html.HiddenFor(p => p.ID)
+            <input type="hidden" id="hid_qx" name="hid_qx" value="aaa" />
             @Html.AntiForgeryToken()
             <div class="am-tabs am-margin" data-am-tabs>
                 <ul class="am-tabs-nav am-nav am-nav-tabs">
                     <li class="am-active"><a href="#tab1">基本信息</a></li>
+                    <li><a href="#tab2">选择权限</a></li>
                 </ul>
                 <div class="am-tabs-bd">
                     <div class="am-tab-panel am-fade am-in am-active" id="tab1">
@@ -56,11 +63,22 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="am-tab-panel am-fade am-in" id="tab2">
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-8 am-u-md-8 am-text-right">
+                                <ul id="tree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
             </div>
             <div class="am-margin">
-                <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
-                <button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+                @if(CheckAdminPower("sysrole/edit",true))
+                {
+                @:<button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                @:<button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+
+                }
             </div>
         </form>
     </div>
@@ -69,6 +87,59 @@
 
 @section scripts
 {
+<script src="~/Assets/plug/ztree/js/jquery.ztree.core.min.js"></script>
+<script src="~/Assets/plug/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+<SCRIPT type="text/javascript">
+		var setting = {
+			check: {
+				enable: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+			    onCheck: zTreeOnCheck
+			}
+		};
+
+		var zNodes =@Html.Raw(ViewData["Tree"]);
+
+		var code;
+
+		function setCheck() {
+		    var zTree = $.fn.zTree.getZTreeObj("tree");
+		    zTree.setting.check.chkboxType = { "Y": "ps", "N": "ps" };
+		}
+
+		function zTreeOnCheck(event, treeId, treeNode) {
+		    //alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+		    
+		    var str_qx = "";
+		    var zTree = $.fn.zTree.getZTreeObj("tree");
+		    var array = zTree.getCheckedNodes(true);
+		    for (var i = 0; i < array.length; i++) {
+		        if(!array[i].isParent)
+		        {
+		            str_qx = str_qx + array[i].id + ",";
+		        }
+		    }
+		    if (str_qx.length > 0)
+		    {
+		        str_qx = str_qx.substring(0, str_qx.length - 1);
+		    }
+		    $("#hid_qx").val(str_qx);
+		};
+
+		$(document).ready(function(){
+			$.fn.zTree.init($("#tree"), setting, zNodes);
+			setCheck();
+		});
+</SCRIPT>
+
+
     <script>
         $(function () {
             @if (Model.Msg == -1)

@@ -22,6 +22,11 @@ namespace Universal.DataCore.Entity
         public string Tag { get; set; }
 
         /// <summary>
+        /// 是否Post请求
+        /// </summary>
+        public bool IsPost { get; set; }
+
+        /// <summary>
         /// 路由地址
         /// </summary>
         [MaxLength(30)]

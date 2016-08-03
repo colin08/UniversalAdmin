@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -145,6 +146,38 @@
     <Content Include="Assets\plug\layer\skin\layer.css" />
     <Content Include="Assets\plug\laypage\laypage.js" />
     <Content Include="Assets\plug\laypage\skin\laypage.css" />
+    <Content Include="Assets\plug\ztree\css\awesomeStyle\awesome.css" />
+    <Content Include="Assets\plug\ztree\css\awesomeStyle\img\loading.gif" />
+    <Content Include="Assets\plug\ztree\css\metroStyle\img\line_conn.png" />
+    <Content Include="Assets\plug\ztree\css\metroStyle\img\loading.gif" />
+    <Content Include="Assets\plug\ztree\css\metroStyle\img\metro.gif" />
+    <Content Include="Assets\plug\ztree\css\metroStyle\img\metro.png" />
+    <Content Include="Assets\plug\ztree\css\metroStyle\metroStyle.css" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\1_close.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\1_open.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\2.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\3.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\4.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\5.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\6.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\7.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\8.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\diy\9.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\line_conn.gif" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\loading.gif" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\zTreeStandard.gif" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\img\zTreeStandard.png" />
+    <Content Include="Assets\plug\ztree\css\zTreeStyle\zTreeStyle.css" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.all.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.all.min.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.core.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.core.min.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.excheck.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.excheck.min.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.exedit.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.exedit.min.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.exhide.js" />
+    <Content Include="Assets\plug\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -158,9 +191,11 @@
     <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
+    <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -189,6 +224,8 @@
     <Content Include="Areas\Admin\Views\SysUser\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\SysRole\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SysRole\Edit.cshtml" />
+    <Content Include="Assets\plug\ztree\css\awesomeStyle\awesome.less" />
+    <Content Include="Assets\plug\ztree\css\awesomeStyle\fa.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

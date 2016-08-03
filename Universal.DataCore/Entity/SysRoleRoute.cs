@@ -15,6 +15,11 @@ namespace Universal.DataCore.Entity
         /// 关联的组ID
         /// </summary>
         public int SysRoleID { get; set; }
+
+        /// <summary>
+        /// 对应的组信息
+        /// </summary>
+        public virtual SysRole SysRole { get; set; }
         
         /// <summary>
         /// 对象的操作路由

@@ -117,6 +117,7 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Tag = c.String(maxLength: 30),
+                        IsPost = c.Boolean(nullable: false),
                         Route = c.String(maxLength: 30),
                         Desc = c.String(maxLength: 30),
                         AddTime = c.DateTime(nullable: false),
