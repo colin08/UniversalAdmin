@@ -102,10 +102,13 @@
         <text>
         function update()
         {
+            var progress = $.AMUI.progress;
             $("#a_update_route").attr('disabled',"true");
+            progress.start();
             $("#a_update_route").text("更新中....");
             $.post("/admin/SysRole/UpdateRoute", { "a":1 }, function (result) {
                 $("#a_update_route").removeAttr("disabled");
+                progress.done();
                 if(result.msg == 1)
                 {
                     $("#a_update_route").text("更新完毕");
