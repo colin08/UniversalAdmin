@@ -25,6 +25,44 @@ ul {
     color:#dd514c
 }
 
+/**
+    上传图片列表
+*/
+
+.img_list ul{
+    display:block;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.img_list ul li{
+    float:left;
+    position:relative;
+    margin-right:10px;
+    clear:inherit;
+    display:block;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.img_list ul li img{
+    border:0;
+}
+
+.img_list ul li a
+{
+    font-size:12px;
+    background: #C00;
+    color:#fff;
+    padding:1px 5px;
+    position:absolute;
+    right:5px;
+    top:5px;
+    clear:none;
+}
+
 .admin-icon-yellow {
   color: #ffbe40;
 }

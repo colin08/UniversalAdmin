@@ -15,7 +15,7 @@ namespace Universal.DataCore.Entity
     {
 
         /// <summary>
-        /// 状态 -1:(数据不存在等)，1：成功并跳转，2：数据验证出错
+        /// 状态 -1:(数据不存在等)，-2：数据验证出错，1：成功并跳转
         /// </summary>
         [NotMapped]
         public int Msg { get; set; }

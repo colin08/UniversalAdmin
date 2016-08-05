@@ -155,15 +155,15 @@ namespace Universal.Web.Framework
                     System.IO.File.Move(filePath + saveName, filePath + md5 + "." + fileExt); //给文件改名
                 }
 
-                if (IsThumb)
-                {
-                    string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
-                    if (img_arr.Contains(fileExt))
-                    {
-                        //如果是图片，就压缩
-                        IOHelper.GenerateThumb_ME(IOHelper.GetMapPath(ServerPath + md5 + "." + fileExt));
-                    }
-                }
+                //if (IsThumb)
+                //{
+                //    string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
+                //    if (img_arr.Contains(fileExt))
+                //    {
+                //        //如果是图片，就压缩
+                //        IOHelper.GenerateThumb_ME(IOHelper.GetMapPath(ServerPath + md5 + "." + fileExt));
+                //    }
+                //}
 
                 response_entity.msg = 1;
                 response_entity.msgbox = "上传成功";

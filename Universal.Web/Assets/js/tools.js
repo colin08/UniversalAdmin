@@ -136,3 +136,26 @@ function del(url, type) {
         })
     });
 }
+
+function DelPic(obj, span_name) {
+    //var pic = $(obj).parent("li").find("img").attr("src");
+    $(obj).parent("li").remove();
+    if (span_name.length > 0) {
+        var list_name = $(obj).parent("li").find("img").attr("class");
+        if ($("." + list_name + "").size() > 0) {
+            var file_name = "";
+            $("." + list_name + "").each(function (index, elem) {
+                file_name += $(this).attr("src") + ",";
+            })
+            if (file_name.length > 0) {
+                file_name = file_name.substring(0, file_name.length - 1);
+            }
+            $("#" + span_name + "").text(file_name);
+        }
+        else {
+            $("#" + span_name + "").text("");
+        }
+    }
+    //$("#" + up_id + "").uploadifive('clearQueue')
+    //$("#"+up_id+"").uploadify('disable', false) //浏览按钮可用
+}

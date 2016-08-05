@@ -132,7 +132,6 @@ namespace Universal.Web.Areas.Admin.Controllers
                 {
                     entity.RegTime = DateTime.Now;
                     entity.Password = SecureHelper.MD5(entity.Password);
-                    entity.Avatar = "";
                     entity.LastLoginTime = DateTime.Now;
                     db.SysUsers.Add(entity);
 
@@ -145,6 +144,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     user.NickName = entity.NickName;
                     user.Gender = entity.Gender;
                     user.Status = entity.Status;
+                    user.Avatar = entity.Avatar;
                     user.SysRoleID = entity.SysRoleID;
                 }
 
