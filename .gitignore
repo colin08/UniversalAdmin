@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Universal.Web/uploads/avatar
+/Universal.Web/uploads/demo

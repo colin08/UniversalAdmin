@@ -1,0 +1,235 @@
+﻿@model Universal.DataCore.Entity.Demo
+@{
+    ViewBag.Title = "编辑测试信息";
+}
+
+
+<!-- content start -->
+<div class="admin-content">
+    <div class="admin-content-body">
+        <div class="am-cf am-padding am-padding-bottom-0">
+            <ol class="am-breadcrumb">
+                <li><a href="@Url.Action("Index", "Home", new { Area = "Admin" })" class="am-icon-home am-text-lg">首页</a></li>
+                <li><a href="@Url.Action("Index", "Demo", new { Area = "Admin" })">测试数据列表</a></li>
+                <li class="am-active">编辑数据</li>
+            </ol>
+        </div>
+        <hr>
+
+        <form class="am-form" method="post">
+            @Html.HiddenFor(p => p.ID)
+            @Html.AntiForgeryToken()
+            <div class="am-tabs am-margin" data-am-tabs>
+                <ul class="am-tabs-nav am-nav am-nav-tabs">
+                    <li class="am-active"><a href="#tab1">基本信息</a></li>
+                    <li><a href="#tab2">旗下信息</a></li>
+                    @if(Model.ID != 0)
+                    {
+                        @:<li><a href="#tab3">其他信息</a></li>
+                    }
+                    
+                </ul>
+                <div class="am-tabs-bd">
+                    <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Title)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.Title)
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Title)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Telphone)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.Telphone)
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Telphone)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Price)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.Price)
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Price)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Ran)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.Ran)
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Ran)
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p => p.Num)</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                @Html.TextBoxFor(p => p.Num)
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                @Html.ValidationMessageFor(p => p.Num)
+                            </div>
+                        </div>
+
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">相册 </div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                              @Html.HiddenFor(p=>p.StrAlbums)
+                              <button type="button" class="am-btn am-btn-default am-btn-sm" onclick="upload()">
+                                <i class="am-icon-cloud-upload"></i> 上传文件</button>
+
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">头像预览 </div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                <div class="img_list">
+                                    <ul id="@Html.NameFor(p=>p.StrAlbums)ListData">
+                                        @if(Model.Albums!=null)
+                                        {
+                                            foreach (var item in Model.Albums)
+                                            {
+                                            @:<li><img src="@item.ImgUrl" ids="0" class="@Html.NameFor(p=>p.StrAlbums)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p=>p.StrAlbums)')">删除</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="am-tab-panel am-fade am-in" id="tab2">
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">...</div>
+                            <div class="am-u-sm-8 am-u-md-4">
+                                其他
+                            </div>
+                            <div class="am-hide-sm-only am-u-md-6">
+                                a
+                            </div>
+                        </div>
+                    </div>
+                    <!--显示添加者-->
+                    @if(Model.ID != 0)
+                    {
+                    <text>
+                    <div class="am-tab-panel am-fade am-in" id="tab3">
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p=>p.AddTime)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                @Model.AddTime
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p=>p.AddUser)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                @(Model.AddUser != null ?Model.AddUser.UserName : "")
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p=>p.LastUpdateTime)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                @Model.LastUpdateTime
+                            </div>
+                        </div>
+                        <div class="am-g am-margin-top">
+                            <div class="am-u-sm-4 am-u-md-2 am-text-right">@Html.DisplayNameFor(p=>p.LastUpdateUser)</div>
+                            <div class="am-u-sm-8 am-u-md-10">
+                                @(Model.LastUpdateUser != null ? Model.LastUpdateUser.UserName :"")
+                            </div>
+                        </div>
+                    </div>
+                    </text>
+                    }
+                </div>
+            <div class="am-margin">
+                <button type="submit" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+                <button type="reset" class="am-btn am-btn-primary am-btn-xs">重置数据</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- content end -->
+
+@section scripts
+{
+    <script src="~/Assets/js/jquery-ui.min.js"></script>
+    <script>
+
+        function upload() {
+            var total = $(".@Html.NameFor(p=>p.StrAlbums)List").size();
+            if (total >= 5) {
+                layer.msg("超过5张，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.MorePicture, folder = "demo", num = 5,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.StrAlbums), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file(path)
+        {
+            if(path.length != 0)
+            {
+                $("#@Html.NameFor(p=>p.StrAlbums)ListData").html("");
+                var arr = path.split(",");
+                var img_te = "";
+                for (var i = 0; i < arr.length; i++) {
+                    img_te += "<li><img src='" + arr[i] + "' ids='0' class='@Html.NameFor(p=>p.StrAlbums)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.StrAlbums)')\">删除</a></li>";
+                }
+                $("#@Html.NameFor(p=>p.StrAlbums)ListData").html(img_te);
+            }
+        }
+        
+        $(function () {
+            $("#@Html.NameFor(p=>p.StrAlbums)ListData").sortable({
+                axis: "x",//沿x轴拖动
+                star:function(e,ui)
+                {
+                    //ui.helper.css({ "background": "#fff" })
+                    return ui;
+                },
+                stop: function (e, ui) {
+                    //console.log("之前的：" + $("#StrAlbums").val());
+                    var albums = "";
+                    $(".@Html.NameFor(p=>p.StrAlbums)List").each(function (index, elem) {
+                        albums += $(this).attr("src") + ",";
+                    })
+                    if(albums.length > 0)
+                    {
+                        albums = albums.substring(0, albums.length - 1);
+                    }
+                    $("#StrAlbums").val(albums);
+                    //console.log("处理后：" + $("#StrAlbums").val());
+                    return ui;
+                }
+            }).disableSelection();
+
+            @if (Model.Msg == -1)
+            {
+                @:layer.msg('@Model.MsgBox', {icon:5}, function () {location.href = '@Model.RedirectUrl';})
+            }
+            else if(Model.Msg == -2)
+            {
+                @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+            }else if(Model.Msg == 1)
+            {
+                @:layer.msg('@Model.MsgBox', {icon:1}, function () {location.href = '@Model.RedirectUrl';})
+            }
+        });
+    </script>
+}

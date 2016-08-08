@@ -59,6 +59,21 @@ namespace Universal.DataCore
         public DbSet<Entity.SysRoleRoute> SysRoleRoutes { get; set; }
 
         /// <summary>
+        /// 测试
+        /// </summary>
+        public DbSet<Entity.Demo> Demo { get; set; }
+
+        /// <summary>
+        /// 测试相册
+        /// </summary>
+        public DbSet<Entity.DemoAlbum> DemoAlbums { get; set; }
+
+        /// <summary>
+        /// 测试成员
+        /// </summary>
+        public DbSet<Entity.DemoDept> DemoDepts { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

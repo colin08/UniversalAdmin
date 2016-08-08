@@ -77,12 +77,13 @@
         }
 
         var ele = "@ViewData["call_back_ele"]";
-        parent.@ViewData["call_func"] (file_list);
         if(parent.$("#"+ele).val().length > 0)
         {
+            parent.@ViewData["call_func"] (parent.$("#"+ele).val()+","+file_list);
             parent.$("#"+ele).val(parent.$("#"+ele).val()+","+file_list);
         }else
         {
+            parent.@ViewData["call_func"] (file_list);
              parent.$("#"+ele).val(file_list);
 
         }

@@ -69,20 +69,26 @@
                 {
                     @:<li><a href="@Url.Action("Index", "Home", new { Area="Admin"})"><span class="am-icon-home"></span> 首页</a></li>
                 }
-                <li class="admin-parent"><!--am-icon-font-awesome-->
+                <li class="admin-parent">
+                    <!--am-icon-font-awesome-->
                     <a class="am-cf" data-am-collapse="{target: '#collapse-nav-user'}"><span class="am-icon-users"></span> 后台用户管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
                     <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav-user">
                         <!-- am-list am-collapse admin-sidebar-sub am-in  am-in 删掉就折叠了-->
-                        @if(CheckAdminPower("sysuser/index",false))
+                        @if (CheckAdminPower("sysuser/index", false))
                         {
-                            @:<li><a href="@Url.Action("Index","SysUser",new { Area="Admin"})"><span class="am-icon-user"></span> 用户列表</a></li>
+                            @:
+                            <li><a href="@Url.Action("Index","SysUser",new { Area="Admin"})"><span class="am-icon-user"></span> 用户列表</a></li>
                         }
                         @if (CheckAdminPower("sysrole/index", false))
                         {
-                        @:<li><a href="@Url.Action("Index", "SysRole", new { Area = "Admin" })"><span class="am-icon-user-secret"></span> 用户组</a></li>
+                            @:
+                            <li><a href="@Url.Action("Index", "SysRole", new { Area = "Admin" })"><span class="am-icon-user-secret"></span> 用户组</a></li>
                         }
                     </ul>
                 </li>
+                <li><a href="@Url.Action("Index", "Demo", new { Area="Admin"})"><span class="am-icon-font-awesome"></span> 测试相册</a></li>
+
+
 
             </ul>
             <div class="am-panel am-panel-default admin-sidebar-panel">

@@ -268,10 +268,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             db.Dispose();
             return View(entity);
         }
-
-        /// <summary>
-        /// 删除用户
-        /// </summary>
+        
         [HttpPost]
         [AdminPermissionAttribute("用户组", "删除用户组信息")]
         public JsonResult Del(string ids)

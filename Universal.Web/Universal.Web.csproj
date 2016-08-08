@@ -132,6 +132,7 @@
     <Content Include="Assets\js\amazeui.widgets.helper.min.js" />
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\handlebars.min.js" />
+    <Content Include="Assets\js\jquery-ui.min.js" />
     <Content Include="Assets\js\jquery.min.1.11.1.js" />
     <Content Include="Assets\js\jquery.min.js" />
     <Content Include="Assets\js\jquery.nicescroll.js" />
@@ -191,12 +192,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelDemo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
@@ -232,6 +235,8 @@
     <Content Include="Assets\plug\ztree\css\awesomeStyle\awesome.less" />
     <Content Include="Assets\plug\ztree\css\awesomeStyle\fa.less" />
     <Content Include="Areas\Admin\Views\Tools\UploadFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Demo\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Demo\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
