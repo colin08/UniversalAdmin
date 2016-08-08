@@ -137,10 +137,10 @@ function del(url, type) {
     });
 }
 
-function DelPic(obj, span_name) {
+function DelPic(obj, hide_name) {
     //var pic = $(obj).parent("li").find("img").attr("src");
     $(obj).parent("li").remove();
-    if (span_name.length > 0) {
+    if (hide_name.length > 0) {
         var list_name = $(obj).parent("li").find("img").attr("class");
         if ($("." + list_name + "").size() > 0) {
             var file_name = "";
@@ -150,10 +150,10 @@ function DelPic(obj, span_name) {
             if (file_name.length > 0) {
                 file_name = file_name.substring(0, file_name.length - 1);
             }
-            $("#" + span_name + "").text(file_name);
+            $("#" + hide_name + "").val(file_name);
         }
         else {
-            $("#" + span_name + "").text("");
+            $("#" + hide_name + "").val("");
         }
     }
     //$("#" + up_id + "").uploadifive('clearQueue')
