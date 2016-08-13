@@ -30,6 +30,7 @@ namespace Universal.Web.Framework
                 
                 db.SysLogExceptions.Add(entity);
                 db.SaveChanges();
+
             }
         }
     }

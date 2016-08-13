@@ -69,7 +69,13 @@ namespace Universal.DataCore.Entity
 
         public virtual ICollection<DemoAlbum> Albums { get; set; }
 
-        public virtual ICollection<DemoDept> Depts { get; set; }
+        public virtual List<DemoDept> Depts { get; set; }
+
+        public Demo()
+        {
+            Albums = new List<DemoAlbum>();
+            Depts = new List<DemoDept>();
+        }
 
     }
 }

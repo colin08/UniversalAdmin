@@ -76,10 +76,17 @@ namespace Universal.Web.Areas.Admin.Controllers
             using (var db = new DataCore.EFDBContext())
             {
                 DataCore.Entity.Demo entity = new DataCore.Entity.Demo();
+                entity.Depts.Add(new DataCore.Entity.DemoDept()
+                {
+                    ImgUrl = "",
+                    Num = 0,
+                    Title = ""
+                });
+
                 int num = TypeHelper.ObjectToInt(id, 0);
                 if (num != 0)
                 {
-                    entity = db.Demo.Where(p=>p.ID==num).Include(p=>p.LastUpdateUser).Include(p=>p.AddUser).Include(p => p.Albums).FirstOrDefault();
+                    entity = db.Demo.Where(p => p.ID == num).Include(p => p.LastUpdateUser).Include(p => p.AddUser).Include(p => p.Albums).Include(p => p.Depts).FirstOrDefault();
                     if (entity == null)
                     {
                         entity = new DataCore.Entity.Demo();
@@ -89,6 +96,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         return View(entity);
                     }
                 }
+                
                 return View(entity);
             }
         }
@@ -100,7 +108,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             var isAdd = entity.ID == 0 ? true : false;
             var db = new DataCore.EFDBContext();
             string str_albums = WebHelper.GetFormString("StrAlbums");
-            if(!isAdd)
+            if (!isAdd)
             {
                 if (db.Demo.Count(p => p.ID == entity.ID) == 0)
                 {
@@ -112,7 +120,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 }
             }
             var temp = db.Demo.Find(entity.ID);
-            
+
             if (ModelState.IsValid)
             {
                 //添加
@@ -136,9 +144,12 @@ namespace Universal.Web.Areas.Admin.Controllers
                     temp.Num = entity.Num;
                     temp.Ran = entity.Ran;
                     temp.StrAlbums = entity.StrAlbums;
-
+                    temp.Depts = entity.Depts;
                     var old_albums = db.DemoAlbums.Where(p => p.DemoID == entity.ID).ToList();
                     old_albums.ForEach(p => db.DemoAlbums.Remove(p));
+
+                    var old_dept = db.DemoDepts.Where(p => p.DemoID == entity.ID).ToList();
+                    old_dept.ForEach(p => db.DemoDepts.Remove(p));
                 }
 
                 db.SaveChanges();

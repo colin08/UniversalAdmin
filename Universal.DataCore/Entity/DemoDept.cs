@@ -19,13 +19,13 @@ namespace Universal.DataCore.Entity
         /// </summary>
         public int DemoID { get; set; }
 
-        [Display(Name ="标题"),MaxLength(255,ErrorMessage ="最大长度255")]
+        [Display(Name ="标题"),MaxLength(255,ErrorMessage ="最大长度255"),Required]
         public string Title { get; set; }
 
-        [Display(Name ="图片"),MaxLength(255)]
+        [Display(Name ="图片"),MaxLength(255),Required]
         public string ImgUrl { get; set; }
 
-        [Display(Name ="其他数据")]
+        [Display(Name ="其他数据"),Required]
         public int Num { get; set; }
         
     }

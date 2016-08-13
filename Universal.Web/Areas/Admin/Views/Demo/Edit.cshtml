@@ -33,7 +33,8 @@
         @Html.AntiForgeryToken()
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
-                <div class="form-group" style="margin-top:25px;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Title)</label>
                     <div class="col-sm-3">
                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control", placeholder = "标题" }) 
@@ -45,7 +46,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Telphone)</label>
                     <div class="col-sm-10">
-                        <div class="col-md-2" style="padding-left: 0px;">
+                        <div class="col-md-3" style="padding-left: 0px;">
                             <div class="input-group m-b">
                                 <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 @Html.TextBoxFor(p => p.Telphone, new { @class = "form-control", placeholder = "手机号" })
@@ -135,21 +136,53 @@
             </div>
 
             <div id="tab-2" class="tab-pane">
-                <div class="form-group" style="margin-top:20px;">
-                    <label class="col-sm-2 control-label">普通</label>
+                <div class="div_dynamic">
+                    <div style="margin-top:20px;"></div>
+                    @if (Model.Depts != null)
+                    {
+                        for (var i = 0; i < Model.Depts.Count; i++)
+                        {
+                            <div  class="form-group">
+                                <div class="col-sm-1" style="width:initial">
+                                    <button class="btn btn-outline btn-danger btn-xs del_dynamic" type="button" onclick="del_dynamic(this)">删除</button>
+                                </div>
+                                <label class="col-sm-1 control-label">
+                                    @Html.DisplayNameFor(x => x.Depts[i].Title)                                    
+                                </label>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(x => x.Depts[i].Title, new { @class = "form-control" })
+                                    <span class="help-block m-b-none label_msg">@Html.ValidationMessageFor(x => x.Depts[i].Title)</span>
+                                </div>
 
-                    <div class="col-sm-3">
-                        <input type="text" class="form-control">
-                    </div>
-                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                                <label class="col-sm-1 control-label">@Html.DisplayNameFor(x => x.Depts[i].ImgUrl)</label>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(x => x.Depts[i].ImgUrl, new { @class = "form-control" })
+                                    <span class="help-block m-b-none label_msg">@Html.ValidationMessageFor(x => x.Depts[i].ImgUrl)</span>
+                                </div>
+
+                                <label class="col-sm-1 control-label">@Html.DisplayNameFor(x => x.Depts[i].Num)</label>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(x => x.Depts[i].Num, new { @class = "form-control" })
+                                    <span class="help-block m-b-none label_msg">@Html.ValidationMessageFor(x => x.Depts[i].Num)</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        }
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 col-sm-offset-1">
+                        <button class="btn btn-primary" type="button" onclick="add_dynamic()">添加一条</button>
+                    </label>
                 </div>
                 <div class="hr-line-dashed"></div>
-
 
             </div>
 
             <div id="tab-3" class="tab-pane">
-                <div class="form-group" style="margin-top:20px;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AddTime)</label>
 
                     <div class="col-sm-10">
@@ -209,6 +242,73 @@
 <script src="~/Assets/js/jquery-ui-1.10.4.min.js"></script>
 
 <script>
+
+    //动态表单 begin
+
+    function del_dynamic(obj)
+    {
+        var dataCount = $(".del_dynamic").length;
+        if (dataCount <= 1)
+        {
+            alert("至少有一条数据");
+            return false;
+        }
+
+
+        $(obj).parent().parent().next().remove();
+        $(obj).parent().parent().remove();
+
+        $.each($(".div_dynamic").find(".form-group"), function (i, item) {
+            //文本框
+            var txts = $(this).find("input[type='text']");
+            txts.each(function () {
+                //重置下标数字
+                $(this).attr("name", $(this).attr("name").replace(/\d+/, i));
+                $(this).attr("id", $(this).attr("id").replace(/\d+/, i));
+            })
+            var spans = $(this).find("span");
+            spans.each(function () {
+                //重置下标数字
+                if ($(this).attr("data-valmsg-for") != undefined)
+                {
+                    $(this).attr("data-valmsg-for", $(this).attr("data-valmsg-for").replace(/\d+/, i));
+                }
+            })
+        })
+
+    }
+
+    function add_dynamic()
+    {
+        //不为空
+        if ($(".div_dynamic").find(".form-group").length >=1)
+        {
+            var obj = $(".div_dynamic").find(".form-group").first().clone();
+            var obj2 = $(".hr-line-dashed").first().clone();
+            $(".div_dynamic").append(obj);
+            $(".div_dynamic").append(obj2);
+
+            var i = $(".div_dynamic").find(".form-group").length -1;
+
+            $(obj.find("input[type='text']")).each(function () {
+                //重置下标数字
+                $(this).attr("name", $(this).attr("name").replace(/\d+/, i));
+                $(this).attr("id", $(this).attr("id").replace(/\d+/, i));
+                $(this).attr("value", "");
+            })
+            var spans = $(obj).find("span");
+            spans.each(function () {
+                //重置下标数字
+                if ($(this).attr("data-valmsg-for") != undefined) {
+                    $(this).attr("data-valmsg-for", $(this).attr("data-valmsg-for").replace(/\d+/, i));
+                }
+            })
+        }
+    }
+
+    //动态表单 end
+
+
     function upload() {
         var total = $(".@Html.NameFor(p=>p.StrAlbums)List").size();
         if (total >= 5) {

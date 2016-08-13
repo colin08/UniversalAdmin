@@ -61,9 +61,9 @@
     <Compile Include="Entity\SysLogMethod.cs" />
     <Compile Include="Entity\SysRoleRoute.cs" />
     <Compile Include="Entity\SysRoute.cs" />
-    <Compile Include="Migrations\201608080823300_init.cs" />
-    <Compile Include="Migrations\201608080823300_init.Designer.cs">
-      <DependentUpon>201608080823300_init.cs</DependentUpon>
+    <Compile Include="Migrations\201608131027372_init.cs" />
+    <Compile Include="Migrations\201608131027372_init.Designer.cs">
+      <DependentUpon>201608131027372_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,8 +81,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608080823300_init.resx">
-      <DependentUpon>201608080823300_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201608131027372_init.resx">
+      <DependentUpon>201608131027372_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

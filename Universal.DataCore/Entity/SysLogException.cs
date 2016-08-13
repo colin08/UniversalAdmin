@@ -26,7 +26,7 @@ namespace Universal.DataCore.Entity
         /// <summary>
         /// 堆栈信息
         /// </summary>
-        [Required,MaxLength(1000)]
+        [Required]
         public string StackTrace { get; set; }
         /// <summary>
         /// 发生时间

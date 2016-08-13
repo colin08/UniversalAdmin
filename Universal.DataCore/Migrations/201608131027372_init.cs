@@ -124,8 +124,8 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         DemoID = c.Int(nullable: false),
-                        Title = c.String(maxLength: 255),
-                        ImgUrl = c.String(maxLength: 255),
+                        Title = c.String(nullable: false, maxLength: 255),
+                        ImgUrl = c.String(nullable: false, maxLength: 255),
                         Num = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ID)
@@ -153,7 +153,7 @@ namespace Universal.DataCore.Migrations
                         ID = c.Int(nullable: false, identity: true),
                         Message = c.String(nullable: false, maxLength: 255),
                         Source = c.String(nullable: false, maxLength: 50),
-                        StackTrace = c.String(nullable: false, maxLength: 1000),
+                        StackTrace = c.String(nullable: false),
                         AddTime = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.ID);
