@@ -8,11 +8,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="~/Assets/css/amazeui.min.css">
-    <link href="~/Assets/plug/uploadifive/uploadifive.css" rel="stylesheet" />
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Assets/js/plugins/uploadifive/uploadifive.css" rel="stylesheet" />
     <script src="~/Assets/js/jquery.min.js"></script>
-    <script src="~/Assets/plug/layer/layer.js"></script>
-    <script src="~/Assets/plug/uploadifive/jquery.uploadifive.min.js"></script>
+    <script src="~/Assets/js/plugins/layer/layer.min.js"></script>
+    <script src="~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"></script>
 
     <title>附件上传</title>
     <script>
@@ -99,14 +99,14 @@
         <div id="uploadify_queue" style="margin-top:20px; width:400px;"></div>
         <b id="noUpload" style="display: none">浏览器不支持HTML5，无法上传</b>
     </div>
-    <div style="margin-top:20px; margin-left:20px;">
+    <div style="margin-top:20px;">
         <ul id="file_list" style="list-style:none;">
             <li></li>
         </ul>
     </div>
     <hr />
     <div style="margin-top:20px; margin-left:20px;">
-        <input type="button" class="am-btn am-btn-primary am-btn-xs" value="完成上传" id="btn_commit" onclick="btn_commit()" />
+        <button class="btn btn-primary " type="button" id="btn_commit" onclick="btn_commit()"><i class="fa fa-check"></i>完成上传</button>
     </div>
 </body>
 </html>

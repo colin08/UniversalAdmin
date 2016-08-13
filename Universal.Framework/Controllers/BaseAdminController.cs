@@ -66,7 +66,7 @@ namespace Universal.Web.Framework
                     }
                     else
                     {
-                        filterContext.Result = RedirectToAction("Login","Home");
+                        filterContext.Result = View("OutFram");
                     }
                 }
             }

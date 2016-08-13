@@ -17,35 +17,53 @@ namespace Universal.DataCore.Migrations
 
         protected override void Seed(Universal.DataCore.EFDBContext context)
         {
-            //组
-            var SysRoles = new List<Entity.SysRole>
+            var SysRoles_1 = context.SysRoles.Where(p=>p.RoleName == "管理员").FirstOrDefault();
+            if(SysRoles_1 == null)
             {
-                new Entity.SysRole(){ AddTime=DateTime.Now, RoleName="管理员", RoleDesc="管理员组",IsAdmin = true},
-                new Entity.SysRole(){ AddTime=DateTime.Now,RoleName="编辑用户",RoleDesc="编辑用户组" }
-            };
-            SysRoles.ForEach(s => context.SysRoles.AddOrUpdate(p => p.RoleName, s));
-            context.SaveChanges();
+                SysRoles_1 = new Entity.SysRole()
+                {
+                    AddTime = DateTime.Now,
+                    RoleName = "管理员",
+                    RoleDesc = "管理员组",
+                    IsAdmin = true
+                };
+                context.SysRoles.Add(SysRoles_1);
+            }
 
-            //用户
-            var SysUser = new Entity.SysUser();
-            SysUser.LastLoginTime = DateTime.Now;
-            SysUser.RegTime = DateTime.Now;
-            SysUser.NickName = "超级管理员";
-            SysUser.Password = SecureHelper.MD5("admin");
-            SysUser.Status = true;
-            SysUser.SysRole = context.SysRoles.Where(s => s.RoleName == "管理员").First();
-            SysUser.UserName = "admin";
-            SysUser.Gender = Entity.UserGender.男;
-            SysUser.Avatar = "";
-            try
+            var SysRoles_2 = context.SysRoles.Where(p => p.RoleName == "编辑用户").FirstOrDefault();
+            if (SysRoles_2 == null)
             {
-                context.SysUsers.AddOrUpdate(s => s.UserName, SysUser);
-                context.SaveChanges();
+                SysRoles_2 = new Entity.SysRole()
+                {
+                    AddTime = DateTime.Now,
+                    RoleName = "编辑用户",
+                    RoleDesc = "编辑用户组",
+                    IsAdmin = false
+                };
+                context.SysRoles.Add(SysRoles_2);
             }
-            catch (DbEntityValidationException ex)
+            
+            var SysUser_Root = context.SysUsers.Where(p => p.UserName == "admin").FirstOrDefault();
+            if(SysUser_Root == null)
             {
-                Console.WriteLine(ex.Message);
+                string pwd = SecureHelper.MD5("admin");
+                SysUser_Root = new Entity.SysUser() {
+                    LastLoginTime = DateTime.Now,
+                    RegTime = DateTime.Now,
+                    NickName = "超级管理员",
+                    Password = pwd,
+                    Status = true,
+                    SysRole = SysRoles_1,
+                    UserName = "admin",
+                    Gender = Entity.UserGender.男,
+                    Avatar= ""
+                };
+                context.SysUsers.Add(SysUser_Root);
             }
+
+
+
+            context.SaveChanges();
         }
     }
 }

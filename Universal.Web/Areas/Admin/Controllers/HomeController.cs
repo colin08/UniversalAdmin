@@ -67,7 +67,8 @@ namespace Universal.Web.Areas.Admin.Controllers
             {
                 if (TypeHelper.ObjectToInt(Session[SessionKey.Login_Fail_Total]) > 3)
                 {
-                    return Content("失败次数过多，重启浏览器后再试");
+                    ModelState.AddModelError("user_name", "失败次数过多，重启浏览器后再试");
+                    return View(viewModelLogin);
                 }
             }
 
@@ -121,6 +122,62 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View();
         }
 
+        public ActionResult Center()
+        {
+            Models.ViewModelSysInfo entity = new Models.ViewModelSysInfo();
+            Tools.SystemInfo sys = new Tools.SystemInfo();
+            //CPU占用比例
+            entity.CpuLoad = (int)sys.CpuLoad;
+            //CPU个数
+            entity.ProcessorTotal = sys.ProcessorCount;
+            //系统内存
+            long PhysicalMemory = sys.PhysicalMemory;
+            entity.PhysicalMemory = WebHelper.ByteToGB(PhysicalMemory);
+            //可用内存
+            long MemoryAvailable = sys.MemoryAvailable;
+            entity.MemoryAvailable = WebHelper.ByteToGB(MemoryAvailable);
+            //可用内存比例
+            entity.MemoryScale = (int)(((float)MemoryAvailable / (float)PhysicalMemory) * 100);
+
+            //当前程序所使用内存
+            System.Diagnostics.Process ps = System.Diagnostics.Process.GetCurrentProcess();
+            long SiteMemory = ps.WorkingSet64;
+            entity.SiteScale = (int)(((float)SiteMemory / (float)PhysicalMemory) * 100);
+            entity.SiteMemory = WebHelper.ByteToGB(SiteMemory);
+
+            //当前站点所在盘符
+            char[] DiskNameArr = HttpRuntime.AppDomainAppPath.Substring(0, 1).ToCharArray();
+            List<SystemInfo_DiskInfo> disk_list = sys.GetLogicalDrives(DiskNameArr[0]);
+            if (disk_list.Count == 1)
+            {
+                //可用空间
+                long FreeSpace = disk_list[0].FreeSpace;
+                //总大小
+                long TotalSize = disk_list[0].Size;
+                entity.DiskName = DiskNameArr[0].ToString();
+                entity.DiskAvailable = WebHelper.ByteToGB(FreeSpace);
+                entity.PhysicalDisk = WebHelper.ByteToGB(TotalSize);
+                entity.DiskScale = (int)(((float)FreeSpace / (float)TotalSize) * 100);
+            }
+            List<SystemInfo_ProcessInfo> process_list = sys.GetProcessInfo().OrderByDescending(p=>p.WorkingSet64).Take(10).ToList();
+            List<Models.ViewModelSysTopList> top_list = new List<Models.ViewModelSysTopList>();
+            foreach (var item in process_list)
+            {
+                Models.ViewModelSysTopList model = new Models.ViewModelSysTopList();
+                model.Id = item.Id;
+                model.FileName = item.FileName;
+                model.ProcessName = item.ProcessName;
+                //大于300MB就显示警告颜色
+                model.MemeoryColor = item.WorkingSet64 >= 314572800 ? "label-warning" : "label-primary";
+                model.Time = WebHelper.ConvertMilliseconds(item.TotalMilliseconds);
+                model.WorkingSet64 = WebHelper.ByteToGB(item.WorkingSet64);
+                model.StartTime = item.StartTime;
+                top_list.Add(model);
+            }
+            entity.MemooryTopList = top_list;
+            return View(entity);
+        }
+        
         /// <summary>
         /// 登出
         /// </summary>

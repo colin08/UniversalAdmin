@@ -41,6 +41,46 @@ namespace Universal.Tools
         /// </summary>
         private static int[] constantInt = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
+        public static string ConvertMilliseconds(double milliseconds)
+        {
+            if (milliseconds <= 0)
+                return "";
+            //秒
+            double miao = milliseconds / 1000;
+            if (miao < 60)
+                return (int)miao +"秒";
+
+            double fenzhong = miao / 60;
+            if (fenzhong < 60)
+                return (int)fenzhong + "分钟";
+            double xiaoshi = fenzhong / 60;
+            if (xiaoshi < 60)
+                return xiaoshi.ToString("0.0") + "小时";
+
+            double tian = xiaoshi / 24;
+            return (int)tian + "天";
+        }
+
+        /// <summary>
+        /// 字节转换为GB，不足G的返回MB，保留小数点后1位
+        /// </summary>
+        /// <returns></returns>
+        public static string ByteToGB(long data)
+        {
+            if (data <= 0)
+                return "0";
+
+            string val = "0";
+            float mb = data / 1024f / 1024f;
+            if (mb < 1024)
+                val = mb.ToString("F1")+"MB";
+            else
+                val = (mb / 1024f).ToString("F1")+"GB";
+
+            return val;
+        }
+
+
         /// <summary>
         /// 根据URL下载图片
         /// </summary>

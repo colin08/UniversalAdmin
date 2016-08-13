@@ -16,7 +16,7 @@ namespace Universal.Web.Framework
         /// </summary>
         /// <param name="ex">异常信息</param>
         /// <returns></returns>
-        public static async Task ToInDB(Exception ex)
+        public static void ToInDB(Exception ex)
         {
             using (var db = new DataCore.EFDBContext())
             {
@@ -29,7 +29,7 @@ namespace Universal.Web.Framework
                 };
                 
                 db.SysLogExceptions.Add(entity);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
         }
     }

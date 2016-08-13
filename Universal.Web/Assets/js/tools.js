@@ -37,7 +37,7 @@ function CheckAll(obj) {
         $(".datacheck").prop("checked", true);
     } else {
         $(obj).attr("txt", "全选");
-        $(".datacheck").prop("checked",false);
+        $(".datacheck").prop("checked", false);
     }
 }
 
@@ -75,12 +75,11 @@ function ConvertBtteToMB(byteSize) {
 }
 
 //设置分页大小(非Ajax方式)
-function SetPageSize(obj)
-{
+function SetPageSize(obj) {
     var num = $(obj).val();
     var cname = $(obj).attr("cname");
     if (num != "") {
-        $.post("/admin/tools/SetPageCookie", { "cname":cname,"num": num }, function (result) {
+        $.post("/admin/tools/SetPageCookie", { "cname": cname, "num": num }, function (result) {
             //
         });
         //页面刷新
@@ -109,20 +108,18 @@ function del(url, type) {
             data: { "ids": ids },
             async: false,
             beforeSend: function () {
-                
+
             },
             complete: function () {
-                
+
             },
             success: function (data) {
                 if (data.msg == 1) {
                     layer.msg(data.msgbox, { icon: 1 });
-                    if (type == 2)
-                    {
+                    if (type == 2) {
                         pageData(1);
                     }
-                    else
-                    {
+                    else {
                         window.location.reload();
                     }
                 }

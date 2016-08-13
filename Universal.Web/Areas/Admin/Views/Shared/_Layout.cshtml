@@ -1,138 +1,43 @@
-﻿<!doctype html>
-<html class="no-js">
+﻿<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@ViewData["Title"]</title>
+    <link rel="shortcut icon" href="~/favicon.ico">
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Assets/css/animate.min.css" rel="stylesheet">
+    <link href="~/Assets/css/style.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/admin.css" rel="stylesheet">
 
-    <!-- Set render engine for 360 browser -->
-    <meta name="renderer" content="webkit">
-
-    <!-- No Baidu Siteapp-->
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
-
-    <link rel="icon" type="image/png" href="~/Assets/i/favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="~/Assets/i/app-icon72x72@2x.png">
-
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="@ViewData["Title"]" />
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileColor" content="#0e90d2">
-
-    <link rel="stylesheet" href="~/Assets/css/amazeui.min.css">
-    <link rel="stylesheet" href="~/Assets/css/admin.css">
-    <!--头部放置js/css-->
-    @RenderSection("head", required: false)
-
+    @RenderSection("head",required:false)
 </head>
 
-<body>
-    <!--[if lte IE 9]>
-    <p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
-      以获得更好的体验！</p>
-    <![endif]-->
-
-<header class="am-topbar am-topbar-inverse admin-header">
-    <div class="am-topbar-brand">
-        <strong>Admin</strong> <small>后台信息管理</small>
-    </div>
-    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
-    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-            <li style="display:none"><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
-            <li class="am-dropdown" data-am-dropdown>
-                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
-                    <span class="am-icon-users"></span> @WorkContext.UserInfo.NickName <span class="am-icon-caret-down"></span>
-                </a>
-                <ul class="am-dropdown-content">
-                    <li><a href="@Url.Action("LoginOut", "Home", new { Area = "admin" })"><span class="am-icon-power-off"></span> 退出</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</header>
-
-<div class="am-cf admin-main">
-    <!-- sidebar start -->
-    <div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
-        <div class="am-offcanvas-bar admin-offcanvas-bar">
-            <ul class="am-list admin-sidebar-list">
-                @if(CheckAdminPower("home/index",false))
-                {
-                    @:<li><a href="@Url.Action("Index", "Home", new { Area="Admin"})"><span class="am-icon-home"></span> 首页</a></li>
-                }
-                <li class="admin-parent">
-                    <!--am-icon-font-awesome-->
-                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav-user'}"><span class="am-icon-users"></span> 后台用户管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
-                    <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav-user">
-                        <!-- am-list am-collapse admin-sidebar-sub am-in  am-in 删掉就折叠了-->
-                        @if (CheckAdminPower("sysuser/index", false))
-                        {
-                            @:
-                            <li><a href="@Url.Action("Index","SysUser",new { Area="Admin"})"><span class="am-icon-user"></span> 用户列表</a></li>
-                        }
-                        @if (CheckAdminPower("sysrole/index", false))
-                        {
-                            @:
-                            <li><a href="@Url.Action("Index", "SysRole", new { Area = "Admin" })"><span class="am-icon-user-secret"></span> 用户组</a></li>
-                        }
-                    </ul>
-                </li>
-                <li><a href="@Url.Action("Index", "Demo", new { Area="Admin"})"><span class="am-icon-font-awesome"></span> 测试相册</a></li>
-
-
-
-            </ul>
-            <div class="am-panel am-panel-default admin-sidebar-panel">
-                <div class="am-panel-bd">
-                    <p><span class="am-icon-bookmark"></span> 公告</p>
-                    <p>这里啥都没有</p>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="row">
+                    
+                    @RenderSection("nav")
+                    
                 </div>
+                <hr />
+
+                @RenderBody()
+
             </div>
         </div>
     </div>
-    <!-- sidebar end -->
 
-    @RenderBody()
-    
-</div>
-
-    <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
-
-    <!--[if lt IE 9]>
-    <script src="~/Assets/js/jquery.min.1.11.1.js"></script>
-    <script src="~/Assets/js/modernizr.js"></script>
-    <script src="~/Assets/js/amazeui.ie8polyfill.min.js"></script>
-    <![endif]-->
-    <!--[if (gte IE 9)|!(IE)]><!-->
     <script src="~/Assets/js/jquery.min.js"></script>
-    <!--<![endif]-->
-    
-    <script src="~/Assets/js/amazeui.min.js"></script>
-    <script src="~/Assets/js/jquery.nicescroll.js"></script>
-    <script src="~/Assets/js/app.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+    <script src="~/Assets/js/plugins/layer/layer.min.js"></script>
     <script src="~/Assets/js/tools.js"></script>
-    <script src="~/Assets/plug/layer/layer.js"></script>
-    <script>
-        $('#admin-offcanvas,.admin-content').niceScroll({
-            cursorcolor: "#ccc",//#CC0071 光标颜色 
-            cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0 
-            touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备 
-            cursorwidth: "5px", //像素光标的宽度 
-            cursorborder: "0", //     游标边框css定义 
-            cursorborderradius: "5px",//以像素为光标边界半径 
-            autohidemode: false //是否隐藏滚动条 
-        });
-    </script>
-    @RenderSection("scripts", required: false)
+
+    @RenderSection("foot",required:false)
 
 </body>
 </html>

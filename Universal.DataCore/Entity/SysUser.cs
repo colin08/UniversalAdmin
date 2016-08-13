@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Universal.DataCore.Entity
 {
@@ -60,7 +61,21 @@ namespace Universal.DataCore.Entity
         /// </summary>
         [Display(Name = "头像")]
         public string Avatar { get; set; }
-        
+
+        /// <summary>
+        /// 头像或者默认头像
+        /// </summary>
+        [NotMapped]
+        public string AvatarOrDefault
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(this.Avatar))
+                    return "/Assets/img/default_avatar.jpg";
+                else
+                    return this.Avatar;
+            }
+        }
 
         /// <summary>
         /// 所属用户组ID

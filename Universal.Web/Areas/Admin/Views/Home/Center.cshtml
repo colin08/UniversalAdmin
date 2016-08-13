@@ -1,0 +1,157 @@
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelSysInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Center</title>
+    <link rel="shortcut icon" href="~/favicon.ico">
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Assets/css/animate.min.css" rel="stylesheet">
+    <link href="~/Assets/css/style.min.css" rel="stylesheet">
+    <link href="~/Assets/css/plugins/toastr/toastr.min.css" rel="stylesheet" />
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>系统资源占用</h5>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-xs btn-primary" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="ibox">
+                                    <div class="ibox-content" style="border-style: solid;border-width: 1px;">
+                                        <h5>CPU使用率</h5>
+                                        <h2>@Model.CpuLoad%</h2>
+                                        <div class="progress progress-mini">
+                                            <div style="width: @Model.CpuLoad%;" class="progress-bar@(Model.CpuLoad > 90 ? " progress-bar-danger":"")"></div>
+                                        </div>
+
+                                        <div class="m-t-sm small">核心数:@Model.ProcessorTotal</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="ibox">
+                                    <div class="ibox-content" style="border-style: solid;border-width: 1px;">
+                                        <h5>内存使用率</h5>
+                                        <h2>@Model.MemoryScale%</h2>
+                                        <div class="progress progress-mini">
+                                            <div style="width: @Model.MemoryScale%;" class="progress-bar@(Model.MemoryScale > 90 ? " progress-bar-danger":"")"></div>
+                                        </div>
+
+                                        <div class="m-t-sm small">总内存:@Model.PhysicalMemory,可用内存:@Model.MemoryAvailable</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="ibox">
+                                    <div class="ibox-content" style="border-style: solid;border-width: 1px;">
+                                        <h5>磁盘 @Model.DiskName 使用率</h5>
+                                        <h2>@Model.DiskScale%</h2>
+                                        <div class="progress progress-mini">
+                                            <div style="width: @Model.DiskScale%;" class="progress-bar@(Model.DiskScale > 90 ? " progress-bar-danger":"")"></div>
+                                        </div>
+
+                                        <div class="m-t-sm small">总容量:@Model.PhysicalDisk. 可用空间:@Model.DiskAvailable</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="ibox">
+                                    <div class="ibox-content" style="border-style: solid;border-width: 1px;">
+                                        <h5>本站内存使用率</h5>
+                                        <h2>@Model.SiteScale%</h2>
+                                        <div class="progress progress-mini">
+                                            <div style="width: @Model.SiteScale%;" class="progress-bar@(Model.SiteScale > 90 ? " progress-bar-danger":"")"></div>
+                                        </div>
+
+                                        <div class="m-t-sm small"><div class="m-t-sm small">使用内存:@Model.SiteMemory</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title" style="border-width: 2px 0 0;">
+                                        <h5>内存占用TOP10</h5>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-hover no-margins">
+                                            <thead>
+                                                <tr>
+                                                    <th>PID</th>
+                                                    <th>进程名</th>
+                                                    <th>使用内存</th>
+                                                    <th>启动时间</th>
+                                                    <th>完整路径</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.MemooryTopList)
+                                                {
+                                                    <tr>
+                                                        <td>@item.Id</td>
+                                                        <td><span class="label label-info" style="font-size:14px;">@item.ProcessName</span></td>
+                                                        <td><span class="label @item.MemeoryColor"  style="font-size:14px;">@item.WorkingSet64</span></td>
+                                                        <td><i class="fa fa-clock-o"></i> @item.StartTime</td>
+                                                        <td>
+                                                                <button type="button" class="btn btn-white btn-bitbucket" onclick="javascript:toastr.info('@item.FileName');">
+                                                                    <i class="fa fa-road"></i>
+                                                                    路径
+                                                                </button>
+                                                        </td>
+                                                    </tr>
+                                                }                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Assets/js/jquery.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+    <script src="~/Assets/js/plugins/toastr/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "positionClass": "toast-top-full-width",
+            "onclick": null,
+            "showDuration": "400",
+            "hideDuration": "1000",
+            "timeOut": "7000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+    </script>
+</body>
+</html>
