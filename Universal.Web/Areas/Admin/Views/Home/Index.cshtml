@@ -52,17 +52,17 @@
                     <li>
                         <a class="J_menuItem" href="/Admin/Home/Center" data-index="0"><i class="fa fa-home"></i> <span class="nav-label">首页</span></a>
                     </li>
-                     @if (CheckAdminPower("sysuser/index", false))
+                     @if (CheckAdminPower("Sysuser/Index", false))
                      {
                      <text>
                     <li>
                         <a href="#"><i class="fa fa-users"></i> <span class="nav-label">后台用户</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            @if (CheckAdminPower("sysuser/index", false))
+                            @if (CheckAdminPower("SysUser/Index", false))
                             {
                             @:<li><a class="J_menuItem" href="/Admin/SysUser/Index">用户管理</a></li>
                             }
-                             @if (CheckAdminPower("sysrole/index", false))
+                             @if (CheckAdminPower("SysRole/Index", false))
                              {
                             @:<li><a class="J_menuItem" href="/Admin/SysRole/Index">用户组管理</a></li>
                              }
@@ -70,6 +70,26 @@
                     </li>
                     </text>
                      }
+
+                    @if (CheckAdminPower("SysLog/LogMethod", false))
+                     {
+                     <text>
+                    <li>
+                        <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">系统日志</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            @if (CheckAdminPower("SysLog/LogMethod", false))
+                            {
+                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
+                            }
+                             @if (CheckAdminPower("SysLog/LogException", false))
+                             {
+                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
+                             }
+                        </ul>
+                    </li>
+                    </text>
+                     }
+
                     <li>
                         <a class="J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
                     </li>

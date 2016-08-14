@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace Universal.DataCore.Entity
 {
@@ -8,9 +10,13 @@ namespace Universal.DataCore.Entity
     /// </summary>
     public enum SysLogMethodType
     {
+        [Description("添加")]
         Add = 1,
+        [Description("修改")]
         Update = 2,
+        [Description("删除")]
         Delete = 3,
+        [Description("登录")]
         Login = 4
     }
 
@@ -32,6 +38,15 @@ namespace Universal.DataCore.Entity
         /// </summary>
         [Required]
         public SysLogMethodType Type { get; set; }
+
+        [NotMapped]
+        public string TypeStr
+        {
+            get
+            {
+                return Tools.EnumHelper.GetDescription<SysLogMethodType>(this.Type);
+            }
+        }
 
         /// <summary>
         /// 详细内容

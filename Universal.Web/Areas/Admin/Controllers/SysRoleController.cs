@@ -114,7 +114,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     db.SysRoutes.Add(route);
                 }
             }
-            
+            AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Update, "更新权限数据");
             db.SaveChanges();
             db.Dispose();
 

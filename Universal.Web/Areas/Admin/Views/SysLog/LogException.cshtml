@@ -1,0 +1,40 @@
+﻿@model List<Universal.DataCore.Entity.SysLogException>
+@{
+    ViewBag.Title = "系统异常日志列表";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<!--路径导航-->
+@section nav
+{
+    <div class="col-sm-4">
+        <h2>系统异常日志列表</h2>
+        <ol class="breadcrumb">
+            <li>主页</li>
+            <li><strong>系统异常日志列表</strong></li>
+        </ol>
+    </div>
+<div class="pull-right" style="margin-right:15px;">
+    <button type="button" class="btn pull-right" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+</div>
+}
+<!--路径导航 end-->
+ 
+<!--Main Body-->
+
+<pre class="pre-scrollable" style="max-height: 440px;">
+    @foreach (var item in Model)
+    {
+ @:<span class="label label-info">@item.AddTime</span> <span class="label label-primary">@item.Source</span>
+ @:<span class="label label-warning">@item.Message</span>
+ @item.StackTrace
+    }
+</pre>
+
+<!-- Main Body end -->

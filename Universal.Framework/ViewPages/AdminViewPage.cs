@@ -37,6 +37,7 @@ namespace Universal.Web.Framework
                 isPost = WorkContext.IsHttpPost;
                 PageKey = WorkContext.PageKey;
             }
+            PageKey = PageKey.ToLower();
             if (WorkContext.UserInfo.SysRole.IsAdmin)
                 return true;
             var result = true;
