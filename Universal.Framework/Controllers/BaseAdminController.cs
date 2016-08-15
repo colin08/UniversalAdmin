@@ -99,7 +99,12 @@ namespace Universal.Web.Framework
         protected override void OnException(ExceptionContext filterContext)
         {
             string error_msg = filterContext.Exception.Message;
-            ExceptionInDB.ToInDB(filterContext.Exception);
+            if(!filterContext.ExceptionHandled)
+            {
+                filterContext.ExceptionHandled = true;
+                ExceptionInDB.ToInDB(filterContext.Exception);
+            }
+            
             if (WorkContext.IsHttpAjax)
             {
                 WorkContext.AjaxStringEntity.msg = 0;
