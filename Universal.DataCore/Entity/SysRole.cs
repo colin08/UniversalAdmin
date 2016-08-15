@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Universal.DataCore.Entity
 {
     /// <summary>
     /// 用户组
     /// </summary>
-    public class SysRole:BaseAdminFrom
+    public class SysRole
     {
         /// <summary>
         /// 自增ID
@@ -17,7 +18,7 @@ namespace Universal.DataCore.Entity
         /// <summary>
         /// 组名
         /// </summary>
-        [StringLength(30,ErrorMessage ="不能超过30个字符"), Required(ErrorMessage ="请输入组名"),Display(Name ="组名")]
+        [StringLength(30,ErrorMessage ="不能超过30个字符"),Index(IsUnique = true), Required(ErrorMessage ="请输入组名"),Display(Name ="组名")]
         public string RoleName { get; set; }
 
         /// <summary>

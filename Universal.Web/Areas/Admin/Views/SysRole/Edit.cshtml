@@ -31,7 +31,7 @@
         <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
         <li><a data-toggle="tab" href="#tab-2">权限信息</a></li>
     </ul>
-    <form method="post" class="form-horizontal">
+    <form method="post" class="form-horizontal"  onsubmit="configm_before()">
         @Html.AntiForgeryToken()
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
@@ -154,16 +154,9 @@
         });
 
         $(function () {
-            @if (Model.Msg == -1)
-            {
-                @:layer.msg('@Model.MsgBox', {icon:5}, function () {location.href = '@Model.RedirectUrl';})
-            }
-            else if(Model.Msg == -2)
+            @if(!ViewData.ModelState.IsValid)
             {
                 @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
-            }else if(Model.Msg == 1)
-            {
-                @:layer.msg('@Model.MsgBox', { icon: 1 }, function () {location.href = '@Model.RedirectUrl'; })
             }
         });
     </script>

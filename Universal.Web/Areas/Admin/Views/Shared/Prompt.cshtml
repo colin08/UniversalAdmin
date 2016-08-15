@@ -3,20 +3,29 @@
     Layout = null;
 }
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>错误提示--@Model.Message</title>
-    @if (Model.IsAutoBack)
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>消息提示 -- @Model.Status</title>
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/animate.min.css" rel="stylesheet" />
+    <link href="~/Assets/css/style.min.css" rel="stylesheet" />
+
+
+    @if (Model.IsAutoLink)
     {
         if (Model.CountdownModel == 0)
         {
-            <meta http-equiv="refresh" content="@Model.CountdownTime;URL=@Model.BackUrl" />
+            <meta http-equiv="refresh" content="@Model.CountdownTime;URL=@Model.LinkUrl" />
         }
         else
         {
-            <script type="text/javascript">
+    <script type="text/javascript">
         window.onload = function(){
             var time = @Model.CountdownTime; //设置时间为几秒
             var timer = document.getElementById('timer'); //获取ID为timer的对象
@@ -25,8 +34,7 @@
             var g = window.setInterval(function(){
                 if(time<0){
                     window.clearTimeout(g); //清除动画
-                    window.location.href = '@Model.BackUrl'; //跳转到指定地址
-            //window.history.back(-1); //后退
+                    window.location.href = '@Model.LinkUrl'; //跳转到指定地址
         } else {
             showTime();
         }
@@ -37,27 +45,40 @@
                 time--;
             }
         };
-            </script>
+    </script>
         }
     }
+
 </head>
 
-<body id="body">
-    <div>
-        <h5>@Html.Raw(Model.Message)</h5>
-        @if (Model.IsAutoBack)
-        {
-            <p>
-                如果您不做出选择，将在@{if (Model.CountdownModel == 0)
-                {@Model.CountdownTime}
-                else
-                {<span id="timer">@Model.CountdownTime</span>}}秒后自动返回
-            </p>
-                    }
-        @if (Model.IsShowBackLink)
-        {
-            <a href="@Model.BackUrl">←点击返回</a>
-        }
+<body class="gray-bg">
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>@Model.Status</h1>
+        <h3 style="font-size: 22px;">@Model.Message</h3>
+
+        <div class="error-desc">
+            <h4> @Html.Raw(Model.Details)</h4>
+
+            @if (Model.IsAutoLink)
+            {
+                <text>
+                    <br />此页面将在@{
+                        if (Model.CountdownModel == 0)
+                        { @Model.CountdownTime}
+                        else
+                        {<span id="timer">@Model.CountdownTime</span>}}秒后跳转
+                </text>
+            }
+            <br />
+            @if (Model.IsShowLink)
+            {
+                <br /><p><a href="@Model.LinkUrl" class="btn btn-block btn-outline btn-primary">继续</a></p>
+            }
+        </div>
     </div>
+
+    <script src="~/Assets/js/jquery.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+
 </body>
 </html>

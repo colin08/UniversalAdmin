@@ -16,7 +16,7 @@ namespace Universal.DataCore.Entity
     /// <summary>
     /// 系统用户
     /// </summary>
-    public class SysUser : BaseAdminFrom
+    public class SysUser
     {
         /// <summary>
         /// 用户ID
@@ -26,6 +26,7 @@ namespace Universal.DataCore.Entity
         /// <summary>
         /// 用户名
         /// </summary>
+        [Index(IsUnique =true)]
         [StringLength(20), Display(Name = "用户名")]
         [Required(ErrorMessage = "用户名不能为空")]
         [RegularExpression(@"^[a-zA-Z0-9]{3,10}$", ErrorMessage = "用户名只能由3-10位字母或数字组成")]

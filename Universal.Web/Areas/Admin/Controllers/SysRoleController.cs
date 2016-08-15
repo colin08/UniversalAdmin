@@ -140,11 +140,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity = db.SysRoles.Find(num);
                     if (entity == null)
                     {
-                        entity = new DataCore.Entity.SysRole();
-                        entity.Msg = -1;
-                        entity.MsgBox = "信息不存在或已被删除";
-                        entity.RedirectUrl = "/admin/SysRole";
-                        return View(entity);
+                        return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 5);
                     }
                 }
                 return View(entity);
@@ -174,11 +170,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             {
                 if (db.SysRoles.Count(p => p.ID == entity.ID) == 0)
                 {
-                    entity.Msg = -1;
-                    entity.MsgBox = "要编辑的信息不存在或已被删除";
-                    entity.RedirectUrl = "/admin/SysRole";
-                    db.Dispose();
-                    return View(entity);
+                    return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
                 }
             }
             var role = db.SysRoles.Find(entity.ID);
@@ -255,18 +247,15 @@ namespace Universal.Web.Areas.Admin.Controllers
                 }
 
                 db.SaveChanges();
-
-                entity.Msg = 1;
-                entity.MsgBox = "操作成功";
-                entity.RedirectUrl = "/admin/SysRole";
+                db.Dispose();
+                return PromptView("/admin/SysRole", "OK", "Success", "操作成功", 5);
             }
             else
             {
-                entity.Msg = -2;
+                db.Dispose();
+                return View(entity);
             }
 
-            db.Dispose();
-            return View(entity);
         }
         
         [HttpPost]

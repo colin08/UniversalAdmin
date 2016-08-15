@@ -9,25 +9,6 @@ namespace Universal.DataCore.Entity
     /// </summary>
     public class BaseAdminEntity
     {
-
-        /// <summary>
-        /// 状态 -1:(数据不存在等)，-2：数据验证出错，1：成功并跳转
-        /// </summary>
-        [NotMapped]
-        public int Msg { get; set; }
-
-        /// <summary>
-        /// 消息
-        /// </summary>
-        [NotMapped]
-        public string MsgBox { get; set; }
-
-        /// <summary>
-        /// 跳转地址
-        /// </summary>
-        [NotMapped]
-        public string RedirectUrl { get; set; }
-
         /// <summary>
         /// 添加时间
         /// </summary>

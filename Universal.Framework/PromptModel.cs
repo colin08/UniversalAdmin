@@ -11,38 +11,93 @@ namespace Universal.Web.Framework
     /// </summary>
     public class PromptModel
     {
-        private string _backurl = "";//返回地址
+        private string _linkurl = "";//跳转地址
+        private string _status = ""; //状态码
         private string _message = "";//提示信息
+        private string _details = "";//消息详情
         private int _countdownmodel = 0;//倒计时模型
         private int _countdowntime = 5;//倒计时时间
-        private bool _isshowbacklink = true;//是否显示返回地址
-        private bool _isautoback = true;//是否自动返回
+        private bool _isshowlink = true;//是否显示跳转地址
+        private bool _isautolink = true;//是否自动跳转
 
         public PromptModel()
         {
 
         }
 
-        public PromptModel(string message)
+        /// <summary>
+        /// 显示消息，不做跳转
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
+        /// <param name="details"></param>
+        public PromptModel(string status,string message, string details)
         {
+            _status = status;
+            _details = details;
             _message = message;
-            _isshowbacklink = false;
-            _isautoback = false;
+            _isshowlink = false;
+            _isautolink = false;
         }
 
-        public PromptModel(string backUrl, string message)
+        /// <summary>
+        /// 进行自动跳转，但不显示倒计时模型
+        /// </summary>
+        /// <param name="linkUrl"></param>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
+        /// <param name="details"></param>
+        public PromptModel(string linkUrl,string status, string message, string details)
         {
-            _backurl = backUrl;
+            _linkurl = linkUrl;
+            _details = details;
+            _status = status;
             _message = message;
         }
 
         /// <summary>
-        /// 返回地址
+        /// 跳转前显示倒计时模型
         /// </summary>
-        public string BackUrl
+        /// <param name="linkUrl"></param>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
+        /// <param name="details"></param>
+        /// <param name="time"></param>
+        public PromptModel(string linkUrl, string status, string message, string details,int time)
         {
-            get { return _backurl; }
-            set { _backurl = value; }
+            _linkurl = linkUrl;
+            _details = details;
+            _status = status;
+            _message = message;
+            if(time >0)
+            {
+                _countdownmodel = 1;
+                _countdowntime = time;
+            }
+        }
+
+        /// <summary>
+        /// 跳转地址
+        /// </summary>
+        public string LinkUrl
+        {
+            get { return _linkurl; }
+            set { _linkurl = value; }
+        }
+
+        /// <summary>
+        /// 状态码
+        /// </summary>
+        public string Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
+
+        public string Details
+        {
+            get { return _details; }
+            set { _details = value; }
         }
 
         /// <summary>
@@ -75,19 +130,19 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 是否显示返回地址
         /// </summary>
-        public bool IsShowBackLink
+        public bool IsShowLink
         {
-            get { return _isshowbacklink; }
-            set { _isshowbacklink = value; }
+            get { return _isshowlink; }
+            set { _isshowlink = value; }
         }
 
         /// <summary>
         /// 是否自动返回
         /// </summary>
-        public bool IsAutoBack
+        public bool IsAutoLink
         {
-            get { return _isautoback; }
-            set { _isautoback = value; }
+            get { return _isautolink; }
+            set { _isautolink = value; }
         }
     }
 }

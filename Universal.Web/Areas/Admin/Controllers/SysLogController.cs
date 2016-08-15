@@ -16,7 +16,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult LogException()
         {
             var db = new DataCore.EFDBContext();
-            return View(db.SysLogExceptions.ToList());
+            return View(db.SysLogExceptions.OrderByDescending(p=>p.AddTime).ToList());
         }
 
         [AdminPermission("日志", "系统操作日志列表")]
@@ -71,16 +71,18 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             var db = new DataCore.EFDBContext();
-            foreach (var item in ids.Split(','))
+            if("all".Equals(ids.ToLower()))
             {
-                int id = TypeHelper.ObjectToInt(item);
-                var entity = db.SysLogExceptions.Find(id);
-                if (entity != null)
-                {
-                    db.SysLogExceptions.Remove(entity);
-                    AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除异常日志:" + entity.ID);
-                }
+                db.Database.ExecuteSqlCommand("delete SysLogException");
+                AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "清空异常日志");
             }
+            else
+            {
+                int id = TypeHelper.ObjectToInt(ids);
+                db.Database.ExecuteSqlCommand("delete SysLogException where ID=" + id.ToString());
+                AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除异常日志:" +id.ToString());
+            }
+
             db.SaveChanges();
             db.Dispose();
             WorkContext.AjaxStringEntity.msg = 1;
@@ -97,22 +99,14 @@ namespace Universal.Web.Areas.Admin.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "缺少参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            var db = new DataCore.EFDBContext();
-            foreach (var item in ids.Split(','))
+            using (var db = new DataCore.EFDBContext())
             {
-                int id = TypeHelper.ObjectToInt(item);
-                var entity = db.SysLogMethods.Find(id);
-                if (entity != null)
-                {
-                    db.SysLogMethods.Remove(entity);
-                    AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除操作日志:" + entity.ID);
-                }
+                db.Database.ExecuteSqlCommand("delete SysLogMethod where ID in(" + ids + ")");
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "success";
+                return Json(WorkContext.AjaxStringEntity);
             }
-            db.SaveChanges();
-            db.Dispose();
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "success";
-            return Json(WorkContext.AjaxStringEntity);
+            
         }
     }
 }

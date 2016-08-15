@@ -84,7 +84,7 @@ namespace Universal.Web.Framework
                     }
                     else
                     {
-                        filterContext.Result = PromptView("您没有权限访问此页面");
+                        filterContext.Result = PromptView("Error","无权限","您没有权限进行此操作");
                     }
                 }
             }
@@ -110,17 +110,19 @@ namespace Universal.Web.Framework
             {
                 if (string.IsNullOrWhiteSpace(WorkContext.UrlReferrer))
                 {
-                    filterContext.Result = PromptView(error_msg);
+                    filterContext.Result = PromptView("500", "系统发生错误", error_msg);
                 }
                 else
                 {
                     PromptModel model = new PromptModel();
-                    model.IsAutoBack = true;
-                    model.IsShowBackLink = true;
-                    model.Message = error_msg;
+                    model.IsAutoLink = true;
+                    model.IsShowLink = true;
+                    model.Status = "500";
+                    model.Details = error_msg;
+                    model.Message = "系统发生错误";
                     model.CountdownTime = 10;
                     model.CountdownModel = 10;
-                    model.BackUrl = WorkContext.UrlReferrer;
+                    model.LinkUrl = WorkContext.UrlReferrer;
                     filterContext.Result = PromptView(model);
                 }
             }
@@ -178,11 +180,13 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 提示信息视图
         /// </summary>
-        /// <param name="message">提示信息</param>
+        /// <param name="status">状态码</param>
+        /// <param name="details">详细消息</param>
+        /// <param name="message">简略消息</param>
         /// <returns></returns>
-        protected ViewResult PromptView(string message)
+        protected ViewResult PromptView(string status,string message,string details)
         {
-            return View("Prompt", new PromptModel(message));
+            return View("Prompt", new PromptModel(status,message, details));
         }
 
         /// <summary>
@@ -198,12 +202,28 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 提示信息视图
         /// </summary>
-        /// <param name="backUrl">返回地址</param>
-        /// <param name="message">提示消息</param>
+        /// <param name="linkUrl">跳转地址</param>
+        /// <param name="status">状态码</param>
+        /// <param name="message">简略消息</param>
+        /// <param name="details">详细消息</param>
         /// <returns></returns>
-        protected ViewResult PromptView(string backUrl, string message)
+        protected ViewResult PromptView(string linkUrl,string status,string message,string details)
         {
-            return View("Prompt", new PromptModel(backUrl, message));
+            return View("Prompt", new PromptModel(linkUrl, status, message, details));
+        }
+
+        /// <summary>
+        /// 提示信息视图
+        /// </summary>
+        /// <param name="linkUrl">跳转地址</param>
+        /// <param name="status">状态码</param>
+        /// <param name="message">简略消息</param>
+        /// <param name="details">详细消息</param>
+        /// <param name="time">倒计时</param>
+        /// <returns></returns>
+        protected ViewResult PromptView(string linkUrl, string status, string message, string details,int time)
+        {
+            return View("Prompt", new PromptModel(linkUrl, status, message, details,time));
         }
         #endregion
 

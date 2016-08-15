@@ -70,11 +70,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity = db.SysUsers.Find(num);
                     if (entity == null)
                     {
-                        entity = new DataCore.Entity.SysUser();
-                        entity.Msg = -1;
-                        entity.MsgBox = "信息不存在或已被删除";
-                        entity.RedirectUrl = "/admin/SysUser";
-                        return View(entity);
+                        return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                     }
                 }
                 return View(entity);
@@ -116,11 +112,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 //如果要编辑的用户不存在
                 if (db.SysUsers.Count(p => p.ID == entity.ID) == 0)
                 {
-                    entity.Msg = -1;
-                    entity.MsgBox = "要编辑的信息不存在或已被删除";
-                    entity.RedirectUrl = "/admin/SysUser";
-                    db.Dispose();
-                    return View(entity);
+                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
                 ModelState.Remove("UserName");
             }
@@ -149,17 +141,15 @@ namespace Universal.Web.Areas.Admin.Controllers
                 }
 
                 db.SaveChanges();
-
-                entity.Msg = 1;
-                entity.MsgBox = "操作成功";
-                entity.RedirectUrl = "/admin/SysUser";
-            }else
-            {
-                entity.Msg = -2;
+                db.Dispose();
+                return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 5);
             }
-
-            db.Dispose();
-            return View(entity);
+            else
+            {
+                db.Dispose();
+                return View(entity);
+            }
+            
         }
         /// <summary>
         /// 删除用户

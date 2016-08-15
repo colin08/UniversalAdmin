@@ -156,3 +156,11 @@ function DelPic(obj, hide_name) {
     //$("#" + up_id + "").uploadifive('clearQueue')
     //$("#"+up_id+"").uploadify('disable', false) //浏览按钮可用
 }
+
+//Loading 层
+function configm_before() {
+    if ($("form").valid())
+    {
+        layer.load(2);
+    }
+}

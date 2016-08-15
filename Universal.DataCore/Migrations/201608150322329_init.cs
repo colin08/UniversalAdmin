@@ -64,6 +64,7 @@ namespace Universal.DataCore.Migrations
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysRole", t => t.SysRoleID, cascadeDelete: true)
+                .Index(t => t.UserName, unique: true)
                 .Index(t => t.SysRoleID);
             
             CreateTable(
@@ -76,7 +77,8 @@ namespace Universal.DataCore.Migrations
                         RoleDesc = c.String(nullable: false, maxLength: 255),
                         AddTime = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => t.ID);
+                .PrimaryKey(t => t.ID)
+                .Index(t => t.RoleName, unique: true);
             
             CreateTable(
                 "dbo.SysRoleRoute",
@@ -189,7 +191,9 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.DemoAlbum", new[] { "DemoID" });
             DropIndex("dbo.SysRoleRoute", new[] { "SysRouteID" });
             DropIndex("dbo.SysRoleRoute", new[] { "SysRoleID" });
+            DropIndex("dbo.SysRole", new[] { "RoleName" });
             DropIndex("dbo.SysUser", new[] { "SysRoleID" });
+            DropIndex("dbo.SysUser", new[] { "UserName" });
             DropIndex("dbo.Demo", new[] { "LastUpdateUser_ID" });
             DropIndex("dbo.Demo", new[] { "AddUser_ID" });
             DropTable("dbo.SysLogMethod");
