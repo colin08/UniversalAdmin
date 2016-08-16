@@ -29,7 +29,7 @@
             @:<li><a data-toggle="tab" href="#tab-3">其他信息</a></li>
         }
     </ul>
-    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+    <form method="post" class="form-horizontal" onsubmit="configm_before2()">
         @Html.AntiForgeryToken()
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
@@ -186,7 +186,7 @@
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AddTime)</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static">@Model.AddTime</p>
+                        <p class="form-control-static">@Html.HiddenFor(p=>p.AddTime) @Model.AddTime</p>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -204,7 +204,7 @@
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.LastUpdateTime)</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static">@Model.LastUpdateTime</p>
+                        <p class="form-control-static">@Html.HiddenFor(p=>p.LastUpdateTime) @Model.LastUpdateTime</p>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -308,6 +308,12 @@
 
     //动态表单 end
 
+    function configm_before2()
+    {
+        if ($("form").valid()) {
+            layer.load(2);
+        }
+    }
 
     function upload() {
         var total = $(".@Html.NameFor(p=>p.StrAlbums)List").size();

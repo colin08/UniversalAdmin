@@ -53,16 +53,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             {
                 int id = TypeHelper.ObjectToInt(item);
                 var entity = db.Demo.Find(id);
-                if (entity != null)
-                {
-                    var albums = db.DemoAlbums.Where(p => p.DemoID == id).ToList();
-                    albums.ForEach(p => db.DemoAlbums.Remove(p));
-
-                    var depts = db.DemoDepts.Where(p => p.DemoID == id).ToList();
-                    depts.ForEach(p => db.DemoDepts.Remove(p));
-
-                    db.Demo.Remove(entity);
-                }
+                db.Demo.Remove(entity);
             }
             db.SaveChanges();
             db.Dispose();
@@ -111,47 +102,46 @@ namespace Universal.Web.Areas.Admin.Controllers
                     return PromptView("/admin/demo", "404", "Not Found", "信息不存在或已被删除",5);
                 }
             }
-            var temp = db.Demo.Find(entity.ID);
+            //var temp = db.Demo.Find(entity.ID);
 
             if (ModelState.IsValid)
             {
                 //添加
                 if (entity.ID == 0)
                 {
+                    var sys_user = db.SysUsers.Find(WorkContext.UserInfo.ID);
                     entity.AddTime = DateTime.Now;
                     entity.LastUpdateTime = DateTime.Now;
-                    entity.AddUser = WorkContext.UserInfo;
-                    entity.LastUpdateUser = WorkContext.UserInfo;
+                    entity.AddUser = sys_user;
+                    entity.LastUpdateUser = sys_user;
 
                     db.Demo.Add(entity);
 
                 }
                 else //修改
                 {
-                    temp.LastUpdateTime = DateTime.Now;
-                    temp.LastUpdateUser = db.SysUsers.Find(WorkContext.UserInfo.ID);
-                    temp.Title = entity.Title;
-                    temp.Telphone = entity.Telphone;
-                    temp.Price = entity.Price;
-                    temp.Num = entity.Num;
-                    temp.Ran = entity.Ran;
-                    temp.StrAlbums = entity.StrAlbums;
-                    temp.Depts = entity.Depts;
-                    var old_albums = db.DemoAlbums.Where(p => p.DemoID == entity.ID).ToList();
-                    old_albums.ForEach(p => db.DemoAlbums.Remove(p));
+                    entity.LastUpdateTime = DateTime.Now;
+                    entity.LastUpdateUser = db.SysUsers.Find(WorkContext.UserInfo.ID);
 
-                    var old_dept = db.DemoDepts.Where(p => p.DemoID == entity.ID).ToList();
-                    old_dept.ForEach(p => db.DemoDepts.Remove(p));
+                    //删除旧数据
+                    db.DemoAlbums.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
+                    db.DemoDepts.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
+
+                    var old_entity = db.Demo.Find(entity.ID);
+                    db.Entry(old_entity).CurrentValues.SetValues(entity);
+                    ((List<DataCore.Entity.DemoAlbum>)entity.Albums).ForEach(p => db.Entry(p).State = EntityState.Added);
+                    foreach (var item in entity.Depts)
+                    {
+                        item.DemoID = entity.ID;
+                        db.Entry(item).State = EntityState.Added;
+                    }
                 }
 
                 db.SaveChanges();
-                db.Dispose();
-
                 return PromptView("/admin/demo", "OK", "Success", "操作成功",5);
             }
             else
             {
-                db.Dispose();
                 return View(entity);
             }            
         }
