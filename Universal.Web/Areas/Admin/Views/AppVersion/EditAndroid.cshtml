@@ -1,0 +1,161 @@
+﻿@model Universal.DataCore.Entity.AppVersion
+@{
+    ViewBag.Title = "编辑安卓版本信息";
+}
+
+<!--头部脚本-->
+@section head
+{
+<link href="~/Assets/js/plugins/uploadifive/uploadifive.css" rel="stylesheet" />
+}
+
+<!--头部脚本 end-->
+
+<!--路径导航-->
+@section nav
+{
+<div class="col-sm-4">
+    <h2>编辑安卓版本信息</h2>
+    <ol class="breadcrumb">
+        <li>主页</li>
+        <li><a href="@Url.Action("Index", "SysUser", new { Area = "Admin" })">APP版本列表</a></li>
+        <li><strong>编辑安卓版本信息</strong></li>
+    </ol>
+</div>
+<a href="@Url.Action("Index", "AppVersion", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
+}
+<!--路径导航 end-->
+
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal"  onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                @Html.HiddenFor(p=>p.Size)
+                @Html.HiddenFor(p=>p.MD5)
+                @Html.HiddenFor(p=>p.LogoImg)
+                @Html.HiddenFor(p=>p.Version)
+                @Html.HiddenFor(p=>p.VersionCode)
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">APK包</label>
+
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(p=>p.DownUrl,new { @class = "form-control",@readonly= "readonly"})
+                        <input type="file" name="uploadify" id="uploadify" />
+                        <div id="uploadify_queue" style="margin-top:20px; width:400px;"></div>
+                        <b id="noUpload" style="display: none">浏览器不支持HTML5，无法上传</b>
+                    </div>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p=>p.Content)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.Content, new { @class = "form-control", placeholder = "版本更新内容", style = "height:100px" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p=>p.Content)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+
+<!--底部脚本-->
+@section foot
+{
+<script src="~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"></script>
+<script>
+
+    $(function () {
+
+        /***********上传apk文件 begin ********/
+        $("#uploadify").uploadifive({
+            'auto': true,
+            'uploadScript': '/admin/Tools/UploadAction',
+            'buttonText': '选择APK文件',
+            'fileTypeDesc': 'APK',
+            'fileType': '*.apk',
+            'fileSizeLimit': '50MB',
+            'height': 30,
+            'queueID': 'uploadify_queue',
+            'width': 100,
+            'formData': { 'operation': 'apk', 'upload_type': 'APK' },
+            'progressData': 'speed', //显示进度的百分比（percentage）或速度（speed）
+            'multi': false,
+            'queueSizeLimit': 1,//一次可上传的数量
+            'onUploadComplete': function (file, data) {
+                //alert('文件 ' + file.name + ' 上传成功.详细信息： ' + response + ':' + data);
+                data = $.parseJSON(data);
+                if (data.msg == 1) {
+                    console.log(data.down_url + "---" + data.size + "---" + data.md5 + "---" + data.version);
+                    $("#DownUrl").val(data.down_url);
+                    $("#Size").val(data.size);
+                    $("#MD5").val(data.md5)
+                    $("#Version").val(data.version);
+                    $("#VersionCode").val(data.version_code);
+                    $("#LogoImg").val(data.logo_img);
+                    $("#uploadify_queue").attr("style", "display:none");
+                }
+                else {
+                    layer.msg(data.msgbox, { icon: 2 });
+                }
+
+                $("input[type='submit']").removeAttr("disabled");
+
+            },
+            onFallback: function () {
+                $("#noUpload").show();
+                $("#uploadify").hide();
+            },
+            onUpload: function (file) {
+                //document.getElementById("btn_commit").disabled = true;//当开始上传文件，要防止上传未完成而表单被提交
+                $("input[type='submit']").attr("disabled", "disabled");
+            }
+
+        });
+        /***********上传apk文件 end ********/
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+</script>
+}
+<!--底部脚本 end-->

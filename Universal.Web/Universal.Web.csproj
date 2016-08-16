@@ -202,6 +202,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AppVersionController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelAppVersion.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
@@ -258,6 +260,8 @@
     <Content Include="Assets\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Areas\Admin\Views\SysLog\LogException.cshtml" />
     <Content Include="Areas\Admin\Views\SysLog\LogMethod.cshtml" />
+    <Content Include="Areas\Admin\Views\AppVersion\EditAndroid.cshtml" />
+    <Content Include="Areas\Admin\Views\AppVersion\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

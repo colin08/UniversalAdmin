@@ -90,6 +90,12 @@
                     </text>
                      }
 
+                    @if (CheckAdminPower("AppVersion/Index", false))
+                    {
+                    <li>
+                        <a class="J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
+                    </li>
+                    }
                     <li>
                         <a class="J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
                     </li>
