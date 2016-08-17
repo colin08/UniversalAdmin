@@ -17,51 +17,39 @@ namespace Universal.DataCore.Migrations
 
         protected override void Seed(Universal.DataCore.EFDBContext context)
         {
-            var SysRoles_1 = context.SysRoles.Where(p=>p.RoleName == "管理员").FirstOrDefault();
-            if(SysRoles_1 == null)
-            {
-                SysRoles_1 = new Entity.SysRole()
-                {
+            var role_list = new List<Entity.SysRole>() {
+                new Entity.SysRole() {
                     AddTime = DateTime.Now,
                     RoleName = "管理员",
                     RoleDesc = "管理员组",
                     IsAdmin = true
-                };
-                context.SysRoles.Add(SysRoles_1);
-            }
-
-            var SysRoles_2 = context.SysRoles.Where(p => p.RoleName == "编辑用户").FirstOrDefault();
-            if (SysRoles_2 == null)
-            {
-                SysRoles_2 = new Entity.SysRole()
-                {
+                },
+                new Entity.SysRole() {
                     AddTime = DateTime.Now,
                     RoleName = "编辑用户",
                     RoleDesc = "编辑用户组",
                     IsAdmin = false
-                };
-                context.SysRoles.Add(SysRoles_2);
-            }
+                }
+            };
+
+            role_list.ForEach(p => context.SysRoles.AddOrUpdate(x => x.RoleName,p));
+            context.SaveChanges();
+
+            var role_root = context.SysRoles.Where(p => p.RoleName == "管理员").FirstOrDefault();
+            string pwd = SecureHelper.MD5("admin");
+            var user_root = new Entity.SysUser() {
+                LastLoginTime = DateTime.Now,
+                RegTime = DateTime.Now,
+                NickName = "超级管理员",
+                Password = pwd,
+                Status = true,
+                SysRole = role_root,
+                UserName = "admin",
+                Gender = Entity.UserGender.男,
+                Avatar = ""
+            };
+            context.SysUsers.AddOrUpdate(p => p.UserName, user_root);
             
-            var SysUser_Root = context.SysUsers.Where(p => p.UserName == "admin").FirstOrDefault();
-            if(SysUser_Root == null)
-            {
-                string pwd = SecureHelper.MD5("admin");
-                SysUser_Root = new Entity.SysUser() {
-                    LastLoginTime = DateTime.Now,
-                    RegTime = DateTime.Now,
-                    NickName = "超级管理员",
-                    Password = pwd,
-                    Status = true,
-                    SysRole = SysRoles_1,
-                    UserName = "admin",
-                    Gender = Entity.UserGender.男,
-                    Avatar= ""
-                };
-                context.SysUsers.Add(SysUser_Root);
-            }
-
-
 
             context.SaveChanges();
         }
