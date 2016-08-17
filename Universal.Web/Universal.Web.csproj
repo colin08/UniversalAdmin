@@ -113,6 +113,7 @@
     <Content Include="Assets\css\patterns\header-profile.png" />
     <Content Include="Assets\css\patterns\shattered.png" />
     <Content Include="Assets\css\plugins\markdown\bootstrap-markdown.min.css" />
+    <Content Include="Assets\css\plugins\simditor\simditor-markdown.css" />
     <Content Include="Assets\css\plugins\simditor\simditor.css" />
     <Content Include="Assets\css\plugins\toastr\toastr.min.css" />
     <Content Include="Assets\css\style.min.css" />
@@ -154,11 +155,14 @@
     <Content Include="Assets\js\plugins\My97DatePicker\WdatePicker.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.min.js" />
+    <Content Include="Assets\js\plugins\simditor\marked.js" />
     <Content Include="Assets\js\plugins\simditor\module.js" />
     <Content Include="Assets\js\plugins\simditor\module.min.js" />
     <Content Include="Assets\js\plugins\simditor\simditor-autosave.js" />
+    <Content Include="Assets\js\plugins\simditor\simditor-markdown.js" />
     <Content Include="Assets\js\plugins\simditor\simditor.js" />
     <Content Include="Assets\js\plugins\simditor\simditor.min.js" />
+    <Content Include="Assets\js\plugins\simditor\to-markdown.js" />
     <Content Include="Assets\js\plugins\simditor\uploader.js" />
     <Content Include="Assets\js\plugins\simditor\uploader.min.js" />
     <Content Include="Assets\js\plugins\slimscroll\jquery.slimscroll.min.js" />
