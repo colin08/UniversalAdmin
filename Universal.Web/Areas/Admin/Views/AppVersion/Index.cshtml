@@ -30,13 +30,11 @@
 <!--Main Body-->
 
 <div class="row">
-    <div class="col-sm-1">
-        <p></p>
-    </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4">        
+        <a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/AppVersion/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         <div class="btn-group">
             <button type="button" data-toggle="dropdown" class="btn btn-white dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-                <i class="glyphicon glyphicon-plus"></i>添加 <span class="caret"></span>
+                <i class="glyphicon glyphicon-plus"></i> 添加 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li>
@@ -47,9 +45,8 @@
                 </li>
             </ul>
         </div>
-        <a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/AppVersion/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-2">
         <p></p>
     </div>
     <div class="col-sm-2">
@@ -95,7 +92,7 @@
                     <td>@item.VersionCode</td>
                     <td>@item.AddTime</td>
                     <td>
-                        <a class="btn btn-sm btn-white" href="/Admin/AppVersion/EditAndroid?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                        <a class="btn btn-sm btn-white" href="/Admin/AppVersion/@(item.Platforms == Universal.DataCore.Entity.APPVersionPlatforms.Android ? "EditAndroid" : "EditIOS")?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                     </td>
                 </tr>
             }

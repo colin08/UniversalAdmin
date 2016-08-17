@@ -1,6 +1,6 @@
 ﻿@model Universal.DataCore.Entity.AppVersion
 @{
-    ViewBag.Title = "编辑安卓版本信息";
+    ViewBag.Title = "编辑苹果版本信息";
 }
 
 <!--头部脚本-->
@@ -15,11 +15,11 @@
 @section nav
 {
 <div class="col-sm-4">
-    <h2>编辑安卓版本信息</h2>
+    <h2>编辑苹果版本信息</h2>
     <ol class="breadcrumb">
         <li>主页</li>
         <li><a href="@Url.Action("Index", "AppVersion", new { Area = "Admin" })">APP版本列表</a></li>
-        <li><strong>编辑安卓版本信息</strong></li>
+        <li><strong>编辑苹果版本信息</strong></li>
     </ol>
 </div>
 <a href="@Url.Action("Index", "AppVersion", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
@@ -41,11 +41,20 @@
                 @Html.HiddenFor(p=>p.Size)
                 @Html.HiddenFor(p=>p.MD5)
                 @Html.HiddenFor(p=>p.LogoImg)
-                @Html.HiddenFor(p=>p.Version)
                 @Html.HiddenFor(p=>p.VersionCode)
                 @Html.HiddenFor(p=>p.AddTime)
+
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">APK包</label>
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.APPType)</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.APPType, ViewData["TypeList"] as List<SelectListItem>, new { @class = "form-control" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.APPType)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">IPA包</label>
 
                     <div class="col-sm-6">
                         @Html.TextBoxFor(p=>p.DownUrl,new { @class = "form-control",@readonly= "readonly"})
@@ -55,6 +64,24 @@
                     </div>
                 </div>
                 
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.LinkUrl)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.LinkUrl, new { @class = "form-control", placeholder = "App Store链接地址" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.LinkUrl)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Version)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Version, new { @class = "form-control", placeholder = "版本号" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Version)</label>
+                </div>
                 <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
@@ -109,14 +136,14 @@
         $("#uploadify").uploadifive({
             'auto': true,
             'uploadScript': '/admin/Tools/UploadAction',
-            'buttonText': '选择APK文件',
-            'fileTypeDesc': 'APK',
-            'fileType': '*.apk',
+            'buttonText': '选择IPA文件',
+            'fileTypeDesc': 'IPA',
+            'fileType': '*.ipa',
             'fileSizeLimit': '50MB',
             'height': 30,
             'queueID': 'uploadify_queue',
             'width': 100,
-            'formData': { 'operation': 'apk', 'upload_type': 'APK' },
+            'formData': { 'operation': 'ipa', 'upload_type': 'IPA' },
             'progressData': 'speed', //显示进度的百分比（percentage）或速度（speed）
             'multi': false,
             'queueSizeLimit': 1,//一次可上传的数量
@@ -124,14 +151,11 @@
                 //alert('文件 ' + file.name + ' 上传成功.详细信息： ' + response + ':' + data);
                 data = $.parseJSON(data);
                 if (data.msg == 1) {
-                    console.log(data.down_url + "---" + data.size + "---" + data.md5 + "---" + data.version);
-                    $("#DownUrl").val(data.down_url);
-                    $("#Size").val(data.size);
-                    $("#MD5").val(data.md5)
-                    $("#Version").val(data.version);
-                    $("#VersionCode").val(data.version_code);
-                    $("#LogoImg").val(data.logo_img);
-                    $("#uploadify_queue").attr("style", "display:none");
+                    $("#DownUrl").val(data.data);
+                    $("#Size").val("0");
+                    $("#MD5").val("");
+                    $("#LogoImg").val("");
+                    $("#VersionCode").val("0");
                 }
                 else {
                     layer.msg(data.msgbox, { icon: 2 });

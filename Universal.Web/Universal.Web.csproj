@@ -262,6 +262,7 @@
     <Content Include="Areas\Admin\Views\SysLog\LogMethod.cshtml" />
     <Content Include="Areas\Admin\Views\AppVersion\EditAndroid.cshtml" />
     <Content Include="Areas\Admin\Views\AppVersion\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AppVersion\EditIOS.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
