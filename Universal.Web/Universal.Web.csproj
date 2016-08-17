@@ -113,6 +113,7 @@
     <Content Include="Assets\css\patterns\header-profile.png" />
     <Content Include="Assets\css\patterns\shattered.png" />
     <Content Include="Assets\css\plugins\markdown\bootstrap-markdown.min.css" />
+    <Content Include="Assets\css\plugins\simditor\simditor.css" />
     <Content Include="Assets\css\plugins\toastr\toastr.min.css" />
     <Content Include="Assets\css\style.min.css" />
     <Content Include="Assets\error\ie.html" />
@@ -151,6 +152,14 @@
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\datepicker.css" />
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Assets\js\plugins\My97DatePicker\WdatePicker.js" />
+    <Content Include="Assets\js\plugins\simditor\hotkeys.js" />
+    <Content Include="Assets\js\plugins\simditor\hotkeys.min.js" />
+    <Content Include="Assets\js\plugins\simditor\module.js" />
+    <Content Include="Assets\js\plugins\simditor\module.min.js" />
+    <Content Include="Assets\js\plugins\simditor\simditor.js" />
+    <Content Include="Assets\js\plugins\simditor\simditor.min.js" />
+    <Content Include="Assets\js\plugins\simditor\uploader.js" />
+    <Content Include="Assets\js\plugins\simditor\uploader.min.js" />
     <Content Include="Assets\js\plugins\slimscroll\jquery.slimscroll.min.js" />
     <Content Include="Assets\js\plugins\toastr\toastr.min.js" />
     <Content Include="Assets\js\plugins\uploadifive\jquery.uploadifive.js" />
@@ -263,6 +272,9 @@
     <Content Include="Areas\Admin\Views\AppVersion\EditAndroid.cshtml" />
     <Content Include="Areas\Admin\Views\AppVersion\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AppVersion\EditIOS.cshtml" />
+    <Content Include="Assets\css\plugins\simditor\editor.scss" />
+    <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
+    <Content Include="Assets\css\plugins\simditor\simditor.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -7,6 +7,7 @@
 @section head
 {
 <link href="~/Assets/js/plugins/uploadifive/uploadifive.css" rel="stylesheet" />
+<link href="~/Assets/css/plugins/simditor/simditor.css" rel="stylesheet" />
 }
 
 <!--头部脚本 end-->
@@ -60,10 +61,10 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p=>p.Content)</label>
 
-                    <div class="col-sm-3">
-                        @Html.TextAreaFor(p => p.Content, new { @class = "form-control", placeholder = "版本更新内容", style = "height:100px" })
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(p => p.Content, new { @class = "form-control", placeholder = "版本更新内容"})
                     </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p=>p.Content)</label>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p=>p.Content)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
                 
@@ -101,6 +102,11 @@
 @section foot
 {
 <script src="~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"></script>
+<!-- 富文本编辑器 -->
+<script src="~/Assets/js/plugins/simditor/module.min.js"></script>
+<script src="~/Assets/js/plugins/simditor/hotkeys.min.js"></script>
+<script src="~/Assets/js/plugins/simditor/uploader.min.js"></script>
+<script src="~/Assets/js/plugins/simditor/simditor.min.js"></script>
 <script>
 
     $(function () {
@@ -151,6 +157,9 @@
 
         });
         /***********上传apk文件 end ********/
+
+
+        InitTextArea("Content");
 
         @if(!ViewData.ModelState.IsValid)
         {

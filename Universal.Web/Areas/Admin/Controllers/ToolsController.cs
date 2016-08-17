@@ -160,18 +160,19 @@ namespace Universal.Web.Areas.Admin.Controllers
                     return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
                 case Admin_Upload_Type.TxtArea: //富文本编辑器中的上传
                     WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
-                    Hashtable ht2 = new Hashtable();
+                    SimditorResult result = new SimditorResult();
                     if (WorkContext.AjaxStringEntity.msg == 1)
                     {
-                        ht2["error"] = 0;
-                        ht2["url"] = WorkContext.AjaxStringEntity.data;
+                        result.success = true;
+                        result.msg = "上传成功";
+                        result.file_path = WorkContext.AjaxStringEntity.data;
                     }
                     else
                     {
-                        ht2["error"] = 0;
-                        ht2["message"] = WorkContext.AjaxStringEntity.msgbox;
+                        result.success = false;
+                        result.msg = WorkContext.AjaxStringEntity.msgbox;
                     }
-                    return Json(ht2, JsonRequestBehavior.AllowGet);
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 case Admin_Upload_Type.OnePicture:
                 case Admin_Upload_Type.MorePicture:
                     if (!string.IsNullOrWhiteSpace(file_ext))
@@ -190,5 +191,19 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
         }
 
+        
+
+    }
+
+    /// <summary>
+    /// 富文本编辑器上传需要返回的格式
+    /// </summary>
+    public class SimditorResult
+    {
+        public bool success { get; set; }
+
+        public string msg { get; set; }
+
+        public string file_path { get; set; }
     }
 }

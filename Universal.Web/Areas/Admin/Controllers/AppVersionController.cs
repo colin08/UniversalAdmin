@@ -88,7 +88,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         [AdminPermission("App版本","保存安卓编辑信息")]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         [HttpPost]
         public ActionResult EditAndroid(DataCore.Entity.AppVersion entity)
         {
@@ -169,7 +169,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         [AdminPermission("App版本", "保存苹果编辑信息")]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         [HttpPost]
         public ActionResult EditIOS(DataCore.Entity.AppVersion entity)
         {

@@ -164,3 +164,27 @@ function configm_before() {
         layer.load(2);
     }
 }
+
+function InitTextArea(TextAreaID)
+{
+    /** 富文本编辑器 begin  **/
+    var toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
+    var editor = new Simditor({
+        textarea: $('#' + TextAreaID + ''),
+        toolbar: toolbar,
+        defaultImage: '/Assets/img/default_avatar.jpg', //编辑器插入图片时使用的默认图片  
+        upload: {
+            url: '/Admin/Tools/UploadAction',
+            params: { operation: "area", upload_type: "TxtArea" },
+            fileKey: 'imgFile', //服务器端获取文件数据的参数名  
+            connectionCount: 3,
+            leaveConfirm: '正在上传文件',
+        },
+        success: function (data) {
+            console.log(data);
+            //alert(data);
+        }
+    });
+
+    /** 富文本编辑器 end  **/
+}
