@@ -171,6 +171,7 @@ function InitTextArea(TextAreaID)
     var toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment'];
     var editor = new Simditor({
         textarea: $('#' + TextAreaID + ''),
+        autosave: 'editor-'+TextAreaID,
         toolbar: toolbar,
         defaultImage: '/Assets/img/default_avatar.jpg', //编辑器插入图片时使用的默认图片  
         upload: {
