@@ -88,10 +88,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         public JsonResult UploadAction(HttpPostedFileBase fileData)
         {
-            if (fileData == null)
-            {
-                fileData = HttpContext.Request.Files["imgFile"];
-            }
+            fileData = fileData ?? HttpContext.Request.Files["imgFile"];
 
             string file_name = fileData.FileName;
             string file_ext = "";
