@@ -76,6 +76,11 @@ namespace Universal.DataCore
         /// <summary>
         /// 
         /// </summary>
+        public DbSet<Entity.House> Houses { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

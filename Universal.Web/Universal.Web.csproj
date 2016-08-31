@@ -113,12 +113,21 @@
     <Content Include="Assets\css\patterns\header-profile.png" />
     <Content Include="Assets\css\patterns\shattered.png" />
     <Content Include="Assets\css\plugins\markdown\bootstrap-markdown.min.css" />
+    <Content Include="Assets\css\plugins\perfect-scrollbar\perfect-scrollbar.css" />
+    <Content Include="Assets\css\plugins\perfect-scrollbar\perfect-scrollbar.min.css" />
     <Content Include="Assets\css\plugins\simditor\simditor-markdown.css" />
     <Content Include="Assets\css\plugins\simditor\simditor.css" />
     <Content Include="Assets\css\plugins\toastr\toastr.min.css" />
+    <Content Include="Assets\css\site.css" />
     <Content Include="Assets\css\style.min.css" />
     <Content Include="Assets\error\ie.html" />
     <Content Include="Assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="Assets\images\bg.jpg" />
+    <Content Include="Assets\images\bg_color.jpg" />
+    <Content Include="Assets\images\btn_bg.png" />
+    <Content Include="Assets\images\line.png" />
+    <Content Include="Assets\images\search.png" />
+    <Content Include="Assets\images\user_border.png" />
     <Content Include="Assets\img\default_avatar.jpg" />
     <Content Include="Assets\img\favicon.ico" />
     <Content Include="Assets\js\bootstrap.min.js" />
@@ -153,6 +162,7 @@
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\datepicker.css" />
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Assets\js\plugins\My97DatePicker\WdatePicker.js" />
+    <Content Include="Assets\js\plugins\perfect-scrollbar\perfect-scrollbar.min.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.min.js" />
     <Content Include="Assets\js\plugins\simditor\marked.js" />
@@ -235,10 +245,12 @@
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
     <Compile Include="Controllers\APIController.cs" />
+    <Compile Include="Controllers\CheckController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ModelAllHouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +292,10 @@
     <Content Include="Assets\css\plugins\simditor\editor.scss" />
     <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
     <Content Include="Assets\css\plugins\simditor\simditor.scss" />
+    <Content Include="Views\Check\Visitor.cshtml" />
+    <Content Include="Views\Check\Message.cshtml" />
+    <Content Include="Views\Check\Outside.cshtml" />
+    <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -289,7 +305,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">

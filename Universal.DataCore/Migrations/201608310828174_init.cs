@@ -149,6 +149,52 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
+                "dbo.House",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Type = c.Int(nullable: false),
+                        Name = c.String(nullable: false, maxLength: 10),
+                        Gender = c.Int(nullable: false),
+                        Age = c.Int(nullable: false),
+                        Telphone = c.String(nullable: false, maxLength: 20),
+                        Address = c.String(nullable: false, maxLength: 500),
+                        VisitCount = c.Int(nullable: false),
+                        ChengYuanGouCheng = c.Int(nullable: false),
+                        VisitTime = c.Int(nullable: false),
+                        Area = c.Int(nullable: false),
+                        Job = c.Int(nullable: false),
+                        JiaoTong = c.Int(nullable: false),
+                        MeiTi = c.Int(nullable: false),
+                        YinSu = c.Int(nullable: false),
+                        YuSuan = c.Int(nullable: false),
+                        Kaolv = c.Int(nullable: false),
+                        XuQiu = c.Int(nullable: false),
+                        MianJi_GongYu = c.Int(nullable: false),
+                        TouZiCiShu = c.Int(nullable: false),
+                        GuanZhuWenTi_GongYu = c.Int(nullable: false),
+                        YongTu = c.Int(nullable: false),
+                        TouZiE = c.Int(nullable: false),
+                        YiXiangPuXing = c.Int(nullable: false),
+                        TouZiNum = c.Int(nullable: false),
+                        MianJi_ShangPu = c.Int(nullable: false),
+                        GuanZhuWenTi_ShangPu = c.Int(nullable: false),
+                        HuXing = c.Int(nullable: false),
+                        XinLiZongJia = c.Int(nullable: false),
+                        JiaTingJieGou = c.Int(nullable: false),
+                        ZhiYeCiShu = c.Int(nullable: false),
+                        MianJi_ZhuZhai = c.Int(nullable: false),
+                        GuanZhuWenTi_ZhuZhai = c.Int(nullable: false),
+                        LaiDianRiQi = c.String(nullable: false),
+                        KeHuJiBie = c.Int(nullable: false),
+                        ZhiYeGuWen = c.String(nullable: false),
+                        GenZongQingKuang = c.String(maxLength: 500),
+                        LaiFangMiaoShu = c.String(maxLength: 500),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
                 "dbo.SysLogException",
                 c => new
                     {
@@ -198,6 +244,7 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.Demo", new[] { "AddUser_ID" });
             DropTable("dbo.SysLogMethod");
             DropTable("dbo.SysLogException");
+            DropTable("dbo.House");
             DropTable("dbo.Feedback");
             DropTable("dbo.DemoDept");
             DropTable("dbo.DemoAlbum");
