@@ -13,7 +13,7 @@
 .body .rightbody .rightbg{overflow-y: scroll;overflow-x: hidden; width:120px;float:right;margin-right:10px;height:610px;background:url(/Assets/images/user_border.png) no-repeat;background-size:contain; background-size:100px;}
 .body .rightbody .rightbg .search{width:120px;float:left;margin:0 auto; position:relative;}
 .body .rightbody .rightbg .search input{margin:15px 0 0 5px; width:68px;height:20px;padding-left:20px;outline:none; background-color:#999387;border:0; border-radius:10px;-moz-border-radius: 10px;-webkit-border-radius: 10px;}
-.body .rightbody .rightbg .search a{height:20px;width:20px;position:absolute;top:17px;left:5px; background:url(/Assets/images/search.png) no-repeat;background-size:contain; cursor:pointer;}
+.body .rightbody .rightbg .search a{height:20px;width:20px;position:absolute;top:17px;left:5px; background:url(/Assets/images/search.png) no-repeat;background-size:contain; cursor:pointer;text-decoration:none;}
 .body .rightbody .rightbg .customers{text-align:center;margin-top:80px;font-family:'Adobe Fan Heiti Std';font-weight:bold;line-height:25px;font-size:15px; color:#705e49;}
 .body .rightbody .rightbg .customers div{width:100px;height:25px;margin-top:30px;background:url(/Assets/images/line.png) no-repeat center 23px; background-size:90px;}
 
