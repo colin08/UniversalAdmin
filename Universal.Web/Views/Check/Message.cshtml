@@ -12,146 +12,148 @@
     <link href="~/Assets/css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="top"></div>
+    <div class="left">
+        <ul class="ul_btn">
+            <li><a href="/Check/Visitor">来客登记表</a></li>
+            <li><a href="/Check/Message" class="cur">来电登记表</a></li>
+            <li><a href="/Check/OutSide">外拓登记表</a></li>
+        </ul>
+    </div>
     
-    <div class="middle">
-        <div class="body">
-            <div class="leftbody">
-                <div class="hrefs">
-                    <div onclick="javascript: location.href = '/Check/Visitor';">来客登记表</div>
-                    <div onclick="javascript: location.href = '/Check/Message';" class="cur">来电登记表</div>
-                    <div onclick="javascript: location.href = '/Check/OutSide';">外拓登记表</div>
-                </div>
+    <div class="center_title">
+        来电登记表
+    </div>
+
+    <div class="center">
+        <form action="/Check/Abc" method="post">
+            @Html.HiddenFor(p=>p.Type,new { @Value="2"})
+            @Html.HiddenFor(p=>p.Age,new { @Value="2"})
+            @Html.HiddenFor(p => p.ID)
+            @Html.HiddenFor(p => p.AddTime)
+            @Html.AntiForgeryToken()
+            <table class="tab">
+                <tr>
+                    <td><span>姓&nbsp;&nbsp;名:</span></td>
+                    <td>@Html.TextBoxFor(p => p.Name) @Html.ValidationMessageFor(p => p.Name)</td>
+                    <td><span>性&nbsp;&nbsp;别:</span></td>
+                    <td>@Html.DropDownListFor(p => p.Gender, ViewData["Genders"] as List<SelectListItem>)</td>
+                    <td><span>地&nbsp;&nbsp;址:</span></td>
+                    <td>@Html.TextBoxFor(p => p.Address) @Html.ValidationMessageFor(p => p.Address)</td>
+                    <td><span>电&nbsp;&nbsp;话:</span></td>
+                    <td>@Html.TextBoxFor(p => p.Telphone) @Html.ValidationMessageFor(p => p.Telphone)</td>
+                </tr>
+                <tr>
+                    <td><span>来访时间:</span></td>
+                    <td>@Html.DropDownListFor(p => p.VisitTime, ViewData["visitTimes"] as List<SelectListItem>)</td>
+                    <td><span>区&nbsp;&nbsp;域:</span></td>
+                    <td>@Html.DropDownListFor(p => p.Area, ViewData["areas"] as List<SelectListItem>)</td>
+                    <td><span>职&nbsp;&nbsp;业:</span></td>
+                    <td>@Html.DropDownListFor(p => p.Job, ViewData["jobs"] as List<SelectListItem>)</td>
+                    <td><span>媒体渠道:</span></td>
+                    <td>@Html.DropDownListFor(p => p.MeiTi, ViewData["MeiTis"] as List<SelectListItem>)</td>
+                </tr>
+                <tr>
+                    <td><span>置业因素:</span></td>
+                    <td>@Html.DropDownListFor(p => p.YinSu, ViewData["YinSus"] as List<SelectListItem>)</td>
+                    <td><span>预&nbsp;&nbsp;算:</span></td>
+                    <td>@Html.DropDownListFor(p => p.YuSuan, ViewData["YuSuans"] as List<SelectListItem>)</td>
+                    <td><span>考虑因素:</span></td>
+                    <td>@Html.DropDownListFor(p => p.Kaolv, ViewData["KaoLvs"] as List<SelectListItem>)</td>
+                    <td><span>置业需求:</span></td>
+                    <td>@Html.DropDownListFor(p => p.XuQiu, ViewData["XuQius"] as List<SelectListItem>,new { @id="sel_xq"})</td>
+                </tr>
+                <!--公寓 Begin-->
+                <tr class="gongyu"  style="display:none;">
+                    <td><span>意向建面:</span></td>
+                    <td>@Html.DropDownListFor(p => p.MianJi_GongYu, ViewData["mianji_zhuzhais"] as List<SelectListItem>)</td>
+                    <td><span>投资次数:</span></td>
+                    <td>@Html.DropDownListFor(p => p.TouZiCiShu, ViewData["touzinums"] as List<SelectListItem>)</td>
+                    <td><span>关注问题:</span></td>
+                    <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_GongYu, ViewData["guanzhuwenti_gongyus"] as List<SelectListItem>)</td>
+                    <td><span>用&nbsp;&nbsp;途:</span></td>
+                    <td>@Html.DropDownListFor(p => p.YongTu, ViewData["yongtus"] as List<SelectListItem>)</td>
+                </tr>
+                <tr class="gongyu"  style="display:none;">
+                    <td><span>意向投资额:</span></td>
+                    <td>@Html.DropDownListFor(p => p.TouZiE, ViewData["touzies"] as List<SelectListItem>)</td>
+                </tr>
+                <!--公寓 End-->
+                <!-- 商业 Begin -->
+                <tr class="shangye">
+                    <td><span>意向铺型:</span></td>
+                    <td>@Html.DropDownListFor(p => p.YiXiangPuXing, ViewData["yixiangpuxings"] as List<SelectListItem>)</td>
+                    <td><span>投资次数:</span></td>
+                    <td>@Html.DropDownListFor(p => p.TouZiNum, ViewData["touzinums"] as List<SelectListItem>)</td>
+                    <td><span>需求面积:</span></td>
+                    <td>@Html.DropDownListFor(p => p.MianJi_ShangPu, ViewData["mianji_shangpus"] as List<SelectListItem>)</td>
+                    <td><span>关注问题:</span></td>
+                    <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_ShangPu, ViewData["guanzhuwenti_shangpus"] as List<SelectListItem>)</td>
+                </tr>
+
+                <tr class="shangye">
+                    <td><span>用&nbsp;&nbsp;途</span></td>
+                    <td>@Html.DropDownListFor(p => p.YongTu, ViewData["yongtus"] as List<SelectListItem>)</td>
+                </tr>
+                <!-- 商业 End -->
+                <!-- 住宅 Begin -->
+                <tr class="zhuzhai" style="display:none;">
+                    <td><span>户&nbsp;&nbsp;型:</span></td>
+                    <td>@Html.DropDownListFor(p => p.HuXing, ViewData["huxings"] as List<SelectListItem>)</td>
+                    <td><span>置业次数:</span></td>
+                    <td>@Html.DropDownListFor(p => p.ZhiYeCiShu, ViewData["touzinums"] as List<SelectListItem>)</td>
+                    <td><span>需求面积:</span></td>
+                    <td>@Html.DropDownListFor(p => p.MianJi_ZhuZhai, ViewData["mianji_zhuzhais"] as List<SelectListItem>)</td>
+                    <td><span>心里总价:</span></td>
+                    <td>@Html.DropDownListFor(p => p.XinLiZongJia, ViewData["xinlizongjias"] as List<SelectListItem>)</td>
+                </tr>
+
+                <tr class="zhuzhai" style="display:none;">
+                    <td><span>家庭结构:</span></td>
+                    <td>@Html.DropDownListFor(p => p.JiaTingJieGou, ViewData["jiatingjiegous"] as List<SelectListItem>)</td>
+                    <td><span>关注问题:</span></td>
+                    <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_ZhuZhai, ViewData["guanzhuwenti_zhuzhais"] as List<SelectListItem>)</td>
+                </tr>
+
+                <!-- 住宅 End -->
+                <tr>
+                    <td><span>客户级别:</span></td>
+                    <td>@Html.DropDownListFor(p => p.KeHuJiBie, ViewData["kehujibies"] as List<SelectListItem>)</td>
+                    <td><span>置业顾问:</span></td>
+                    <td>@Html.TextBoxFor(p => p.ZhiYeGuWen) @Html.ValidationMessageFor(p => p.ZhiYeGuWen)</td>
+                    <td><span>来电日期:</span></td>
+                    <td>@Html.TextBoxFor(p => p.LaiDianRiQi) @Html.ValidationMessageFor(p => p.LaiDianRiQi)</td>
+                </tr>
+
+                <tr style="margin-bottom:10px;">
+                    <td><span>跟踪情况:</span></td>
+                    <td colspan="7">@Html.TextAreaFor(p => p.GenZongQingKuang, new { rows = "4", cols = "98" }) @Html.ValidationMessageFor(p => p.GenZongQingKuang)</td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="text-align:center;"><input type="submit" value="保存" /></td>
+                    <td colspan="4" style="text-align:center;"><input type="button" value="关闭"  onclick="javascript: location.href = 'uniwebview://close'"  /></td>
+                </tr>
+
+            </table>
+        </form>
+</div>
+
+    <div class="right">
+        <div class="right_center">
+            <div class="search">
+                <a href="javascript:void(0)" onclick="go_search()">&nbsp;</a>
+                <input type="text" id="txt_search">
             </div>
 
-            <div class="centerBody">
-                <div class="title">来电登记表</div>
-                <form action="/Check/Abc" method="post">
-                    @Html.HiddenFor(p=>p.Type,new { @Value="2"})
-                    @Html.HiddenFor(p=>p.Age,new { @Value="2"})
-                    @Html.HiddenFor(p => p.ID)
-                    @Html.HiddenFor(p => p.AddTime)
-                    @Html.AntiForgeryToken()
-                    <table>
-                        <tr>
-                            <td><span>姓&nbsp;&nbsp;名:</span></td>
-                            <td>@Html.TextBoxFor(p => p.Name) @Html.ValidationMessageFor(p => p.Name)</td>
-                            <td><span>性&nbsp;&nbsp;别:</span></td>
-                            <td>@Html.DropDownListFor(p => p.Gender, ViewData["Genders"] as List<SelectListItem>)</td>
-                            <td><span>地&nbsp;&nbsp;址:</span></td>
-                            <td>@Html.TextBoxFor(p => p.Address) @Html.ValidationMessageFor(p => p.Address)</td>
-                            <td><span>电&nbsp;&nbsp;话:</span></td>
-                            <td>@Html.TextBoxFor(p => p.Telphone) @Html.ValidationMessageFor(p => p.Telphone)</td>
-                        </tr>
-                        <tr>
-                            <td><span>来访时间:</span></td>
-                            <td>@Html.DropDownListFor(p => p.VisitTime, ViewData["visitTimes"] as List<SelectListItem>)</td>
-                            <td><span>区&nbsp;&nbsp;域:</span></td>
-                            <td>@Html.DropDownListFor(p => p.Area, ViewData["areas"] as List<SelectListItem>)</td>
-                            <td><span>职&nbsp;&nbsp;业:</span></td>
-                            <td>@Html.DropDownListFor(p => p.Job, ViewData["jobs"] as List<SelectListItem>)</td>
-                            <td><span>媒体渠道:</span></td>
-                            <td>@Html.DropDownListFor(p => p.MeiTi, ViewData["MeiTis"] as List<SelectListItem>)</td>
-                        </tr>
-                        <tr>
-                            <td><span>置业因素:</span></td>
-                            <td>@Html.DropDownListFor(p => p.YinSu, ViewData["YinSus"] as List<SelectListItem>)</td>
-                            <td><span>预&nbsp;&nbsp;算:</span></td>
-                            <td>@Html.DropDownListFor(p => p.YuSuan, ViewData["YuSuans"] as List<SelectListItem>)</td>
-                            <td><span>考虑因素:</span></td>
-                            <td>@Html.DropDownListFor(p => p.Kaolv, ViewData["KaoLvs"] as List<SelectListItem>)</td>
-                            <td><span>置业需求:</span></td>
-                            <td>@Html.DropDownListFor(p => p.XuQiu, ViewData["XuQius"] as List<SelectListItem>,new { @id="sel_xq"})</td>
-                        </tr>
-                        <!--公寓 Begin-->
-                        <tr class="gongyu"  style="display:none;">
-                            <td><span>意向建面:</span></td>
-                            <td>@Html.DropDownListFor(p => p.MianJi_GongYu, ViewData["mianji_zhuzhais"] as List<SelectListItem>)</td>
-                            <td><span>投资次数:</span></td>
-                            <td>@Html.DropDownListFor(p => p.TouZiCiShu, ViewData["touzinums"] as List<SelectListItem>)</td>
-                            <td><span>关注问题:</span></td>
-                            <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_GongYu, ViewData["guanzhuwenti_gongyus"] as List<SelectListItem>)</td>
-                            <td><span>用&nbsp;&nbsp;途:</span></td>
-                            <td>@Html.DropDownListFor(p => p.YongTu, ViewData["yongtus"] as List<SelectListItem>)</td>
-                        </tr>
-                        <tr class="gongyu"  style="display:none;">
-                            <td><span>意向投资额:</span></td>
-                            <td>@Html.DropDownListFor(p => p.TouZiE, ViewData["touzies"] as List<SelectListItem>)</td>
-                        </tr>
-                        <!--公寓 End-->
-                        <!-- 商业 Begin -->
-                        <tr class="shangye">
-                            <td><span>意向铺型:</span></td>
-                            <td>@Html.DropDownListFor(p => p.YiXiangPuXing, ViewData["yixiangpuxings"] as List<SelectListItem>)</td>
-                            <td><span>投资次数:</span></td>
-                            <td>@Html.DropDownListFor(p => p.TouZiNum, ViewData["touzinums"] as List<SelectListItem>)</td>
-                            <td><span>需求面积:</span></td>
-                            <td>@Html.DropDownListFor(p => p.MianJi_ShangPu, ViewData["mianji_shangpus"] as List<SelectListItem>)</td>
-                            <td><span>关注问题:</span></td>
-                            <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_ShangPu, ViewData["guanzhuwenti_shangpus"] as List<SelectListItem>)</td>
-                        </tr>
-
-                        <tr class="shangye">
-                            <td><span>用&nbsp;&nbsp;途</span></td>
-                            <td>@Html.DropDownListFor(p => p.YongTu, ViewData["yongtus"] as List<SelectListItem>)</td>
-                        </tr>
-                        <!-- 商业 End -->
-                        <!-- 住宅 Begin -->
-                        <tr class="zhuzhai" style="display:none;">
-                            <td><span>户&nbsp;&nbsp;型:</span></td>
-                            <td>@Html.DropDownListFor(p => p.HuXing, ViewData["huxings"] as List<SelectListItem>)</td>
-                            <td><span>置业次数:</span></td>
-                            <td>@Html.DropDownListFor(p => p.ZhiYeCiShu, ViewData["touzinums"] as List<SelectListItem>)</td>
-                            <td><span>需求面积:</span></td>
-                            <td>@Html.DropDownListFor(p => p.MianJi_ZhuZhai, ViewData["mianji_zhuzhais"] as List<SelectListItem>)</td>
-                            <td><span>心里总价:</span></td>
-                            <td>@Html.DropDownListFor(p => p.XinLiZongJia, ViewData["xinlizongjias"] as List<SelectListItem>)</td>
-                        </tr>
-
-                        <tr class="zhuzhai" style="display:none;">
-                            <td><span>家庭结构:</span></td>
-                            <td>@Html.DropDownListFor(p => p.JiaTingJieGou, ViewData["jiatingjiegous"] as List<SelectListItem>)</td>
-                            <td><span>关注问题:</span></td>
-                            <td>@Html.DropDownListFor(p => p.GuanZhuWenTi_ZhuZhai, ViewData["guanzhuwenti_zhuzhais"] as List<SelectListItem>)</td>
-                        </tr>
-
-                        <!-- 住宅 End -->
-                        <tr>
-                            <td><span>客户级别:</span></td>
-                            <td>@Html.DropDownListFor(p => p.KeHuJiBie, ViewData["kehujibies"] as List<SelectListItem>)</td>
-                            <td><span>置业顾问:</span></td>
-                            <td>@Html.TextBoxFor(p => p.ZhiYeGuWen) @Html.ValidationMessageFor(p => p.ZhiYeGuWen)</td>
-                            <td><span>来电日期:</span></td>
-                            <td>@Html.TextBoxFor(p => p.LaiDianRiQi) @Html.ValidationMessageFor(p => p.LaiDianRiQi)</td>
-                        </tr>
-
-                        <tr>
-                            <td><span>跟踪情况:</span></td>
-                            <td colspan="7">@Html.TextAreaFor(p => p.GenZongQingKuang, new { rows = "5", cols = "100" }) @Html.ValidationMessageFor(p => p.GenZongQingKuang)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="8" style="text-align:center;">
-                                <input type="submit" style="height:35px;line-height:initial;" class="sub" value="保存" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
+            <div class="search_con">
+                <ul id="ul_user">                    
+                    <li><a href="javascript:void(0)">Loading...</a></li>
+                </ul>
             </div>
 
-            <div class="rightbody">
-                <div class="rightbg">
-                    <div class="search">
-                        <a href="javascript:void(0)" onclick="go_search()">&nbsp;</a>
-                        <input type="text" id="txt_search" />
-                    </div>
-                    <div class="customers">
-                        
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    <div class="bottom"></div>
+
     <script src="~/Assets/js/jquery.min.js"></script>
     <script src="~/Assets/js/plugins/validate/jquery.validate.min.js"></script>
     <script src="~/Assets/js/plugins/validate/jquery.validate.unobtrusive.min.js"></script>
@@ -180,12 +182,19 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
-                        $(".customers").html("");
-                        var htmls = "";
-                        $.each(data.data, function (i, item) {
-                            htmls += "<div onclick=\"location.href='/Check/Message?id=" + item.ID + "'\">" + item.Name + "</div>";
-                        });
-                        $(".customers").html(htmls);
+                        if (data.data.length > 0)
+                        {
+                            $("#ul_user").html("");
+                            var htmls = "";
+                            $.each(data.data, function (i, item) {
+                                htmls += "<li><a href=\"/Check/Message?id=" + item.ID + "\">" + item.Name + "</a></li>";
+                            });
+                            $("#ul_user").html(htmls);
+                        } else
+                        {
+                            $("#ul_user").html("<li><a href=\"javascript:void(0)\">无数据</a></li>");
+                        }
+                        
                     }
                     else {
                         
@@ -224,7 +233,6 @@
 
         $(function () {
             loadUser("");
-
             @if(Model.ID != 0)
             {
                 @:showorhide(@((int)Model.XuQiu));

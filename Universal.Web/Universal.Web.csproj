@@ -123,7 +123,6 @@
     <Content Include="Assets\error\ie.html" />
     <Content Include="Assets\fonts\fontawesome-webfont.svg" />
     <Content Include="Assets\images\bg.jpg" />
-    <Content Include="Assets\images\bg_color.jpg" />
     <Content Include="Assets\images\btn_bg.png" />
     <Content Include="Assets\images\line.png" />
     <Content Include="Assets\images\search.png" />
