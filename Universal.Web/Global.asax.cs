@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using System.Web.Optimization;
 
 namespace Universal.Web
 {
@@ -19,10 +20,11 @@ namespace Universal.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //TODO 接口校验处于关闭状态
             //GlobalConfiguration.Configuration.MessageHandlers.Add(new Universal.Web.Framework.ApplicationAuthenticationHandler());
-            
+
         }
     }
 }

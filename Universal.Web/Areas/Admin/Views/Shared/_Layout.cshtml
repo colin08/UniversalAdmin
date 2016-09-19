@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@ViewData["Title"]</title>
-    <link rel="shortcut icon" href="~/favicon.ico">
-    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/Assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="~/Assets/css/animate.min.css" rel="stylesheet">
-    <link href="~/Assets/css/style.min.css" rel="stylesheet" />
-    <link href="~/Assets/css/admin.css" rel="stylesheet">
+
+    @Styles.Render("~/Content/admin/css")
 
     @RenderSection("head",required:false)
 </head>
@@ -32,10 +28,10 @@
         </div>
     </div>
 
-    <script src="~/Assets/js/jquery.min.js"></script>
-    <script src="~/Assets/js/bootstrap.min.js"></script>
-    <script src="~/Assets/js/plugins/layer/layer.min.js"></script>
-    <script src="~/Assets/js/tools.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/layer")
+    @Scripts.Render("~/bundles/tools")
 
     @RenderSection("foot",required:false)
 

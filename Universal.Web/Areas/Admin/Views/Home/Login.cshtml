@@ -11,12 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>后台管理 - 登录</title>
 
-    <link rel="shortcut icon" href="~/Assets/img/favicon.ico">
-    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/Assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="~/Assets/css/style.min.css" rel="stylesheet" />
-    <link href="~/Assets/css/animate.min.css" rel="stylesheet">
-    <link href="~/Assets/css/admin.css" rel="stylesheet">
+    @Styles.Render("~/Content/admin/css")
 </head>
 
 <body class="gray-bg">
@@ -57,12 +52,9 @@
             </div>
         </div>
     </div>
-
-    <script src="~/Assets/js/jquery.min.js"></script>
-    <script src="~/Assets/js/bootstrap.min.js"></script>
-    <script src="~/Assets/js/plugins/validate/jquery.validate.min.js"></script>
-    <script src="~/Assets/js/plugins/validate/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/Assets/js/plugins/validate/messages_zh.min.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         function toValid() {
             if ($("form").valid())

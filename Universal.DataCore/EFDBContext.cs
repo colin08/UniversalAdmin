@@ -72,12 +72,7 @@ namespace Universal.DataCore
         /// 测试成员
         /// </summary>
         public DbSet<Entity.DemoDept> DemoDepts { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DbSet<Entity.House> Houses { get; set; }
-
+        
         /// <summary>
         /// 
         /// </summary>

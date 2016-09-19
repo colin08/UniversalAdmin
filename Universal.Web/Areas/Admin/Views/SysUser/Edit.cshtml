@@ -166,9 +166,7 @@
 <!--底部脚本-->
 @section foot
 {
-<script src="~/Assets/js/plugins/validate/jquery.validate.min.js"></script>
-<script src="~/Assets/js/plugins/validate/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Assets/js/plugins/validate/messages_zh.min.js"></script>
+@Scripts.Render("~/bundles/jqueryval")
 
 <script>
     function upload() {

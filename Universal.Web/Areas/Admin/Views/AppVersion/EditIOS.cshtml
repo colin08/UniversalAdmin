@@ -6,9 +6,8 @@
 <!--头部脚本-->
 @section head
 {
-<link href="~/Assets/js/plugins/uploadifive/uploadifive.css" rel="stylesheet" />
-<link href="~/Assets/css/plugins/simditor/simditor.css" rel="stylesheet" />
-<link href="~/Assets/css/plugins/simditor/simditor-markdown.css" rel="stylesheet" />
+@Styles.Render("~/Content/uploadifive")
+@Styles.Render("~/Content/simditor")
 }
 
 <!--头部脚本 end-->
@@ -129,17 +128,8 @@
 <!--底部脚本-->
 @section foot
 {
-<script src="~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"></script>
-<!-- 富文本编辑器 -->
-<script src="~/Assets/js/plugins/simditor/module.min.js"></script>
-<script src="~/Assets/js/plugins/simditor/hotkeys.min.js"></script>
-<script src="~/Assets/js/plugins/simditor/uploader.min.js"></script>
-<script src="~/Assets/js/plugins/simditor/simditor.min.js"></script>
-<script src="~/Assets/js/plugins/simditor/simditor-autosave.js"></script>
-
-<script src="~/Assets/js/plugins/simditor/marked.js"></script>
-<script src="~/Assets/js/plugins/simditor/to-markdown.js"></script>
-<script src="~/Assets/js/plugins/simditor/simditor-markdown.js"></script>
+@Scripts.Render("~/bundles/uploadifive")
+@Scripts.Render("~/bundles/simditor")
 <script>
 
     $(function () {

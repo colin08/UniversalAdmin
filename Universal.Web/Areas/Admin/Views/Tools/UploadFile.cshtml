@@ -8,11 +8,12 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Assets/js/plugins/uploadifive/uploadifive.css" rel="stylesheet" />
-    <script src="~/Assets/js/jquery.min.js"></script>
-    <script src="~/Assets/js/plugins/layer/layer.min.js"></script>
-    <script src="~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"></script>
+
+    @Styles.Render("~/Content/admin/css")
+    @Styles.Render("~/Content/uploadifive")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/layer")
+    @Scripts.Render("~/bundles/uploadifive")
 
     <title>附件上传</title>
     <script>
