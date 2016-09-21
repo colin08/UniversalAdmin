@@ -59,6 +59,7 @@
     <Compile Include="TypeHelper.cs" />
     <Compile Include="ValidateHelper.cs" />
     <Compile Include="WaterMark.cs" />
+    <Compile Include="ConfigHelper.cs" />
     <Compile Include="WebHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

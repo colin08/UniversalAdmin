@@ -25,6 +25,18 @@
                 @RenderBody()
 
             </div>
+            
+            @{ 
+                if (ViewData.ContainsKey("ExecutionTime"))
+                {
+                    <text>
+                    <div class="pull-left" style="margin: 10px 0 0 15px;">
+                    time：@ViewData["ExecutionTime"] ms   
+                    <div>
+                    </text>
+                }
+            }
+
         </div>
     </div>
 

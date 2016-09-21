@@ -12,5 +12,11 @@
 </head>
 <body>
     <h4>Index</h4>
+    @{ 
+        if(ViewData.ContainsKey("ExecutionTime"))
+        {
+            @:执行时间：@ViewData["ExecutionTime"] ms
+        }
+    }
 </body>
 </html>

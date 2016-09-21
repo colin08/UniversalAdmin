@@ -16,6 +16,10 @@ namespace Universal.Web.Framework
         /// 工作上下文
         /// </summary>
         public AdminWorkContext WorkContext = new AdminWorkContext();
+        /// <summary>
+        /// 站点配置文件
+        /// </summary>
+        public WebSiteModel WebSite = null;
 
         /// <summary>
         /// 初始化调用构造函数后可能不可用的数据
@@ -24,6 +28,7 @@ namespace Universal.Web.Framework
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
+            WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
             WorkContext.SessionId = Session.SessionID;
             WorkContext.IsHttpAjax = WebHelper.IsAjax();
             WorkContext.IsHttpPost = WebHelper.IsPost();
@@ -158,6 +163,10 @@ namespace Universal.Web.Framework
         /// <param name="detail">介绍内容</param>
         protected void AddAdminLogs(DataCore.EFDBContext db,DataCore.Entity.SysLogMethodType LogType, string detail, int user_id = 0)
         {
+            if (!WebSite.LogMethodInDB)
+                return;
+
+
             if (WorkContext.UserInfo != null)
             {
                 user_id = WorkContext.UserInfo.ID;

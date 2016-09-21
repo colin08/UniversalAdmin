@@ -95,7 +95,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>PID</th>
-                                                    <th>进程名</th>
+                                                    <th style="float:left;">进程名</th>
                                                     <th>使用内存</th>
                                                     <th>启动时间</th>
                                                     <th>完整路径</th>
@@ -106,7 +106,7 @@
                                                 {
                                                     <tr>
                                                         <td>@item.Id</td>
-                                                        <td><span class="label label-info" style="font-size:14px;">@item.ProcessName</span></td>
+                                                        <td><span class="label label-info" style="font-size:14px;float:left;">@item.ProcessName</span></td>
                                                         <td><span class="label @item.MemeoryColor"  style="font-size:14px;">@item.WorkingSet64</span></td>
                                                         <td><i class="fa fa-clock-o"></i> @item.StartTime</td>
                                                         <td>
@@ -124,6 +124,18 @@
                             </div>
                         </div>
                     </div>
+
+                    @{ 
+						if (ViewData.ContainsKey("ExecutionTime"))
+						{
+							<text>
+							<div class="pull-left" style="margin: 10px 0 0 15px;">
+							time：@ViewData["ExecutionTime"] ms   
+							<div>
+							</text>
+						}
+					}
+
                 </div>
             </div>
         </div>

@@ -18,6 +18,10 @@ namespace Universal.Web.Framework
         /// <returns></returns>
         public static void ToInDB(Exception ex)
         {
+            Tools.WebSiteModel model = Tools.ConfigHelper.LoadConfig<Tools.WebSiteModel>(Tools.ConfigFileEnum.SiteConfig);
+            if (!model.LogExceptionInDB)
+                return;
+
             using (var db = new DataCore.EFDBContext())
             {
                 var entity = new DataCore.Entity.SysLogException()

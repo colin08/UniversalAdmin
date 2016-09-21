@@ -116,6 +116,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Data\WebSite.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Assets\css\admin.css" />
     <Content Include="Assets\css\animate.min.css" />
     <Content Include="Assets\css\bootstrap.min.css" />
@@ -306,9 +309,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
       <Project>{0568b903-5079-4390-880d-de68862e1462}</Project>

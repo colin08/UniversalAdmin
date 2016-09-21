@@ -15,6 +15,7 @@ namespace Universal.Web
         {
             filters.Add(new HandleErrorAttribute(),1);
             filters.Add(new Universal.Web.Framework.CustomWebExceptionAttribute(),2);
+            filters.Add(new Framework.CustomActionAttribute());
         }
     }
 }
