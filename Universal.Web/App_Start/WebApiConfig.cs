@@ -16,6 +16,7 @@ namespace Universal.Web
 
             //更改返回类型为json
             var jsonFormatter = new JsonMediaTypeFormatter();
+            jsonFormatter.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd hh:mm:ss" });
             config.Services.Replace(typeof(IContentNegotiator), new Framework.JsonContentNegotiator(jsonFormatter));
             // Web API 路由
             config.MapHttpAttributeRoutes();
