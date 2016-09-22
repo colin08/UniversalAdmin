@@ -23,7 +23,7 @@ namespace Universal.Web.Areas.Admin.Models
         /// <summary>
         /// 用户列表
         /// </summary>
-        public List<DataCore.Entity.SysUser> DataList { get; set; }
+        public List<Entity.SysUser> DataList { get; set; }
         
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
     /// <summary>
     /// 系统错误日志

@@ -9,6 +9,6 @@ namespace Universal.Web.Areas.Admin.Models
     {
         public int platform { get; set; }
 
-        public List<DataCore.Entity.AppVersion> DataList { get; set; }
+        public List<Entity.AppVersion> DataList { get; set; }
     }
 }

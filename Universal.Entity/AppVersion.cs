@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
     /// <summary>
     /// app的平台分类枚举

@@ -11,6 +11,6 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 当前登录的用户
         /// </summary>
-        public DataCore.Entity.SysUser UserInfo;
+        public Entity.SysUser UserInfo;
     }
 }

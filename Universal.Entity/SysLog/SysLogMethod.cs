@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
     /// <summary>
     /// 操作日志类别

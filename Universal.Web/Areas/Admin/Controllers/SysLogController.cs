@@ -25,9 +25,9 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             List<SelectListItem> typeList = new List<SelectListItem>();
             typeList.Add(new SelectListItem() { Text = "所有日志", Value = "0" });
-            foreach (var item in EnumHelper.EnumToDictionary(typeof(DataCore.Entity.SysLogMethodType)))
+            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.SysLogMethodType)))
             {
-                string text = EnumHelper.GetDescription<DataCore.Entity.SysLogMethodType>((DataCore.Entity.SysLogMethodType)item.Key);
+                string text = EnumHelper.GetDescription<Entity.SysLogMethodType>((Entity.SysLogMethodType)item.Key);
                 typeList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
             }
             ViewData["LogMethod_Type"] = typeList;
@@ -42,9 +42,9 @@ namespace Universal.Web.Areas.Admin.Controllers
             var db = new DataCore.EFDBContext();
             
             //查询分页
-            IQueryable<DataCore.Entity.SysLogMethod> query = db.SysLogMethods;
+            IQueryable<Entity.SysLogMethod> query = db.SysLogMethods;
             if (type != 0)
-                query = query.Where(p => p.Type == (DataCore.Entity.SysLogMethodType)type);
+                query = query.Where(p => p.Type == (Entity.SysLogMethodType)type);
             if (!string.IsNullOrWhiteSpace(word))
                 query = query.Where(p => p.Detail.Contains(word));
 
@@ -74,13 +74,13 @@ namespace Universal.Web.Areas.Admin.Controllers
             if("all".Equals(ids.ToLower()))
             {
                 db.Database.ExecuteSqlCommand("delete SysLogException");
-                AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "清空异常日志");
+                AddAdminLogs(db, Entity.SysLogMethodType.Delete, "清空异常日志");
             }
             else
             {
                 int id = TypeHelper.ObjectToInt(ids);
                 db.Database.ExecuteSqlCommand("delete SysLogException where ID=" + id.ToString());
-                AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除异常日志:" +id.ToString());
+                AddAdminLogs(db, Entity.SysLogMethodType.Delete, "删除异常日志:" +id.ToString());
             }
 
             db.SaveChanges();

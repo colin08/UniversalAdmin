@@ -78,6 +78,10 @@
       <Project>{0568B903-5079-4390-880D-DE68862E1462}</Project>
       <Name>Universal.DataCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Universal.Entity\Universal.Entity.csproj">
+      <Project>{67a0c808-58d1-4394-b8c5-f14925f3d5de}</Project>
+      <Name>Universal.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Universal.Framework\Universal.Web.Framework.csproj">
       <Project>{3df7ca62-7579-4dd2-8687-990267daf92d}</Project>
       <Name>Universal.Web.Framework</Name>

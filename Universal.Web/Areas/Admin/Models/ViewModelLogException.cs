@@ -15,6 +15,6 @@ namespace Universal.Web.Areas.Admin.Models
         /// <summary>
         /// 
         /// </summary>
-        public List<DataCore.Entity.SysLogException> DataList { get; set; }
+        public List<Entity.SysLogException> DataList { get; set; }
     }
 }

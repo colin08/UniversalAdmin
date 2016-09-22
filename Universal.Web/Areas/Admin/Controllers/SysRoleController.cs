@@ -23,7 +23,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysroleindex"), SiteKey.AdminDefaultPageSize);
             var db = new DataCore.EFDBContext();
             //查询分页
-            IQueryable<DataCore.Entity.SysRole> query = db.SysRoles;
+            IQueryable<Entity.SysRole> query = db.SysRoles;
             if (!string.IsNullOrWhiteSpace(word))
                 query = query.Where(p => p.RoleName.Contains(word));
 
@@ -105,7 +105,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 var entity = db.SysRoutes.Where(p => p.IsPost == item.IsPost && p.Route == item.Route).FirstOrDefault();
                 if (entity == null)
                 {
-                    var route = new DataCore.Entity.SysRoute();
+                    var route = new Entity.SysRoute();
                     route.AddTime = DateTime.Now;
                     route.Desc = item.Desc;
                     route.IsPost = item.IsPost;
@@ -114,7 +114,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     db.SysRoutes.Add(route);
                 }
             }
-            AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Update, "更新权限数据");
+            AddAdminLogs(db,Entity.SysLogMethodType.Update, "更新权限数据");
             db.SaveChanges();
             db.Dispose();
 
@@ -133,7 +133,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 else
                     GetTree(db, TypeHelper.ObjectToInt(id, 0));
 
-                DataCore.Entity.SysRole entity = new DataCore.Entity.SysRole();
+                Entity.SysRole entity = new Entity.SysRole();
                 int num = TypeHelper.ObjectToInt(id, 0);
                 if (num != 0)
                 {
@@ -150,7 +150,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("用户组", "保存用户组编辑的信息")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(DataCore.Entity.SysRole entity)
+        public ActionResult Edit(Entity.SysRole entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
             var db = new DataCore.EFDBContext();
@@ -202,7 +202,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         {
                             int route_id = TypeHelper.ObjectToInt(item);
                             db.SysRoleRoutes.Add(
-                                new DataCore.Entity.SysRoleRoute() { SysRole = entity, SysRouteID = route_id }
+                                new Entity.SysRoleRoute() { SysRole = entity, SysRouteID = route_id }
                             );
                         }
                     }
@@ -241,7 +241,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         foreach (var item in route_add_list)
                         {
                             //做增加
-                            db.SysRoleRoutes.Add(new DataCore.Entity.SysRoleRoute() { SysRoleID = entity.ID, SysRouteID = item });
+                            db.SysRoleRoutes.Add(new Entity.SysRoleRoute() { SysRoleID = entity.ID, SysRouteID = item });
                         }
                     }
                 }
@@ -278,7 +278,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             //    if (entity != null)
             //    {
             //        db.SysUsers.Remove(entity);
-            //        AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
+            //        AddAdminLogs(db, Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
             //    }
             //}
             //db.SaveChanges();
@@ -294,7 +294,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <param name="id">当前组ID，没有传0</param>
         private void GetTree(DataCore.EFDBContext db, int id = 0)
         {
-            DataCore.Entity.SysRole role = null;
+            Entity.SysRole role = null;
             if (id != 0)
             {
                 role = db.SysRoles.Find(id);

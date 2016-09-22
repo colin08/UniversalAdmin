@@ -23,7 +23,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("demoindex"), SiteKey.AdminDefaultPageSize);
             var db = new DataCore.EFDBContext();
             //查询分页
-            IQueryable<DataCore.Entity.Demo> query = db.Demo;
+            IQueryable<Entity.Demo> query = db.Demo;
             if (!string.IsNullOrWhiteSpace(word))
                 query = query.Where(p => p.Title.Contains(word));
 
@@ -66,8 +66,8 @@ namespace Universal.Web.Areas.Admin.Controllers
         {
             using (var db = new DataCore.EFDBContext())
             {
-                DataCore.Entity.Demo entity = new DataCore.Entity.Demo();
-                entity.Depts.Add(new DataCore.Entity.DemoDept()
+                Entity.Demo entity = new Entity.Demo();
+                entity.Depts.Add(new Entity.DemoDept()
                 {
                     ImgUrl = "",
                     Num = 0,
@@ -90,7 +90,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(DataCore.Entity.Demo entity)
+        public ActionResult Edit(Entity.Demo entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
             var db = new DataCore.EFDBContext();
@@ -129,7 +129,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
                     var old_entity = db.Demo.Find(entity.ID);
                     db.Entry(old_entity).CurrentValues.SetValues(entity);
-                    ((List<DataCore.Entity.DemoAlbum>)entity.Albums).ForEach(p => db.Entry(p).State = EntityState.Added);
+                    ((List<Entity.DemoAlbum>)entity.Albums).ForEach(p => db.Entry(p).State = EntityState.Added);
                     foreach (var item in entity.Depts)
                     {
                         item.DemoID = entity.ID;

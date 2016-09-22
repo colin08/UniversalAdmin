@@ -15,6 +15,6 @@ namespace Universal.Web.Areas.Admin.Models
         /// <summary>
         /// 
         /// </summary>
-        public List<DataCore.Entity.SysRole> DataList { get; set; }
+        public List<Entity.SysRole> DataList { get; set; }
     }
 }

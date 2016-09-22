@@ -38,10 +38,10 @@ namespace Universal.Tests
             string pwd = SecureHelper.MD5("admin");
             for (int i = 0; i < 30; i++)
             {
-                var user = new DataCore.Entity.SysUser()
+                var user = new Entity.SysUser()
                 {
                     Avatar = "",
-                    Gender = DataCore.Entity.UserGender.男,
+                    Gender = Entity.UserGender.男,
                     LastLoginTime = DateTime.Now,
                     NickName = "编辑用户" + (i + 1).ToString(),
                     Password = pwd,

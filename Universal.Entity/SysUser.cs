@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
     /// <summary>
     /// 用户性别枚举

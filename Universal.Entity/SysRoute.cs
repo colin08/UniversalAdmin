@@ -5,7 +5,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
 
     /// <summary>

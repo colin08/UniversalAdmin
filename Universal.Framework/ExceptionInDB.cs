@@ -24,7 +24,7 @@ namespace Universal.Web.Framework
 
             using (var db = new DataCore.EFDBContext())
             {
-                var entity = new DataCore.Entity.SysLogException()
+                var entity = new Entity.SysLogException()
                 {
                     AddTime = DateTime.Now,
                     Message = ex.Message,

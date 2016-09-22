@@ -32,12 +32,12 @@ namespace Universal.Web.Areas.Admin.Controllers
                     string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
                     using (DataCore.EFDBContext db = new DataCore.EFDBContext())
                     {
-                        DataCore.Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
+                        Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
                         if (model != null)
                         {
                             if (model.Status)
                             {
-                                AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
+                                AddAdminLogs(db,Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
                                 Session[SessionKey.Admin_User_Info] = model;
                                 Session.Timeout = 60; //一小时不操作，session就过期
                                 model.LastLoginTime = DateTime.Now;
@@ -77,7 +77,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 using (DataCore.EFDBContext db = new DataCore.EFDBContext())
                 {
                     string passworld = SecureHelper.MD5(viewModelLogin.password);
-                    DataCore.Entity.SysUser model = db.SysUsers.Where(s => s.UserName == viewModelLogin.user_name & s.Password == passworld).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
+                    Entity.SysUser model = db.SysUsers.Where(s => s.UserName == viewModelLogin.user_name & s.Password == passworld).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
                     if (model == null)
                     {
                         ModelState.AddModelError("user_name", "用户名或密码错误");
@@ -104,7 +104,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password);
                     }
                     model.LastLoginTime = DateTime.Now;
-                    AddAdminLogs(db,DataCore.Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
+                    AddAdminLogs(db,Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
                     db.SaveChanges();
                     return RedirectToAction("Index","Home");
                 }

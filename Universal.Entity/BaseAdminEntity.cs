@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Universal.DataCore.Entity
+namespace Universal.Entity
 {
     /// <summary>
     /// 后台公共字段基类

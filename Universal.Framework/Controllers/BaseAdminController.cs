@@ -161,7 +161,7 @@ namespace Universal.Web.Framework
         /// <param name="LogType">操作类别</param>
         /// <param name="obj">操作对象</param>
         /// <param name="detail">介绍内容</param>
-        protected void AddAdminLogs(DataCore.EFDBContext db,DataCore.Entity.SysLogMethodType LogType, string detail, int user_id = 0)
+        protected void AddAdminLogs(DataCore.EFDBContext db,Entity.SysLogMethodType LogType, string detail, int user_id = 0)
         {
             if (!WebSite.LogMethodInDB)
                 return;
@@ -171,7 +171,7 @@ namespace Universal.Web.Framework
             {
                 user_id = WorkContext.UserInfo.ID;
             }
-            var entity = new DataCore.Entity.SysLogMethod()
+            var entity = new Entity.SysLogMethod()
             {
                 AddTime = DateTime.Now,
                 Detail = detail,
@@ -260,7 +260,7 @@ namespace Universal.Web.Framework
                 {
                     using (DataCore.EFDBContext db = new DataCore.EFDBContext())
                     {
-                        DataCore.Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
+                        Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
                         if (model != null)
                         {
                             if (model.Status)
@@ -282,11 +282,11 @@ namespace Universal.Web.Framework
         /// 获取登陆用户的信息
         /// </summary>
         /// <returns></returns>
-        protected DataCore.Entity.SysUser GetUserInfo()
+        protected Entity.SysUser GetUserInfo()
         {
             if (IsLogin())
             {
-                DataCore.Entity.SysUser model = Session[SessionKey.Admin_User_Info] as DataCore.Entity.SysUser;
+                Entity.SysUser model = Session[SessionKey.Admin_User_Info] as Entity.SysUser;
                 if (model != null)
                 {
                     if (model.Status)

@@ -32,7 +32,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             var db = new DataCore.EFDBContext();
             Load(db);
             //查询分页
-            IQueryable<DataCore.Entity.SysUser> query = db.SysUsers;
+            IQueryable<Entity.SysUser> query = db.SysUsers;
             if (role != 0)
                 query = query.Where(p => p.SysRoleID == role);
             if (!string.IsNullOrWhiteSpace(word))
@@ -63,7 +63,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             using (var db = new DataCore.EFDBContext())
             {
                 Load(db);
-                DataCore.Entity.SysUser entity = new DataCore.Entity.SysUser();
+                Entity.SysUser entity = new Entity.SysUser();
                 int num = TypeHelper.ObjectToInt(id, 0);
                 if (num != 0)
                 {
@@ -85,7 +85,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AdminPermissionAttribute("后台用户", "保存后台用户首页编辑信息")]
-        public ActionResult Edit(DataCore.Entity.SysUser entity)
+        public ActionResult Edit(Entity.SysUser entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
 
@@ -171,7 +171,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 if (entity != null)
                 {
                     db.SysUsers.Remove(entity);
-                    AddAdminLogs(db, DataCore.Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
+                    AddAdminLogs(db, Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
                 }
             }
             db.SaveChanges();
