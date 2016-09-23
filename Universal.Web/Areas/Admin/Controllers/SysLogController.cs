@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
@@ -12,15 +13,15 @@ namespace Universal.Web.Areas.Admin.Controllers
 {
     public class SysLogController : BaseAdminController
     {
-        [AdminPermission("日志","系统异常日志列表")]
+        [AdminPermission("日志", "系统异常日志列表")]
         public ActionResult LogException()
         {
-            var db = new DataCore.EFDBContext();
-            return View(db.SysLogExceptions.OrderByDescending(p=>p.AddTime).ToList());
+            BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
+            return View(bll.GetListBy(new List<BLL.FilterSearch>(), p => p.AddTime, false));
         }
 
         [AdminPermission("日志", "系统操作日志列表")]
-        public ActionResult LogMethod(int page = 1,int type= 0, string word = "")
+        public ActionResult LogMethod(int page = 1, int type = 0, string word = "")
         {
 
             List<SelectListItem> typeList = new List<SelectListItem>();
@@ -39,25 +40,21 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.word = word;
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("logmethodindex"), SiteKey.AdminDefaultPageSize);
-            var db = new DataCore.EFDBContext();
-            
-            //查询分页
-            IQueryable<Entity.SysLogMethod> query = db.SysLogMethods;
+
+            int total = 0;
+
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             if (type != 0)
-                query = query.Where(p => p.Type == (Entity.SysLogMethodType)type);
+                filter.Add(new BLL.FilterSearch("Type",type.ToString(),BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
-                query = query.Where(p => p.Detail.Contains(word));
+                filter.Add(new BLL.FilterSearch("Detail", word, BLL.FilterSearchContract.like));
 
-            //总数
-            int total = query.Count();
 
-            query = query.Include(p=>p.SysUser).OrderByDescending(p => p.AddTime);
-            query = query.Skip(response_model.page_size * (page - 1)).Take(response_model.page_size);
-
-            response_model.DataList = query.ToList();
+            BLL.BaseBLL<Entity.SysLogMethod> bll = new BLL.BaseBLL<Entity.SysLogMethod>();
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.AddTime, p => p.SysUser, false);
+            response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
-            db.Dispose();
             return View(response_model);
         }
 
@@ -70,21 +67,20 @@ namespace Universal.Web.Areas.Admin.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "缺少参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            var db = new DataCore.EFDBContext();
-            if("all".Equals(ids.ToLower()))
+            BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
+            if ("all".Equals(ids.ToLower()))
             {
-                db.Database.ExecuteSqlCommand("delete SysLogException");
-                AddAdminLogs(db, Entity.SysLogMethodType.Delete, "清空异常日志");
+                bll.DelBy(new List<BLL.FilterSearch>());
+                AddAdminLogs(Entity.SysLogMethodType.Delete, "清空异常日志");
             }
             else
             {
                 int id = TypeHelper.ObjectToInt(ids);
-                db.Database.ExecuteSqlCommand("delete SysLogException where ID=" + id.ToString());
-                AddAdminLogs(db, Entity.SysLogMethodType.Delete, "删除异常日志:" +id.ToString());
+                List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+                filters.Add(new BLL.FilterSearch("ID", id.ToString(), BLL.FilterSearchContract.等于));
+                bll.DelBy(filters);
+                AddAdminLogs(Entity.SysLogMethodType.Delete, "删除异常日志:" + id.ToString());
             }
-
-            db.SaveChanges();
-            db.Dispose();
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             return Json(WorkContext.AjaxStringEntity);
@@ -106,7 +102,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "success";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            
+
         }
     }
 }

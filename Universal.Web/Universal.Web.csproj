@@ -311,6 +311,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
+      <Project>{d291ef55-3d6d-4c5a-be18-25875b78342e}</Project>
+      <Name>Universal.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
       <Project>{0568b903-5079-4390-880d-de68862e1462}</Project>
       <Name>Universal.DataCore</Name>

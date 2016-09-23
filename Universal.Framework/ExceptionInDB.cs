@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Universal.Web.Framework
 {
@@ -22,20 +18,16 @@ namespace Universal.Web.Framework
             if (!model.LogExceptionInDB)
                 return;
 
-            using (var db = new DataCore.EFDBContext())
+            var entity = new Entity.SysLogException()
             {
-                var entity = new Entity.SysLogException()
-                {
-                    AddTime = DateTime.Now,
-                    Message = ex.Message,
-                    Source = ex.Source,
-                    StackTrace = ex.StackTrace
-                };
-                
-                db.SysLogExceptions.Add(entity);
-                db.SaveChanges();
+                AddTime = DateTime.Now,
+                Message = ex.Message,
+                Source = ex.Source,
+                StackTrace = ex.StackTrace
+            };
 
-            }
+            BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
+            bll.Add(entity);
         }
     }
 }

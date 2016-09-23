@@ -4,6 +4,8 @@ using System.Web.Routing;
 using System.Linq;
 using Universal.Tools;
 using System.Data.Entity;
+using Universal.BLL;
+using System.Collections.Generic;
 
 namespace Universal.Web.Framework
 {
@@ -161,7 +163,7 @@ namespace Universal.Web.Framework
         /// <param name="LogType">操作类别</param>
         /// <param name="obj">操作对象</param>
         /// <param name="detail">介绍内容</param>
-        protected void AddAdminLogs(DataCore.EFDBContext db,Entity.SysLogMethodType LogType, string detail, int user_id = 0)
+        protected void AddAdminLogs(Entity.SysLogMethodType LogType, string detail, int user_id = 0)
         {
             if (!WebSite.LogMethodInDB)
                 return;
@@ -171,6 +173,7 @@ namespace Universal.Web.Framework
             {
                 user_id = WorkContext.UserInfo.ID;
             }
+
             var entity = new Entity.SysLogMethod()
             {
                 AddTime = DateTime.Now,
@@ -178,15 +181,8 @@ namespace Universal.Web.Framework
                 SysUserID = user_id,
                 Type = LogType
             };
-            if (db == null)
-            {
-                db = new DataCore.EFDBContext();
-                db.SysLogMethods.Add(entity);
-                db.SaveChanges();
-            }
-            else
-                db.SysLogMethods.Add(entity);
-            
+            BaseBLL<Entity.SysLogMethod> bll = new BaseBLL<Entity.SysLogMethod>();
+            bll.Add(entity);            
         }
 
 
@@ -258,20 +254,21 @@ namespace Universal.Web.Framework
                 string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
                 if (uid != 0 && !string.IsNullOrWhiteSpace(upwd))
                 {
-                    using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+                    BaseBLL<Entity.SysUser> bll = new BaseBLL<Entity.SysUser>();
+                    List<FilterSearch> filters = new List<FilterSearch>();
+                    filters.Add(new FilterSearch("ID", uid.ToString(), FilterSearchContract.等于));
+                    filters.Add(new FilterSearch("Password", upwd, FilterSearchContract.等于));
+                    Entity.SysUser model = bll.GetModel(filters, s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute));
+                    if(model != null)
                     {
-                        Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
-                        if (model != null)
+                        if (model.Status)
                         {
-                            if (model.Status)
-                            {
-                                Session[SessionKey.Admin_User_Info] = model;
-                                return true;
-                            }
-                            return false;
+                            Session[SessionKey.Admin_User_Info] = model;
+                            return true;
                         }
                         return false;
                     }
+                    return false;
                 }
                 return false;
             }
@@ -320,13 +317,17 @@ namespace Universal.Web.Framework
             if (WorkContext.UserInfo.SysRole.IsAdmin)
                 return true;
             var result = true;
-            var db = new DataCore.EFDBContext();
-            if(db.SysRoutes.Count(p=>p.IsPost == isPost && p.Route == PageKey)>0)
+            BaseBLL<Entity.SysRoute> bll = new BaseBLL<Entity.SysRoute>();
+            List<FilterSearch> filters = new List<FilterSearch>();
+            filters.Add(new FilterSearch("IsPost", isPost.ToString(), FilterSearchContract.等于));
+            filters.Add(new FilterSearch("Route", PageKey, FilterSearchContract.等于));
+            int total =bll.GetCount(filters);
+            if(total>0)
             {
                 var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
                 result = entity == null ? false : true;
             }
-            db.Dispose();
+
             return result;
         }
 

@@ -114,7 +114,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     db.SysRoutes.Add(route);
                 }
             }
-            AddAdminLogs(db,Entity.SysLogMethodType.Update, "更新权限数据");
+            AddAdminLogs(Entity.SysLogMethodType.Update, "更新权限数据");
             db.SaveChanges();
             db.Dispose();
 
@@ -278,7 +278,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             //    if (entity != null)
             //    {
             //        db.SysUsers.Remove(entity);
-            //        AddAdminLogs(db, Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
+            //        AddAdminLogs( Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
             //    }
             //}
             //db.SaveChanges();

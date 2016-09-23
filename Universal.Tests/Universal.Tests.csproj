@@ -66,6 +66,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BaseBLLTests.cs" />
     <Compile Include="EFDBContextTests.cs" />
     <Compile Include="EnumTests.cs" />
     <Compile Include="ExceptionInDBTests.cs" />
@@ -74,6 +75,10 @@
     <Compile Include="TreeTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
+      <Project>{D291EF55-3D6D-4C5A-BE18-25875B78342E}</Project>
+      <Name>Universal.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
       <Project>{0568B903-5079-4390-880D-DE68862E1462}</Project>
       <Name>Universal.DataCore</Name>

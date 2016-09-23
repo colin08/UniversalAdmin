@@ -41,13 +41,15 @@ namespace Universal.Web.Framework
             if (WorkContext.UserInfo.SysRole.IsAdmin)
                 return true;
             var result = true;
-            var db = new DataCore.EFDBContext();
-            if (db.SysRoutes.Count(p => p.IsPost == isPost && p.Route == PageKey) > 0)
+            BLL.BaseBLL<Entity.SysRoute> bll = new BLL.BaseBLL<Entity.SysRoute>();
+            List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+            filters.Add(new BLL.FilterSearch("IsPost", isPost.ToString(), BLL.FilterSearchContract.等于));
+            filters.Add(new BLL.FilterSearch("Route",PageKey, BLL.FilterSearchContract.等于));
+            if (bll.GetCount(filters) > 0)
             {
                 var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
                 result = entity == null ? false : true;
             }
-            db.Dispose();
             return result;
         }
     }

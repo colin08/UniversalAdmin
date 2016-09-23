@@ -30,26 +30,27 @@ namespace Universal.Web.Areas.Admin.Controllers
                 {
                     int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Login_UserID));
                     string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
-                    using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+                    BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
+                    List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+                    filters.Add(new BLL.FilterSearch("ID", uid.ToString(), BLL.FilterSearchContract.等于));
+                    filters.Add(new BLL.FilterSearch("Password", upwd, BLL.FilterSearchContract.等于));
+                    Entity.SysUser model = bll.GetModel(filters, p => p.SysRole.SysRoleRoutes.Select(t => t.SysRoute));
+                    if (model != null)
                     {
-                        Entity.SysUser model = db.SysUsers.Where(s => s.ID == uid & s.Password == upwd).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
-                        if (model != null)
+                        if (model.Status)
                         {
-                            if (model.Status)
-                            {
-                                AddAdminLogs(db,Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
-                                Session[SessionKey.Admin_User_Info] = model;
-                                Session.Timeout = 60; //一小时不操作，session就过期
-                                model.LastLoginTime = DateTime.Now;
-                                db.SaveChanges();
-                                return RedirectToAction("Index");
-                            }
-                            else
-                                return View(viewModelLogin);
+                            AddAdminLogs(Entity.SysLogMethodType.Login, "已记住密码，做自动登录", model.ID);
+                            Session[SessionKey.Admin_User_Info] = model;
+                            Session.Timeout = 60; //一小时不操作，session就过期
+                            model.LastLoginTime = DateTime.Now;
+                            bll.Modify(model, new string[] { "LastLoginTime" });
+                            return RedirectToAction("Index");
                         }
                         else
                             return View(viewModelLogin);
                     }
+                    else
+                        return View(viewModelLogin);
                 }
                 else
                     return View(viewModelLogin);
@@ -74,40 +75,42 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                using (DataCore.EFDBContext db = new DataCore.EFDBContext())
+                string passworld = SecureHelper.MD5(viewModelLogin.password);
+
+                BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
+                List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+                filters.Add(new BLL.FilterSearch("UserName", viewModelLogin.user_name, BLL.FilterSearchContract.等于));
+                filters.Add(new BLL.FilterSearch("Password", passworld, BLL.FilterSearchContract.等于));
+                Entity.SysUser model = bll.GetModel(filters, s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute));
+                if (model == null)
                 {
-                    string passworld = SecureHelper.MD5(viewModelLogin.password);
-                    Entity.SysUser model = db.SysUsers.Where(s => s.UserName == viewModelLogin.user_name & s.Password == passworld).Include(s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute)).FirstOrDefault();
-                    if (model == null)
-                    {
-                        ModelState.AddModelError("user_name", "用户名或密码错误");
-                        return View(viewModelLogin);
-                    }
-
-                    if (!model.Status)
-                    {
-                        ModelState.AddModelError("user_name", "用户已被禁用");
-                        return View(viewModelLogin);
-                    }
-
-                    Session[SessionKey.Admin_User_Info] = model;
-                    Session.Timeout = 60;
-                    if (viewModelLogin.is_rember)
-                    {
-                        WebHelper.SetCookie(CookieKey.Is_Remeber, "1", 14400);
-                        WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString(), 14400);
-                        WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password, 14400);
-                    }
-                    else
-                    {
-                        WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString());
-                        WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password);
-                    }
-                    model.LastLoginTime = DateTime.Now;
-                    AddAdminLogs(db,Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
-                    db.SaveChanges();
-                    return RedirectToAction("Index","Home");
+                    ModelState.AddModelError("user_name", "用户名或密码错误");
+                    return View(viewModelLogin);
                 }
+
+                if (!model.Status)
+                {
+                    ModelState.AddModelError("user_name", "用户已被禁用");
+                    return View(viewModelLogin);
+                }
+
+                Session[SessionKey.Admin_User_Info] = model;
+                Session.Timeout = 60;
+                if (viewModelLogin.is_rember)
+                {
+                    WebHelper.SetCookie(CookieKey.Is_Remeber, "1", 14400);
+                    WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString(), 14400);
+                    WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password, 14400);
+                }
+                else
+                {
+                    WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString());
+                    WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password);
+                }
+                model.LastLoginTime = DateTime.Now;
+                bll.Modify(model, new string[] { "LastLoginTime" });
+                AddAdminLogs(Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
+                return RedirectToAction("Index", "Home");
             }
 
 
