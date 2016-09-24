@@ -13,7 +13,7 @@ namespace Universal.Web.Areas.Admin.Controllers
     public class AppVersionController : BaseAdminController
     {
         [AdminPermissionAttribute("APP版本", "APP版本首页")]
-        public ActionResult Index(int page = 1,int platform = 0)
+        public ActionResult Index(int page = 1, int platform = 0)
         {
             LoadPlatform();
 
@@ -24,22 +24,16 @@ namespace Universal.Web.Areas.Admin.Controllers
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("appversionindex"), SiteKey.AdminDefaultPageSize);
 
-            var db = new DataCore.EFDBContext();
-            //查询分页
-            IQueryable<Entity.AppVersion> query = db.AppVersions;
+            List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
             if (platform != 0)
-                query = query.Where(p => p.Platforms == (Entity.APPVersionPlatforms)platform);
+                filters.Add(new BLL.FilterSearch("Platforms", platform.ToString(), BLL.FilterSearchContract.等于));
+            int total = 0;
+            BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
+            List<Entity.AppVersion> list = bll.GetPagedList(page, response_model.page_size, ref total, filters, p => p.AddTime, false);
 
-            //总数
-            int total = query.Count();
-
-            query = query.OrderByDescending(p => p.AddTime);
-            query = query.Skip(response_model.page_size * (page - 1)).Take(response_model.page_size);
-
-            response_model.DataList = query.ToList();
+            response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
-            db.Dispose();
             return View(response_model);
         }
 
@@ -53,9 +47,11 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            using (var db = new DataCore.EFDBContext())
+            BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
+            foreach (var item in ids.Split(','))
             {
-                db.Database.ExecuteSqlCommand("delete AppVersion where ID in('" + ids + "')");
+                int id = TypeHelper.ObjectToInt(item);
+                bll.DelBy(p => p.ID == id);
             }
 
             WorkContext.AjaxStringEntity.msg = 1;
@@ -70,31 +66,29 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("App版本", "安卓版本编辑页面")]
         public ActionResult EditAndroid(int? id)
         {
-            using (var db = new DataCore.EFDBContext())
+            int num = TypeHelper.ObjectToInt(id, 0);
+            Entity.AppVersion entity = new Entity.AppVersion();
+            if (num != 0)
             {
-                Entity.AppVersion entity = new Entity.AppVersion();
-                int num = TypeHelper.ObjectToInt(id, 0);
-                if (num != 0)
-                {
-                    entity = db.AppVersions.Find(num);
-                    if (entity == null)
-                        return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
-                    if(entity.Platforms != Entity.APPVersionPlatforms.Android)
-                        return PromptView("/admin/AppVersion", "400", "数据非法", "此信息非安卓版本", 5);
-                }
-                
-                return View(entity);
+                BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
+                entity = bll.GetModel(p => p.ID == num);
+                if (entity == null)
+                    return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
+                if (entity.Platforms != Entity.APPVersionPlatforms.Android)
+                    return PromptView("/admin/AppVersion", "400", "数据非法", "此信息非安卓版本", 5);
+
             }
+            return View(entity);
         }
 
-        [AdminPermission("App版本","保存安卓编辑信息")]
-        [ValidateAntiForgeryToken,ValidateInput(false)]
+        [AdminPermission("App版本", "保存安卓编辑信息")]
+        [ValidateAntiForgeryToken, ValidateInput(false)]
         [HttpPost]
         public ActionResult EditAndroid(Entity.AppVersion entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
-
-            var db = new DataCore.EFDBContext();
+            BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
+            
             entity.APPType = Entity.APPVersionType.Standard;
             entity.Platforms = Entity.APPVersionPlatforms.Android;
 
@@ -102,7 +96,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断版本是否存在
-                if (db.AppVersions.Count(p => p.Platforms == Entity.APPVersionPlatforms.Android && p.APPType == Entity.APPVersionType.Standard && p.Version == entity.Version) > 0)
+                if (bll.GetCount(p => p.Platforms == Entity.APPVersionPlatforms.Android && p.APPType == Entity.APPVersionType.Standard && p.Version == entity.Version) > 0)
                 {
                     ModelState.AddModelError("Content", "该版本存在");
                 }
@@ -110,7 +104,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                if (db.AppVersions.Count(p => p.ID == entity.ID) == 0)
+                if (bll.GetCount(p => p.ID == entity.ID) == 0)
                 {
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -122,25 +116,16 @@ namespace Universal.Web.Areas.Admin.Controllers
                 if (entity.ID == 0)
                 {
                     entity.AddTime = DateTime.Now;
-                    db.AppVersions.Add(entity);
+                    bll.Add(entity);
 
                 }
                 else //修改
-                {
-                    var old_entity = db.AppVersions.Find(entity.ID);
-                    db.Entry(old_entity).CurrentValues.SetValues(entity);
-                    
-                }
-
-                db.SaveChanges();
-                db.Dispose();
+                    bll.Modify(entity);
+                
                 return PromptView("/admin/AppVersion", "OK", "Success", "操作成功", 5);
             }
             else
-            {
-                db.Dispose();
                 return View(entity);
-            }
         }
 
         /// <summary>
@@ -151,31 +136,31 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult EditIOS(int? id)
         {
             LoadPlatform();
-            using (var db = new DataCore.EFDBContext())
-            {
-                Entity.AppVersion entity = new Entity.AppVersion();
-                int num = TypeHelper.ObjectToInt(id, 0);
-                if (num != 0)
-                {
-                    entity = db.AppVersions.Find(num);
-                    if (entity == null)
-                        return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
-                    if (entity.Platforms != Entity.APPVersionPlatforms.IOS)
-                        return PromptView("/admin/AppVersion", "400", "数据非法", "此信息非IOS版本", 5);
-                }
+            Entity.AppVersion entity = new Entity.AppVersion();
+            int num = TypeHelper.ObjectToInt(id, 0);
+            BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
 
-                return View(entity);
+            if (num != 0)
+            {
+                entity = bll.GetModel(p => p.ID == num);
+                if (entity == null)
+                    return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
+                if (entity.Platforms != Entity.APPVersionPlatforms.IOS)
+                    return PromptView("/admin/AppVersion", "400", "数据非法", "此信息非IOS版本", 5);
             }
+
+            return View(entity);
         }
 
         [AdminPermission("App版本", "保存苹果编辑信息")]
-        [ValidateAntiForgeryToken,ValidateInput(false)]
+        [ValidateAntiForgeryToken, ValidateInput(false)]
         [HttpPost]
         public ActionResult EditIOS(Entity.AppVersion entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
             LoadPlatform();
-            var db = new DataCore.EFDBContext();
+            BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
+
             entity.Platforms = Entity.APPVersionPlatforms.IOS;
             entity.LogoImg = "null";
             entity.MD5 = "null";
@@ -183,11 +168,13 @@ namespace Universal.Web.Areas.Admin.Controllers
             ModelState.Remove("LogoImg");
             ModelState.Remove("MD5");
 
+
+
             //数据验证
             if (isAdd)
             {
                 //判断版本是否存在
-                if (db.AppVersions.Count(p => p.Platforms == Entity.APPVersionPlatforms.IOS &&  p.APPType == entity.APPType && p.Version == entity.Version) > 0)
+                if (bll.GetCount(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType && p.Version == entity.Version) > 0)
                 {
                     ModelState.AddModelError("Version", "该版本存在");
                 }
@@ -195,7 +182,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                if (db.AppVersions.Count(p => p.ID == entity.ID) == 0)
+                if (bll.GetCount(p => p.ID == entity.ID) == 0)
                 {
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -206,30 +193,23 @@ namespace Universal.Web.Areas.Admin.Controllers
                 //添加
                 if (entity.ID == 0)
                 {
-                    var new_ver = db.AppVersions.Where(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType).OrderByDescending(p => p.VersionCode).FirstOrDefault();
-                    
+                    var new_ver = bll.GetModel(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType, p => p.VersionCode, false);
                     entity.VersionCode = new_ver == null ? 1 : new_ver.VersionCode + 1;
                     entity.AddTime = DateTime.Now;
-                    
-                    db.AppVersions.Add(entity);
+
+                    bll.Add(entity);
 
                 }
                 else //修改
                 {
-                    var old_entity = db.AppVersions.Find(entity.ID);
-                    db.Entry(old_entity).CurrentValues.SetValues(entity);
-
+                    //var old_entity = db.AppVersions.Find(entity.ID);
+                    //db.Entry(old_entity).CurrentValues.SetValues(entity);
+                    bll.Modify(entity);
                 }
-
-                db.SaveChanges();
-                db.Dispose();
                 return PromptView("/admin/AppVersion", "OK", "Success", "操作成功", 5);
             }
             else
-            {
-                db.Dispose();
                 return View(entity);
-            }
         }
 
         /// <summary>

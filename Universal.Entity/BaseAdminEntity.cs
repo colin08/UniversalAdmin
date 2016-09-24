@@ -16,9 +16,15 @@ namespace Universal.Entity
         public DateTime AddTime { get; set; }
 
         /// <summary>
+        /// 添加者ID
+        /// </summary>
+        public int AddUserID { get; set; }
+
+        /// <summary>
         /// 添加信息的用户信息
         /// </summary>
         [Display(Name ="添加者")]
+        [ForeignKey("AddUserID")]
         public virtual SysUser AddUser { get; set; }
 
         /// <summary>
@@ -28,9 +34,15 @@ namespace Universal.Entity
         public DateTime LastUpdateTime { get; set; }
 
         /// <summary>
+        /// 最后修改者ID
+        /// </summary>
+        public int LastUpdateUserID { get; set; }
+
+        /// <summary>
         /// 最后修改的用户的信息
         /// </summary>
         [Display(Name ="最后修改者")]
+        [ForeignKey("LastUpdateUserID")]
         public virtual SysUser LastUpdateUser { get; set; }
 
     }

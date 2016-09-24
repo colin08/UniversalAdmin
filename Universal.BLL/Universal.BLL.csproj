@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseBLL.cs" />
+    <Compile Include="BLLDemo.cs" />
+    <Compile Include="BLLSysRole.cs" />
+    <Compile Include="BLLSysRoute.cs" />
     <Compile Include="DynamicLinq.cs" />
     <Compile Include="FilterSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,6 +69,10 @@
     <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
       <Project>{0568B903-5079-4390-880D-DE68862E1462}</Project>
       <Name>Universal.DataCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Universal.Entity\Universal.Entity.csproj">
+      <Project>{67a0c808-58d1-4394-b8c5-f14925f3d5de}</Project>
+      <Name>Universal.Entity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Universal.Tools\Universal.Tools.csproj">
       <Project>{14d7ea68-6235-4d4c-bd93-894e20e14f75}</Project>

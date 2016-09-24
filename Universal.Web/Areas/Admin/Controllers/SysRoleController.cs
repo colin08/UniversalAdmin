@@ -21,22 +21,19 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.word = word;
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysroleindex"), SiteKey.AdminDefaultPageSize);
-            var db = new DataCore.EFDBContext();
-            //查询分页
-            IQueryable<Entity.SysRole> query = db.SysRoles;
+
+            int total = 0;
+
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             if (!string.IsNullOrWhiteSpace(word))
-                query = query.Where(p => p.RoleName.Contains(word));
+                filter.Add(new BLL.FilterSearch("RoleName", word, BLL.FilterSearchContract.like));
 
-            //总数
-            int total = query.Count();
 
-            query = query.OrderByDescending(p => p.AddTime);
-            query = query.Skip(response_model.page_size * (page - 1)).Take(response_model.page_size);
-
-            response_model.DataList = query.ToList();
+            BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.AddTime, false);
+            response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
-            db.Dispose();
             return View(response_model);
         }
 
@@ -52,7 +49,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             string path = IOHelper.GetMapPath("~/bin/Universal.Web.dll");
             byte[] buffer = System.IO.File.ReadAllBytes(path);
             Assembly assembly = Assembly.Load(buffer);
-            
+
             foreach (var type in assembly.ExportedTypes)
             {
                 System.Reflection.MemberInfo[] properties = type.GetMembers();
@@ -81,28 +78,30 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             #endregion
 
-            var db = new DataCore.EFDBContext();
-            var db_list = db.SysRoutes.ToList();
+            BLL.BaseBLL<Entity.SysRoute> bll = new BLL.BaseBLL<Entity.SysRoute>();
+            var db_list = bll.GetListBy(new List<BLL.FilterSearch>());
 
             foreach (var item in db_list)
             {
                 var entity = route_list.Where(p => p.IsPost == item.IsPost && p.Route == item.Route).FirstOrDefault();
                 //如果数据库对应程序中不存在，则删除数据库里的
-                if(entity == null)
+                if (entity == null)
                 {
-                    db.SysRoutes.Remove(item);
+                    bll.Del(item);
 
-                }else
+                }
+                else
                 {
                     //否则修改数据库里的DES之类的辅助说明              
                     item.Desc = entity.Desc;
                     item.Tag = entity.Tag;
+                    bll.Modify(item);
                 }
             }
 
             foreach (var item in route_list)
             {
-                var entity = db.SysRoutes.Where(p => p.IsPost == item.IsPost && p.Route == item.Route).FirstOrDefault();
+                var entity = bll.GetModel(p => p.IsPost == item.IsPost && p.Route == item.Route);
                 if (entity == null)
                 {
                     var route = new Entity.SysRoute();
@@ -111,12 +110,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                     route.IsPost = item.IsPost;
                     route.Route = item.Route;
                     route.Tag = item.Tag;
-                    db.SysRoutes.Add(route);
+                    bll.Add(route);
                 }
             }
             AddAdminLogs(Entity.SysLogMethodType.Update, "更新权限数据");
-            db.SaveChanges();
-            db.Dispose();
 
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
@@ -126,25 +123,23 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("用户组", "用户组信息编辑页面")]
         public ActionResult Edit(int? id)
         {
-            using (var db = new DataCore.EFDBContext())
-            {
-                if (id == null)
-                    GetTree(db);
-                else
-                    GetTree(db, TypeHelper.ObjectToInt(id, 0));
+            BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
+            if (id == null)
+                GetTree();
+            else
+                GetTree(TypeHelper.ObjectToInt(id, 0));
 
-                Entity.SysRole entity = new Entity.SysRole();
-                int num = TypeHelper.ObjectToInt(id, 0);
-                if (num != 0)
+            Entity.SysRole entity = new Entity.SysRole();
+            int num = TypeHelper.ObjectToInt(id, 0);
+            if (num != 0)
+            {
+                entity = bll.GetModel(p => p.ID == num);
+                if (entity == null)
                 {
-                    entity = db.SysRoles.Find(num);
-                    if (entity == null)
-                    {
-                        return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 5);
-                    }
+                    return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
-                return View(entity);
             }
+            return View(entity);
         }
 
         [AdminPermissionAttribute("用户组", "保存用户组编辑的信息")]
@@ -153,164 +148,94 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult Edit(Entity.SysRole entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
-            var db = new DataCore.EFDBContext();
-            GetTree(db, entity.ID);
+            BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
+            GetTree(entity.ID);
 
             var qx = WebHelper.GetFormString("hid_qx");
             //数据验证
             if (isAdd)
             {
-                if (db.SysRoles.Count(p => p.RoleName == entity.RoleName) > 0)
-                {
+                if (bll.GetCount(p => p.RoleName == entity.RoleName) > 0)
                     ModelState.AddModelError("RoleName", "该组名已存在");
-                }
-
             }
             else
             {
-                if (db.SysRoles.Count(p => p.ID == entity.ID) == 0)
-                {
+                if (bll.GetCount(p => p.ID == entity.ID) == 0)
                     return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
-                }
-            }
-            var role = db.SysRoles.Find(entity.ID);
 
-            if (ModelState.IsValid)
-            {
-                if (!isAdd)
+                var old_entity = bll.GetModel(p => p.ID == entity.ID);
+                //验证组名是否存在
+                if (old_entity.RoleName != entity.RoleName)
                 {
-                    //验证组名是否存在
-                    if (role.RoleName != entity.RoleName)
-                    {
-                        if (db.SysRoles.Count(p => p.RoleName == entity.RoleName) > 0)
-                        {
-                            ModelState.AddModelError("RoleName", "该组名已存在");
-                        }
-                    }
+                    if (bll.GetCount(p => p.RoleName == entity.RoleName) > 0)
+                        ModelState.AddModelError("RoleName", "该组名已存在");
                 }
             }
 
             if (ModelState.IsValid)
             {
-                //添加
-                if (entity.ID == 0)
-                {
-                    entity.AddTime = DateTime.Now;
-                    if (!string.IsNullOrWhiteSpace(qx))
-                    {
-                        foreach (var item in qx.Split(','))
-                        {
-                            int route_id = TypeHelper.ObjectToInt(item);
-                            db.SysRoleRoutes.Add(
-                                new Entity.SysRoleRoute() { SysRole = entity, SysRouteID = route_id }
-                            );
-                        }
-                    }
-                    db.SysRoles.Add(entity);
-
-                }
+                BLL.BLLSysRole bll_role = new BLL.BLLSysRole();
+                if (entity.ID == 0)//添加
+                    bll_role.Add(entity, qx);
                 else //修改
-                {
-                    role.RoleName = entity.RoleName;
-                    role.RoleDesc = entity.RoleDesc;
-                    role.IsAdmin = entity.IsAdmin;
-                    if (string.IsNullOrWhiteSpace(qx))
-                    {
-                        var list = db.SysRoleRoutes.Where(p => p.SysRoleID == role.ID).ToList();
-                        list.ForEach(p => db.SysRoleRoutes.Remove(p));
-                    }
-                    else
-                    {
-                        List<int> new_id_list = qx.Split(',').Select(Int32.Parse).ToList();
-                        var route_list = db.SysRoleRoutes.Where(p => p.SysRoleID == role.ID).ToList();
-                        List<int> route_id_list = new List<int>();
-                        foreach (var item in route_list)
-                        {
-                            route_id_list.Add(item.SysRouteID);
-                        }
-                        //判断存在的差
-                        var route_del_list = route_id_list.Except(new_id_list).ToList();
-                        foreach (var item in route_del_list)
-                        {
-                            //删除
-                            var del_entity = db.SysRoleRoutes.Where(p => p.SysRouteID == item && p.SysRoleID == role.ID).FirstOrDefault();
-                            db.SysRoleRoutes.Remove(del_entity);
-                        }
+                    bll_role.Modify(entity, qx);
 
-                        var route_add_list = new_id_list.Except(route_id_list).ToList();
-                        foreach (var item in route_add_list)
-                        {
-                            //做增加
-                            db.SysRoleRoutes.Add(new Entity.SysRoleRoute() { SysRoleID = entity.ID, SysRouteID = item });
-                        }
-                    }
-                }
-
-                db.SaveChanges();
-                db.Dispose();
                 return PromptView("/admin/SysRole", "OK", "Success", "操作成功", 5);
             }
             else
-            {
-                db.Dispose();
                 return View(entity);
-            }
 
         }
-        
+
         [HttpPost]
         [AdminPermissionAttribute("用户组", "删除用户组信息")]
         public JsonResult Del(string ids)
         {
-            WorkContext.AjaxStringEntity.msgbox = "暂不能删除用户组";
-            return Json(WorkContext.AjaxStringEntity);
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
 
-            //if (string.IsNullOrWhiteSpace(ids))
-            //{
-            //    WorkContext.AjaxStringEntity.msgbox = "缺少参数";
-            //    return Json(WorkContext.AjaxStringEntity);
-            //}
-            //var db = new DataCore.EFDBContext();
-            //foreach (var item in ids.Split(','))
-            //{
-            //    int id = TypeHelper.ObjectToInt(item);
-            //    var entity = db.SysUsers.Find(id);
-            //    if (entity != null)
-            //    {
-            //        db.SysUsers.Remove(entity);
-            //        AddAdminLogs( Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
-            //    }
-            //}
-            //db.SaveChanges();
-            //db.Dispose();
-            //WorkContext.AjaxStringEntity.msg = 1;
-            //WorkContext.AjaxStringEntity.msgbox = "success";
-            //return Json(WorkContext.AjaxStringEntity);
+            BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
+            foreach (var item in ids.Split(','))
+            {
+                int id = TypeHelper.ObjectToInt(item);
+                if (id != 1)
+                {
+                    bll.DelBy(p => p.ID == id);
+                    AddAdminLogs(Entity.SysLogMethodType.Delete, "删除用户组：" + item);
+                }
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "success";
+            return Json(WorkContext.AjaxStringEntity);
         }
 
         /// <summary>
         /// 获取树数据
         /// </summary>
         /// <param name="id">当前组ID，没有传0</param>
-        private void GetTree(DataCore.EFDBContext db, int id = 0)
+        private void GetTree(int id = 0)
         {
+            BLL.BaseBLL<Entity.SysRole> bll_route = new BLL.BaseBLL<Entity.SysRole>();
+            BLL.BaseBLL<Entity.SysRoleRoute> bll_role_route = new BLL.BaseBLL<Entity.SysRoleRoute>();
             Entity.SysRole role = null;
             if (id != 0)
-            {
-                role = db.SysRoles.Find(id);
-            }
+                role = bll_route.GetModel(p => p.ID == id);
+
             List<Models.ViewModelTree> list = new List<Models.ViewModelTree>();
-            var query = db.SysRoutes.GroupBy(p => p.Tag).ToList();
-            for (int i = 0; i < query.Count; i++)
+            var route_group = new BLL.BLLSysRoute().GetListGroupByTag();
+            for (int i = 0; i < route_group.Count; i++)
             {
                 int top_id = i + 10000;
                 Models.ViewModelTree model = new Models.ViewModelTree();
                 model.id = top_id;
-                model.name = query[i].Key;
+                model.name = route_group[i].Key;
                 model.open = i < 4 ? true : false;
                 model.pId = 0;
                 list.Add(model);
-                foreach (var item in query[i].ToList())
+                foreach (var item in route_group[i].ToList())
                 {
                     Models.ViewModelTree model2 = new Models.ViewModelTree();
                     model2.id = item.ID;
@@ -318,7 +243,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     model2.open = false;
                     model2.pId = top_id;
                     if (role != null)
-                        model2.is_checked = db.SysRoleRoutes.Count(p => p.SysRoleID == role.ID && p.SysRouteID == item.ID) > 0 ? true : false;
+                        model2.is_checked = bll_role_route.GetCount(p => p.SysRoleID == role.ID && p.SysRouteID == item.ID) > 0 ? true : false;
 
                     list.Add(model2);
                 }

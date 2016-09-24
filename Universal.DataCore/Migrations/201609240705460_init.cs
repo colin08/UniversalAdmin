@@ -37,15 +37,15 @@ namespace Universal.DataCore.Migrations
                         Ran = c.Int(nullable: false),
                         Num = c.Single(nullable: false),
                         AddTime = c.DateTime(nullable: false),
+                        AddUserID = c.Int(nullable: false),
                         LastUpdateTime = c.DateTime(nullable: false),
-                        AddUser_ID = c.Int(),
-                        LastUpdateUser_ID = c.Int(),
+                        LastUpdateUserID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.SysUser", t => t.AddUser_ID)
-                .ForeignKey("dbo.SysUser", t => t.LastUpdateUser_ID)
-                .Index(t => t.AddUser_ID)
-                .Index(t => t.LastUpdateUser_ID);
+                .ForeignKey("dbo.SysUser", t => t.AddUserID, cascadeDelete: false)
+                .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID, cascadeDelete: false)
+                .Index(t => t.AddUserID)
+                .Index(t => t.LastUpdateUserID);
             
             CreateTable(
                 "dbo.SysUser",
@@ -179,10 +179,10 @@ namespace Universal.DataCore.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.SysLogMethod", "SysUserID", "dbo.SysUser");
-            DropForeignKey("dbo.Demo", "LastUpdateUser_ID", "dbo.SysUser");
+            DropForeignKey("dbo.Demo", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.DemoDept", "DemoID", "dbo.Demo");
             DropForeignKey("dbo.DemoAlbum", "DemoID", "dbo.Demo");
-            DropForeignKey("dbo.Demo", "AddUser_ID", "dbo.SysUser");
+            DropForeignKey("dbo.Demo", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.SysUser", "SysRoleID", "dbo.SysRole");
             DropForeignKey("dbo.SysRoleRoute", "SysRouteID", "dbo.SysRoute");
             DropForeignKey("dbo.SysRoleRoute", "SysRoleID", "dbo.SysRole");
@@ -194,8 +194,8 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.SysRole", new[] { "RoleName" });
             DropIndex("dbo.SysUser", new[] { "SysRoleID" });
             DropIndex("dbo.SysUser", new[] { "UserName" });
-            DropIndex("dbo.Demo", new[] { "LastUpdateUser_ID" });
-            DropIndex("dbo.Demo", new[] { "AddUser_ID" });
+            DropIndex("dbo.Demo", new[] { "LastUpdateUserID" });
+            DropIndex("dbo.Demo", new[] { "AddUserID" });
             DropTable("dbo.SysLogMethod");
             DropTable("dbo.SysLogException");
             DropTable("dbo.Feedback");

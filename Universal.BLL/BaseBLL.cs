@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,7 +33,19 @@ namespace Universal.BLL
         {
             db.Set<T>().Add(model);
             //保存成功后，会将自增的id设置给model的主键属性，并返回受影响的行数。
-            return db.SaveChanges();
+            try
+            {
+                return db.SaveChanges();
+            }
+            catch(DbUpdateException ex)
+            {
+                throw new Exception("添加数据出现异常", ex);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                throw new Exception("添加数据出现异常", ex);
+            }
+            
         }
         #endregion
 
@@ -292,15 +305,54 @@ namespace Universal.BLL
         }
         #endregion
 
-        #region 4.4 根据条件查询单个model + T GetCount(Expression<Func<T,bool>> whereLambda)
+        #region 4.4 根据条件查询单个model，使用两个Incloud + T GetModel<TKey,TKey2>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
         /// <summary>
-        /// 4.4 根据条件查询单个model
+        /// 4.4 根据条件查询单个model，使用Incloud
+        /// </summary>
+        /// <param name="where">Where条件</param>
+        /// <param name="incloudLambda">包含条件</param>
+        /// <param name="incloudLambda2">包含2</param>
+        /// <returns></returns>
+        public T GetModel<TKey,TKey2>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
+        {
+            return db.Set<T>().WhereCustom(where).Include(incloudLambda).Include(incloudLambda2).AsNoTracking().FirstOrDefault();
+        }
+        #endregion
+
+        #region 4.5 根据条件查询单个model，使用两个Incloud + T GetModel<TKey, TKey2>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
+        /// <summary>
+        /// 4.4 根据条件查询单个model，使用Incloud
+        /// </summary>
+        /// <param name="whereLambda">Where条件</param>
+        /// <param name="incloudLambda">包含条件</param>
+        /// <param name="incloudLambda2">包含2</param>
+        /// <returns></returns>
+        public T GetModel<TKey, TKey2>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
+        {
+            return db.Set<T>().Where(whereLambda).Include(incloudLambda).Include(incloudLambda2).AsNoTracking().FirstOrDefault();
+        }
+        #endregion
+
+        #region 7.0 根据条件查询数量 + T GetCount(Expression<Func<T,bool>> whereLambda)
+        /// <summary>
+        /// 7.0 根据条件查询数量
         /// </summary>
         /// <param name="whereLambda">Where条件</param>
         /// <returns></returns>
         public int GetCount(Expression<Func<T,bool>> whereLambda)
         {
             return db.Set<T>().Count(whereLambda);
+        }
+        #endregion
+        #region 7.1 根据条件查询数量 + T GetCount(List<FilterSearch> where)
+        /// <summary>
+        /// 7.1 根据条件查询数量
+        /// </summary>
+        /// <param name="where">Where条件</param>
+        /// <returns></returns>
+        public int GetCount(List<FilterSearch> where)
+        {
+            return db.Set<T>().CountCustom(where);
         }
         #endregion
 

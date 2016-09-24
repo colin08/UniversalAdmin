@@ -315,10 +315,6 @@
       <Project>{d291ef55-3d6d-4c5a-be18-25875b78342e}</Project>
       <Name>Universal.BLL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Universal.DataCore\Universal.DataCore.csproj">
-      <Project>{0568b903-5079-4390-880d-de68862e1462}</Project>
-      <Name>Universal.DataCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Universal.Entity\Universal.Entity.csproj">
       <Project>{67a0c808-58d1-4394-b8c5-f14925f3d5de}</Project>
       <Name>Universal.Entity</Name>

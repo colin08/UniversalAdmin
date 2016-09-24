@@ -95,14 +95,15 @@ namespace Universal.Web.Areas.Admin.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "缺少参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            using (var db = new DataCore.EFDBContext())
+            BLL.BaseBLL<Entity.SysLogMethod> bll = new BLL.BaseBLL<Entity.SysLogMethod>();
+            foreach (var item in ids.Split(','))
             {
-                db.Database.ExecuteSqlCommand("delete SysLogMethod where ID in(" + ids + ")");
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "success";
-                return Json(WorkContext.AjaxStringEntity);
+                int id = TypeHelper.ObjectToInt(item);
+                bll.DelBy(p => p.ID == id);
             }
-
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "success";
+            return Json(WorkContext.AjaxStringEntity);
         }
     }
 }

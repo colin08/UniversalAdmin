@@ -29,25 +29,24 @@ namespace Universal.Web.Areas.Admin.Controllers
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysuserindex"), SiteKey.AdminDefaultPageSize);
 
-            var db = new DataCore.EFDBContext();
-            Load(db);
-            //查询分页
-            IQueryable<Entity.SysUser> query = db.SysUsers;
+            Load();
+
+            int total = 0;
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             if (role != 0)
-                query = query.Where(p => p.SysRoleID == role);
+                filter.Add(new BLL.FilterSearch("SysRoleID", role.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
-                query = query.Where(p => p.NickName.Contains(word) || p.UserName.Contains(word));
+            {
+                filter.Add(new BLL.FilterSearch("NickName", word, BLL.FilterSearchContract.like));
+                filter.Add(new BLL.FilterSearch("UserName", word, BLL.FilterSearchContract.like));
+            }
 
-            //总数
-            int total = query.Count();
 
-            query = query.Include(p => p.SysRole).OrderByDescending(p => p.RegTime);
-            query = query.Skip(response_model.page_size * (page - 1)).Take(response_model.page_size);
-
-            response_model.DataList = query.ToList();
+            BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.RegTime, p => p.SysRole, false);
+            response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
-            db.Dispose();
             return View(response_model);
         }
 
@@ -59,22 +58,19 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("后台用户", "后台用户编辑页面")]
         public ActionResult Edit(int? id)
         {
-
-            using (var db = new DataCore.EFDBContext())
+            BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
+            Load();
+            Entity.SysUser entity = new Entity.SysUser();
+            int num = TypeHelper.ObjectToInt(id, 0);
+            if (num != 0)
             {
-                Load(db);
-                Entity.SysUser entity = new Entity.SysUser();
-                int num = TypeHelper.ObjectToInt(id, 0);
-                if (num != 0)
+                entity = bll.GetModel(p => p.ID == num);
+                if (entity == null)
                 {
-                    entity = db.SysUsers.Find(num);
-                    if (entity == null)
-                    {
-                        return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
-                    }
+                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
-                return View(entity);
             }
+            return View(entity);
         }
 
         /// <summary>
@@ -89,8 +85,8 @@ namespace Universal.Web.Areas.Admin.Controllers
         {
             var isAdd = entity.ID == 0 ? true : false;
 
-            var db = new DataCore.EFDBContext();
-            Load(db);
+            BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
+            Load();
 
             if (entity.SysRoleID == 0)
             {
@@ -101,7 +97,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断用户名是否存在
-                if (db.SysUsers.Count(p => p.UserName == entity.UserName) > 0)
+                if (bll.GetCount(p => p.UserName == entity.UserName) > 0)
                 {
                     ModelState.AddModelError("UserName", "该用户名已存在");
                 }
@@ -110,7 +106,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             else
             {
                 //如果要编辑的用户不存在
-                if (db.SysUsers.Count(p => p.ID == entity.ID) == 0)
+                if (bll.GetCount(p => p.ID == entity.ID) == 0)
                 {
                     return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -125,12 +121,12 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity.RegTime = DateTime.Now;
                     entity.Password = SecureHelper.MD5(entity.Password);
                     entity.LastLoginTime = DateTime.Now;
-                    db.SysUsers.Add(entity);
+                    bll.Add(entity);
 
                 }
                 else //修改
                 {
-                    var user = db.SysUsers.Find(entity.ID);
+                    var user = bll.GetModel(p => p.ID == entity.ID);
                     if (entity.Password != "litdev")
                         user.Password = SecureHelper.MD5(entity.Password);
                     user.NickName = entity.NickName;
@@ -138,18 +134,13 @@ namespace Universal.Web.Areas.Admin.Controllers
                     user.Status = entity.Status;
                     user.Avatar = entity.Avatar;
                     user.SysRoleID = entity.SysRoleID;
+                    bll.Modify(user);
                 }
-
-                db.SaveChanges();
-                db.Dispose();
+                
                 return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 5);
             }
             else
-            {
-                db.Dispose();
                 return View(entity);
-            }
-            
         }
         /// <summary>
         /// 删除用户
@@ -163,19 +154,15 @@ namespace Universal.Web.Areas.Admin.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "缺少参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            var db = new DataCore.EFDBContext();
+            BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
             foreach (var item in ids.Split(','))
             {
                 int id = TypeHelper.ObjectToInt(item);
-                var entity = db.SysUsers.Find(id);
-                if (entity != null)
+                if (bll.DelBy(p => p.ID == id) > 0)
                 {
-                    db.SysUsers.Remove(entity);
-                    AddAdminLogs(Entity.SysLogMethodType.Delete, "删除后台用户：" + item + ",登录名：" + entity.UserName + ",昵称:" + entity.NickName);
+                    AddAdminLogs(Entity.SysLogMethodType.Delete, "删除后台用户：" + id + "");
                 }
             }
-            db.SaveChanges();
-            db.Dispose();
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             return Json(WorkContext.AjaxStringEntity);
@@ -185,12 +172,12 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <summary>
         /// 加载用户组
         /// </summary>
-        private void Load(DataCore.EFDBContext db)
+        private void Load()
         {
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "全部组", Value = "0" });
-            var lis = db.SysRoles;
-            foreach (var item in lis.ToList())
+            BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
+            foreach (var item in bll.GetListBy(new List<BLL.FilterSearch>()))
             {
                 userRoleList.Add(new SelectListItem() { Text = item.RoleName, Value = item.ID.ToString() });
             }

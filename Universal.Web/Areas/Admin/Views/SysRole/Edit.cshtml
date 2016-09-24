@@ -33,6 +33,8 @@
     </ul>
     <form method="post" class="form-horizontal"  onsubmit="configm_before()">
         @Html.AntiForgeryToken()
+        <input type="hidden" id="hid_qx" name="hid_qx" value="aaa" />
+        @Html.HiddenFor(p=>p.AddTime)
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
                 <div style="margin-top:20px;"></div>

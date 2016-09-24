@@ -49,8 +49,7 @@ namespace Universal.BLL
             Expression left = Expression.Property(param, property);
             //组装右边  
             Expression right = null;
-
-            //todo: 下面根据需要，扩展自己的类型  
+ 
             if (property.PropertyType == typeof(int))
             {
                 right = Expression.Constant(int.Parse(filterObj.Value));
@@ -84,8 +83,7 @@ namespace Universal.BLL
             {
                 throw new Exception("暂不能解析该Key的类型");
             }
-
-            //todo: 下面根据需要扩展自己的比较  
+            
             Expression filter = Expression.Equal(left, right);
             switch (filterObj.Contract)
             {
@@ -114,6 +112,7 @@ namespace Universal.BLL
                     filter = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new[] { typeof(string) }),
                                  Expression.Constant(filterObj.Value)));
                     break;
+                    
                 default:
                     filter = Expression.Equal(left, right);
                     break;

@@ -31,6 +31,8 @@
     </ul>
     <form method="post" class="form-horizontal" onsubmit="configm_before2()">
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(p=>p.AddUserID)
+        @Html.HiddenFor(p=>p.LastUpdateUserID)
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
                 <div style="margin-top:20px;"></div>
