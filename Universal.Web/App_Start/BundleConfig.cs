@@ -11,6 +11,9 @@ namespace Universal.Web
         // 有关绑定的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            //关闭压缩功能，否则发布后文件加载不了
+            BundleTable.EnableOptimizations = false;
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Assets/js/jquery.min.js"));
 
@@ -86,6 +89,7 @@ namespace Universal.Web
 
             bundles.Add(new StyleBundle("~/Content/ztree_metroStyle").Include(
                       "~/Assets/js/plugins/ztree/css/metroStyle/metroStyle.css"));
+
         }
     }
 }
