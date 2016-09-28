@@ -46,7 +46,7 @@ namespace Universal.BLL
 
             var old_entity = db.SysRoles.Find(entity.ID);
             db.Entry(old_entity).CurrentValues.SetValues(entity);
-
+            
             //修改权限数据
             if(string.IsNullOrWhiteSpace(qx))
             {
@@ -64,6 +64,7 @@ namespace Universal.BLL
                 //删除
                 var del_entity = db.SysRoleRoutes.Where(p => p.SysRouteID == item && p.SysRoleID == entity.ID).FirstOrDefault();
                 db.SysRoleRoutes.Remove(del_entity);
+
             }
 
             var route_add_list = new_id_list.Except(route_id_list).ToList();

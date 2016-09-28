@@ -136,7 +136,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     user.SysRoleID = entity.SysRoleID;
                     bll.Modify(user);
                 }
-                
+
                 return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 5);
             }
             else
@@ -155,14 +155,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
-            foreach (var item in ids.Split(','))
-            {
-                int id = TypeHelper.ObjectToInt(item);
-                if (bll.DelBy(p => p.ID == id) > 0)
-                {
-                    AddAdminLogs(Entity.SysLogMethodType.Delete, "删除后台用户：" + id + "");
-                }
-            }
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            AddAdminLogs(Entity.SysLogMethodType.Delete, "删除后台用户：" + ids + "");
+
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             return Json(WorkContext.AjaxStringEntity);

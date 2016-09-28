@@ -45,7 +45,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             if (type != 0)
-                filter.Add(new BLL.FilterSearch("Type",type.ToString(),BLL.FilterSearchContract.等于));
+                filter.Add(new BLL.FilterSearch("Type", type.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
                 filter.Add(new BLL.FilterSearch("Detail", word, BLL.FilterSearchContract.like));
 
@@ -96,11 +96,9 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.SysLogMethod> bll = new BLL.BaseBLL<Entity.SysLogMethod>();
-            foreach (var item in ids.Split(','))
-            {
-                int id = TypeHelper.ObjectToInt(item);
-                bll.DelBy(p => p.ID == id);
-            }
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             return Json(WorkContext.AjaxStringEntity);

@@ -44,11 +44,9 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.Demo> bll = new BLL.BaseBLL<Entity.Demo>();
-            foreach (var item in ids.Split(','))
-            {
-                int id = TypeHelper.ObjectToInt(item);
-                bll.DelBy(p => p.ID == id);
-            }
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','),int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            AddAdminLogs(Entity.SysLogMethodType.Delete, "删除Demo："+ids);
 
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";

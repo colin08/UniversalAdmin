@@ -120,23 +120,23 @@ namespace Universal.Web.Framework
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(WorkContext.UrlReferrer))
-                {
                     filterContext.Result = PromptView("500", "系统发生错误", error_msg);
-                }
-                else
-                {
-                    PromptModel model = new PromptModel();
-                    model.IsAutoLink = true;
-                    model.IsShowLink = true;
-                    model.Status = "500";
-                    model.Details = error_msg;
-                    model.Message = "系统发生错误";
-                    model.CountdownTime = 10;
-                    model.CountdownModel = 10;
-                    model.LinkUrl = WorkContext.UrlReferrer;
-                    filterContext.Result = PromptView(model);
-                }
+                //if (string.IsNullOrWhiteSpace(WorkContext.UrlReferrer))
+                //{
+                //}
+                //else
+                //{
+                //    PromptModel model = new PromptModel();
+                //    model.IsAutoLink = true;
+                //    model.IsShowLink = true;
+                //    model.Status = "500";
+                //    model.Details = error_msg;
+                //    model.Message = "系统发生错误";
+                //    model.CountdownTime = 10;
+                //    model.CountdownModel = 10;
+                //    model.LinkUrl = WorkContext.UrlReferrer;
+                //    filterContext.Result = PromptView(model);
+                //}
             }
         }
 

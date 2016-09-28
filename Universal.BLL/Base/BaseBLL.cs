@@ -7,6 +7,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Universal.DataCore;
+using EntityFramework.Extensions;
+using EntityFramework.Caching;
 
 namespace Universal.BLL
 {
@@ -20,7 +22,7 @@ namespace Universal.BLL
         /// 上下文
         /// </summary>
         DbContext db = new EFDBContext();
-
+        private static readonly int CacheTime = 10;
 
         //增
         #region 1.0 新增实体，返回受影响的行数 +  int Add(T model)
@@ -37,7 +39,7 @@ namespace Universal.BLL
             {
                 return db.SaveChanges();
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 throw new Exception("添加数据出现异常", ex);
             }
@@ -45,7 +47,7 @@ namespace Universal.BLL
             {
                 throw new Exception("添加数据出现异常", ex);
             }
-            
+
         }
         #endregion
 
@@ -78,45 +80,49 @@ namespace Universal.BLL
         }
         #endregion
 
-        #region 2.1 根据条件删除 + int DelBy(List<FilterSearch> delWhere)
+        #region 2.1 根据条件删除 + void DelBy(List<FilterSearch> delWhere)
         /// <summary>
         /// 2.1 根据条件删除
         /// </summary>
         /// <param name="delWhere"></param>
         /// <returns>返回受影响的行数</returns>
-        public int DelBy(List<FilterSearch> delWhere)
+        public void DelBy(List<FilterSearch> delWhere)
         {
-            //2.1.1 查询要删除的数据
-            List<T> listDeleting = db.Set<T>().WhereCustom(delWhere).ToList();
-            //2.1.2 将要删除的数据 用删除方法添加到 EF 容器中
-            listDeleting.ForEach(u =>
-            {
-                db.Set<T>().Attach(u);  //先附加到EF 容器
-                db.Set<T>().Remove(u); //标识为删除状态
-            });
-            //2.1.3 一次性生成sql语句 到数据库执行删除
-            return db.SaveChanges();
+            db.Set<T>().WhereCustom(delWhere).Delete();
+            db.SaveChanges();
+            ////2.1.1 查询要删除的数据
+            //List<T> listDeleting = db.Set<T>().WhereCustom(delWhere).ToList();
+            ////2.1.2 将要删除的数据 用删除方法添加到 EF 容器中
+            //listDeleting.ForEach(u =>
+            //{
+            //    db.Set<T>().Attach(u);  //先附加到EF 容器
+            //    db.Set<T>().Remove(u); //标识为删除状态
+            //});
+            ////2.1.3 一次性生成sql语句 到数据库执行删除
+            //return db.SaveChanges();
         }
         #endregion
 
-        #region 2.2 根据条件删除 + int DelBy(Expression<Func<T, bool>> delWhere)
+        #region 2.2 根据条件删除 + void DelBy(Expression<Func<T, bool>> delWhere)
         /// <summary>
         /// 2.2 根据条件删除
         /// </summary>
         /// <param name="delWhere"></param>
         /// <returns>返回受影响的行数</returns>
-        public int DelBy(Expression<Func<T, bool>> delWhere)
+        public void DelBy(Expression<Func<T, bool>> delWhere)
         {
-            //2.1.1 查询要删除的数据
-            List<T> listDeleting = db.Set<T>().Where(delWhere).ToList();
-            //2.1.2 将要删除的数据 用删除方法添加到 EF 容器中
-            listDeleting.ForEach(u =>
-            {
-                db.Set<T>().Attach(u);  //先附加到EF 容器
-                db.Set<T>().Remove(u); //标识为删除状态
-            });
-            //2.1.3 一次性生成sql语句 到数据库执行删除
-            return db.SaveChanges();
+            db.Set<T>().Where(delWhere).Delete();
+            db.SaveChanges();
+            ////2.1.1 查询要删除的数据
+            //List<T> listDeleting = db.Set<T>().Where(delWhere).ToList();
+            ////2.1.2 将要删除的数据 用删除方法添加到 EF 容器中
+            //listDeleting.ForEach(u =>
+            //{
+            //    db.Set<T>().Attach(u);  //先附加到EF 容器
+            //    db.Set<T>().Remove(u); //标识为删除状态
+            //});
+            ////2.1.3 一次性生成sql语句 到数据库执行删除
+            //return db.SaveChanges();
         }
         #endregion
 
@@ -212,7 +218,7 @@ namespace Universal.BLL
         /// <param name="whereLambda"></param>
         /// <param name="modifiedPropertyNames"></param>
         /// <returns></returns>
-        public int ModifyBy(T model, Expression<Func<T,bool>> whereLambda, params string[] modifiedPropertyNames)
+        public int ModifyBy(T model, Expression<Func<T, bool>> whereLambda, params string[] modifiedPropertyNames)
         {
             //3.2.1 查询要修改的数据
             List<T> listModifing = db.Set<T>().Where(whereLambda).ToList();
@@ -273,7 +279,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="whereLambda">Where条件</param>
         /// <returns></returns>
-        public T GetModel(Expression<Func<T,bool>> whereLambda)
+        public T GetModel(Expression<Func<T, bool>> whereLambda)
         {
             return db.Set<T>().Where(whereLambda).AsNoTracking().FirstOrDefault();
         }
@@ -299,7 +305,7 @@ namespace Universal.BLL
         /// <param name="whereLambda">Where条件</param>
         /// <param name="incloudLambda">包含条件</param>
         /// <returns></returns>
-        public T GetModel<TKey>(Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda)
+        public T GetModel<TKey>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda)
         {
             return db.Set<T>().Where(whereLambda).Include(incloudLambda).AsNoTracking().FirstOrDefault();
         }
@@ -313,7 +319,7 @@ namespace Universal.BLL
         /// <param name="incloudLambda">包含条件</param>
         /// <param name="incloudLambda2">包含2</param>
         /// <returns></returns>
-        public T GetModel<TKey,TKey2>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
+        public T GetModel<TKey, TKey2>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, Expression<Func<T, TKey2>> incloudLambda2)
         {
             return db.Set<T>().WhereCustom(where).Include(incloudLambda).Include(incloudLambda2).AsNoTracking().FirstOrDefault();
         }
@@ -339,7 +345,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="whereLambda">Where条件</param>
         /// <returns></returns>
-        public int GetCount(Expression<Func<T,bool>> whereLambda)
+        public int GetCount(Expression<Func<T, bool>> whereLambda)
         {
             return db.Set<T>().Count(whereLambda);
         }
@@ -387,7 +393,7 @@ namespace Universal.BLL
         /// <param name="orderLambda"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public T GetModel<TKey>(Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
+        public T GetModel<TKey>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
         {
             if (isAsc)
             {
@@ -400,26 +406,34 @@ namespace Universal.BLL
         }
         #endregion
         //查，查List
-        #region  5.0 根据条件查询 + List<T> GetListBy(List<FilterSearch> where)
+        #region  5.0 根据条件查询 + List<T> GetListBy(List<FilterSearch> where,bool isCache=false)
         /// <summary>
         /// 5.0 根据条件查询
         /// </summary>
         /// <param name="where"></param>
+        /// <param name="isCache">是否缓存</param>
         /// <returns></returns>
-        public List<T> GetListBy(List<FilterSearch> where)
+        public List<T> GetListBy(List<FilterSearch> where,bool isCache=false)
         {
-            return db.Set<T>().WhereCustom(where).AsNoTracking().ToList();
+            if (isCache)
+                return db.Set<T>().WhereCustom(where).AsNoTracking().ToList();
+            else
+                return db.Set<T>().WhereCustom(where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
         }
         #endregion
-        #region  5.1 根据条件查询 + List<T> GetListBy(Expression<Func<T,bool>> whereLambda)
+        #region  5.1 根据条件查询 + List<T> GetListBy(Expression<Func<T,bool>> whereLambda,bool isCache=false)
         /// <summary>
         /// 5.1 根据条件查询
         /// </summary>
         /// <param name="whereLambda"></param>
+        /// <param name="isCache">是否缓存</param>
         /// <returns></returns>
-        public List<T> GetListBy(Expression<Func<T,bool>> whereLambda)
+        public List<T> GetListBy(Expression<Func<T, bool>> whereLambda, bool isCache = false)
         {
-            return db.Set<T>().Where(whereLambda).AsNoTracking().ToList();
+            if(!isCache)
+                return db.Set<T>().Where(whereLambda).AsNoTracking().ToList();
+            else
+                return db.Set<T>().Where(whereLambda).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
         }
         #endregion
         #region 5.2 根据条件查询，并排序 +  List<T> GetListBy<TKey>(List<FilterSearch> where, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
@@ -452,7 +466,7 @@ namespace Universal.BLL
         /// <param name="orderLambda"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public List<T> GetListBy<TKey>(Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
+        public List<T> GetListBy<TKey>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
         {
             if (isAsc)
             {
@@ -496,7 +510,7 @@ namespace Universal.BLL
         /// <param name="orderLambda"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public List<T> GetListBy<TKey>(int top, Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
+        public List<T> GetListBy<TKey>(int top, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderLambda, bool isAsc = true)
         {
             if (isAsc)
             {
@@ -558,7 +572,7 @@ namespace Universal.BLL
         /// <param name="isAsc1"></param>
         /// <param name="isAsc2"></param>
         /// <returns></returns>
-        public List<T> GetListBy<TKey1, TKey2>(Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey1>> orderLambda1, Expression<Func<T, TKey2>> orderLambda2, bool isAsc1 = true, bool isAsc2 = true)
+        public List<T> GetListBy<TKey1, TKey2>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey1>> orderLambda1, Expression<Func<T, TKey2>> orderLambda2, bool isAsc1 = true, bool isAsc2 = true)
         {
             if (isAsc1)
             {
@@ -636,7 +650,7 @@ namespace Universal.BLL
         /// <param name="isAsc1"></param>
         /// <param name="isAsc2"></param>
         /// <returns></returns>
-        public List<T> GetListBy<TKey1, TKey2>(int top, Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey1>> orderLambda1, Expression<Func<T, TKey2>> orderLambda2, bool isAsc1 = true, bool isAsc2 = true)
+        public List<T> GetListBy<TKey1, TKey2>(int top, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey1>> orderLambda1, Expression<Func<T, TKey2>> orderLambda2, bool isAsc1 = true, bool isAsc2 = true)
         {
             if (isAsc1)
             {
@@ -678,16 +692,28 @@ namespace Universal.BLL
         /// <returns></returns>
         public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, Expression<Func<T, TKey>> orderByLambda, bool isAsc = true)
         {
-            rowCount = db.Set<T>().WhereCustom(where).Count();
-
+            //使用拓展框架
+            var q = db.Set<T>().WhereCustom(where);
+            var q1 = q.FutureCount();
+            IOrderedQueryable<T> q2 = null;
             if (isAsc)
-            {
-                return db.Set<T>().OrderBy(orderByLambda).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            }
+                q2 = q.OrderBy(orderByLambda);
             else
-            {
-                return db.Set<T>().OrderByDescending(orderByLambda).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            }
+                q2 = q.OrderByDescending(orderByLambda);
+            var q3 = q2.Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            rowCount = q1.Value;
+            return q3.ToList();
+
+            //rowCount = db.Set<T>().WhereCustom(where).Count();
+
+            //if (isAsc)
+            //{
+            //    return db.Set<T>().OrderBy(orderByLambda).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            //}
+            //else
+            //{
+            //    return db.Set<T>().OrderByDescending(orderByLambda).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            //}
         }
 
 
@@ -705,18 +731,30 @@ namespace Universal.BLL
         /// <param name="incloudLambda"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> orderByLambda, bool isAsc = true)
+        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderByLambda, bool isAsc = true)
         {
-            rowCount = db.Set<T>().Where(whereLambda).Count();
-
+            //使用拓展框架
+            var q = db.Set<T>().Where(whereLambda);
+            var q1 = q.FutureCount();
+            IOrderedQueryable<T> q2 = null;
             if (isAsc)
-            {
-                return db.Set<T>().OrderBy(orderByLambda).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            }
+                q2 = q.OrderBy(orderByLambda);
             else
-            {
-                return db.Set<T>().OrderByDescending(orderByLambda).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            }
+                q2 = q.OrderByDescending(orderByLambda);
+            var q3 = q2.Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            rowCount = q1.Value;
+            return q3.ToList();
+
+            //rowCount = db.Set<T>().Where(whereLambda).Count();
+
+            //if (isAsc)
+            //{
+            //    return db.Set<T>().OrderBy(orderByLambda).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            //}
+            //else
+            //{
+            //    return db.Set<T>().OrderByDescending(orderByLambda).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            //}
         }
 
 
@@ -737,6 +775,24 @@ namespace Universal.BLL
         /// <returns></returns>
         public List<T> GetPagedList<TKey, TKey1>(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, Expression<Func<T, TKey>> orderByLambda, Expression<Func<T, TKey1>> incloudLambda, bool isAsc = true)
         {
+
+            //使用拓展框架 使用InCloud就报错
+            //IQueryable<T> q = null;// db.Set<T>().WhereCustom(where);
+            //if (incloudLambda != null)
+            //    q =db.Set<T>().WhereCustom(where).Include(incloudLambda);
+            //else
+            //    q =db.Set<T>().WhereCustom(where);
+            //var q1 = q.FutureCount();
+            //IOrderedQueryable<T> q2 = null;
+            //if (isAsc)
+            //    q2 = q.OrderBy(orderByLambda);
+            //else
+            //    q2 = q.OrderByDescending(orderByLambda);
+
+            //var q3 = q2.Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            //rowCount = q1.Value;
+            //return q3.ToList();
+
             rowCount = db.Set<T>().WhereCustom(where).Count();
 
             if (isAsc)
@@ -775,8 +831,31 @@ namespace Universal.BLL
         /// <param name="incloudLambda"></param>
         /// <param name="isAsc"></param>
         /// <returns></returns>
-        public List<T> GetPagedList<TKey, TKey1>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T,bool>> whereLambda, Expression<Func<T, TKey>> orderByLambda, Expression<Func<T, TKey1>> incloudLambda, bool isAsc = true)
+        public List<T> GetPagedList<TKey, TKey1>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> orderByLambda, Expression<Func<T, TKey1>> incloudLambda, bool isAsc = true)
         {
+            //使用拓展框架
+            //var q = db.Set<T>().Where(whereLambda);
+            //var q1 = q.FutureCount();
+            //IOrderedQueryable<T> q2 = null;
+            //if (isAsc)
+            //{
+            //    if (incloudLambda != null)
+            //        q2 = q.Include(incloudLambda).OrderBy(orderByLambda);
+            //    else
+            //        q2 = q.OrderBy(orderByLambda);
+            //}
+            //else
+            //{
+            //    if (incloudLambda != null)
+            //        q2 = q.Include(incloudLambda).OrderByDescending(orderByLambda);
+            //    else
+            //        q2 = q.OrderByDescending(orderByLambda);
+            //}
+
+            //var q3 = q2.Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            //rowCount = q1.Value;
+            //return q3.ToList();
+
             rowCount = db.Set<T>().Where(whereLambda).Count();
 
             if (isAsc)
@@ -799,48 +878,6 @@ namespace Universal.BLL
             }
         }
 
-
-        #endregion
-        #region 6.2 分页查询 带输出 并支持双字段排序
-        ///// <summary>
-        ///// 分页查询 带输出 并支持双字段排序
-        ///// </summary>
-        ///// <typeparam name="TKey"></typeparam>
-        ///// <param name="pageIndex"></param>
-        ///// <param name="pageSize"></param>
-        ///// <param name="rowCount"></param>
-        ///// <param name="whereLambda"></param>
-        ///// <param name="orderByLambda1"></param>
-        ///// <param name="orderByLambda2"></param>
-        ///// <param name="isAsc1"></param>
-        ///// <param name="isAsc2"></param>
-        ///// <returns></returns>
-        //public List<T> GetPagedList<TKey1, TKey2>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey1>> orderByLambda1, Expression<Func<T, TKey2>> orderByLambda2, bool isAsc1 = true, bool isAsc2 = true)
-        //{
-        //    rowCount = db.Set<T>().Where(whereLambda).Count();
-        //    if (isAsc1)
-        //    {
-        //        if (isAsc2)
-        //        {
-        //            return db.Set<T>().OrderBy(orderByLambda1).ThenBy(orderByLambda2).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-        //        }
-        //        else
-        //        {
-        //            return db.Set<T>().OrderBy(orderByLambda1).ThenByDescending(orderByLambda2).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (isAsc2)
-        //        {
-        //            return db.Set<T>().OrderByDescending(orderByLambda1).ThenBy(orderByLambda2).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-        //        }
-        //        else
-        //        {
-        //            return db.Set<T>().OrderByDescending(orderByLambda1).ThenByDescending(orderByLambda2).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-        //        }
-        //    }
-        //}
         #endregion
     }
 }

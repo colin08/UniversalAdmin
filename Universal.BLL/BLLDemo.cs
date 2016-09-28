@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Universal.DataCore;
 using Universal.Entity;
+using EntityFramework.Extensions;
 
 namespace Universal.BLL
 {
@@ -45,9 +46,11 @@ namespace Universal.BLL
                 return false;
 
             //删除旧数据
-            db.DemoAlbums.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
-            db.DemoDepts.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
-            
+            //db.DemoAlbums.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
+            //db.DemoDepts.Where(p => p.DemoID == entity.ID).ToList().ForEach(p => db.Entry(p).State = EntityState.Deleted);
+            db.DemoAlbums.Where(p => p.DemoID == entity.ID).Delete();
+            db.DemoDepts.Where(p => p.DemoID == entity.ID).Delete();
+
             var old_entity = db.Demo.Find(entity.ID);
             db.Entry(old_entity).CurrentValues.SetValues(entity);
             ((List<DemoAlbum>)entity.Albums).ForEach(p => db.Entry(p).State = EntityState.Added);
