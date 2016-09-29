@@ -23,7 +23,7 @@ namespace Universal.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //TODO 接口校验处于关闭状态
-            //GlobalConfiguration.Configuration.MessageHandlers.Add(new Universal.Web.Framework.ApplicationAuthenticationHandler());
+            //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
 
         }
 

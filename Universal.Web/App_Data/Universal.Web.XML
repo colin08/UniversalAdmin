@@ -136,6 +136,21 @@
             系统注册的路由列表
             </summary>
         </member>
+        <member name="T:Universal.Web.Areas.Admin.Models.ViewModelLogAPIAction">
+            <summary>
+            接口日志
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Areas.Admin.Models.ViewModelLogAPIAction.word">
+            <summary>
+            当前筛选的关键字
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Areas.Admin.Models.ViewModelLogAPIAction.DataList">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Universal.Web.Areas.Admin.Models.ViewModelLogMethod.word">
             <summary>
             当前筛选的关键字

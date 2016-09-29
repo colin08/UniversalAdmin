@@ -39,6 +39,11 @@ namespace Universal.DataCore
         public DbSet<Entity.SysLogException> SysLogExceptions { get; set; }
 
         /// <summary>
+        /// 接口请求日志
+        /// </summary>
+        public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
+
+        /// <summary>
         /// 意见反馈
         /// </summary>
         public DbSet<Entity.Feedback> Feedbacks { get; set; }

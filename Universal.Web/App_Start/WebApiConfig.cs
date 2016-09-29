@@ -13,7 +13,8 @@ namespace Universal.Web
             // Web API 配置和服务
             //异常过滤器
             config.Filters.Add(new Framework.CustomAPIExceptionAttribute());
-
+            config.Filters.Add(new Framework.CustomApiTrackerAttribute());
+            
             //更改返回类型为json
             var jsonFormatter = new JsonMediaTypeFormatter();
             jsonFormatter.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd hh:mm:ss" });

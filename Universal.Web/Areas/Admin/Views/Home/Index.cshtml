@@ -82,6 +82,10 @@
                              {
                             @:<li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
                              }
+                             @if (CheckAdminPower("SysLog/LogApiAction", false))
+                             {
+                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
+                             }
                         </ul>
                     </li>
                     </text>
