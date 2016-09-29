@@ -16,12 +16,13 @@ namespace Universal.Entity
         /// <summary>
         /// 控制器名字
         /// </summary>
+        [MaxLength(20)]
         public string ControllerName { get; set; }
 
         /// <summary>
         /// Action
         /// </summary>
-        [MaxLength(10)]
+        [MaxLength(20)]
         public string ActionName { get; set; }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace Universal.Entity
         /// <summary>
         /// 请求方式
         /// </summary>
-        [MaxLength(5)]
+        [MaxLength(10)]
         public string HttpMethod { get; set; }
 
     }

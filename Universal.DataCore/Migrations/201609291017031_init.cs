@@ -154,15 +154,15 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Uri = c.String(maxLength: 500),
-                        ControllerName = c.String(),
-                        ActionName = c.String(maxLength: 10),
+                        ControllerName = c.String(maxLength: 20),
+                        ActionName = c.String(maxLength: 20),
                         ExecuteStartTime = c.DateTime(nullable: false),
                         ExecuteEndTime = c.DateTime(nullable: false),
                         ExecuteTime = c.Double(nullable: false),
                         ActionParams = c.String(),
                         HttpRequestHeaders = c.String(),
                         IP = c.String(maxLength: 20),
-                        HttpMethod = c.String(maxLength: 5),
+                        HttpMethod = c.String(maxLength: 10),
                     })
                 .PrimaryKey(t => t.ID);
             
