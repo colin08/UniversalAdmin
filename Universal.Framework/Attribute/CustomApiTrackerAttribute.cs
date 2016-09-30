@@ -15,7 +15,7 @@ namespace Universal.Web.Framework
     /// Web Api接口监控
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-    public class CustomApiTrackerAttribute:ActionFilterAttribute
+    public class CustomApiTrackerAttribute : ActionFilterAttribute
     {
         private readonly string Key = "_thisWebApiOnActionMonitorLog_";
         public override void OnActionExecuting(HttpActionContext actionContext)
@@ -56,10 +56,14 @@ namespace Universal.Web.Framework
             MonLog.ControllerName = actionExecutedContext.ActionContext.ActionDescriptor.ControllerDescriptor.ControllerName;
             MonLog.Uri = actionExecutedContext.Request.RequestUri.OriginalString;
             //Trace.WriteLine(MonLog.GetLoginfo());
-            BLL.BaseBLL<Entity.SysLogApiAction> bll = new BLL.BaseBLL<Entity.SysLogApiAction>();
-            DateTime now_date = DateTime.Now.Date;
-            bll.DelBy(p => p.ExecuteStartTime < now_date);
-            bll.Add(MonLog.GetLogEntity()); 
+            Tools.WebSiteModel site = Tools.ConfigHelper.LoadConfig<Tools.WebSiteModel>(Tools.ConfigFileEnum.SiteConfig);
+            if (site.EnableAPILog)
+            {
+                BLL.BaseBLL<Entity.SysLogApiAction> bll = new BLL.BaseBLL<Entity.SysLogApiAction>();
+                DateTime now_date = DateTime.Now.Date;
+                bll.DelBy(p => p.ExecuteStartTime < now_date);
+                bll.Add(MonLog.GetLogEntity());
+            }
         }
     }
 }

@@ -105,6 +105,11 @@ namespace Universal.Tools
         /// </summary>
         public bool LogExceptionInDB { get; set; }
 
+        /// <summary>
+        /// 启用接口日志
+        /// </summary>
+        public bool EnableAPILog { get; set; }
+
     }
 
 }
