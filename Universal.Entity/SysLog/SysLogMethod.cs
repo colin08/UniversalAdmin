@@ -8,7 +8,7 @@ namespace Universal.Entity
     /// <summary>
     /// 操作日志类别
     /// </summary>
-    public enum SysLogMethodType
+    public enum SysLogMethodType : byte
     {
         [Description("添加")]
         Add = 1,

@@ -7,7 +7,7 @@ namespace Universal.Entity
     /// <summary>
     /// 用户性别枚举
     /// </summary>
-    public enum UserGender
+    public enum UserGender : byte
     {
         男 = 1,
         女 = 2

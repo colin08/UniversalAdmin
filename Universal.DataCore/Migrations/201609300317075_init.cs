@@ -12,8 +12,8 @@ namespace Universal.DataCore.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Platforms = c.Int(nullable: false),
-                        APPType = c.Int(nullable: false),
+                        Platforms = c.Byte(nullable: false),
+                        APPType = c.Byte(nullable: false),
                         MD5 = c.String(nullable: false, maxLength: 100),
                         Size = c.Long(nullable: false),
                         Version = c.String(nullable: false, maxLength: 20),
@@ -54,7 +54,7 @@ namespace Universal.DataCore.Migrations
                         ID = c.Int(nullable: false, identity: true),
                         UserName = c.String(nullable: false, maxLength: 20),
                         NickName = c.String(nullable: false, maxLength: 30),
-                        Gender = c.Int(nullable: false),
+                        Gender = c.Byte(nullable: false),
                         Password = c.String(nullable: false, maxLength: 255),
                         Status = c.Boolean(nullable: false),
                         Avatar = c.String(),
@@ -184,7 +184,7 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         SysUserID = c.Int(nullable: false),
-                        Type = c.Int(nullable: false),
+                        Type = c.Byte(nullable: false),
                         Detail = c.String(nullable: false, maxLength: 500),
                         AddTime = c.DateTime(nullable: false),
                     })
