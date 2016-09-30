@@ -27,7 +27,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 filters.Add(new BLL.FilterSearch("Title", word, BLL.FilterSearchContract.like));
             int total = 0;
             BLL.BaseBLL<Entity.Demo> bll = new BLL.BaseBLL<Entity.Demo>();
-            List<Entity.Demo> list = bll.GetPagedList(page, response_model.page_size, ref total, filters, p => p.AddTime, false);
+            List<Entity.Demo> list = bll.GetPagedList(page, response_model.page_size, ref total, filters, "AddTime desc");
 
             response_model.DataList = list;
             response_model.total = total;
@@ -86,7 +86,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             string str_albums = WebHelper.GetFormString("StrAlbums");
             if (!isAdd)
             {
-                if (bll.GetCount(p => p.ID == entity.ID) == 0)
+                if (bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/demo", "404", "Not Found", "信息不存在或已被删除", 5);
                 }

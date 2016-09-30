@@ -30,7 +30,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.AddTime, false);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "AddTime desc");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -79,7 +79,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             #endregion
 
             BLL.BaseBLL<Entity.SysRoute> bll = new BLL.BaseBLL<Entity.SysRoute>();
-            var db_list = bll.GetListBy(new List<BLL.FilterSearch>());
+            var db_list = bll.GetListBy(0,new List<BLL.FilterSearch>(),null);
 
             foreach (var item in db_list)
             {
@@ -155,19 +155,19 @@ namespace Universal.Web.Areas.Admin.Controllers
             //数据验证
             if (isAdd)
             {
-                if (bll.GetCount(p => p.RoleName == entity.RoleName) > 0)
+                if (bll.Exists(p => p.RoleName == entity.RoleName))
                     ModelState.AddModelError("RoleName", "该组名已存在");
             }
             else
             {
-                if (bll.GetCount(p => p.ID == entity.ID) == 0)
+                if (bll.Exists(p => p.ID == entity.ID))
                     return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
 
                 var old_entity = bll.GetModel(p => p.ID == entity.ID);
                 //验证组名是否存在
                 if (old_entity.RoleName != entity.RoleName)
                 {
-                    if (bll.GetCount(p => p.RoleName == entity.RoleName) > 0)
+                    if (bll.Exists(p => p.RoleName == entity.RoleName))
                         ModelState.AddModelError("RoleName", "该组名已存在");
                 }
             }
@@ -243,7 +243,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     model2.open = false;
                     model2.pId = top_id;
                     if (role != null)
-                        model2.is_checked = bll_role_route.GetCount(p => p.SysRoleID == role.ID && p.SysRouteID == item.ID) > 0 ? true : false;
+                        model2.is_checked = bll_role_route.Exists(p => p.SysRoleID == role.ID && p.SysRouteID == item.ID);
 
                     list.Add(model2);
                 }

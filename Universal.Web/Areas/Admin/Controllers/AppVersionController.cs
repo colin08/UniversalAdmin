@@ -29,8 +29,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 filters.Add(new BLL.FilterSearch("Platforms", platform.ToString(), BLL.FilterSearchContract.等于));
             int total = 0;
             BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
-            List<Entity.AppVersion> list = bll.GetPagedList(page, response_model.page_size, ref total, filters, p => p.AddTime, false);
-
+            List<Entity.AppVersion> list = bll.GetPagedList(page, response_model.page_size, ref total, filters, "AddTime desc");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -96,7 +95,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断版本是否存在
-                if (bll.GetCount(p => p.Platforms == Entity.APPVersionPlatforms.Android && p.APPType == Entity.APPVersionType.Standard && p.Version == entity.Version) > 0)
+                if (bll.Exists(p => p.Platforms == Entity.APPVersionPlatforms.Android && p.APPType == Entity.APPVersionType.Standard && p.Version == entity.Version))
                 {
                     ModelState.AddModelError("Content", "该版本存在");
                 }
@@ -104,7 +103,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                if (bll.GetCount(p => p.ID == entity.ID) == 0)
+                if (bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -174,7 +173,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断版本是否存在
-                if (bll.GetCount(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType && p.Version == entity.Version) > 0)
+                if (bll.Exists(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType && p.Version == entity.Version))
                 {
                     ModelState.AddModelError("Version", "该版本存在");
                 }
@@ -182,7 +181,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                if (bll.GetCount(p => p.ID == entity.ID) == 0)
+                if (bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -193,7 +192,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 //添加
                 if (entity.ID == 0)
                 {
-                    var new_ver = bll.GetModel(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType, p => p.VersionCode, false);
+                    var new_ver = bll.GetModel(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == entity.APPType, "VersionCode desc");
                     entity.VersionCode = new_ver == null ? 1 : new_ver.VersionCode + 1;
                     entity.AddTime = DateTime.Now;
 

@@ -43,7 +43,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.RegTime, p => p.SysRole, false);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "RegTime desc", p => p.SysRole);
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -97,7 +97,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断用户名是否存在
-                if (bll.GetCount(p => p.UserName == entity.UserName) > 0)
+                if (bll.Exists(p => p.UserName == entity.UserName))
                 {
                     ModelState.AddModelError("UserName", "该用户名已存在");
                 }
@@ -106,7 +106,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             else
             {
                 //如果要编辑的用户不存在
-                if (bll.GetCount(p => p.ID == entity.ID) == 0)
+                if (bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -173,7 +173,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "全部组", Value = "0" });
             BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
-            foreach (var item in bll.GetListBy(new List<BLL.FilterSearch>()))
+            foreach (var item in bll.GetListBy(0,new List<BLL.FilterSearch>(),null))
             {
                 userRoleList.Add(new SelectListItem() { Text = item.RoleName, Value = item.ID.ToString() });
             }

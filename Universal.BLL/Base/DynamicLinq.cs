@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -191,6 +192,40 @@ namespace Universal.BLL
             }
             var lambda = param.GenerateTypeLambda<T>(body); //最终组成lambda  
             return query.Count(lambda);
+        }
+
+        /// <summary>
+        /// 自定义Any查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        public static bool AnyCustom<T>(this IQueryable<T> query, List<FilterSearch> filters)
+        {
+            var param = DynamicLinq.CreateLambdaParam<T>("c");
+            Expression body = Expression.Constant(true); //初始默认一个true  
+            foreach (var filter in filters)
+            {
+                body = body.AndAlso(param.GenerateBody<T>(filter)); //这里可以根据需要自由组合  
+            }
+            var lambda = param.GenerateTypeLambda<T>(body); //最终组成lambda  
+            return query.Any(lambda);
+        }
+
+        /// <summary>
+        /// 排序拓展方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="ordering"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static IQueryable<T> OrderByCustom<T>(this IQueryable<T> query, string ordering, params object[] values)
+        {
+            if (query == null)
+                throw new ArgumentException("query is null");
+            return DynamicQueryable.OrderBy(query, ordering, values);
         }
         
     }

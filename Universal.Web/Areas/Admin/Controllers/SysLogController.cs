@@ -17,7 +17,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult LogException()
         {
             BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
-            return View(bll.GetListBy(new List<BLL.FilterSearch>(), p => p.AddTime, false));
+            return View(bll.GetListBy(0,new List<BLL.FilterSearch>(), "AddTime desc", false));
         }
 
         [AdminPermission("日志", "系统操作日志列表")]
@@ -51,7 +51,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysLogMethod> bll = new BLL.BaseBLL<Entity.SysLogMethod>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.AddTime, p => p.SysUser, false);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "AddTime desc", p => p.SysUser);
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -76,7 +76,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysLogApiAction> bll = new BLL.BaseBLL<Entity.SysLogApiAction>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, p => p.ExecuteTime, false);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "ExecuteTime desc");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);

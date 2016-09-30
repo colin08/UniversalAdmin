@@ -45,7 +45,7 @@ namespace Universal.Web.Framework
             List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
             filters.Add(new BLL.FilterSearch("IsPost", isPost.ToString(), BLL.FilterSearchContract.等于));
             filters.Add(new BLL.FilterSearch("Route",PageKey, BLL.FilterSearchContract.等于));
-            if (bll.GetCount(filters) > 0)
+            if (bll.Exists(filters))
             {
                 var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
                 result = entity == null ? false : true;
