@@ -35,10 +35,11 @@ namespace Universal.Web.Framework
             Encoding encoding = Encoding.UTF8;
             stream.Position = 0;
             string responseData = "";
-            using (StreamReader reader = new StreamReader(stream, encoding))
-            {
-                responseData = reader.ReadToEnd().ToString();
-            }
+            //启用下面的代码接口上传文件将会报错
+            //using (StreamReader reader = new StreamReader(stream, encoding))
+            //{
+            //    responseData = reader.ReadToEnd().ToString();
+            //}
             if (!string.IsNullOrWhiteSpace(responseData) && !MonLog.ActionParams.ContainsKey("__EntityParamsList__"))
             {
                 MonLog.ActionParams["__EntityParamsList__"] = responseData;
