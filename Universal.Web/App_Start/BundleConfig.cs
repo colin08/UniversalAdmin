@@ -34,6 +34,9 @@ namespace Universal.Web
             bundles.Add(new ScriptBundle("~/bundles/laypage").Include(
                       "~/Assets/js/plugins/layer/laypage/laypage.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/my97datepicker").Include(
+                        "~/Assets/js/plugins/My97DatePicker/WdatePicker.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/tools").Include(
                       "~/Assets/js/tools.js"));
 

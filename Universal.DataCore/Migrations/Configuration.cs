@@ -43,7 +43,7 @@ namespace Universal.DataCore.Migrations
                 NickName = "超级管理员",
                 Password = pwd,
                 Status = true,
-                SysRole = role_root,
+                SysRoleID = role_root.ID,
                 UserName = "admin",
                 Gender = Entity.UserGender.男,
                 Avatar = ""

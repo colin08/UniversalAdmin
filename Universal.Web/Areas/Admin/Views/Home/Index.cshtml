@@ -68,6 +68,21 @@
                     </text>
                      }
 
+                     @if (CheckAdminPower("cususer/Index", false))
+                     {
+                     <text>
+                    <li>
+                        <a href="#"><i class="fa fa-users"></i> <span class="nav-label">前端用户</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            @if (CheckAdminPower("CusUser/Index", false))
+                            {
+                            @:<li><a class="J_menuItem" href="/Admin/CusUser/Index">用户管理</a></li>
+                            }
+                        </ul>
+                    </li>
+                    </text>
+                     }
+
                     @if (CheckAdminPower("SysLog/LogMethod", false))
                      {
                      <text>

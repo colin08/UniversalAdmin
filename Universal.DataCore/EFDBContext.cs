@@ -77,7 +77,17 @@ namespace Universal.DataCore
         /// 测试成员
         /// </summary>
         public DbSet<Entity.DemoDept> DemoDepts { get; set; }
+
+        /// <summary>
+        /// 用户
+        /// </summary>
+        public DbSet<Entity.CusUser> CusUsers { get; set; }
         
+        /// <summary>
+        /// 验证码
+        /// </summary>
+        public DbSet<Entity.CusVerification> CusVerifications { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

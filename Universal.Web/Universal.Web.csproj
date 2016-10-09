@@ -260,6 +260,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AppVersionController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CusUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelCusUser.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelAppVersion.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
@@ -307,6 +309,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\APIController.cs" />
+    <Compile Include="Controllers\api\UserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
@@ -375,6 +378,8 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Areas\Admin\Views\SysLog\LogApiAction.cshtml" />
+    <Content Include="Areas\Admin\Views\CusUser\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CusUser\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -383,9 +388,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Views\SysLogApiAction\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
       <Project>{d291ef55-3d6d-4c5a-be18-25875b78342e}</Project>

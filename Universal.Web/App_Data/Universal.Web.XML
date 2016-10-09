@@ -800,5 +800,10 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Universal.Web.Controllers.UserController">
+            <summary>
+            用户接口
+            </summary>
+        </member>
     </members>
 </doc>

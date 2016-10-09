@@ -80,7 +80,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AdminPermissionAttribute("后台用户", "保存后台用户首页编辑信息")]
+        [AdminPermissionAttribute("后台用户", "保存后台用户编辑的信息")]
         public ActionResult Edit(Entity.SysUser entity)
         {
             var isAdd = entity.ID == 0 ? true : false;

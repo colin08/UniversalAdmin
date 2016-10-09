@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AppVersion.cs" />
     <Compile Include="BaseAdminEntity.cs" />
+    <Compile Include="CusUser\CusUser.cs" />
+    <Compile Include="CusUser\CusVerification.cs" />
     <Compile Include="Demo\Demo.cs" />
     <Compile Include="Demo\DemoAlbum.cs" />
     <Compile Include="Demo\DemoDept.cs" />

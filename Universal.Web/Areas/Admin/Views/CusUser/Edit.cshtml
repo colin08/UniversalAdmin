@@ -1,0 +1,250 @@
+﻿@model Universal.Entity.CusUser
+@{
+    ViewBag.Title = "编辑用户信息";
+}
+
+<!--头部脚本-->
+@section head
+{
+    
+}
+
+<!--头部脚本 end-->
+
+<!--路径导航-->
+@section nav
+{
+<div class="col-sm-4">
+    <h2>编辑前端用户</h2>
+    <ol class="breadcrumb">
+        <li>主页</li>
+        <li><a href="@Url.Action("Index", "CusUser", new { Area = "Admin" })">前端用户列表</a></li>
+        <li><strong>编辑前端账户</strong></li>
+    </ol>
+</div>
+<a href="@Url.Action("Index", "CusUser", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
+}
+<!--路径导航 end-->
+
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal"  onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        @if(Model.ID != 0)
+        {
+            @Html.HiddenFor(p=>p.Telphone)
+            @Html.HiddenFor(p=>p.RegTime)
+            @Html.HiddenFor(p=>p.LastLoginTime)
+        }
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Telphone)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Telphone, Model.ID == 0 ? (object)new { @class = "form-control", placeholder = "手机号" } : (object)new { @class = "form-control", disabled = "disabled" }) 
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Telphone)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Password)</label>
+
+                    <div class="col-sm-3">
+                        @Html.PasswordFor(p => p.Password, Model.ID == 0 ? (object)new { @class = "form-control", placeholder = "最大长度30" } : (object)new { @class = "form-control", value = "litdev" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Password)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.NickName)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.NickName, new { @class = "form-control", placeholder = "姓名" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.NickName)</label>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.Avatar)
+                        <button type="button" class="btn btn-primary " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.Avatar)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.Avatar))
+                                {
+                                    @:<li><img src="@Model.Avatar" ids="0" class="@Html.NameFor(p => p.Avatar)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.Avatar)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Gender) </label>
+                    <div class="col-sm-10">
+                        @Html.RadioButtonFor(x => x.Gender, 1, new { @id = "rb_gender_1", @checked = true }) <label for="rb_gender_1">男</label>
+                        &nbsp;
+                        @Html.RadioButtonFor(x => x.Gender, 2, new { @id="rb_gender_2"}) <label for="rb_gender_2">女</label>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Status) </label>
+                    <div class="col-sm-10">
+                        @Html.RadioButtonFor(x => x.Status, true, new { @id="rb_status_1"}) <label for="rb_status_1">正常</label>
+                        &nbsp;
+                        @Html.RadioButtonFor(x => x.Status, false,new { @id="rb_status_2"}) <label for="rb_status_2">禁用</label>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Brithday)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Brithday, new { @class = "form-control", placeholder = "生日", onfocus= "WdatePicker({minDate:'1970-1-1',maxDate:'%y-%M-%d'})" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Brithday)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.ShorNum)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.ShorNum, new { @class = "form-control", placeholder = "短号" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.ShorNum)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Email)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Email, new { @class = "form-control", placeholder = "邮箱" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Email)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AboutMe)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.AboutMe, new { @class = "form-control", placeholder = "简介" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.AboutMe)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+
+<!--底部脚本-->
+@section foot
+{
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/my97datepicker")
+
+<script>
+    function upload() {
+        var total = $(".@Html.NameFor(p=>p.Avatar)List").size();
+        if (total >= 1) {
+            layer.msg("已有头像，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "avatar", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.Avatar), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path)
+    {
+        if(path.length != 0)
+        {
+            $("#@Html.NameFor(p=>p.Avatar)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.Avatar)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.Avatar)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.Avatar)ListData").append(img_te);
+        }
+    }
+
+
+    $(function () {
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+</script>
+}
+<!--底部脚本 end-->

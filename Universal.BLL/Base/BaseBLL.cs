@@ -104,7 +104,14 @@ namespace Universal.BLL
         {
             DbEntityEntry entry = db.Entry<T>(model);
             entry.State = EntityState.Modified;
-            return db.SaveChanges();
+            try
+            {
+                return db.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
