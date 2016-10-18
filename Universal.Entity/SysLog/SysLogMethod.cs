@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
+using Universal.Tools;
 
 namespace Universal.Entity
 {
@@ -10,13 +11,13 @@ namespace Universal.Entity
     /// </summary>
     public enum SysLogMethodType : byte
     {
-        [Description("添加")]
+        [EnumShowName("添加")]
         Add = 1,
-        [Description("修改")]
+        [EnumShowName("修改")]
         Update = 2,
-        [Description("删除")]
+        [EnumShowName("删除")]
         Delete = 3,
-        [Description("登录")]
+        [EnumShowName("登录")]
         Login = 4
     }
 

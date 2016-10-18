@@ -18,6 +18,11 @@ namespace Universal.Entity
     /// </summary>
     public class SysUser
     {
+        public SysUser()
+        {
+            this.Gender = UserGender.男;
+        }
+
         /// <summary>
         /// 用户ID
         /// </summary>
