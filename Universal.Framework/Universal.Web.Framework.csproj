@@ -109,7 +109,6 @@
     <Compile Include="Attribute\CustomWebExceptionAttribute.cs" />
     <Compile Include="Controllers\BaseHBLController.cs" />
     <Compile Include="ExceptionInDB.cs" />
-    <Compile Include="HtmlExtensions.cs" />
     <Compile Include="PromptModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadApkPackInfo.cs" />
