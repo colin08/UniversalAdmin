@@ -621,7 +621,7 @@ namespace Universal.Tools
             else
                 ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
-            if (string.IsNullOrEmpty(ip) || !ValidateHelper.IsIP(ip))
+            if (string.IsNullOrEmpty(ip) || !ValidateHelper.IsIP(ip) || ip.Equals("::1"))
                 ip = "127.0.0.1";
             return ip;
         }

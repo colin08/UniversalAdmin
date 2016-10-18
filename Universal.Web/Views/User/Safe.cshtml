@@ -391,16 +391,17 @@
             var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
             if(!myreg.test(new_email))
             {
-                alert('非法邮箱格式');
+                $("#error_email_a").html('非法邮箱格式');
                 myreg.focus();
                 return false;
             }
 
             if (!email_modify(new_email))
                 return;
-            $("#span_email").html(new_email);
+            $("#span_email").html(new_email);            
             /*关闭当前*/
             allCloseFun();
+            location.reload();
         }
         function pwSubmit() {//确认修改密码
             $("#error_pw_a").html('');

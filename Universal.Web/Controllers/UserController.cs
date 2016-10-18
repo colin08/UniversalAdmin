@@ -188,7 +188,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(!ValidateHelper.IsEmail(email))
+            if (!ValidateHelper.IsEmail(email))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法邮箱格式";
                 return Json(WorkContext.AjaxStringEntity);

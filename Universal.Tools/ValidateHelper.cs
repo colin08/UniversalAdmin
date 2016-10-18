@@ -9,7 +9,7 @@ namespace Universal.Tools
     public class ValidateHelper
     {
         //邮件正则表达式
-        private static Regex _emailregex = new Regex(@"^[a-z]([a-z0-9]*[-_]?[a-z0-9]+)*@([a-z0-9]*[-_]?[a-z0-9]+)+[\.][a-z]{2,3}([\.][a-z]{2})?$", RegexOptions.IgnoreCase);
+        private static Regex _emailregex = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", RegexOptions.IgnoreCase);
         //手机号正则表达式
         private static Regex _mobileregex = new Regex("^(13|15|18|17)[0-9]{9}$");
         //固话号正则表达式
