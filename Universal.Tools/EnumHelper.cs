@@ -156,6 +156,12 @@ namespace Universal.Tools
             return EnumToDictionary(enumType)[intValue];
 
         }
+
+        public static string GetBEnumShowName(Type enumType, byte intValue)
+        {
+            return BEnumToDictionary(enumType)[intValue];
+        }
+
         public static string GetLEnumShowName(Type enumType, long intValue)
         {
             return LEnumToDictionary(enumType)[intValue];
