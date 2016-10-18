@@ -88,7 +88,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Universal.Web.Areas.Admin.Controllers.ToolsController.UploadFile(Universal.Web.Framework.Admin_Upload_Type,System.String,System.Int32,System.String,System.String)">
+        <member name="M:Universal.Web.Areas.Admin.Controllers.ToolsController.UploadFile(Universal.Tools.Admin_Upload_Type,System.String,System.Int32,System.String,System.String)">
             <summary>
             上传文件
             </summary>
@@ -783,6 +783,49 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:Universal.Web.Controllers.AccountController.Login">
+            <summary>
+            登录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.Login(Universal.Web.Models.ViewModelUserLogin)">
+            <summary>
+            登录处理
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.LoginOut">
+            <summary>
+            登出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.ResetPwd">
+            <summary>
+            重置密码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.ResetPwd(Universal.Web.Models.ViewModelSendPwd)">
+            <summary>
+            重置密码
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.SendCode(System.String,System.String)">
+            <summary>
+            发送验证码
+            </summary>
+            <param name="tel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AccountController.ResetSuc">
+            <summary>
+            重置密码成功
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Universal.Web.Controllers.APIController">
             <summary>
             测试接口
@@ -800,9 +843,181 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Universal.Web.Controllers.UserController">
+        <member name="T:Universal.Web.Controllers.CusUserController">
             <summary>
             用户接口
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.ToolsController.SendCode(System.String,System.String)">
+            <summary>
+            发送验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ToolsController.UploadAvatar(System.Web.HttpPostedFileBase)">
+            <summary>
+            上传用户头像
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.Basic">
+            <summary>
+            基本资料
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.Avatar">
+            <summary>
+            修改头像
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.Avatar(System.String)">
+            <summary>
+            修改头像
+            </summary>
+            <param name="avatar"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.Safe">
+            <summary>
+            安全设置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.CheckCode">
+            <summary>
+            验证码的校验
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.CheckPwd(System.String,System.String)">
+            <summary>
+            修改邮箱-检查密码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.ModifyEmail(System.String)">
+            <summary>
+            修改邮箱
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.CheckTel(System.String)">
+            <summary>
+            检查邮箱输入是否正确
+            </summary>
+            <param name="tel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.SendCode(System.String)">
+            <summary>
+            发送验证码
+            </summary>
+            <param name="tel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.CheckTelCode(System.String,System.String)">
+            <summary>
+            校验手机验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.CheckTelExists(System.String)">
+            <summary>
+            验证手机号是否存在
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.ModifyTel(System.String)">
+            <summary>
+            修改手机号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.ModifyPwd(System.String,System.String)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="old"></param>
+            <param name="newp"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelSendPwd">
+            <summary>
+            发送验证码
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelSendPwd.guid">
+            <summary>
+            标识
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelUserBasic">
+            <summary>
+            用户基本资料
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.nick_name">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.gender">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.year">
+            <summary>
+            年
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.month">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.day">
+            <summary>
+            日
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.short_num">
+            <summary>
+            短号
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserBasic.about_me">
+            <summary>
+            关于我
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelUserLogin">
+            <summary>
+            用户登录所需参数
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserLogin.user_name">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserLogin.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelUserLogin.is_rember">
+            <summary>
+            是否记住登陆
             </summary>
         </member>
     </members>

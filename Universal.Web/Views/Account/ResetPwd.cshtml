@@ -1,0 +1,150 @@
+﻿@model Universal.Web.Models.ViewModelSendPwd
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>找回密码</title>
+    <link type="text/css" rel="stylesheet" href="/Content/css/public.css" />
+</head>
+
+<body class="login_bg">
+    <div class="login_content">
+        <div class="f_pw_step">
+            <span class="icon_a">1</span>
+            <span>确认身份</span>
+            <span class="line"></span>
+            <span class="icon_a icon_b">2</span>
+            <span>重置密码</span>
+        </div>
+        <div class="content f_pw_bg">
+            <p class="tt">找回密码</p>
+            <p class="txt">请验证登录手机，我们将为您重置为初始密码。</p>
+            <form class="form_login" id="signIn" method="post">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p=>p.guid)
+                <p class="form_pad">@Html.TextBoxFor(p=>p.telphone,new { @class= "form_inp", placeholder= "手机号" })</p>
+                <p class="form_pad">
+                    @Html.TextBoxFor(p => p.code, new { @class = "form_inp", placeholder = "验证码" })
+                    <span class="form_sms" id="sendCode">获取验证码</span>
+                </p>
+                <input type="submit" class="form_but" id="button" value="立即重置" />
+                <p class="error" id="error">@Html.ValidationSummary()</p>
+            </form>
+        </div>
+    </div>
+    <p class="login_footer">Copyright &copy; 深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        function send_code() {
+            var guid = $("#guid").val();
+            var tel = $("#telphone").val();
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/Account/SendCode",
+                data: { "gui": guid, "tel": tel },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error").html(data.msgbox);
+                    } else {
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+function loginFun(){
+    var userN = $("#signIn input[name='telphone']"), userP = $("#signIn input[name='code']"), errorW = $("#error"), singIn = $("#button"), timer = 60, sendCode = $("#sendCode");
+    var guid = $("#guid").val();
+	/*发送短信*/
+	sendCode.click(function(){
+		if(sendCode.hasClass("disableBut")){
+			return false;
+		}
+		errorW.html('');
+		/*检查手机号码*/
+		if(userN.val()==''||typeof userN.val()=='undefined'){
+			errorW.html('手机号码不能为空');
+			userN.focus();
+			return false;
+		}
+		var re = /^1\d{10}$/
+		if (!re.test(userN.val()))
+		{
+		    errorW.html('非法手机号码');
+		    userN.focus();
+		    return false;
+		}
+
+		if (!send_code())
+		    return false;
+        
+		/*启动倒计时*/
+		sendCode.addClass("disableBut");
+		sendCode.html('重试('+timer+'s)');
+		var mov=setInterval(function(){
+			timer--;
+			if(timer>0){
+				sendCode.html('重试('+timer+'s)');
+			}
+			else{
+				sendCode.html('获取验证码');
+				sendCode.removeClass("disableBut");
+				timer=60;
+				clearInterval(mov);
+			}
+		},1000);
+	});
+
+	userN.focusout(function(){
+		if(userN.val()==''||typeof userN.val()=='undefined'){
+			errorW.html('手机号不能为空');
+		}
+	});
+	userP.focusout(function(){
+		if(userP.val()==''||typeof userP.val()=='undefined'){
+			errorW.html('验证码不能为空');
+		}
+	});
+	/*点击重置*/
+    singIn.click(function(){
+	    if(singIn.hasClass("disableBut")){
+			return false;
+		}
+		errorW.html('');
+		if(userN.val()==''||typeof userN.val()=='undefined'){
+			errorW.html('手机号不能为空');
+			userN.addClass("errorBg").focus();
+			return false;
+		}
+		if(userP.val()==''||typeof userP.val()=='undefined'){
+			errorW.html('验证码不能为空');
+			userP.addClass("errorBg").focus();
+			return false;
+		}
+	});
+}
+    $(document).ready(function(e) {
+	    loginFun();
+	    document.onkeydown=function(event){
+		    var e = event || window.event || arguments.callee.caller.arguments[0];
+		     if(e && e.keyCode==13){ // enter 键
+			     //要做的事情.
+			     $("#button").click();
+		    }
+	    };
+    });
+
+    </script>
+</body>
+</html>

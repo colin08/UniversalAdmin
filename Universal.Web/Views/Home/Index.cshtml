@@ -1,22 +1,9 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "首页";
+    ViewData["tabTop"] = "home";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <h4>Index</h4>
-    @{ 
-        if(ViewData.ContainsKey("ExecutionTime"))
-        {
-            @:执行时间：@ViewData["ExecutionTime"] ms
-        }
-    }
-</body>
-</html>
+<!-- body -->
+<p>Home Index</p>
+<!-- body end -->

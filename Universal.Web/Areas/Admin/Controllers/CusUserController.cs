@@ -106,6 +106,8 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity.RegTime = DateTime.Now;
                     entity.LastLoginTime = DateTime.Now;
                     entity.Password = SecureHelper.MD5(entity.Password);
+                    if (string.IsNullOrWhiteSpace(entity.Avatar))
+                        entity.Avatar = "/Content/images/default_avatar.jpg";
                     bll.Add(entity);
 
                 }

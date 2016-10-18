@@ -110,6 +110,11 @@ namespace Universal.Tools
         /// </summary>
         public bool EnableAPILog { get; set; }
 
+        /// <summary>
+        /// 重置的密码
+        /// </summary>
+        public string ResetPwd { get; set; }
+        
     }
 
 }

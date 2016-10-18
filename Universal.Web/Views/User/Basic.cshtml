@@ -1,0 +1,180 @@
+﻿@model Universal.Web.Models.ViewModelUserBasic
+@{
+    ViewBag.Title = "修改资料";
+    ViewData["tabLeft"] = "basic";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_MenuLeft",this.ViewData)
+    <div class="right_content" id="minHeight">
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="content">
+                <p class="al_tt">基本资料</p>
+                <ul class="jb_msg">
+                    <li class="clearfix">
+                        <p class="l_sp">部门岗位</p>
+                        <p class="r_sp">事业一部 - 项目经理</p>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">姓名</p>
+                        <div class="r_sp">
+                            @Html.TextBoxFor(p=>p.nick_name,new { placeholder ="必填",@class= "inp fl" })
+                            <span class="bg_col">请填写 真实姓名，方便他人识别</span>
+                            @Html.ValidationMessageFor(p=>p.nick_name)
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">性别</p>
+                        <div class="r_sp clearfix">
+
+                            <label class="lab pub_lab" for="@Universal.Entity.CusUserGender.male">
+                                @Html.RadioButtonFor(x => x.gender, "1", Model.gender == Universal.Entity.CusUserGender.male ? (object)new { id = Universal.Entity.CusUserGender.male, @checked= true } : (object)new { id = Universal.Entity.CusUserGender.male })
+                                <i class="pub_radio"></i>
+                                <span>男</span>
+                            </label>
+                            <label class="lab pub_lab" for="@Universal.Entity.CusUserGender.female">
+                                @Html.RadioButtonFor(x => x.gender, "2", Model.gender == Universal.Entity.CusUserGender.female ? (object)new { id = Universal.Entity.CusUserGender.female, @checked = true } : (object)new { id = Universal.Entity.CusUserGender.female })
+                                <i class="pub_radio"></i>
+                                <span>女</span>
+                            </label>
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">生日</p>
+                        <div class="r_sp">
+                            <div class="pub_select_box year">
+                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="年" />
+                                <div class="select_list">
+                                    <p class="first"></p>
+                                    <div class="select_sun_list" id="select_sun_list">
+                                        <a href="javascript:;">1990年</a>
+                                        <a href="javascript:;">1991年</a>
+                                        <a href="javascript:;">1992年</a>
+                                        <a href="javascript:;">1993年</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="pub_select_box day">
+                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="月" />
+                                <div class="select_list">
+                                    <p class="first"></p>
+                                    <div class="select_sun_list" id="select_sun_list">
+                                        <a href="javascript:;">1月</a>
+                                        <a href="javascript:;">2月</a>
+                                        <a href="javascript:;">3月</a>
+                                        <a href="javascript:;">4月</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="pub_select_box day">
+                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="日" />
+                                <div class="select_list">
+                                    <p class="first"></p>
+                                    <div class="select_sun_list" id="select_sun_list">
+                                        <a href="javascript:;">1日</a>
+                                        <a href="javascript:;">3日</a>
+                                        <a href="javascript:;">5日</a>
+                                        <a href="javascript:;">7日</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">短号</p>
+                        <div class="r_sp">
+                            @Html.TextBoxFor(p=>p.short_num,new { @class= "inp fl" })
+                            @Html.ValidationMessageFor(p => p.short_num)
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">邮箱</p>
+                        <div class="r_sp">
+                            @Html.TextBoxFor(p => p.email, new { @class = "inp fl" })
+                            @Html.ValidationMessageFor(p => p.email)
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">个人简介</p>
+                        <div class="r_sp">
+                            <div class="tex">
+                                @Html.TextAreaFor(p=>p.about_me,new { @class= "get_num_forInput" })
+                                @Html.ValidationMessageFor(p => p.about_me)
+                                <p class="show_num_forInput">0/150</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <p class="l_sp">&nbsp;</p>
+                        <div class="r_sp">
+                            <input type="submit" class="sub_but" id="button" value="保存" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+</div>
+
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        window.onload=function(){
+	        if(document.getElementById("minHeight").offsetHeight<600){
+		        if(600>window.innerHeight-67){
+			        document.getElementById("minHeight").style.height=600+'px';
+		        }
+		        else{
+			        document.getElementById("minHeight").style.height=(window.innerHeight-67)+'px';
+		        }
+	        }
+	        else{
+		        if(document.getElementById("minHeight").offsetHeight<window.innerHeight-67){
+			        document.getElementById("minHeight").style.height=(window.innerHeight-67)+'px';
+		        }
+	        }
+        }
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+	        document.onkeydown=function(event){
+		        var e = event || window.event || arguments.callee.caller.arguments[0];
+		         if(e && e.keyCode==13){ // enter 键
+			         //要做的事情.
+			         $("#button").click();
+		        }
+	        };
+
+            @if(Model.State)
+            {
+                @:$("#span_top_name").html("@Model.nick_name");
+                @:alert("修改成功")
+            }
+
+        });
+
+
+</script>
+
+}
+<!--底部脚本 end-->

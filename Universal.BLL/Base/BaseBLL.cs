@@ -34,7 +34,21 @@ namespace Universal.BLL
         public int Add(T model)
         {
             db.Set<T>().Add(model);
-            return db.SaveChanges();
+            int num = 0;
+            try
+            {
+                num =db.SaveChanges();
+            }
+            catch(DbEntityValidationException ex)
+            {
+                Tools.IOHelper.WriteLogs("添加实体出现异常："+ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Tools.IOHelper.WriteLogs("添加实体出现异常：" + ex.Message);
+            }
+            return num;
+            
         }
         #endregion
 

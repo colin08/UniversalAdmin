@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/css/public.css" />
+    @RenderSection("head", required: false)
+</head>
+
+<body>
+    <div class="header">
+        <h1 class="logo"></h1>
+        <ul class="nav clearfix">
+            <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=hover": "")><a href="#">首页</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=hover": "")><a href="#">项目管理</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=hover": "")><a href="#">学院秘籍</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=hover": "")><a href="#">企业通讯</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=hover": "")><a href="#">平台统计</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=hover": "")><a href="#">系统管理</a></li>
+        </ul>
+        <ul class="menu fr">
+            <li><a class="icon i3" href="#"></a></li>
+            <li><a class="icon i2" href="#"></a></li>
+            <li><a class="icon i1" href="#"></a></li>
+            <li><a class="icon i4" href="#"></a></li>
+            @if (WorkContext.UserInfo != null)
+            {
+                <li>
+                    <div class="ac_box clearfix">
+                        <i class="pic"  onclick="window.location.href='/User/Basic'"><img src="@WorkContext.UserInfo.Avatar" id="img_top_avatar" /></i>
+                        <span class="sp" id="span_top_name">@WorkContext.UserInfo.NickName</span>
+                        <em onclick="window.location.href='/Account/LoginOut'"></em>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <a class="icon i4" href="/Account/Login"></a>
+            }
+        </ul>
+    </div>
+    @RenderBody()
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript" src="/Content/js/public.js"></script>
+
+    @RenderSection("foot", required: false)
+</body>
+</html>

@@ -48,7 +48,7 @@ namespace Universal.Web.Framework
                 string oauth = monsterApiKeyHeaderValues.First();
                 if (!string.IsNullOrWhiteSpace(oauth))
                 {
-                    Tools.Crypto3DES des = new Tools.Crypto3DES(SiteKey.DES3KEY);
+                    Tools.Crypto3DES des = new Tools.Crypto3DES(Tools.SiteKey.DES3KEY);
                     string[] vals = des.DESDeCode(oauth).Split('&');
                     if (vals.Length == 2)
                     {

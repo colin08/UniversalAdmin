@@ -17,11 +17,13 @@ namespace Universal.Web.Framework
             Tools.WebSiteModel model = Tools.ConfigHelper.LoadConfig<Tools.WebSiteModel>(Tools.ConfigFileEnum.SiteConfig);
             if (!model.LogExceptionInDB)
                 return;
-
+            string msg = ex.Message;
+            if(msg.Length > 255)
+               msg = msg.Substring(0, 255);
             var entity = new Entity.SysLogException()
             {
                 AddTime = DateTime.Now,
-                Message = ex.Message,
+                Message = msg,
                 Source = ex.Source,
                 StackTrace = ex.StackTrace
             };

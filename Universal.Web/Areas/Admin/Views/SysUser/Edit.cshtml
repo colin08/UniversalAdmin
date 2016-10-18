@@ -113,9 +113,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Gender) </label>
                     <div class="col-sm-10">
-                        @Html.RadioButtonFor(x => x.Gender, 1, new { @id = "rb_gender_1", @checked = true }) <label for="rb_gender_1">男</label>
+                        @Html.RadioButtonFor(x => x.Gender, "1", Model.Gender == Universal.Entity.UserGender.男 ? (object)new { id = "rb_gender_1", @checked = true } : (object)new { id= "rb_gender_1" }) <label for="rb_gender_1">男</label>
                         &nbsp;
-                        @Html.RadioButtonFor(x => x.Gender, 2, new { @id="rb_gender_2"}) <label for="rb_gender_2">女</label>
+                        @Html.RadioButtonFor(x => x.Gender, "2", Model.Gender == Universal.Entity.UserGender.女 ? (object)new { id="rb_gender_2", @checked = true }: (object)new { id= "rb_gender_2" }) <label for="rb_gender_2">女</label>
                     </div>
                 </div>
 
@@ -181,7 +181,7 @@
             area: ['700px', '530px'],
             fix: false, //不固定
             maxmin: true,
-            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "avatar", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.Avatar), Area = "Admin" })', 'no']
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Tools.Admin_Upload_Type.OnePicture, folder = "avatar", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.Avatar), Area = "Admin" })', 'no']
         });
     }
 

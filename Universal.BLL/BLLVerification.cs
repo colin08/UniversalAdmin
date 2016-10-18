@@ -62,8 +62,6 @@ namespace Universal.BLL
         {
             if (string.IsNullOrWhiteSpace(code) || guid == null)
                 return false;
-            if (!Tools.ValidateHelper.IsMobile(code))
-                return false;
 
             BaseBLL<Entity.CusVerification> bll = new BaseBLL<Entity.CusVerification>();
             var entity = bll.GetModel(p => p.Guid == guid && p.Type == type);

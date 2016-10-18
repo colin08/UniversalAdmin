@@ -15,7 +15,7 @@ namespace Universal.Web.Controllers
     /// <summary>
     /// 用户接口
     /// </summary>
-    public class UserController : BaseAPIController
+    public class CusUserController : BaseAPIController
     {
 
     }

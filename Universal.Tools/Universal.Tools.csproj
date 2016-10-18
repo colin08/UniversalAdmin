@@ -54,10 +54,12 @@
     <Compile Include="IOHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecureHelper.cs" />
+    <Compile Include="SiteKey.cs" />
     <Compile Include="SMSHelper.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="SystemInfo.cs" />
     <Compile Include="TypeHelper.cs" />
+    <Compile Include="ValidateCode.cs" />
     <Compile Include="ValidateHelper.cs" />
     <Compile Include="WaterMark.cs" />
     <Compile Include="ConfigHelper.cs" />

@@ -138,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\WebSite.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="App_Data\Universal.Web.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -250,6 +250,44 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.js" />
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
+    <Content Include="Content\css\index.css" />
+    <Content Include="Content\css\public.css" />
+    <Content Include="Content\images\aq_icon01.jpg" />
+    <Content Include="Content\images\aq_icon02.jpg" />
+    <Content Include="Content\images\aq_icon03.jpg" />
+    <Content Include="Content\images\find_pw_icon.gif" />
+    <Content Include="Content\images\find_pw_icon2.gif" />
+    <Content Include="Content\images\find_pw_icon3.jpg" />
+    <Content Include="Content\images\login_bg.jpg" />
+    <Content Include="Content\images\login_logo.jpg" />
+    <Content Include="Content\images\default_avatar.jpg" />
+    <Content Include="Content\images\msg_icon1.jpg" />
+    <Content Include="Content\images\msg_icon10.jpg" />
+    <Content Include="Content\images\msg_icon10h.jpg" />
+    <Content Include="Content\images\msg_icon11.jpg" />
+    <Content Include="Content\images\msg_icon11h.jpg" />
+    <Content Include="Content\images\msg_icon12.jpg" />
+    <Content Include="Content\images\msg_icon12h.jpg" />
+    <Content Include="Content\images\msg_icon13.jpg" />
+    <Content Include="Content\images\msg_icon13h.jpg" />
+    <Content Include="Content\images\msg_icon14.jpg" />
+    <Content Include="Content\images\msg_icon2.jpg" />
+    <Content Include="Content\images\msg_icon3.jpg" />
+    <Content Include="Content\images\msg_icon4.jpg" />
+    <Content Include="Content\images\msg_icon5.jpg" />
+    <Content Include="Content\images\msg_icon6.jpg" />
+    <Content Include="Content\images\msg_icon6h.jpg" />
+    <Content Include="Content\images\msg_icon7.jpg" />
+    <Content Include="Content\images\msg_icon7h.jpg" />
+    <Content Include="Content\images\msg_icon8.jpg" />
+    <Content Include="Content\images\msg_icon8h.jpg" />
+    <Content Include="Content\images\msg_icon9.jpg" />
+    <Content Include="Content\images\msg_icon9h.jpg" />
+    <Content Include="Content\images\pub_logo.jpg" />
+    <Content Include="Content\images\set_icon.jpg" />
+    <Content Include="Content\images\tx_icon01.jpg" />
+    <Content Include="Content\js\jquery-1.7.2.min.js" />
+    <Content Include="Content\js\public.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -308,14 +346,19 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\APIController.cs" />
-    <Compile Include="Controllers\api\UserController.cs" />
+    <Compile Include="Controllers\api\CusUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ToolsController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ModelAllHouse.cs" />
+    <Compile Include="Models\ViewModelSendPwd.cs" />
+    <Compile Include="Models\ViewModelUserBasic.cs" />
+    <Compile Include="Models\ViewModelUserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +424,16 @@
     <Content Include="Areas\Admin\Views\CusUser\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CusUser\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\ResetPwd.cshtml" />
+    <Content Include="Views\Account\ResetSuc.cshtml" />
+    <Content Include="Views\User\Basic.cshtml" />
+    <Content Include="Views\Shared\_MenuLeft.cshtml" />
+    <Content Include="Views\User\Avatar.cshtml" />
+    <Content Include="Views\User\Safe.cshtml" />
+    <None Include="Properties\PublishProfiles\hbl.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

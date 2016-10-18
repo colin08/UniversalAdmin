@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Universal.Tools;
+using Universal.Web.Framework;
 
 namespace Universal.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseHBLController
     {
         public ActionResult Index()
         {
             return View();
         }
-        
-        public ContentResult test()
-        { 
-            return Content("哈哈哈");
-        }
-
     }
 
 }

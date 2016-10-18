@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Universal.Web.Framework
+namespace Universal.Tools
 {
     /// <summary>
     /// 站点KEY
@@ -87,6 +87,22 @@ namespace Universal.Web.Framework
         /// </summary>
         public static readonly string Login_UserPassword = "opwd";
 
+
+        /// <summary>
+        /// 前端是否记住我
+        /// </summary>
+        public static readonly string Web_Is_Remeber = "wisrm";
+
+        /// <summary>
+        /// 前端用户Id
+        /// </summary>
+        public static readonly string Web_Login_UserID = "wid";
+
+        /// <summary>
+        /// 前端用户密码
+        /// </summary>
+        public static readonly string Web_Login_UserPassword = "wp";
+
     }
 
 
@@ -102,7 +118,10 @@ namespace Universal.Web.Framework
         /// </summary>
         public static readonly string Login_Fail_Total = "SESSION_LOGIN_FAIL";
 
-
+        /// <summary>
+        /// 前端管理用户的实体
+        /// </summary>
+        public static readonly string Web_User_Info = "WEB_USER_INFO";
 
     }
 }

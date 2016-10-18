@@ -1,0 +1,612 @@
+﻿
+@{
+    ViewBag.Title = "安全设置";
+    ViewData["tabLeft"] = "safe";
+    ViewData["tabTop"] = "manager";
+}
+
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_MenuLeft", this.ViewData)
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <p class="al_tt">安全设置</p>
+            <ul class="aq_set">
+                <li class="clearfix">
+                    <p class="p_icon p_i1">
+                        @{
+                            var email_state = "更改邮箱";
+                        }
+                        @if (!string.IsNullOrWhiteSpace(WorkContext.UserInfo.Email))
+                        {
+                            <span class="bold_sp">邮箱</span>
+                            <span class="col_sp" id="span_email">@WorkContext.UserInfo.Email</span>
+                            <span>已绑定</span><br />
+                        }else
+                        {
+                            email_state = "绑定邮箱";
+                            <span>未绑定</span>
+                        }
+                        <span>邮箱可以用来登录花伴里和找回密码</span>
+                    </p>
+                    <a href="javascript:;" class="set_but" onclick="showMyOut('put_out_box_email_st1')">@email_state</a>
+                </li>
+                <li class="clearfix">
+                    <p class="p_icon p_i2">
+                        <span class="bold_sp">手机</span>
+                        <span class="col_sp">
+                            @{ 
+                                var telphone = WorkContext.UserInfo.Telphone;
+                                var hid_num = telphone.Substring(3, 4);
+                                var show_tel = telphone.Replace(hid_num, "****");
+                            }
+                            @show_tel
+                        </span>
+                        <span>已绑定</span><br />
+                        <span>手机可以用来登录花伴里和找回密码</span>
+                    </p>
+                    <a href="javascript:;" class="set_but" onclick="showMyOut('put_out_box_tel_st1')">更改手机</a>
+                </li>
+                <li class="clearfix">
+                    <p class="p_icon p_i3">
+                        <span class="bold_sp">密码</span>
+                        <span>已设置</span><br />
+                        <span>用于保护账号信息和登录安全</span>
+                    </p>
+                    <a href="javascript:;" class="set_but" onclick="showMyOut('put_out_box_pw')">修改密码</a>
+                </li>
+            </ul>
+        </div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+</div>
+
+<!--弹出框-->
+<div class="pub_out_box" id="put_out_box_tel_st1">
+    <!--更换手机号码 STEP 1-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>更改手机号(1/2)</p>
+    <div class="mid_a">
+        <p class="p_a">为了保证您的帐号安全，绑定新手机前请先进行安全验证</p>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">手机号</p>
+            <input type="hidden" value="" id="hid_now_guid" />
+            <div class="p_a_inp">
+                <input type="text" id="now_tel" placeholder="请输入当前登录的手机号" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">验证码</p>
+            <div class="p_a_inp">
+                <input type="text" id="sms_val" placeholder="请输入短信验证码" />
+                <span onclick="getSMSA(this)">获取验证码</span>
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" onclick="telSetpNext()">下一步</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_tel_a"></p>
+    </div>
+</div>
+
+
+<div class="pub_out_box" id="put_out_box_tel_st2">
+    <!--更换手机号码 STEP 2-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>更改手机号(2/2)</p>
+    <div class="mid_a">
+        <p class="p_a">请输入您的新手机号码，点击“获取验证码”完成短信验证</p>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">新手机号</p>
+            <input type="hidden" value="" id="hid_new_guid" />
+            <div class="p_a_inp">
+                <input type="text" id="new_tel" placeholder="请输入新手机号" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">验证码</p>
+            <div class="p_a_inp">
+                <input type="text" id="new_sms" />
+                <span onclick="getSMSB(this)">获取验证码</span>
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" onclick="telSetpSubmit()">确定</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_tel_b"></p>
+    </div>
+</div>
+
+<div class="pub_out_box" id="put_out_box_email_st1">
+    <!--更换email STEP 1-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>验证身份</p>
+    <div class="mid_a">
+        <p class="p_a">为了保证您的帐号安全，绑定新邮箱前请先进行安全验证</p>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">密码</p>
+            <div class="p_a_inp">
+                <input type="password" id="passwork_email" placeholder="请输入密码" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">验证码</p>
+            <div class="p_a_inp p_a_short">
+                <input type="text" id="img_check" maxlength="4" placeholder="请输入图片验证码" />
+            </div>
+            <img class="p_a_img" src="/User/CheckCode?ID=1" />
+            <span class="p_a_refert" onclick="ClickRemoveChangeCode()">&nbsp;</span>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" onclick="emailSetpNext()">下一步</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_email_b"></p>
+    </div>
+</div>
+
+<div class="pub_out_box" id="put_out_box_email_st2">
+    <!--更换email STEP 2-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>修改邮箱</p>
+    <div class="mid_a">
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">邮箱地址</p>
+            <div class="p_a_inp">
+                <input type="text" id="new_email" placeholder="请输入您的邮箱" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" onclick="emailSetpSubmit()">确定</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_email_a"></p>
+    </div>
+</div>
+
+<div class="pub_out_box" id="put_out_box_pw">
+    <!--修改密码-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>修改密码</p>
+    <div class="mid_a">
+        <p class="p_a">为保障您的帐号安全，修改密码前请填写原密码</p>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b p_a_pw">原密码</p>
+            <div class="p_a_inp">
+                <input type="password" id="old_pw" placeholder="请输入原密码" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b p_a_pw">设置新密码</p>
+            <div class="p_a_inp">
+                <input type="password" id="new_pw" placeholder="请输入新密码" />
+            </div>
+        </div>
+        <p class="p_a_words">密码由6~16位字母、数字或符号组成</p>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b p_a_pw">确认新密码</p>
+            <div class="p_a_inp">
+                <input type="password" id="st_pw" placeholder="再次输入新密码" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b p_a_pw">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" onclick="pwSubmit()">确定</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_pw_a"></p>
+    </div>
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        function allCloseFun() {//关闭弹框及背景遮罩
+            $(".pub_out_box").hide();
+            $("#pub_under_bg").remove();
+            $(".pub_out_box input:text,.pub_out_box input:password").val('');
+        }
+        function showMyOut(obj) {//显示修改电话
+            $("#" + obj).show();
+            showOutBox();
+        }
+        function telSetpNext() {//更改手机号STEP 1 下一步
+            $("#error_tel_a").html('');
+            if ($("#now_tel").val() == '' || $("#now_tel").val().length != 11) {
+                $("#error_tel_a").html('请输入正确的手机号码');
+                return false;
+            }
+            if ($("#sms_val").val() == '') {
+                $("#error_tel_a").html('请输入短信验证码');
+                return false;
+            }
+            
+            if (!telphone_check_code($("#hid_now_guid").val(), $("#sms_val").val()))
+                return false;
+
+            /*关闭当前、显示下一步*/
+            allCloseFun();
+            $("#put_out_box_tel_st2").show();
+            showOutBox();
+        }
+        function telSetpSubmit() {//更改手机号STEP 2 确定
+            $("#error_tel_b").html('');
+            if ($("#new_tel").val() == '' || $("#new_tel").val().length != 11) {
+                $("#error_tel_b").html('请输入正确的手机号码');
+                return false;
+            }
+            if ($("#new_sms").val() == '') {
+                $("#error_tel_b").html('请输入短信验证码');
+                return false;
+            }
+
+            if (!telphone_check_code($("#hid_new_guid").val(), $("#new_sms").val()))
+                return false;
+
+            if (!telphone_modify($("#new_tel").val()))
+                return false;
+            else
+                location.href = "/Account/Login";
+            /*关闭当前*/
+            allCloseFun();
+        }
+        function getSMSA(obj) {
+            var userN = $("#now_tel"), errorW = $("#error_tel_a"), timer = 60, sendCode = $(obj);
+
+            /*发送短信*/
+            if (sendCode.hasClass("disableBut")) {
+                return false;
+            }
+            errorW.html('');
+            /*检查手机号码*/
+            if (userN.val() == '' || typeof userN.val() == 'undefined') {
+                errorW.html('手机号码不能为空');
+                userN.focus();
+                return false;
+            }
+
+            var re = /^1\d{10}$/
+            if (!re.test(userN.val())) {
+                errorW.html('非法手机号码');
+                userN.focus();
+                return false;
+            }
+
+            if (!telphone_check(userN.val()))
+                return false;
+
+            if (!telphone_send(1, userN.val()))
+                return false;
+            
+            /*启动倒计时*/
+            sendCode.addClass("disableBut");
+            sendCode.html('重试(' + timer + 's)');
+            var mov = setInterval(function () {
+                timer--;
+                if (timer > 0) {
+                    sendCode.html('重试(' + timer + 's)');
+                }
+                else {
+                    sendCode.html('获取验证码');
+                    sendCode.removeClass("disableBut");
+                    timer = 60;
+                    clearInterval(mov);
+                }
+            }, 1000);
+        }
+        function getSMSB(obj) {
+            var userN = $("#new_tel"), errorW = $("#error_tel_b"), timer = 60, sendCode = $(obj);
+
+            /*发送短信*/
+            if (sendCode.hasClass("disableBut")) {
+                return false;
+            }
+            errorW.html('');
+            /*检查手机号码*/
+            if (userN.val() == '' || typeof userN.val() == 'undefined') {
+                errorW.html('手机号码不能为空');
+                userN.focus();
+                return false;
+            }
+
+            if (!telphone_check_exixts(userN.val()))
+                return;
+
+            if (!telphone_send(2, userN.val()))
+                return false;
+
+            /*启动倒计时*/
+            sendCode.addClass("disableBut");
+            sendCode.html('重试(' + timer + 's)');
+            var mov = setInterval(function () {
+                timer--;
+                if (timer > 0) {
+                    sendCode.html('重试(' + timer + 's)');
+                }
+                else {
+                    sendCode.html('获取验证码');
+                    sendCode.removeClass("disableBut");
+                    timer = 60;
+                    clearInterval(mov);
+                }
+            }, 1000);
+        }
+
+        //更换验证码
+        function ClickRemoveChangeCode()
+        {
+            var code = $(".p_a_img").attr("src");
+            if (code == '')
+                code = "/User/CheckCode?ID=1";
+            $(".p_a_img").attr("src", code + "1");
+        }
+
+        function emailSetpNext() {//更改email STEP 1 下一步
+            $("#error_email_b").html('');
+            if ($("#passwork_email").val() == '') {
+                $("#error_email_b").html('请输入密码');
+                return false;
+            }
+            if ($("#img_check").val() == '') {
+                $("#error_email_b").html('请输入图片验证码');
+                return false;
+            }
+
+            if (!email_check_pwd($("#passwork_email").val(), $("#img_check").val()))
+                return;
+
+            ClickRemoveChangeCode();
+            /*关闭当前、显示下一步*/
+            allCloseFun();
+            $("#put_out_box_email_st2").show();
+            showOutBox();
+        }
+        function emailSetpSubmit() {//更改email STEP 2 确定
+            var new_email = $("#new_email").val();
+            $("#error_email_a").html('');
+            if (new_email == '') {
+                $("#error_email_a").html('请输入您的邮箱');
+                return false;
+            }
+
+            var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+            if(!myreg.test(new_email))
+            {
+                alert('非法邮箱格式');
+                myreg.focus();
+                return false;
+            }
+
+            if (!email_modify(new_email))
+                return;
+            $("#span_email").html(new_email);
+            /*关闭当前*/
+            allCloseFun();
+        }
+        function pwSubmit() {//确认修改密码
+            $("#error_pw_a").html('');
+            if ($("#old_pw").val() == '') {
+                $("#error_pw_a").html('请输入原密码');
+                return false;
+            }
+            if ($("#new_pw").val() == '') {
+                $("#error_pw_a").html('请输入新密码');
+                return false;
+            }
+            if ($("#st_pw").val() == '') {
+                $("#error_pw_a").html('请输入再次确认新密码');
+                return false;
+            }
+            if ($("#st_pw").val() != $("#new_pw").val()) {
+                $("#error_pw_a").html('两次输入的密码不相同');
+                return false;
+            }
+
+            if (!pwd_modify($("#old_pw").val(), $("#new_pw").val()))
+                return;
+            else
+                location.href = "/Account/Login";
+            /*关闭当前*/
+            allCloseFun();
+        }
+        $(document).ready(function (e) {
+            $(".pub_out_box").each(function (index, element) {
+                $(this).css("top", ($(window).height() - $(this).height()) / 2);
+            });
+            $(window).resize(function () {
+                $(".pub_out_box").each(function (index, element) {
+                    $(this).css("top", ($(window).height() - $(this).height()) / 2);
+                });
+            });
+        });
+
+
+        function email_check_pwd(pwd, code) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/CheckPwd",
+                data: { "pwd": pwd, "code": code },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        ClickRemoveChangeCode();
+                        $("#error_email_b").html(data.msgbox);
+                    } else
+                        state = true;
+                }
+            });
+
+            return state;
+        }
+
+        function email_modify(email) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/ModifyEmail",
+                data: { "email": email },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error_email_a").html(data.msgbox);
+                    } else
+                        state = true;
+                }
+            });
+
+            return state;
+        }
+
+        function telphone_check(tel) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/CheckTel",
+                data: { "tel": tel },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error_tel_a").html(data.msgbox);
+                    } else
+                        state = true;
+                }
+            });
+
+            return state;
+        }
+
+        function telphone_send(type,tel)
+        {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/SendCode",
+                data: { "tel": tel },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        if(type == 1)
+                        {
+                            $("#error_tel_a").html(data.msgbox);
+                        }else
+                        {
+                            $("#error_tel_b").html(data.msgbox);
+                        }
+                    } else
+                    {
+                        if (type == 1) {
+                            $("#hid_now_guid").val(data.data);
+                        } else {
+                            $("#hid_new_guid").val(data.data);
+                        }
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+        function telphone_check_code(guid,code)
+        {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/CheckTelCode",
+                data: { "guid": guid,"code":code },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                    } else {
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+        function telphone_check_exixts(tel) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/CheckTelExists",
+                data: { "tel": tel },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error_tel_b").html(data.msgbox);
+                    } else {
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+        function telphone_modify(tel) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/ModifyTel",
+                data: { "tel": tel },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error_tel_b").html(data.msgbox);
+                    } else {
+                        alert(data.msgbox);
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+        function pwd_modify(old,newp) {
+            var state = false;
+            $.ajax({
+                type: "post",
+                url: "/User/ModifyPwd",
+                data: { "old": old,"newp":newp },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#error_pw_a").html(data.msgbox);
+                    } else {
+                        alert("密码修改成功，请重新登录");
+                        state = true;
+                    }
+                }
+            });
+
+            return state;
+        }
+
+    </script>
+}
+<!--底部脚本 end-->
