@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Permissions;
 using System.Security;
+using System.ComponentModel;
 
 namespace Universal.Tools
 {
@@ -13,7 +14,7 @@ namespace Universal.Tools
     /// </summary>
     public enum ConfigFileEnum
     {
-        [EnumShowNameAttribute("/App_Data/WebSite.config")]
+        [Description("/App_Data/WebSite.config")]
         SiteConfig = 1
     }
 
