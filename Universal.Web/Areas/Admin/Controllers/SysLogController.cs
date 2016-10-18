@@ -26,7 +26,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             List<SelectListItem> typeList = new List<SelectListItem>();
             typeList.Add(new SelectListItem() { Text = "所有日志", Value = "0" });
-            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.SysLogMethodType)))
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.SysLogMethodType)))
             {
                 string text = EnumHelper.GetDescription<Entity.SysLogMethodType>((Entity.SysLogMethodType)item.Key);
                 typeList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });

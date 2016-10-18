@@ -11,13 +11,13 @@ namespace Universal.Entity
     /// </summary>
     public enum SysLogMethodType : byte
     {
-        [EnumShowName("添加")]
+        [Description("添加")]
         Add = 1,
-        [EnumShowName("修改")]
+        [Description("修改")]
         Update = 2,
-        [EnumShowName("删除")]
+        [Description("删除")]
         Delete = 3,
-        [EnumShowName("登录")]
+        [Description("登录")]
         Login = 4
     }
 
