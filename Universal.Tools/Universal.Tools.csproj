@@ -49,6 +49,8 @@
     <Compile Include="CacheHelper.cs" />
     <Compile Include="Crypto3DES.cs" />
     <Compile Include="DESEncrypt.cs" />
+    <Compile Include="EmailHelper.cs" />
+    <Compile Include="EmailTemplateHelper.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Hz2Py.cs" />
     <Compile Include="IOHelper.cs" />

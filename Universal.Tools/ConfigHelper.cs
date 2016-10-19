@@ -111,6 +111,31 @@ namespace Universal.Tools
         /// </summary>
         public bool EnableAPILog { get; set; }
 
+        /// <summary>
+        /// 邮件-发送账户
+        /// </summary>
+        public string EmailFrom { get; set; }
+
+        /// <summary>
+        /// 邮件-账户密码
+        /// </summary>
+        public string EmailPwd { get; set; }
+
+        /// <summary>
+        /// 邮件- 服务器
+        /// </summary>
+        public string EmailHost { get; set; }
+
+        /// <summary>
+        /// 邮件- 端口
+        /// </summary>
+        public int EmailPort { get; set; }
+
+        /// <summary>
+        /// 邮件-是否启用SSL
+        /// </summary>
+        public bool EmailEnableSsl { get; set; }
+
     }
 
 }
