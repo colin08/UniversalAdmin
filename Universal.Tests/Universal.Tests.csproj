@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="BaseBLLTests.cs" />
     <Compile Include="EFDBContextTests.cs" />
+    <Compile Include="EmailHelperTests.cs" />
     <Compile Include="EnumTests.cs" />
     <Compile Include="ExceptionInDBTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

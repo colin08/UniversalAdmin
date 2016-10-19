@@ -140,6 +140,7 @@
     <None Include="App_Data\WebSite.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="App_Data\mailtemplate\demo.html" />
     <Content Include="App_Data\Universal.Web.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Assets\css\admin.css" />
