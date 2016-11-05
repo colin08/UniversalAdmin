@@ -209,6 +209,7 @@
     <Content Include="Assets\js\plugins\simditor\uploader.js" />
     <Content Include="Assets\js\plugins\simditor\uploader.min.js" />
     <Content Include="Assets\js\plugins\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Assets\js\plugins\textareacounter.js" />
     <Content Include="Assets\js\plugins\toastr\toastr.min.js" />
     <Content Include="Assets\js\plugins\uploadifive\jquery.uploadifive.js" />
     <Content Include="Assets\js\plugins\uploadifive\jquery.uploadifive.min.js" />

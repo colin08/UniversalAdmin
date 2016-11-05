@@ -72,6 +72,8 @@ namespace Universal.Web
                       "~/Assets/js/plugins/ztree/js/jquery.ztree.core.min.js",
                       "~/Assets/js/plugins/ztree/js/jquery.ztree.excheck.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/textareacounter").Include(
+                      "~/Assets/js/plugins/textareacounter.js"));
 
             bundles.Add(new StyleBundle("~/Content/admin/css").Include(
                       "~/Assets/css/bootstrap.min.css",

@@ -114,7 +114,6 @@
                             <div class="tex">
                                 @Html.TextAreaFor(p=>p.about_me,new { @class= "get_num_forInput" })
                                 @Html.ValidationMessageFor(p => p.about_me)
-                                <p class="show_num_forInput">0/150</p>
                             </div>
                         </div>
                     </li>
@@ -135,6 +134,7 @@
 <!--底部脚本-->
 @section foot
 {
+    
     <script type="text/javascript">
         window.onload=function(){
 	        if(document.getElementById("minHeight").offsetHeight<600){
@@ -154,9 +154,10 @@
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")
-
+@Scripts.Render("~/bundles/textareacounter")
 <script type="text/javascript">
     $(document).ready(function (e) {
+            $("#about_me").textAreaCount({ maxlength: 500, speed: 256 });
 	        document.onkeydown=function(event){
 		        var e = event || window.event || arguments.callee.caller.arguments[0];
 		         if(e && e.keyCode==13){ // enter 键
