@@ -44,6 +44,11 @@ namespace Universal.BLL
 
         //}
 
+        public FilterSearch()
+        {
+
+        }
+
         public FilterSearch(string key,string value, FilterSearchContract contract)
         {
             this.Key = key;

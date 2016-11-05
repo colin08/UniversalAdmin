@@ -50,13 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFDBContext.cs" />
-    <Compile Include="Migrations\201609300317075_init.cs" />
-    <Compile Include="Migrations\201609300317075_init.Designer.cs">
-      <DependentUpon>201609300317075_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610080945098_add_CusUser.cs" />
-    <Compile Include="Migrations\201610080945098_add_CusUser.Designer.cs">
-      <DependentUpon>201610080945098_add_CusUser.cs</DependentUpon>
+    <Compile Include="Migrations\201611040817301_init.cs" />
+    <Compile Include="Migrations\201611040817301_init.Designer.cs">
+      <DependentUpon>201611040817301_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,11 +72,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609300317075_init.resx">
-      <DependentUpon>201609300317075_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610080945098_add_CusUser.resx">
-      <DependentUpon>201610080945098_add_CusUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611040817301_init.resx">
+      <DependentUpon>201611040817301_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -251,17 +251,48 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.js" />
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
+    <Content Include="Content\css\class_set.css" />
     <Content Include="Content\css\index.css" />
+    <Content Include="Content\css\miji.css" />
     <Content Include="Content\css\public.css" />
     <Content Include="Content\images\aq_icon01.jpg" />
     <Content Include="Content\images\aq_icon02.jpg" />
     <Content Include="Content\images\aq_icon03.jpg" />
+    <Content Include="Content\images\check_box.jpg" />
+    <Content Include="Content\images\check_boxh.jpg" />
     <Content Include="Content\images\find_pw_icon.gif" />
     <Content Include="Content\images\find_pw_icon2.gif" />
     <Content Include="Content\images\find_pw_icon3.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i01.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i01h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i02.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i02h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i03.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i03h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i04.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i04h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i05.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i05h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i06.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i06h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i07.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i07h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i08.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i08h.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i09.jpg" />
+    <Content Include="Content\images\icon2\xt_set_i09h.jpg" />
+    <Content Include="Content\images\img01.jpg" />
+    <Content Include="Content\images\join.jpg" />
+    <Content Include="Content\images\list_bg.jpg" />
     <Content Include="Content\images\login_bg.jpg" />
     <Content Include="Content\images\login_logo.jpg" />
     <Content Include="Content\images\default_avatar.jpg" />
+    <Content Include="Content\images\mem_cho_i01.jpg" />
+    <Content Include="Content\images\mem_cho_i02.jpg" />
+    <Content Include="Content\images\mem_cho_i02H.jpg" />
+    <Content Include="Content\images\mem_cho_i03.jpg" />
+    <Content Include="Content\images\mem_cho_i03h.jpg" />
+    <Content Include="Content\images\miji_upload.jpg" />
     <Content Include="Content\images\msg_icon1.jpg" />
     <Content Include="Content\images\msg_icon10.jpg" />
     <Content Include="Content\images\msg_icon10h.jpg" />
@@ -286,11 +317,24 @@
     <Content Include="Content\images\msg_icon9h.jpg" />
     <Content Include="Content\images\pub_logo.jpg" />
     <Content Include="Content\images\set_icon.jpg" />
+    <Content Include="Content\images\success.jpg" />
+    <Content Include="Content\images\tt_cion.jpg" />
     <Content Include="Content\images\tx_icon01.jpg" />
+    <Content Include="Content\images\yg_icon01.jpg" />
+    <Content Include="Content\images\yg_icon02.jpg" />
+    <Content Include="Content\images\yg_icon03.jpg" />
+    <Content Include="Content\images\yg_icon04.jpg" />
+    <Content Include="Content\images\yg_icon05.jpg" />
+    <Content Include="Content\images\yg_icon06.jpg" />
+    <Content Include="Content\images\yg_icon07.jpg" />
+    <Content Include="Content\images\yg_icon08.jpg" />
+    <Content Include="Content\images\yg_icon09.jpg" />
     <Content Include="Content\js\jquery-1.7.2.min.js" />
     <Content Include="Content\js\public.js" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -300,7 +344,6 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AppVersionController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusUserController.cs" />
-    <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
@@ -314,7 +357,6 @@
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelDemo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
@@ -348,8 +390,17 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminUserController.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\api\CusUserController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\AppVersionController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\NodeController.cs" />
+    <Compile Include="Controllers\FlowController.cs" />
+    <Compile Include="Controllers\DocCategoryController.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -357,6 +408,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModelAdminUser.cs" />
+    <Compile Include="Models\ViewModelCustomFormBase.cs" />
+    <Compile Include="Models\ViewModelDepartment.cs" />
+    <Compile Include="Models\ViewModelDocument.cs" />
     <Compile Include="Models\ViewModelSendPwd.cs" />
     <Compile Include="Models\ViewModelUserBasic.cs" />
     <Compile Include="Models\ViewModelUserLogin.cs" />
@@ -379,8 +434,6 @@
     <Content Include="Areas\Admin\Views\SysRole\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SysRole\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Tools\UploadFile.cshtml" />
-    <Content Include="Areas\Admin\Views\Demo\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Demo\Edit.cshtml" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\awesome.less" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\fa.less" />
     <Content Include="Areas\Admin\Views\Home\Center.cshtml" />
@@ -435,6 +488,20 @@
     <Content Include="Views\User\Avatar.cshtml" />
     <Content Include="Views\User\Safe.cshtml" />
     <None Include="Properties\PublishProfiles\hbl.pubxml" />
+    <Content Include="Views\AdminUser\Index.cshtml" />
+    <Content Include="Views\Shared\_AdminMenuLeft.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Shared\permission.cshtml" />
+    <Content Include="Views\AdminUser\Modify.cshtml" />
+    <Content Include="Views\Document\Index.cshtml" />
+    <Content Include="Views\DocCategory\Index.cshtml" />
+    <Content Include="Views\Flow\Index.cshtml" />
+    <Content Include="Views\Node\Index.cshtml" />
+    <Content Include="Views\Project\Index.cshtml" />
+    <Content Include="Views\Notice\Index.cshtml" />
+    <Content Include="Views\AppVersion\Index.cshtml" />
+    <Content Include="Views\AdminUser\Job.cshtml" />
+    <Content Include="Views\Document\Modify.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -16,7 +16,7 @@
             <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=hover": "")><a href="#">学院秘籍</a></li>
             <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=hover": "")><a href="#">企业通讯</a></li>
             <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=hover": "")><a href="#">平台统计</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=hover": "")><a href="#">系统管理</a></li>
+            <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=hover": "")><a href="@WorkContext.ManagerHome">系统管理</a></li>
         </ul>
         <ul class="menu fr">
             <li><a class="icon i3" href="#"></a></li>
@@ -27,7 +27,7 @@
             {
                 <li>
                     <div class="ac_box clearfix">
-                        <i class="pic"  onclick="window.location.href='/User/Basic'"><img src="@WorkContext.UserInfo.Avatar" id="img_top_avatar" /></i>
+                        <i class="pic" onclick="window.location.href='/User/Basic'"><img src="@WorkContext.UserInfo.Avatar" id="img_top_avatar" /></i>
                         <span class="sp" id="span_top_name">@WorkContext.UserInfo.NickName</span>
                         <em onclick="window.location.href='/Account/LoginOut'"></em>
                     </div>

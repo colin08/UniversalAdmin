@@ -59,14 +59,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="BLLCusRoute.cs" />
     <Compile Include="BLLCusUser.cs" />
-    <Compile Include="BLLDemo.cs" />
+    <Compile Include="BLLDepartment.cs" />
+    <Compile Include="BLLDocCategory.cs" />
     <Compile Include="BLLEmail.cs" />
+    <Compile Include="BllCusUserFavorites.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />
     <Compile Include="Base\FilterSearch.cs" />
     <Compile Include="BLLVerification.cs" />
+    <Compile Include="Model\AdminUserRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

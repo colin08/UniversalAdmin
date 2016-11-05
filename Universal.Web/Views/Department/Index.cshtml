@@ -1,0 +1,369 @@
+﻿@{
+    ViewBag.Title = "部门管理";
+    ViewData["tabLeft"] = "department";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <p class="al_tt">部门设置</p>
+            <div class="bm_set_list">
+                <div class="fat_li clearfix">
+                    <p class="l_sp">公司名称</p>
+                    <ul class="r_list">
+                        <li class="sun_li"><p class="p1">深圳花伴里实业集团有限公司</p></li>
+                    </ul>
+                </div>
+                <div class="fat_li clearfix">
+                    <p class="l_sp">一级部门</p>
+                    <ul class="r_list">
+                        <li class="sun_li bm_sun_list" data-id="15235">
+                            <p class="p1 p2 bm_name_p">总经办</p>
+                            <p>
+                                <span class="p3 p4">主管：</span>
+                                <span class="p3 zg_name_p" data-id="23">张总</span>
+                                <span class="p3 zg_name_p" data-id="45">张总</span>
+                            </p>
+                        </li>
+                        <li class="sun_li bm_sun_list" data-id="13135">
+                            <p class="p1 p2 bm_name_p">总经办</p>
+                            <p>
+                                <span class="p3 p4">主管：</span>
+                                <span class="p3 zg_name_p" data-id="23">张总</span>
+                                <span class="p3 zg_name_p" data-id="45">张总</span>
+                            </p>
+                        </li>
+                        <li class="dashed_li" id="ol_one" onclick="clickTj(this)"><p>点击添加</p></li>
+                    </ul>
+                </div>
+                <div class="fat_li clearfix">
+                    <p class="l_sp">二级部门</p>
+                    <ul class="r_list">
+                        <li class="sun_li bm_sun_list" data-id="1512315">
+                            <p class="p1 p2 bm_name_p">总经办</p>
+                            <p>
+                                <span class="p3 p4">主管：</span>
+                                <span class="p3 zg_name_p" data-id="23">张总</span>
+                                <span class="p3 zg_name_p" data-id="45">张总</span>
+                            </p>
+                        </li>
+                        <li class="sun_li bm_sun_list" data-id="69235">
+                            <p class="p1 p2 bm_name_p">总经办</p>
+                            <p>
+                                <span class="p3 p4">主管：</span>
+                                <span class="p3 zg_name_p" data-id="23">张总</span>
+                                <span class="p3 zg_name_p" data-id="45">张总</span>
+                            </p>
+                        </li>
+                        <li class="dashed_li" id="ol_two" onclick="clickTj(this)"><p>点击添加</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+
+
+<!--弹出框-->
+<div class="pub_out_box" id="put_out_box_new_bm">
+    <!--添加部门-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>添加部门</p>
+    <div class="p_b_pd25 clearfix">
+        <p class="p_b_p1">部门名称</p>
+        <div class="p_a_inp">
+            <input type="text" id="now_tel" name="bm_mc" placeholder="请输入部门名称" />
+        </div>
+    </div>
+    <div class="p_b_pd25 clearfix">
+        <p class="p_b_p1">主管</p>
+        <div class="p_a_inp p_b_w1">
+            <p class="clearfix new_bm_zg_list">
+                <!--<span class="p_b_p2"><input name="bm_zg" data-id="" data-name="李峰" type="hidden" value="lf" />李峰<i class="close_zg_sp">×</i></span>-->
+            </p>
+            <span class="sp" onclick="showMember(this)">添加主管</span>
+        </div>
+    </div>
+    <div class="p_b_pd25 p_b_pd40 clearfix">
+        <p class="p_b_p1">&nbsp;</p>
+        <div class="fl clearfix">
+            <a href="javascript:;" class="p_a_but" onclick="joinBMsub()">确定</a>
+            <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+        </div>
+    </div>
+</div>
+<div class="pub_out_box" id="put_out_box_edit_bm">
+    <!--编辑部门-->
+    <p class="tt"><span class="sp_close" onclick="allCloseFun()">×</span>编辑部门</p>
+    <input type="hidden" name="bm_id" value="" />
+    <div class="p_b_pd25 clearfix">
+        <p class="p_b_p1">部门名称</p>
+        <div class="p_a_inp">
+            <input type="text" id="now_tel" name="bm_mc" placeholder="请输入部门名称" />
+        </div>
+    </div>
+    <div class="p_b_pd25 clearfix">
+        <p class="p_b_p1">主管</p>
+        <div class="p_a_inp p_b_w1">
+            <p class="clearfix new_bm_zg_list">
+            </p>
+            <span class="sp" onclick="showMember(this)">添加主管</span>
+        </div>
+    </div>
+    <div class="p_b_pd25 p_b_pd40 clearfix">
+        <p class="p_b_p1">&nbsp;</p>
+        <div class="fl clearfix">
+            <a href="javascript:;" class="p_a_but" onclick="editSubmit()">确定</a>
+            <a href="javascript:;" class="p_a_but p_a_but_col" onclick="allCloseFun()">取消</a>
+        </div>
+    </div>
+</div>
+<div class="out_box_member_chose">
+    <p class="tp_tt"><i onclick="$('.out_box_member_chose').show();">×</i><span>选择成员</span></p>
+    <div class="mid">
+        <div class="pd_top28 clearfix">
+            <div class="bor_style_a clearfix fl">
+                <input type="text" class="inp_style_a" placeholder="搜索电话号码或姓名" />
+                <a class="but_style_a" href="javascript:;">&nbsp;</a>
+            </div>
+            <div class="div_style_a clearfix">
+                <div class="bor_style_a bor_style_b fl">
+                    <input type="text" class="inp_style_a inp_style_b" placeholder="姓名" />
+                </div>
+                <div class="bor_style_a bor_style_c fl">
+                    <input type="text" class="inp_style_a inp_style_c" placeholder="电话号码" />
+                </div>
+                <a class="but_style_b" href="javascript:;">添加成员</a>
+            </div>
+        </div>
+
+        <div class="pd_top15 clearfix">
+            <div class="but_style_d">
+                <div class="tab_tt clearfix">
+                    <p class="p_a p_a_h">最近</p>
+                    <p class="p_a">企业通讯录</p>
+                </div>
+                <div class="scorll_box">
+                    <div class="fat_list">
+                        <p class="p_list_tt"><i class="ic_e"></i>最近联系人 (5人)</p>
+                        <ul>
+                            <li><label class="clearfix" for="1231231"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="1231231" data-name="张z三" class="choise_input" data-num="18412435698" /></li>
+                            <li><label class="clearfix" for="12313121"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="12313121" data-name="张c三" data-num="18412xde98" class="choise_input" /></li>
+                            <li><label class="clearfix" for="1231xde231"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="1231xde231" data-name="张x三" data-num="18xe2435698" class="choise_input" /></li>
+                            <li><label class="clearfix" for="123qwe1231"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="123qwe1231" data-name="张vv三" data-num="1841gdc5698" class="choise_input" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="but_style_e">
+                <p class="p_member_tt">已选成员：16/500</p>
+                <ul class="get_member_list" id="get_member_list"></ul>
+            </div>
+        </div>
+
+        <div class="clearfix pd_top15">
+            <a class="but_style_f" onclick="$('.out_box_member_chose').show();" href="javascript:;">取消</a>
+            <a class="but_style_f but_style_g" id="post_member_list" href="javascript:;">确定</a>
+        </div>
+    </div>
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+        /**
+        * 【手动高亮】
+        * 峻峰小婊砸注意了
+        * 下面就是部门的json数据
+        */
+        var data_json = @Html.Raw(ViewData["response_model"]);
+
+        /**
+        * 【添加部门】
+        * 接口地址：/Department/Add
+        * 请求参数示例：data: { "pid": 父级ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
+        * 请求方式：Post
+        * 返回数据：json
+        * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+        */
+
+        /**
+        * 【修改部门】
+        * 接口地址：/Department/Modify
+        * 请求参数示例：data: { "iid": 部门ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
+        * 请求方式：Post
+        * 返回数据：json
+        * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+        */
+        
+
+
+        var joinId = '';
+        var getMemberHtml = '', $thatZGlist;
+        function closeZGtab() {
+            $(".close_zg_sp").live("click", function () {
+                var id = $(this).siblings("input").val();//获取该id，取消选中项
+                $(this).parent().remove();
+            });
+        }
+        function allCloseFun() {//关闭弹框及背景遮罩
+            $(".pub_out_box").hide();
+            $("#pub_under_bg").remove();
+            $(".pub_out_box input[name=bm_id],.pub_out_box input[name=bm_mc]").val('');
+            $(".pub_out_box .new_bm_zg_list").html('');
+        }
+        function joinBMsub() {
+            //添加部门确定按钮
+            var html = '<li class="sun_li bm_sun_list" data-id="">';/*data-id上传成功后生成*/
+            html += '<p class="p1 p2 bm_name_p">' + $("#put_out_box_new_bm input[name=\"bm_mc\"]").val() + '</p>';
+            html += '<p>';
+            html += '<span class="p3 p4">主管：</span>';
+            $("#put_out_box_new_bm input[name='bm_zg']").each(function (index, element) {
+                html += '<span class="p3 zg_name_p" data-id="' + $(this).attr("data-id") + '">' + $(this).attr("data-name") + '</span>';
+            });
+            html += '</p>';
+            html += '</li>';
+            $("#" + joinId).before(html);
+            allCloseFun();
+            $(".sun_li").unbind('mouseenter').unbind('mouseleave');
+            $(".sun_li").bind({
+                mouseenter: function () {
+                    $(this).addClass("hover");
+                },
+                mouseleave: function () {
+                    $(this).removeClass("hover");
+                }
+            });
+            $(".bm_sun_list").unbind("click");
+            editMSG();
+        }
+        function clickTj(obj) {//点击添加部门
+            joinId = $(obj).attr("id");
+            showOutBox();
+            $("#put_out_box_new_bm").show();
+        }
+        function editMSG() {//点击编辑部门
+            $(".bm_sun_list").click(function () {
+                $("#put_out_box_edit_bm input[name='bm_id']").val($(this).attr("data-id"));
+                $("#put_out_box_edit_bm input[name='bm_mc']").val($(this).find(".bm_name_p").html());
+                var num_zg = $(this).find(".zg_name_p");
+                var html = ''
+                $(this).find(".zg_name_p").each(function (index, element) {
+                    html += '<span class="p_b_p2">';
+                    html += '<input name="bm_zg" data-id="" data-name="' + $(this).html() + '" type="hidden" value="' + $(this).attr("data-id") + '" />';
+                    html += $(this).html() + '<i class="close_zg_sp">×</i>';
+                    html += '</span>';
+
+                });
+                $("#put_out_box_edit_bm .new_bm_zg_list").html(html);
+                showOutBox();
+                $("#put_out_box_edit_bm").show();
+            });
+        }
+        function editSubmit() {
+            //编辑部门确定按钮
+            var $that = $("#put_out_box_edit_bm input[name='bm_id']").val();
+            $that = $("li.bm_sun_list[data-id=" + $that + "]");
+            var html = '';
+            html += '<p class="p1 p2 bm_name_p">' + $("#put_out_box_edit_bm input[name=\"bm_mc\"]").val() + '</p>';
+            html += '<p>';
+            html += '<span class="p3 p4">主管：</span>';
+            for (var i = 0; i < $("#put_out_box_edit_bm input[name='bm_zg']").length; i++) {
+                html += '<span class="p3 zg_name_p">' + $("#put_out_box_edit_bm input[name='bm_zg']").eq(i).attr("data-name") + '</span>';
+            }
+            html += '</p>';
+            $that.html(html);
+            allCloseFun();
+        }
+        function choiceMember(obj) {
+            $(".choise_input").change(function () {
+                var html = '';
+                if (!$(this).prop("checked")) {
+                    $(this).siblings("label").removeClass("hover");
+                    $("#get_member_list li[data-id='" + $(this).attr("id") + "']").remove();
+                }
+                else {
+                    $(this).siblings("label").addClass("hover");
+                    html = '<li class="clearfix" data-id="' + $(this).attr("id") + '" data-name="' + $(this).attr("data-name") + '"><i class="icb remove_member" data-id="' + $(this).attr("id") + '">×</i>' + $(this).attr("data-num") + '(' + $(this).attr("data-name") + ')</li>';
+                    $("#get_member_list").append(html)
+                }
+            });
+            $(".p_list_tt").click(function () {
+                if ($(this).hasClass("under_hide")) {
+                    $(this).removeClass("under_hide");
+                    $(this).siblings("ul").slideDown();
+                }
+                else {
+                    $(this).addClass("under_hide");
+                    $(this).siblings("ul").slideUp();
+                }
+            });
+            /*
+            $("#get_member_list li").hover(function(){
+                $(this).addClass("hover");
+                },function(){
+                    $(this).removeClass("hover");
+            });
+            */
+            $("#get_member_list .remove_member").live("click", function () {
+                var getId = $(this).attr("data-id");
+                $(this).parent().remove();
+                $("#" + getId).prop("checked", false);
+                $("#" + getId).siblings("label").removeClass("hover");
+            });
+            $("#post_member_list").click(function () {
+                $(".out_box_member_chose").hide();
+                $("#get_member_list li").each(function (index, element) {
+                    getMemberHtml += '<span class="p_b_p2"><input name="bm_zg" data-id="' + $(this).attr("data-id") + '" data-name="' + $(this).attr("data-name") + '" type="hidden" value="' + $(this).attr("data-id") + '" />' + $(this).attr("data-name") + '<i class="close_zg_sp">×</i></span>';
+                });
+                $thatZGlist.html(getMemberHtml);
+            });
+        }
+        function showMember(obj) {
+            $thatZGlist = $(obj).siblings(".new_bm_zg_list");
+            $(".out_box_member_chose").show();
+            $(".out_box_member_chose label").removeClass("hover");
+            $(".out_box_member_chose .choise_input").prop("checked", false);
+            $("#get_member_list").html('');
+            getMemberHtml = '';
+        }
+        $(document).ready(function (e) {
+            //showOutBox();
+            choiceMember();
+            $(".sun_li").bind({
+                mouseenter: function () {
+                    $(this).addClass("hover");
+                },
+                mouseleave: function () {
+                    $(this).removeClass("hover");
+                }
+            });
+            $(".pub_out_box,.out_box_member_chose").each(function (index, element) {
+                $(this).css("top", ($(window).height() - $(this).height()) / 2);
+            });
+            $(window).resize(function () {
+                $(".pub_out_box,.out_box_member_chose").each(function (index, element) {
+                    $(this).css("top", ($(window).height() - $(this).height()) / 2);
+                });
+            });
+            closeZGtab();
+            editMSG();
+        });
+    </script>
+
+}
+<!--底部脚本 end-->

@@ -15,16 +15,16 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SendCode(string guid,string telphone)
+        public JsonResult SendCode(string guid, string telphone)
         {
-            if(string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(telphone))
+            if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(telphone))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
 
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            if(!bll.Exists(p => p.Telphone == telphone))
+            if (!bll.Exists(p => p.Telphone == telphone))
             {
                 WorkContext.AjaxStringEntity.msgbox = "该手机号不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -52,9 +52,34 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult UploadAvatar(HttpPostedFileBase file)
         {
-            
+            if (file == null)
+                file = Request.Files[0];
             UploadHelper uh = new UploadHelper();
             WebAjaxEntity<string> result = uh.Upload(file, "/uploads/avatar/");
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 上传秘籍附件
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UploadDocument(HttpPostedFileBase file)
+        {
+            if (file == null)
+                file = Request.Files[0];
+            UploadHelper uh = new UploadHelper();
+            WebAjaxEntity<string> result = uh.Upload(file, "/uploads/doc/");
+            if (result.msg == 1)
+            {
+                int size = IOHelper.GetFileSize(result.data);
+                if (size >= 1024)
+                {
+                    result.msgbox = (size / 1024).ToString() + "MB";
+                }
+                else
+                    result.msgbox = size.ToString() + "KB";
+            }
             return Json(result);
         }
 

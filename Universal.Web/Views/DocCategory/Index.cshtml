@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "秘籍管理";
+    ViewData["tabLeft"] = "doccategory";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+<link href="~/Content/css/class_set.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <div class="al_tt clearfix">
+                <span>分类设置</span>
+                <em class="class_set_title">注：编辑分类时，可按住 “分类块” 调整顺序</em>
+            </div>
+            <div class="class_set_box">
+                <div class="level_li">
+                    <p class="level_title">一级分类</p>
+                    <ul class="level_ul disBlock" data-id="id_1">
+                        <li class="hover" data-sun="id_11">政1策<em>×</em></li>
+                        <li data-sun="id_12">指2引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <a href="javascript:;" class="level_under edit_class">编辑分类</a>
+                </div>
+                <div class="level_li">
+                    <p class="level_title">二级分类</p>
+                    <ul class="level_ul disBlock" data-id="id_11">
+                        <li class="hover" data-sun="id_111">政11策<em>×</em></li>
+                        <li data-sun="id_112">指11引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <ul class="level_ul" data-id="id_12">
+                        <li class="hover" data-sun="id_121">政12策<em>×</em></li>
+                        <li data-sun="id_122">指12引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <a href="javascript:;" class="level_under edit_class">编辑分类</a>
+                </div>
+                <div class="level_li">
+                    <p class="level_title">三级分类</p>
+                    <ul class="level_ul disBlock" data-id="id_111">
+                        <li class="hover">政111策<em>×</em></li>
+                        <li>指111引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <ul class="level_ul" data-id="id_112">
+                        <li class="hover">政112策<em>×</em></li>
+                        <li>指112引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <ul class="level_ul" data-id="id_121">
+                        <li class="hover">政121策<em>×</em></li>
+                        <li>指121引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <ul class="level_ul" data-id="id_122">
+                        <li class="hover">政122策<em>×</em></li>
+                        <li>指122引<em>×</em></li>
+                        <li class="join">点击插入</li>
+                    </ul>
+                    <a href="javascript:;" class="level_under edit_class">编辑分类</a>
+                </div>
+                <div class="new_class">
+                    <p class="tp_tt">新增分类</p>
+                    <a class="but" href="javascript:;">+新增分类</a>
+                </div>
+            </div>
+        </div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+<div class="pub_out_box" id="put_out_box_join">
+    <p class="tt"><span class="sp_close close_join">×</span>插入分类</p>
+    <div class="mid_a">
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">分类名称</p>
+            <div class="p_a_inp">
+                <input type="text" id="new_class" placeholder="请输入您想要添加的分类名" />
+            </div>
+        </div>
+        <div class="p_a_li clearfix">
+            <p class="p_a_b">&nbsp;</p>
+            <div class="fl clearfix">
+                <a href="javascript:;" class="p_a_but" id="join_submit">确定</a>
+                <a href="javascript:;" class="p_a_but p_a_but_col close_join">取消</a>
+            </div>
+        </div>
+        <p class="error" id="error_email_a"></p>
+    </div>
+</div>
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        var get_post_id = "";
+        function getMenuClass() {//获取子分类显示
+            $(".level_ul li").unbind("click");
+            $(".level_ul li").bind("click", function () {
+                if (!$(this).hasClass("join") && !$(this).parent().hasClass("level_edit")) {
+                    $(this).siblings("li").removeClass("hover");
+                    $(this).addClass("hover");
+                    var sun_id = $(this).attr("data-sun");
+                    $("ul[data-id='" + sun_id + "']").siblings("ul").hide();
+                    $("ul[data-id='" + sun_id + "']").show();
+                    $("ul[data-id='" + sun_id + "']").children().removeClass("hover");
+                }
+            });
+        }
+        function removeClass() {//删除分类
+            $(".level_li em").unbind("click");
+            $(".level_li em").bind("click", function () {
+                $(this).parent().remove();
+            });
+        }
+        function editClass() {//编辑分类、保存分类
+            $(".level_li .edit_class").click(function () {
+                if (!$(this).hasClass("edit_going")) {//编辑
+                    $(this).parents(".level_li").addClass("level_edit");
+                    $(this).html("保存分类");
+                    $(this).addClass("edit_going");
+                }
+                else {//保存
+                    $(this).parents(".level_li").removeClass("level_edit");
+                    $(this).html("编辑分类");
+                    $(this).removeClass("edit_going");
+                }
+            });
+        }
+        function joinClass() {//点击插入
+            var $that;
+            $(".join").click(function () {
+                get_post_id = $(this).parent().attr("data-id");//获取当前插入id
+                $("#put_out_box_join").show();
+                $that = $(this);
+                showOutBox();
+            });
+            $("#join_submit").click(function () {
+                var txt = '<li data-sun="id_123">' + $("#new_class").val() + '<em>×</em></li>';
+                $that.before(txt);
+                $("#new_class").val('');
+                $("#put_out_box_join").hide();
+                $("#pub_under_bg").remove();
+                getMenuClass();//重新绑定点击事件
+                removeClass();//重新绑定点击事件
+            });
+            $("#put_out_box_join .close_join").click(function () {
+                $("#new_class").val('');
+                $("#put_out_box_join").hide();
+                $("#pub_under_bg").remove();
+            });
+        }
+        $(document).ready(function (e) {
+            getMenuClass();
+            removeClass();
+            editClass();
+            joinClass();
+        });
+    </script>
+
+}
+<!--底部脚本 end-->

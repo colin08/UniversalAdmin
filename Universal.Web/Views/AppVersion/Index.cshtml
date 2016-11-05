@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "秘籍管理";
+    ViewData["tabLeft"] = "appversion";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            版本管理
+        </div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+
+}
+<!--底部脚本 end-->

@@ -1,0 +1,188 @@
+﻿@model Universal.Web.Models.ViewModelDocument
+@{
+    ViewBag.Title = "编辑秘籍信息";
+    ViewData["tabLeft"] = "doc";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+<link href="~/Content/css/miji.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <div class="al_tt clearfix">
+                <a class="icon" href="/Document/index"></a>
+                <span>秘籍列表</span>
+                <span class="bf">上传秘籍</span>
+            </div>
+            <form method="post" class="form-horizontal" id="form">
+                @Html.AntiForgeryToken()
+                <div class="page_miji_upload">
+                    <div class="pd_bottom clearfix">
+                        标题： @Html.TextBoxFor(p => p.title, new { @class = "inp" })
+                        @Html.ValidationMessageFor(p => p.title)
+
+                        *样式未好，必填
+                        <br />
+                        <p class="l_tt">所属分类</p>
+                        <div class="fl">
+                            <div class="pub_select_box">
+                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="请选择..." />
+                                <div class="select_list">
+                                    <p class="first"></p>
+                                    @Html.HiddenFor(p=>p.category_id)
+                                    <div class="select_sun_list" id="select_sun_list">
+                                        @foreach (var item in Model.category_list)
+                                        {
+                                            @:<a class="a_category" ids="@item.id" href="javascript:set_select(@item.id);">@item.title</a>
+
+                                        }
+                                    </div>
+                                    @Html.ValidationMessageFor(p=>p.category_id)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pd_bottom clearfix">
+                        <p class="l_tt">文件</p>
+                        <div class="fl">
+                            @Html.HiddenFor(p=>p.filepath)
+                            @Html.HiddenFor(p=>p.filesize)
+                            <label class="icon_label" for="but_upload"><i class="icon_file"></i><input type="file" id="but_upload" />上传文件</label>
+                            <span id="span_filename">@Model.filepath</span> &nbsp; <span id="span_upload_status"></span>
+                        </div>
+                    </div>
+                    <div class="pd_bottom clearfix">
+                        <p class="l_tt">谁可以看</p>
+                        <div class="fl">
+                            <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.everyone">
+                                @Html.RadioButtonFor(x => x.post_see, "0", Model.post_see == Universal.Entity.DocPostSee.everyone ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked= true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
+                                <i class="pub_radio"></i>
+                                <span>所有人</span>
+                            </label>
+                            <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
+                                @Html.RadioButtonFor(x => x.post_see, "1", Model.post_see == Universal.Entity.DocPostSee.department ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
+                                <i class="pub_radio"></i>
+                                <span>同事分组</span>
+                            </label>
+                            <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
+                                @Html.RadioButtonFor(x => x.post_see, "2", Model.post_see == Universal.Entity.DocPostSee.user ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
+                                <i class="pub_radio"></i>
+                                <span>自定义</span>
+                            </label>
+                            <label class="icon_label disNone" id="cs_label" for="cs_member">
+                                <i class="icon_file"></i>
+                                <span>添加成员</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="pd_bottom clearfix" id="box_bor_line">
+                        <p class="l_tt"></p>
+                        <div class="box_bor_line">
+
+                        </div>
+                    </div>
+                    <div class="pd_bottom clearfix">
+                        <p class="l_tt"></p>
+                        <div class="fl">
+                            <input type="submit" value="确定" class="p_a_but" />
+                            <a href="javascript:location.href='/Document/Index';" class="p_a_but p_a_but_col close_join">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+@Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        function set_select(id)
+        {
+            
+            $("#category_id").val(id);
+        }
+
+        function showOther() {
+            $("input[name='post_see']").change(function () {
+                if ($(this).val() == 2) {
+                    $("#cs_label").show();
+                    $("#box_bor_line").show();
+                }
+                else {
+                    $("#cs_label").hide();
+                    $("#box_bor_line").hide();
+                }
+            });
+        }
+
+        $(function () {
+            $("#but_upload").on("change", function () {
+                var filePath = $(this).val().toLowerCase();
+                if (filePath != "")
+                {
+                    upload();
+                }
+            })
+
+        })
+
+        function upload()
+        {
+            var fd = new FormData();
+            fd.append("FileData", document.getElementById('but_upload').files[0]);
+            $("#span_upload_status").html("上传中...");
+            $.ajax({
+                url: '/Tools/UploadDocument',
+                type: 'POST',
+                cache: false,
+                contentType: "multipart/form-data",
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                $("#span_upload_status").html("");
+                if (res.msg == 1) {
+                    $("#span_filename").html(res.data);
+                    $("#filepath").val(res.data);
+                    $("#filesize").val(res.msgbox);
+                } else {
+                    alert(res.msgbox);
+                }
+            }).fail(function (res) { });
+        }
+
+
+        
+        $(document).ready(function (e) {
+            showOther();
+            
+            @if(Model.Msg == 1)
+            {
+                @:alert("操作成功");
+                @:location.href = "/Document/index";
+                @:getWindow();
+
+            }
+            else if(Model.Msg == 2)
+            {
+                @:alert("数据不存在");
+            }
+        });
+    </script>
+
+}
+<!--底部脚本 end-->

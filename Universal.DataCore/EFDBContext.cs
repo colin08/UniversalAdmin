@@ -64,21 +64,6 @@ namespace Universal.DataCore
         public DbSet<Entity.SysRoleRoute> SysRoleRoutes { get; set; }
 
         /// <summary>
-        /// 测试
-        /// </summary>
-        public DbSet<Entity.Demo> Demo { get; set; }
-
-        /// <summary>
-        /// 测试相册
-        /// </summary>
-        public DbSet<Entity.DemoAlbum> DemoAlbums { get; set; }
-
-        /// <summary>
-        /// 测试成员
-        /// </summary>
-        public DbSet<Entity.DemoDept> DemoDepts { get; set; }
-
-        /// <summary>
         /// 用户
         /// </summary>
         public DbSet<Entity.CusUser> CusUsers { get; set; }
@@ -87,6 +72,46 @@ namespace Universal.DataCore
         /// 验证码
         /// </summary>
         public DbSet<Entity.CusVerification> CusVerifications { get; set; }
+
+        /// <summary>
+        /// 用户职位
+        /// </summary>
+        public DbSet<Entity.CusUserJob> CusUserJobs { get; set; }
+
+        /// <summary>
+        /// 部门
+        /// </summary>
+        public DbSet<Entity.CusDepartment> CusDepartments { get; set; }
+
+        /// <summary>
+        /// 权限列表
+        /// </summary>
+        public DbSet<Entity.CusRoute> CusRoutes { get; set; }
+
+        /// <summary>
+        /// 用户所拥有的权限列表
+        /// </summary>
+        public DbSet<Entity.CusUserRoute> CusUserRoutes { get; set; }
+
+        /// <summary>
+        /// 秘籍分类
+        /// </summary>
+        public DbSet<Entity.DocCategory> DocCategorys { get; set; }
+
+        /// <summary>
+        /// 秘籍文章
+        /// </summary>
+        public DbSet<Entity.DocPost> DocPosts { get; set; }
+
+        /// <summary>
+        /// 用户收藏
+        /// </summary>
+        public DbSet<Entity.CusUserFavorites> CusUserFavorites { get; set; }
+
+        /// <summary>
+        /// 秘籍文章可见权限
+        /// </summary>
+        public DbSet<Entity.DocPostPower> DocPostPowers { get; set; }
 
         /// <summary>
         /// 

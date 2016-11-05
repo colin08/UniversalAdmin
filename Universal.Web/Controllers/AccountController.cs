@@ -30,7 +30,7 @@ namespace Universal.Web.Controllers
                     List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
                     filters.Add(new BLL.FilterSearch("ID", uid.ToString(), BLL.FilterSearchContract.等于));
                     filters.Add(new BLL.FilterSearch("Password", upwd, BLL.FilterSearchContract.等于));
-                    Entity.CusUser model = bll.GetModel(filters);
+                    Entity.CusUser model = bll.GetModel(filters, p => p.CusUserRoute.Select(s => s.CusRoute));
                     if (model != null)
                     {
                         if (model.Status)
@@ -69,9 +69,9 @@ namespace Universal.Web.Controllers
                 
                 //如果是邮箱
                 if(ValidateHelper.IsEmail(req.user_name))
-                    model = bll.GetModel(p => p.Email == req.user_name && p.Password == passworld);
+                    model = bll.GetModel(p => p.Email == req.user_name && p.Password == passworld, p => p.CusUserRoute.Select(s => s.CusRoute));
                 else
-                    model = bll.GetModel(p => p.Telphone == req.user_name && p.Password == passworld);
+                    model = bll.GetModel(p => p.Telphone == req.user_name && p.Password == passworld, p => p.CusUserRoute.Select(s => s.CusRoute));
                 if(model == null)
                 {
                     ModelState.AddModelError("user_name", "用户不存在或密码错误");

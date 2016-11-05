@@ -8,7 +8,7 @@ using Universal.Web.Framework;
 
 namespace Universal.Web.Controllers
 {
-    [BasicAuth]
+    [BasicUserAuth]
     public class UserController : BaseHBLController
     {
         /// <summary>

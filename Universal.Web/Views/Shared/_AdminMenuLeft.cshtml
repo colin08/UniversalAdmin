@@ -1,0 +1,30 @@
+﻿<div class="left_menu">
+    <p class="menu_tt">系统管理</p>
+    <p class="tt">帐号管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("user_list") ? "class=hover": "")><a href="/AdminUser/Index"><i class="ic1"></i>员工管理</a></li>
+        <li @(ViewData["tabLeft"].ToString().Equals("department") ? "class=hover": "")><a href="/Department/Index"><i class="ic2"></i>部门设置</a></li>
+    </ul>
+    <p class="tt">秘籍管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("doc") ? "class=hover": "")><a href="/Document/Index"><i class="ic3"></i>秘籍列表</a></li>
+        <li @(ViewData["tabLeft"].ToString().Equals("doccategory") ? "class=hover": "")><a href="/DocCategory/Index"><i class="ic4"></i>分类设置</a></li>
+    </ul>
+    <p class="tt">流程管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("flow") ? "class=hover": "")><a href="/Flow/Index"><i class="ic5"></i>流程设置</a></li>
+        <li @(ViewData["tabLeft"].ToString().Equals("node") ? "class=hover" : "")><a href="/Node/Index"><i class="ic6"></i>节点设置</a></li>
+    </ul>
+    <p class="tt">项目管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("project") ? "class=hover": "")><a href="/Project/Index"><i class="ic7"></i>项目列表</a></li>
+    </ul>
+    <p class="tt">公告管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("notice") ? "class=hover" : "")><a href="/Notice/Index"><i class="ic8"></i>公告列表</a></li>
+    </ul>
+    <p class="tt">版本管理</p>
+    <ul class="menu_ul">
+        <li @(ViewData["tabLeft"].ToString().Equals("appversion") ? "class=hover" : "")><a href="AppVersion/Index"><i class="ic9"></i>版本列表</a></li>
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* CSS Document */
+
+.class_set_title{float:right; font-size:14px; color:#84929b; padding-top:15px;}
+
+.class_set_box{border:1px solid #e0e0e0; margin:30px 0; height:650px;}
+.class_set_box .level_li{float:left; width:208px; border-right:1px solid #e0e0e0; height:650px; z-index:103; position:relative;}
+.class_set_box .level_title{text-align:center; height:46px; line-height:46px; font-size:16px; color:#506470; font-weight:bold; border-bottom:1px solid #e0e0e0; background:#f2f5f8; overflow:hidden;}
+.class_set_box .level_ul{width:140px; height:552px; padding:0 34px; overflow:hidden; display:none;}
+.class_set_box .level_ul li{cursor:pointer; margin:14px 0; text-align:center; height:44px; line-height:44px; border:1px solid #e0e0e0; color:#506470; position:relative; z-index:103;}
+.class_set_box .level_ul li.hover{background:#e22d3e; border-color:#e22d3e; color:#fff;}
+.class_set_box .level_ul li.join{border:1px dashed #e0e0e0; color:#999;}
+.class_set_box .level_ul em{position:absolute; z-index:103; display:inline-block; width:20px; height:20px; background:#e22d3e; color:#fff; line-height:20px; text-align:center; font-size:16px; font-weight:bold; overflow:hidden; border-radius:50%; top:-10px; right:-10px; display:none;}
+.class_set_box .disBlock{display:block;}
+.class_set_box .level_edit em{display:block;}
+.class_set_box .level_edit li.join{display:none;}
+.class_set_box .level_edit li.hover{background:#fff; border-color:#e0e0e0; color:#506470;}
+.class_set_box .level_under{height:48px; line-height:48px; width:100%; text-align:center; border-top:1px solid #e0e0e0; display:inline-block; color:#3366cc;}
+.class_set_box .level_under:hover{text-decoration:underline;}
+.class_set_box .new_class{width:499px; float:left;}
+.class_set_box .new_class .tp_tt{height:46px; line-height:46px; font-size:16px; color:#506470; font-weight:bold; border-bottom:1px solid #e0e0e0; background:#f2f5f8; overflow:hidden; padding:0 25px;}
+.class_set_box .new_class .but{width:108px; height:38px; display:block; border:1px solid #e0e0e0; text-align:center; line-height:38px; border-radius:4px; margin:200px auto 0 auto;}
+
+
+
+

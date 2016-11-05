@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.page_miji_gl_but{float:right; display:inline-block; height:36px; line-height:36px; font-size:14px; margin:-15px 0 0 20px;}
+.page_miji_gl_but i{width:22px; height:36px; display:inline-block; vertical-align:middle; background:url(../images/miji_upload.jpg) left center no-repeat; left center no-repeat;}
+.page_miji_gl_but i.ic{background-image:url(../images/yg_icon05.jpg);}
+.page_miji_gl_but i.id{background-image:url(../images/yg_icon05.jpg);}
+.page_miji_gl_but i.ie{background-image:url(../images/yg_icon05.jpg);}
+.page_miji_gl_but_z{margin-top:0;}
+
+
+.page_miji_gl_box .rs_w1{width:35px;}
+.page_miji_gl_box .rs_w2{width:200px;}
+.page_miji_gl_box .rs_w3{width:130px;}
+.page_miji_gl_box .rs_w4{width:115px;}
+.page_miji_gl_box .rs_w5{width:220px;}
+.page_miji_gl_box .rs_w6{width:80px;}
+.page_miji_gl_box .rs_w7{width:108px;}
+
+
+.page_miji_detail .tp_tt{padding:10px 0; text-align:center;}
+.page_miji_detail .tp_tt span{padding:0 5px;}
+.page_miji_detail .txt{padding:30px 0 100px 0; border-bottom:1px solid #e0e0e0; line-height:24px;}
+.page_miji_detail .und_but{text-align:center; padding:30px 0;}
+.page_miji_detail .und_but .but{display:inline-block; height:36px; line-height:36px; padding:0 20px; text-align:center; color:#fff; background:#e22d3e; border:1px solid #e22d3e; margin:0 15px;}
+.page_miji_detail .und_but .but_a{background:#fff; color:#666; border-color:#e0e0e0;}
+
+
+.page_miji_upload{width:720px; margin:50px auto 170px auto;}
+.page_miji_upload .l_tt{float:left; width:120px; height:42px; line-height:42px; text-align:right; padding-right:15px; font-size:14px;}
+.page_miji_upload .pub_select_box{width:555px;}
+.page_miji_upload .pub_select_box .select_list .first{background-position:96% center;}
+.page_miji_upload .icon_file{width:22px; height:22px; display:inline-block; vertical-align:middle; background:url(../images/join.jpg) center no-repeat; margin-right:5px;}
+.page_miji_upload .icon_label input{display:none;}
+.page_miji_upload .icon_label{line-height:40px;}
+.page_miji_upload .pd_bottom{padding-bottom:15px;}
+.page_miji_upload .p_a_but{width:100px; float:left; height:40px; border:1px solid #e22d3e; background:#e22d3e; color:#fff; text-align:center; line-height:40px; display:inline-block; margin-right:20px; border-radius:3px;}
+.page_miji_upload .p_a_but_col{background:#fff; color:#506470; border-color:#c7cbd3;}
+.page_miji_upload .pub_lab{line-height:42px; padding-right:20px;}
+.page_miji_upload .box_bor_line{width:580px; height:162px; border:1px solid #e0e0e0; overflow-x:hidden; overflow-y:visible; float:left;}
+.page_miji_upload #box_bor_line{display:none;}
+

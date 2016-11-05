@@ -21,6 +21,11 @@ namespace Universal.Tools
         /// </summary>
         public static readonly int AdminDefaultPageSize = 12;
 
+        /// <summary>
+        /// 缓存时间(分钟)
+        /// </summary>
+        public static readonly int CACHE_TIME = 60;
+
     }
 
     /// <summary>

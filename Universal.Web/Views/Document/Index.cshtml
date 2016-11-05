@@ -1,0 +1,274 @@
+﻿@{
+    ViewBag.Title = "秘籍管理";
+    ViewData["tabLeft"] = "doc";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+    <input type="hidden" id="hid_temp_doc_id" value="0" />
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <div class="al_tt clearfix">
+                <div class="pub_yuangong_gl_search clearfix fr">
+                    <input type="text" id="txt_search" class="inp" placeholder="请输入标题搜索" />
+                    <a class="page_miji_gl_but" href="javascript:void(0);" onclick="data_search()">&nbsp;</a>
+                </div>
+                <a class="pub_yuangong_gl_but" href="/Document/Modify"><i class="ic" style="background-image:url(/Content/images/miji_upload.jpg)"></i>上传秘籍</a>
+
+                <span>秘籍列表</span>
+            </div>
+            <div class="pub_yuangong_gl_box clearfix">
+                <div class="ls">
+                    <p class="ls_tt">所有秘籍 </p>
+                    @Html.Raw(ViewData["TreeData"])
+                </div>
+                <div class="rs">
+                    <ul class="member_list">
+                        <li class="mb_tp_tt clearfix">
+                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" onclick="CheckAll(this)" type="checkbox" /></span></p>
+                            <p class="rs_w2">标题</p>
+                            <p class="rs_w3">上传者</p>
+                            <p class="rs_w5">更新时间</p>
+                            <p class="rs_w6">大小</p>
+                            <p class="rs_w7">操作</p>
+
+                        </li>
+                    </ul>
+                    <div class="member_bottom">
+                        <a href="javascript:void(0);" onclick="del(0)"><i class="del_red"></i>批量删除</a>
+                        <div class="pub_page_style fr">
+                            <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                            <select class="sel" id="select_page_size">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span>条</span>
+
+                            <div id="pager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/laypage")
+
+    <script type="text/javascript">
+        function menuSun() {
+            $(".ls_list_tt").click(function () {
+                if ($(this).hasClass("ls_list_tt_ns")) {
+                    return false;
+                }
+                else {
+                    if ($(this).hasClass("ls_list_tt_h")) {
+                        $(this).removeClass("ls_list_tt_h");
+                        $(this).siblings("ul.ls_menu_ul").slideDown();
+                    }
+                    else {
+                        $(this).addClass("ls_list_tt_h");
+                        $(this).siblings("ul.ls_menu_ul").slideUp();
+                    }
+                }
+            });
+        }
+        $(document).ready(function (e) {
+            menuSun();
+            pageData(1,@ViewData["DefaultID"],false)
+        });
+
+        function data_search()
+        {
+            pageData(1, $("#hid_temp_doc_id").val(), false)
+        }
+
+        function clear_data()
+        {
+            $('.mb_list_li').each(function (index) {
+                $(this).remove();
+            });
+        }
+
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index, doc_id, clearbox) {
+            clear_data();
+            if (doc_id == 0)
+            {
+                return;
+            }
+            $("#hid_temp_doc_id").val(doc_id);
+            if (clearbox)
+            {
+                $("#txt_search").val("");
+            }
+            $.ajax({
+                type: "post",
+                url: "/Document/DocData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": doc_id, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
+
+                    clear_data();
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        var si = "";
+                        if(item.FileSize != null)
+                        {
+                            si = item.FileSize;
+                        }
+                        dataHtml += "<li class=\"mb_list_li clearfix\">";
+                            dataHtml += "<p class=\"rs_w1\"><span class=\"sp_a\"><input class=\"all_checked_but\" type=\"checkbox\" hid=\""+item.ID+"\" /></span></p>"
+                        dataHtml += "<p class=\"rs_w2\">"+CutString(item.Title,10)+"</p>";
+                        dataHtml += "<p class=\"rs_w3\">"+item.CusUser.NickName+"</p>";
+                        dataHtml += "<p class=\"rs_date\">" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</p>";
+                        dataHtml += "<p class=\"rs_w6\">" + si + "</p>";
+                        dataHtml += "<p class=\"rs_w7\">";
+                        dataHtml += "<a class=\"edit_but\" href=\"javascript:location.href='/Document/Modify?id="+item.ID+"';\">&nbsp;</a>";
+                        dataHtml += "<a class=\"edit_but del_but\" href=\"javascript:void(0);\" onclick=\"del("+item.ID+")\">&nbsp;</a>";
+                        dataHtml += "</p>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<li class=\"mb_list_li clearfix\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></li>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $(".member_list").append(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr,doc_id, clearbox);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //列表的选中
+        function CheckAll(obj) {
+            if ($(obj).is(':checked')) {
+                $(".all_checked_but").prop("checked", true);
+            } else {
+                $(".all_checked_but").prop("checked", false);
+            }
+        }
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
+            }
+        }
+
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        function del(id) {
+            var ids = "";
+            if(id==0)
+            {
+                $(".all_checked_but").each(function () {
+                    if ($(this).is(':checked')) {
+                        ids = ids + $(this).attr("hid") + ","
+                    }
+                })
+                if (ids == "") {
+                    alert("请先选中要删除的数据");
+                    return;
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            else
+            {
+                ids = id;
+            }
+            $.ajax({
+                type: "post",
+                url: "/Document/DelDoc",
+                data: { "ids": ids },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        data_search();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+                
+    </script>
+
+}
+<!--底部脚本 end-->

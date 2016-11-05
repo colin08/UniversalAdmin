@@ -12,5 +12,11 @@ namespace Universal.Web.Framework
         /// 当前登录的用户
         /// </summary>
         public Entity.CusUser UserInfo;
+
+        /// <summary>
+        /// 管理首页
+        /// </summary>
+        public string ManagerHome { get; set; }
+
     }
 }

@@ -246,16 +246,6 @@
             内存指示颜色
             </summary>
         </member>
-        <member name="P:Universal.Web.Areas.Admin.Models.ViewModelDemo.word">
-            <summary>
-            当前筛选的关键字
-            </summary>
-        </member>
-        <member name="P:Universal.Web.Areas.Admin.Models.ViewModelDemo.DataList">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:Universal.Web.Areas.Admin.Models.ViewModelLogin">
             <summary>
             后台登陆表单实体类
@@ -826,6 +816,66 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Universal.Web.Controllers.AdminUserController">
+            <summary>
+            管理员
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.UserData(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            分页数据
+            </summary>
+            <param name="page_size"></param>
+            <param name="page_index"></param>
+            <param name="department_id">部门ID</param>
+            <param name="keyword">搜索关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.DelUser(System.String)">
+            <summary>
+            删除
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.ResetUserPwd(System.Int32)">
+            <summary>
+            重置用户密码
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.Modify(System.Nullable{System.Int32})">
+            <summary>
+            编辑员工信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.Modify(Universal.Web.Models.ViewModelAdminUser)">
+            <summary>
+            保存员工信息
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.Job">
+            <summary>
+            职位管理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.DelJob(System.Int32)">
+            <summary>
+            删除职位
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AdminUserController.AddJob(System.String)">
+            <summary>
+            新增职位
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Universal.Web.Controllers.APIController">
             <summary>
             测试接口
@@ -848,6 +898,99 @@
             用户接口
             </summary>
         </member>
+        <member name="T:Universal.Web.Controllers.DepartmentController">
+            <summary>
+            部门
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.DepartmentController.Index">
+            <summary>
+            部门管理
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DepartmentController.Add(System.Int32,System.String,System.String)">
+            <summary>
+            添加部门
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DepartmentController.Modify(System.Int32,System.String,System.String)">
+            <summary>
+            修改部门
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Universal.Web.Controllers.AppVersionController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.NoticeController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.ProjectController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.NodeController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.FlowController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.DocCategoryController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.DocumentController">
+            <summary>
+            秘籍
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocumentController.DocData(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            分页数据
+            </summary>
+            <param name="page_size"></param>
+            <param name="page_index"></param>
+            <param name="doc_id">部门ID</param>
+            <param name="keyword">搜索关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocumentController.DelDoc(System.String)">
+            <summary>
+            删除
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocumentController.Info(System.Int32)">
+            <summary>
+            详情
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocumentController.DocFavorites(System.Int32)">
+            <summary>
+             秘籍收藏
+            </summary>
+            <param name="doc_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocumentController.LoadCategory">
+            <summary>
+            加载分类
+            </summary>
+        </member>
         <member name="M:Universal.Web.Controllers.ToolsController.SendCode(System.String,System.String)">
             <summary>
             发送验证码
@@ -857,6 +1000,12 @@
         <member name="M:Universal.Web.Controllers.ToolsController.UploadAvatar(System.Web.HttpPostedFileBase)">
             <summary>
             上传用户头像
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ToolsController.UploadDocument(System.Web.HttpPostedFileBase)">
+            <summary>
+            上传秘籍附件
             </summary>
             <returns></returns>
         </member>
@@ -944,6 +1093,146 @@
             <param name="old"></param>
             <param name="newp"></param>
             <returns></returns>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelAdminUser">
+            <summary>
+            编辑管理员用户
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.id">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.nick_name">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.telphone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.department_id">
+            <summary>
+            部门ID
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.department_title">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.job_id">
+            <summary>
+            职位
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.jon_title">
+            <summary>
+            职位名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.gender">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.about_me">
+            <summary>
+            个人介绍
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.user_route">
+            <summary>
+            所有权限
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.user_route_str">
+            <summary>
+            权限ID,逗号分割
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelCustomFormBase">
+            <summary>
+            自定义表单基类字段
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelCustomFormBase.Msg">
+            <summary>
+            操作状态(0：默认情况,1：处理成功，2：数据不存在，3：数据验证有误)
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelCustomFormBase.MsgBox">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelDepartment">
+            <summary>
+            部门管理首页数据
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartment.department_id">
+            <summary>
+            部门ID
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartment.title">
+            <summary>
+            部门名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartment.parent_id">
+            <summary>
+            父级ID
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartment.admin_list">
+            <summary>
+            部门主管信息
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.ViewModelDepartmentAdmin">
+            <summary>
+            部门管理员信息
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartmentAdmin.user_id">
+            <summary>
+            主管ID
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDepartmentAdmin.name">
+            <summary>
+            主管名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDocument.category_list">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDocument.post_see">
+            <summary>
+            秘籍权限
+            </summary>
         </member>
         <member name="T:Universal.Web.Models.ViewModelSendPwd">
             <summary>

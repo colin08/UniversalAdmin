@@ -1,0 +1,292 @@
+﻿@{
+    ViewBag.Title = "员工管理";
+    ViewData["tabLeft"] = "user_list";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+    <input type="hidden" id="hid_temp_department_id" value="0" />
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <div class="al_tt clearfix">
+                <div class="pub_yuangong_gl_search clearfix fr">
+                    <input type="text" id="txt_search" class="inp" placeholder="请输入手机号/姓名" />
+                    <a class="but" href="javascript:void(0);" onclick="data_search()">&nbsp;</a>
+                </div>
+                <a class="pub_yuangong_gl_but" href="/AdminUser/Job"><i></i>职位管理</a>
+                <a class="pub_yuangong_gl_but" href="/AdminUser/Modify"><i class="ic"></i>添加员工</a>
+                <span>员工管理</span>
+            </div>
+            <div class="pub_yuangong_gl_box clearfix">
+                <div class="ls">
+                    <p class="ls_tt">所有部门 </p>
+                    @Html.Raw(ViewData["TreeData"])
+                </div>
+                <div class="rs">
+                    <ul class="member_list">
+                        <li class="mb_tp_tt clearfix">
+                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" onclick="CheckAll(this)" type="checkbox" /></span></p>
+                            <p class="rs_w2">姓名</p>
+                            <p class="rs_w3">手机号</p>
+                            <p class="rs_w4">管理权限</p>
+                            <p class="rs_w5">职位</p>
+                            <p class="rs_w6">登录邮箱</p>
+                            <p class="rs_w7">登录密码</p>
+                            <p class="rs_w8">操作</p>
+                        </li>
+                        @*<li class="mb_list_li clearfix">
+                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" type="checkbox" /></span></p>
+                            <p class="rs_w2">李明</p>
+                            <p class="rs_w3">18584805134</p>
+                            <p class="rs_w4">管理员</p>
+                            <p class="rs_w5">产品经理</p>
+                            <p class="rs_w6">tajck@qq.com</p>
+                            <p class="rs_w7">重置</p>
+                            <p class="rs_w8"></p>
+                        </li>*@
+                    </ul>
+                    <div class="member_bottom">
+                        <a href="javascript:void(0);" onclick="del(0)"><i class="del_red"></i>批量删除</a>
+                        <div class="pub_page_style fr">
+                            <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                            <select class="sel" id="select_page_size">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span>条</span>
+
+                            <div id="pager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/laypage")
+
+    <script type="text/javascript">
+        function menuSun() {
+            $(".ls_list_tt").click(function () {
+                if ($(this).hasClass("ls_list_tt_ns")) {
+                    return false;
+                }
+                else {
+                    if ($(this).hasClass("ls_list_tt_h")) {
+                        $(this).removeClass("ls_list_tt_h");
+                        $(this).siblings("ul.ls_menu_ul").slideDown();
+                    }
+                    else {
+                        $(this).addClass("ls_list_tt_h");
+                        $(this).siblings("ul.ls_menu_ul").slideUp();
+                    }
+                }
+            });
+        }
+        $(document).ready(function (e) {
+            menuSun();
+            pageData(1,@ViewData["DefaultID"],false)
+        });
+
+        function data_search()
+        {
+            pageData(1, $("#hid_temp_department_id").val(), false)
+        }
+
+        function clear_data()
+        {
+            $('.mb_list_li').each(function (index) {
+                $(this).remove();
+            });
+        }
+
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index, department_id, clearbox) {
+            clear_data();
+            if (department_id == 0)
+            {
+                return;
+            }
+            $("#hid_temp_department_id").val(department_id);
+            if (clearbox)
+            {
+                $("#txt_search").val("");
+            }
+            $.ajax({
+                type: "post",
+                url: "/AdminUser/UserData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "department_id": department_id, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
+
+                    clear_data();
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        var admin_str = "";
+                        if (item.IsAdmin) {
+                            admin_str = "管理员"
+                        }
+                        var email = "";
+                        if (item.Email != null)
+                        {
+                            email = item.Email;
+                        }
+
+                        dataHtml += "<li class=\"mb_list_li clearfix\">";
+                        if(item.ID == 1)
+                        {
+                            dataHtml += "<p class=\"rs_w1\"><span class=\"sp_a\"></span></p>";
+                        }else
+                        {
+                            dataHtml += "<p class=\"rs_w1\"><span class=\"sp_a\"><input class=\"all_checked_but\" type=\"checkbox\" hid=\""+item.ID+"\" /></span></p>"
+                        }
+                        dataHtml += "<p class=\"rs_w2\">"+item.NickName+"</p>";
+                        dataHtml += "<p class=\"rs_w3\">"+item.Telphone+"</p>";
+                        dataHtml += "<p class=\"rs_w4\">" + admin_str + "</p>";
+                        dataHtml += "<p class=\"rs_w5\">" + item.CusUserJob.Title + "</p>";
+                        dataHtml += "<p class=\"rs_w6\">" + email + "</p>";
+                        dataHtml += "<p class=\"rs_w7\"><a href='javascript:void(0)' onclick='reset_pwd("+item.ID+")'>重置</a></p>";
+                        dataHtml += "<p class=\"rs_w8\">";
+                        dataHtml += "<a class=\"edit_but\" href=\"javascript:location.href='/AdminUser/Modify?id="+item.ID+"';\">&nbsp;</a>";
+                        dataHtml += "<a class=\"edit_but del_but\" href=\"javascript:void(0);\" onclick=\"del("+item.ID+")\">&nbsp;</a>";
+                        dataHtml += "</p>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<li class=\"mb_list_li clearfix\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></li>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $(".member_list").append(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr,department_id, clearbox);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //列表的选中
+        function CheckAll(obj) {
+            if ($(obj).is(':checked')) {
+                $(".all_checked_but").prop("checked", true);
+            } else {
+                $(".all_checked_but").prop("checked", false);
+            }
+        }
+
+        function del(id) {
+            var ids = "";
+            if(id==0)
+            {
+                $(".all_checked_but").each(function () {
+                    if ($(this).is(':checked')) {
+                        ids = ids + $(this).attr("hid") + ","
+                    }
+                })
+                if (ids == "") {
+                    alert("请先选中要删除的数据");
+                    return;
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            else
+            {
+                ids = id;
+            }
+            $.ajax({
+                type: "post",
+                url: "/AdminUser/DelUser",
+                data: { "ids": ids },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        data_search();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
+        function reset_pwd(id) {
+            if(id==0)
+            {
+                alert("非法参数");
+                return;
+            }
+            $.ajax({
+                type: "post",
+                url: "/AdminUser/ResetUserPwd",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    alert(data.msgbox);
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
+    </script>
+
+}
+<!--底部脚本 end-->

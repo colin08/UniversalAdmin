@@ -19,6 +19,14 @@ namespace Universal.Entity
     /// </summary>
     public class CusUser
     {
+
+        public CusUser()
+        {
+            this.Status = true;
+            this.RegTime = DateTime.Now;
+            this.LastLoginTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
         
         [Display(Name = "手机号"), Index(IsUnique = true), StringLength(20),Required(ErrorMessage = "手机号不能为空")]
@@ -29,6 +37,29 @@ namespace Universal.Entity
         
         [Required(ErrorMessage = "密码不能为空"),StringLength(255), Display(Name = "密码")]
         public string Password { get; set; }
+
+        [Display(Name ="是否管理员")]
+        public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// 所属部门ID
+        /// </summary>
+        public int CusDepartmentID { get; set; }
+
+        /// <summary>
+        /// 部门信息
+        /// </summary>
+        public virtual CusDepartment CusDepartment { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public int CusUserJobID { get; set; }
+
+        /// <summary>
+        /// 职位信息
+        /// </summary>
+        public virtual CusUserJob CusUserJob { get; set; }
 
         [Display(Name = "性别"),Required]
         public CusUserGender Gender { get; set; }
@@ -57,5 +88,10 @@ namespace Universal.Entity
         [Display(Name ="最后登录时间"),Required]
         public DateTime LastLoginTime { get; set; }
 
+        /// <summary>
+        /// 用户的权限
+        /// </summary>
+        public virtual ICollection<CusUserRoute> CusUserRoute { get; set; }
+        
     }
 }

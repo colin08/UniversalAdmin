@@ -381,7 +381,7 @@ namespace Universal.BLL
 
             if (string.IsNullOrWhiteSpace(orderby))
             {
-                if (isCache)
+                if (!isCache)
                 {
                     if (top <= 0)
                         return db.Set<T>().WhereCustom(where).AsNoTracking().ToList();
@@ -398,7 +398,7 @@ namespace Universal.BLL
             }
             else
             {
-                if (isCache)
+                if (!isCache)
                 {
                     if (top <= 0)
                         return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).AsNoTracking().ToList();
@@ -430,7 +430,7 @@ namespace Universal.BLL
         {
             if (string.IsNullOrWhiteSpace(orderby))
             {
-                if (isCache)
+                if (!isCache)
                 {
                     if (top <= 0)
                         return db.Set<T>().Where(whereLambda).AsNoTracking().ToList();
@@ -447,7 +447,7 @@ namespace Universal.BLL
             }
             else
             {
-                if (isCache)
+                if (!isCache)
                 {
                     if (top <= 0)
                         return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).AsNoTracking().ToList();
@@ -464,6 +464,108 @@ namespace Universal.BLL
             }
         }
         #endregion
+
+        //查，查List
+        #region  5.2 根据条件查询 + List<T> GetListBy<TKey>(int top, List<FilterSearch> where, string orderby, Expression<Func<T, TKey>> incloudLambda,bool isCache = false)
+        /// <summary>
+        /// 5.2 根据条件查询
+        /// </summary>
+        /// <param name="top">0为所有</param>
+        /// <param name="where"></param>
+        /// <param name="orderby">排序</param>
+        /// <param name="incloudLambda">包含</param>
+        /// <param name="isCache">是否缓存</param>
+        /// <returns></returns>
+        public List<T> GetListBy<TKey>(int top, List<FilterSearch> where, string orderby, Expression<Func<T, TKey>> incloudLambda,bool isCache = false)
+        {
+
+            if (string.IsNullOrWhiteSpace(orderby))
+            {
+                if (!isCache)
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).AsNoTracking().ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).Take(top).AsNoTracking().ToList();
+                }
+                else
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                }
+            }
+            else
+            {
+                if (!isCache)
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).OrderByCustom(orderby).AsNoTracking().ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
+                }
+                else
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).WhereCustom(where).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                }
+            }
+
+        }
+        #endregion
+
+        #region  5.3 根据条件查询 + List<T> GetListBy(int top, Expression<Func<T, bool>> whereLambda,string orderby, bool isCache = false)
+        /// <summary>
+        /// 5.3 根据条件查询
+        /// </summary>
+        /// <param name="top">0为所有</param>
+        /// <param name="whereLambda"></param>
+        /// <param name="orderby">排序</param>
+        /// <param name="incloudLambda">包含</param>
+        /// <param name="isCache">是否缓存</param>
+        /// <returns></returns>
+        public List<T> GetListBy<TKey>(int top, Expression<Func<T, bool>> whereLambda, string orderby, Expression<Func<T, TKey>> incloudLambda, bool isCache = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderby))
+            {
+                if (!isCache)
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).AsNoTracking().ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).Take(top).AsNoTracking().ToList();
+                }
+                else
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                }
+            }
+            else
+            {
+                if (!isCache)
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).OrderByCustom(orderby).AsNoTracking().ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
+                }
+                else
+                {
+                    if (top <= 0)
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                    else
+                        return db.Set<T>().Include(incloudLambda).Where(whereLambda).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                }
+            }
+        }
+        #endregion
+
 
         //查，带分页查询
         #region 6.0分页查询 不带InCloud +List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby)
