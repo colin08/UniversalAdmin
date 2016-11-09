@@ -253,17 +253,25 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
     <Content Include="Content\css\class_set.css" />
+    <Content Include="Content\css\gg.css" />
     <Content Include="Content\css\index.css" />
     <Content Include="Content\css\miji.css" />
     <Content Include="Content\css\public.css" />
     <Content Include="Content\images\aq_icon01.jpg" />
     <Content Include="Content\images\aq_icon02.jpg" />
     <Content Include="Content\images\aq_icon03.jpg" />
+    <Content Include="Content\images\bb_icon01.jpg" />
+    <Content Include="Content\images\bb_icon02.jpg" />
+    <Content Include="Content\images\bb_icon03.jpg" />
+    <Content Include="Content\images\bb_icon04.jpg" />
+    <Content Include="Content\images\bb_icon05.jpg" />
     <Content Include="Content\images\check_box.jpg" />
     <Content Include="Content\images\check_boxh.jpg" />
     <Content Include="Content\images\find_pw_icon.gif" />
     <Content Include="Content\images\find_pw_icon2.gif" />
     <Content Include="Content\images\find_pw_icon3.jpg" />
+    <Content Include="Content\images\gg_icon1.jpg" />
+    <Content Include="Content\images\gg_icon2.jpg" />
     <Content Include="Content\images\icon2\xt_set_i01.jpg" />
     <Content Include="Content\images\icon2\xt_set_i01h.jpg" />
     <Content Include="Content\images\icon2\xt_set_i02.jpg" />
@@ -410,9 +418,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModelAdminUser.cs" />
+    <Compile Include="Models\ViewModelAppVersion.cs" />
     <Compile Include="Models\ViewModelCustomFormBase.cs" />
     <Compile Include="Models\ViewModelDepartment.cs" />
     <Compile Include="Models\ViewModelDocument.cs" />
+    <Compile Include="Models\ViewModelJob.cs" />
+    <Compile Include="Models\ViewModelNotice.cs" />
     <Compile Include="Models\ViewModelSendPwd.cs" />
     <Compile Include="Models\ViewModelUserBasic.cs" />
     <Compile Include="Models\ViewModelUserLogin.cs" />
@@ -503,6 +514,8 @@
     <Content Include="Views\AppVersion\Index.cshtml" />
     <Content Include="Views\AdminUser\Job.cshtml" />
     <Content Include="Views\Document\Modify.cshtml" />
+    <Content Include="Views\Notice\Modify.cshtml" />
+    <Content Include="Views\AppVersion\Modify.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

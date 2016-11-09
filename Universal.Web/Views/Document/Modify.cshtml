@@ -26,11 +26,14 @@
                 @Html.AntiForgeryToken()
                 <div class="page_miji_upload">
                     <div class="pd_bottom clearfix">
-                        标题： @Html.TextBoxFor(p => p.title, new { @class = "inp" })
-                        @Html.ValidationMessageFor(p => p.title)
+                        <div class="p_a clearfix">
+                            <p class="p_b">公告标题</p>
+                            <div class="p_c">
+                                <div class="inp_a">@Html.TextBoxFor(p => p.title, new { @class = "inp" })</div>
+                                @Html.ValidationMessageFor(p => p.title)
+                            </div>
+                        </div>
 
-                        *样式未好，必填
-                        <br />
                         <p class="l_tt">所属分类</p>
                         <div class="fl">
                             <div class="pub_select_box">

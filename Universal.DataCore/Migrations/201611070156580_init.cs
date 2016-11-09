@@ -27,6 +27,20 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
+                "dbo.CusDepartmentAdmin",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        CusDepartmentID = c.Int(nullable: false),
+                        CusUserID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.CusDepartment", t => t.CusDepartmentID, cascadeDelete: true)
+                .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: false)
+                .Index(t => t.CusDepartmentID)
+                .Index(t => t.CusUserID);
+            
+            CreateTable(
                 "dbo.CusDepartment",
                 c => new
                     {
@@ -62,19 +76,13 @@ namespace Universal.DataCore.Migrations
                         AboutMe = c.String(maxLength: 500),
                         RegTime = c.DateTime(nullable: false),
                         LastLoginTime = c.DateTime(nullable: false),
-                        CusDepartment_ID = c.Int(),
-                        CusDepartment_ID1 = c.Int(),
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusDepartment", t => t.CusDepartmentID, cascadeDelete: true)
                 .ForeignKey("dbo.CusUserJob", t => t.CusUserJobID, cascadeDelete: true)
-                .ForeignKey("dbo.CusDepartment", t => t.CusDepartment_ID)
-                .ForeignKey("dbo.CusDepartment", t => t.CusDepartment_ID1)
                 .Index(t => t.Telphone, unique: true)
                 .Index(t => t.CusDepartmentID)
-                .Index(t => t.CusUserJobID)
-                .Index(t => t.CusDepartment_ID)
-                .Index(t => t.CusDepartment_ID1);
+                .Index(t => t.CusUserJobID);
             
             CreateTable(
                 "dbo.CusUserJob",
@@ -109,6 +117,34 @@ namespace Universal.DataCore.Migrations
                         ControllerName = c.String(nullable: false, maxLength: 30),
                     })
                 .PrimaryKey(t => t.ID);
+            
+            CreateTable(
+                "dbo.CusNotice",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 100),
+                        Content = c.String(nullable: false, unicode: false, storeType: "text"),
+                        CusUserID = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: true)
+                .Index(t => t.CusUserID);
+            
+            CreateTable(
+                "dbo.CusNoticeUser",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        CusNoticeID = c.Int(nullable: false),
+                        CusUserID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.CusNotice", t => t.CusNoticeID, cascadeDelete: true)
+                .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: false)
+                .Index(t => t.CusNoticeID)
+                .Index(t => t.CusUserID);
             
             CreateTable(
                 "dbo.CusUserFavorites",
@@ -437,7 +473,6 @@ namespace Universal.DataCore.Migrations
                     end
                     ";
             Sql(SQLProcGetCusRouteExists);
-
         }
         
         public override void Down()
@@ -451,13 +486,16 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.DocPost", "CusUserID", "dbo.CusUser");
             DropForeignKey("dbo.DocCategory", "PID", "dbo.DocCategory");
             DropForeignKey("dbo.CusUserFavorites", "CusUserID", "dbo.CusUser");
-            DropForeignKey("dbo.CusDepartment", "PID", "dbo.CusDepartment");
-            DropForeignKey("dbo.CusUser", "CusDepartment_ID1", "dbo.CusDepartment");
-            DropForeignKey("dbo.CusUser", "CusDepartment_ID", "dbo.CusDepartment");
+            DropForeignKey("dbo.CusNotice", "CusUserID", "dbo.CusUser");
+            DropForeignKey("dbo.CusNoticeUser", "CusUserID", "dbo.CusUser");
+            DropForeignKey("dbo.CusNoticeUser", "CusNoticeID", "dbo.CusNotice");
+            DropForeignKey("dbo.CusDepartmentAdmin", "CusUserID", "dbo.CusUser");
             DropForeignKey("dbo.CusUserRoute", "CusUserID", "dbo.CusUser");
             DropForeignKey("dbo.CusUserRoute", "CusRouteID", "dbo.CusRoute");
             DropForeignKey("dbo.CusUser", "CusUserJobID", "dbo.CusUserJob");
             DropForeignKey("dbo.CusUser", "CusDepartmentID", "dbo.CusDepartment");
+            DropForeignKey("dbo.CusDepartment", "PID", "dbo.CusDepartment");
+            DropForeignKey("dbo.CusDepartmentAdmin", "CusDepartmentID", "dbo.CusDepartment");
             DropIndex("dbo.SysRoleRoute", new[] { "SysRouteID" });
             DropIndex("dbo.SysRoleRoute", new[] { "SysRoleID" });
             DropIndex("dbo.SysRole", new[] { "RoleName" });
@@ -469,14 +507,17 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.DocPostPower", new[] { "DocPostID" });
             DropIndex("dbo.DocCategory", new[] { "PID" });
             DropIndex("dbo.CusUserFavorites", new[] { "CusUserID" });
+            DropIndex("dbo.CusNoticeUser", new[] { "CusUserID" });
+            DropIndex("dbo.CusNoticeUser", new[] { "CusNoticeID" });
+            DropIndex("dbo.CusNotice", new[] { "CusUserID" });
             DropIndex("dbo.CusUserRoute", new[] { "CusRouteID" });
             DropIndex("dbo.CusUserRoute", new[] { "CusUserID" });
-            DropIndex("dbo.CusUser", new[] { "CusDepartment_ID1" });
-            DropIndex("dbo.CusUser", new[] { "CusDepartment_ID" });
             DropIndex("dbo.CusUser", new[] { "CusUserJobID" });
             DropIndex("dbo.CusUser", new[] { "CusDepartmentID" });
             DropIndex("dbo.CusUser", new[] { "Telphone" });
             DropIndex("dbo.CusDepartment", new[] { "PID" });
+            DropIndex("dbo.CusDepartmentAdmin", new[] { "CusUserID" });
+            DropIndex("dbo.CusDepartmentAdmin", new[] { "CusDepartmentID" });
             DropTable("dbo.SysRoute");
             DropTable("dbo.SysRoleRoute");
             DropTable("dbo.SysRole");
@@ -490,20 +531,15 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.DocCategory");
             DropTable("dbo.CusVerification");
             DropTable("dbo.CusUserFavorites");
+            DropTable("dbo.CusNoticeUser");
+            DropTable("dbo.CusNotice");
             DropTable("dbo.CusRoute");
             DropTable("dbo.CusUserRoute");
             DropTable("dbo.CusUserJob");
             DropTable("dbo.CusUser");
             DropTable("dbo.CusDepartment");
+            DropTable("dbo.CusDepartmentAdmin");
             DropTable("dbo.AppVersion");
-
-            Sql("DROP PROCEDURE [dbo].[sp_GetChildDepartments]");
-
-            Sql("DROP PROCEDURE [dbo].[sp_GetParentDepartments]");
-
-            Sql("DROP FUNCTION [dbo].[fn_GetChildDepartmentStr]");
-
-            Sql("DROP PROCEDURE [dbo].[sp_GetCusRouteExists]");
         }
     }
 }

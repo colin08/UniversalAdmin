@@ -84,6 +84,11 @@ namespace Universal.DataCore
         public DbSet<Entity.CusDepartment> CusDepartments { get; set; }
 
         /// <summary>
+        /// 部门管理员
+        /// </summary>
+        public DbSet<Entity.CusDepartmentAdmin> CusDepartmentAdmins { get; set; }
+
+        /// <summary>
         /// 权限列表
         /// </summary>
         public DbSet<Entity.CusRoute> CusRoutes { get; set; }
@@ -112,6 +117,16 @@ namespace Universal.DataCore
         /// 秘籍文章可见权限
         /// </summary>
         public DbSet<Entity.DocPostPower> DocPostPowers { get; set; }
+
+        /// <summary>
+        /// 通知
+        /// </summary>
+        public DbSet<Entity.CusNotice> CusNotices { get; set; }
+
+        /// <summary>
+        /// 通知用户
+        /// </summary>
+        public DbSet<Entity.CusNoticeUser> CusNoticeUsers { get; set; }
 
         /// <summary>
         /// 

@@ -50,9 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFDBContext.cs" />
-    <Compile Include="Migrations\201611040817301_init.cs" />
-    <Compile Include="Migrations\201611040817301_init.Designer.cs">
-      <DependentUpon>201611040817301_init.cs</DependentUpon>
+    <Compile Include="Migrations\201611070156580_init.cs" />
+    <Compile Include="Migrations\201611070156580_init.Designer.cs">
+      <DependentUpon>201611070156580_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,8 +72,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611040817301_init.resx">
-      <DependentUpon>201611040817301_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611070156580_init.resx">
+      <DependentUpon>201611070156580_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -56,14 +56,9 @@ namespace Universal.Entity
         public DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 部门下的用户
+        /// 部门管理员
         /// </summary>
-        public virtual ICollection<CusUser> DepartmentAUsers { get; set; }
-
-        /// <summary>
-        /// 部门的管理员
-        /// </summary>
-        public virtual ICollection<CusUser> DepartmentAdminUsers { get; set; }
+        public virtual ICollection<CusDepartmentAdmin> CusDepartmentAdmins { get; set; }
 
     }
 }

@@ -52,7 +52,10 @@
   <ItemGroup>
     <Compile Include="AppVersion.cs" />
     <Compile Include="BaseAdminEntity.cs" />
+    <Compile Include="CusDepartmentAdmin.cs" />
     <Compile Include="CusDepartment.cs" />
+    <Compile Include="CusNotice.cs" />
+    <Compile Include="CusNoticeUser.cs" />
     <Compile Include="CusRoute.cs" />
     <Compile Include="CusUserRoute.cs" />
     <Compile Include="CusUser\CusUser.cs" />

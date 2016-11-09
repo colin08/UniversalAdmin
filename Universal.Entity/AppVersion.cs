@@ -30,6 +30,11 @@ namespace Universal.Entity
 
     public class AppVersion
     {
+        public AppVersion()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
 
         [Display(Name = "所属平台")]
@@ -52,11 +57,11 @@ namespace Universal.Entity
                 switch (Platforms)
                 {
                     case APPVersionPlatforms.Android:
-                        return "fa fa-android";
+                        return "bb_icon3";
                     case APPVersionPlatforms.IOS:
-                        return "fa fa-apple";
+                        return "bb_icon2";
                     default:
-                        return "fa fa-question";
+                        return "";
                 }
             }
         }

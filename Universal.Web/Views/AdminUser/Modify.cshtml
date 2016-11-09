@@ -77,16 +77,17 @@
                         <li class="p8_pd_top10 clearfix">
                             <p class="p5_left_txt"><i>*</i>部门</p>
                             <div class="p6_right_inp clearfix">
-                                <input type="text" class="inp inp_a" value="@Model.jon_title" />
-                                @Html.HiddenFor(p=>p.job_id)
+                                <input type="text" class="inp inp_a" value="@Model.department_title" />
+                                @Html.HiddenFor(p => p.department_id)
+                                
                                 <a class="but" href="javascript:;">选择部门</a>
                             </div>
                         </li>
                         <li class="p8_pd_top10 clearfix">
                             <p class="p5_left_txt"><i>*</i>职位</p>
                             <div class="p6_right_inp clearfix">
-                                <input type="text" class="inp inp_a" value="@Model.department_title" />
-                                @Html.HiddenFor(p=>p.department_id)
+                                <input type="text" class="inp inp_a" value="@Model.jon_title" />
+                                @Html.HiddenFor(p => p.job_id)
                                 <a class="but" href="javascript:;">选择职位</a>
                             </div>
                         </li>

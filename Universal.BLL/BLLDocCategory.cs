@@ -10,32 +10,59 @@ namespace Universal.BLL
     public class BLLDocCategory
     {
         /// <summary>
-        /// 添加部门数据
+        /// 添加分类数据
         /// </summary>
         /// <returns></returns>
-        public static bool Add(int pid, string title)
+        public static int Add(int pid, string title)
         {
             if (pid <= 0)
-                return false;
+                return 0;
 
             if (string.IsNullOrWhiteSpace(title))
-                return false;
+                return 0;
 
             var db = new DataCore.EFDBContext();
             var p_entity = db.DocCategorys.Find(pid);
             if (p_entity == null)
-                return false;
+                return 0;
 
             var entity = new Entity.DocCategory();
-            entity.PID = pid;
+            if (pid == 0)
+                entity.PID = null;
+            else
+                entity.PID = pid;
             entity.Title = title;
             entity.Depth = p_entity.PID == null ? 1 : p_entity.Depth + 1;
             
             db.DocCategorys.Add(entity);
             db.SaveChanges();
             db.Dispose();
+            return entity.ID;
+        }
+
+        /// <summary>
+        /// 修改分类数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        public static bool Modify(int id,string title)
+        {
+            if (id <= 0)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(title))
+                return false;
+
+            var db = new DataCore.EFDBContext();
+            var p_entity = db.DocCategorys.Find(id);
+            if (p_entity == null)
+                return false;
+            p_entity.Title = title;
+            db.SaveChanges();
             return true;
         }
+
 
         /// <summary>
         /// 构造秘籍树数据

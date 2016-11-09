@@ -1,3 +1,0 @@
-﻿**************************2016/10/17 17:17:32 begin **************************
-添加实体出现异常：Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
-/*************************2016/10/17 17:17:32 end **************************/

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "秘籍管理";
+    ViewBag.Title = "版本管理";
     ViewData["tabLeft"] = "appversion";
     ViewData["tabTop"] = "manager";
 }
@@ -7,7 +7,7 @@
 <!--头部脚本-->
 @section head
 {
-
+<link href="~/Content/css/gg.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
 
@@ -16,7 +16,58 @@
 
     <div class="right_content" id="minHeight">
         <div class="content">
-            版本管理
+            <div class="al_tt clearfix">
+                <div class="pub_yuangong_gl_search clearfix fr">
+                    <input type="text" class="inp" id="txt_search" placeholder="请输入标题搜索" />
+                    <a class="but" href="javascript:void(0);" onclick="pageData(1)">&nbsp;</a>
+                </div>
+                <a class="page_gl_but" href="javascript:void(0);" onclick="del(0)"><i class="ic"></i>删除</a>
+                <a class="page_gl_but" href="/AppVersion/Modify"><i class="bb_bg"></i>发布版本</a>
+                <span>版本列表</span>
+            </div>
+            <div class="gl_list_box banben_list_box">
+                <div class="rs">
+                    <ul class="member_list">
+                        <li class="mb_tp_tt clearfix">
+                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" type="checkbox" /></span></p>
+                            <p class="rs_w2">ID</p>
+                            <p class="rs_w3">LOGO</p>
+                            <p class="rs_w4">所属系统</p>
+                            <p class="rs_w5">版本类别</p>
+                            <p class="rs_w6">添加时间</p>
+                            <p class="rs_w7">大小</p>
+                            <p class="rs_w8">操作</p>
+                        </li>
+                        @*<li class="mb_list_li clearfix">
+                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" type="checkbox" /></span></p>
+                            <p class="rs_w2 ellipsis">1</p>
+                            <p class="rs_w3 ellipsis"><i class="bb_icon1"></i></p>
+                            <p class="rs_w4"><i class="bb_icon2"></i></p>
+                            <p class="rs_w5">企业版</p>
+                            <p class="rs_w6">2016-08-22 18:05:24</p>
+                            <p class="rs_w7">15.23MB</p>
+                            <p class="rs_w8">
+                                <a class="edit_but bb_icon5" href="javascript:;">&nbsp;</a>
+                                <a class="edit_but bb_icon4" href="javascript:;">&nbsp;</a>
+                                <a class="edit_but del_but" href="javascript:;">&nbsp;</a>
+                            </p>
+                        </li>*@
+                    </ul>
+                    <a href="" target="_blank"></a>
+                    <div class="member_bottom">
+                        <div class="pub_page_style fr">
+                            <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                            <select class="sel" id="select_page_size">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span>条</span>
+
+                            <div id="pager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
     </div>
@@ -27,7 +78,197 @@
 @section foot
 {
     <script type="text/javascript">
+        $(document).ready(function (e) {
+            pageData(1, false)
+        });
 
+        function clear_data() {
+            $('.mb_list_li').each(function (index) {
+                $(this).remove();
+            });
+        }
+
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index) {
+            $.ajax({
+                type: "post",
+                url: "/AppVersion/VersionData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
+
+                    clear_data();
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        var logo = "";
+                        if (item.Platforms == "Android")
+                            logo = item.LogoImg;
+
+                        dataHtml += "<li class=\"mb_list_li clearfix\">";
+                        dataHtml += "<p class=\"rs_w1\"><span class=\"sp_a\"><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></span></p>"
+                        dataHtml += "<p class=\"rs_w2 ellipsis\">" + item.ID + "</p>";
+                        dataHtml += "<p class=\"rs_w3 ellipsis\"><i class=\"bb_icon1\"></i></p>";
+                        dataHtml += "<p class=\"rs_w4\"><i class=\"" + item.PlatformsLog + "\"></i></p>";
+                        dataHtml += "<p class=\"rs_w5\">" + item.PlatformsStr + "</p>";
+                        dataHtml += "<p class=\"rs_w6\">" + ChangeDateFormat(item.AddTime, "yyyy-MM-dd HH:mm:ss") + "</p>";
+                        dataHtml += "<p class=\"rs_w7\">" + ConvertBtteToMB(item.Size) + "</p>";
+                        dataHtml += "<p class=\"rs_w8\">";
+                        dataHtml += "<a class=\"edit_but bb_icon5\" target=\"_blank\" href=\"" + item.DownUrl + "\">&nbsp;</a>";
+                        dataHtml += "<a class=\"edit_but bb_icon4\" href=\"javascript:location.href='/AppVersion/Modify?id=" + item.ID + "';\">&nbsp;</a>";
+                        dataHtml += "<a class=\"edit_but del_but\" href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\">&nbsp;</a>";
+                        dataHtml += "</p>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<li class=\"mb_list_li clearfix\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></li>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $(".member_list").append(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //转换Byte到KB或MB ，不足1M时显示KB
+        function ConvertBtteToMB(byteSize) {
+            if (byteSize <= 0)
+            {
+                return "0";
+            }
+            var temp = "";
+            byteSize = byteSize / 1024;
+            if (byteSize < 1024) {
+                temp = accRound(byteSize, 1) + "KB";
+            } else {
+                temp = accRound(byteSize / 1024, 2) + "MB";
+            }
+            return temp;
+        }
+
+        //列表的选中
+        function CheckAll(obj) {
+            if ($(obj).is(':checked')) {
+                $(".all_checked_but").prop("checked", true);
+            } else {
+                $(".all_checked_but").prop("checked", false);
+            }
+        }
+        
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        //除法格式化  使用方法：ccRound(size /1024 ,1) + "KB";
+        function accRound(arg, len) { //len 为保留小数点后几位
+            var index = arg.toString().indexOf('.');
+            if (index < 0) {
+                return arg;
+            }
+            var r1 = arg.toString().split(".")[1];
+            if (r1.length <= len) {
+                return arg;
+            }
+            var r0 = arg.toString().split(".")[0];
+            var arg1 = r0 + r1.substr(0, len) + "." + r1.substr(len, 1);
+            var arg2 = Math.round(arg1).toString();
+            var l = arg2.toString().length - len;
+            if (l == 0) {
+                return "0." + arg2;
+            }
+            var arg3 = arg2.substr(0, l) + "." + arg2.substr(l, len);
+            return arg3;
+        }
+
+        function del(id) {
+            var ids = "";
+            if (id == 0) {
+                $(".all_checked_but").each(function () {
+                    if ($(this).is(':checked')) {
+                        ids = ids + $(this).attr("hid") + ","
+                    }
+                })
+                if (ids == "") {
+                    alert("请先选中要删除的数据");
+                    return;
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            else {
+                ids = id;
+            }
+            $.ajax({
+                type: "post",
+                url: "/AppVersion/DelVersion",
+                data: { "ids": ids },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
     </script>
 
 }

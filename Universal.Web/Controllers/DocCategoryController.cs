@@ -20,5 +20,67 @@ namespace Universal.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 获取秘秘籍分类
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetDocCategory(int? pid)
+        {
+            WebAjaxEntity<List<Models.ViewModelDepartment>> result = new WebAjaxEntity<List<Models.ViewModelDepartment>>();
+            List<Models.ViewModelDepartment> list = new List<Models.ViewModelDepartment>();
+            BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
+            foreach (var item in bll.GetListBy(0, p => p.PID == pid, "Priority Desc"))
+            {
+                Models.ViewModelDepartment model = new Models.ViewModelDepartment();
+                model.department_id = item.ID;
+                model.parent_id = item.PID == null ? 0 : item.PID;
+                model.title = item.Title;
+                list.Add(model);
+            }
+            result.data = list;
+            result.msg = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 添加秘籍分类
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult AddDocCategory(int pid,string title)
+        {
+            WebAjaxEntity<int> result = new WebAjaxEntity<int>();
+            int re_id = BLL.BLLDocCategory.Add(pid, title);
+            if (re_id<=0)
+                result.msg = 0;
+            result.msg = 1;
+            result.data = re_id;
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 修改分类数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ModifyDocCategory(int id,string title)
+        {
+            bool isOK = BLL.BLLDocCategory.Modify(id, title);
+            if(isOK)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "修改成功";
+            }else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "失败，请检查数据";
+            }
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
     }
 }

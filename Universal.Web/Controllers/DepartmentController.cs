@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Universal.Tools;
 using Universal.Web.Framework;
+using System.Data.Entity;
 
 namespace Universal.Web.Controllers
 {
@@ -20,31 +21,45 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            List<Models.ViewModelDepartment> response_entity = new List<Models.ViewModelDepartment>();
+            return View();
+        }
+
+        /// <summary>
+        /// 获取部门信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetDeparment(int? pid)
+        {
+            WebAjaxEntity<List<Models.ViewModelDepartment>> result = new WebAjaxEntity<List<Models.ViewModelDepartment>>();
+            List<Models.ViewModelDepartment> list = new List<Models.ViewModelDepartment>();
             BLL.BaseBLL<Entity.CusDepartment> bll = new BLL.BaseBLL<Entity.CusDepartment>();
-            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            List<Entity.CusDepartment> db_list = bll.GetListBy(0, filter, "Priority desc", p => p.DepartmentAdminUsers, true);
-            foreach (var item in db_list)
+            foreach (var item in bll.GetListBy(0, p => p.PID == pid, "Priority Desc", p => p.CusDepartmentAdmins.Select(s => s.CusUser)))
             {
                 Models.ViewModelDepartment model = new Models.ViewModelDepartment();
                 model.department_id = item.ID;
                 model.parent_id = item.PID == null ? 0 : item.PID;
                 model.title = item.Title;
                 List<Models.ViewModelDepartmentAdmin> admin_list = new List<Models.ViewModelDepartmentAdmin>();
-                foreach (var ad_list in item.DepartmentAdminUsers)
+                foreach (var ad_list in item.CusDepartmentAdmins)
                 {
-                    Models.ViewModelDepartmentAdmin admin_model = new Models.ViewModelDepartmentAdmin();
-                    admin_model.user_id = ad_list.ID;
-                    admin_model.name = ad_list.NickName;
-                    admin_list.Add(admin_model);
+                    if (ad_list.CusUser != null)
+                    {
+                        Models.ViewModelDepartmentAdmin admin_model = new Models.ViewModelDepartmentAdmin();
+
+                        admin_model.user_id = ad_list.CusUserID;
+                        admin_model.name = ad_list.CusUser.NickName;
+                        admin_list.Add(admin_model);
+
+                    }
                 }
 
                 model.admin_list = admin_list;
-                response_entity.Add(model);
+                list.Add(model);
             }
-
-            ViewData["response_model"] = Newtonsoft.Json.JsonConvert.SerializeObject(response_entity);
-            return View();
+            result.data = list;
+            result.msg = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

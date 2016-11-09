@@ -186,11 +186,21 @@
     <script type="text/javascript">
 
         /**
-        * 【手动高亮】
-        * 峻峰小婊砸注意了
-        * 下面就是部门的json数据
+        * 【获取部门信息】
+        * 接口地址：/Department/GetDeparment?PId=
+        * 请求参数：PID，父级ID，如果是一级，则不传数据
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
         */
-        var data_json = @Html.Raw(ViewData["response_model"]);
+
+        /**
+        * 【加载用户列表】
+        * 接口地址：/Tools/GetUserList?search=
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
+        */
 
         /**
         * 【添加部门】
@@ -209,7 +219,7 @@
         * 返回数据：json
         * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
         */
-        
+
 
 
         var joinId = '';

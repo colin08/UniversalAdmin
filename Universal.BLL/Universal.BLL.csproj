@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="BLLCusNotice.cs" />
     <Compile Include="BLLCusRoute.cs" />
     <Compile Include="BLLCusUser.cs" />
     <Compile Include="BLLDepartment.cs" />

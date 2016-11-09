@@ -1,0 +1,253 @@
+﻿@model Universal.Web.Models.ViewModelNotice
+@{
+    ViewBag.Title = "通知管理";
+    ViewData["tabLeft"] = "notice";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+<link href="~/Content/css/gg.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<div class="container" id="getHeight">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="right_content" id="minHeight">
+        <div class="content">
+            <div class="al_tt clearfix">
+                <a class="icon" href="/Notice/Index"></a>
+                <span>公告列表</span>
+                <span class="bf">发布公告</span>
+            </div>
+            <form method="post" class="form-horizontal" id="form">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p=>p.user_id_str)
+                <div class="form_gl_box">
+                    <div class="p_a clearfix">
+                        <p class="p_b">公告标题</p>
+                        <div class="p_c">
+                            <div class="inp_a">@Html.TextBoxFor(p => p.title, new { @class = "inp" })</div>
+                            @Html.ValidationMessageFor(p => p.title)
+                        </div>
+                    </div>
+                    <div class="p_a clearfix">
+                        <p class="p_b">通知成员</p>
+                        <div class="p_c">
+                            <label class="lab_a" id="member_join"><i></i>添加成员</label>
+                            <div class="member_list">
+                                <ul id="member"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p_a clearfix">
+                        <p class="p_b">公告内容</p>
+                        <div class="p_c">
+                                @Html.TextAreaFor(p=>p.content,new { @style= "margin: 0px; width: 600px; height: 150px;" })
+                                @Html.ValidationMessageFor(p => p.content)
+                        </div>
+                    </div>
+                    <div class="p_a clearfix">
+                        <p class="p_b">&nbsp;</p>
+                        <div class="p_c">
+                            <input type="submit" value="确定" class="but" />
+                            <a class="but but_z" href="/Notice/Index">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+</div>
+        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+    </div>
+
+</div>
+<div class="out_box_member_chose">
+    <p class="tp_tt"><i onclick="closeMember()">×</i><span>选择成员</span></p>
+    <div class="mid">
+        <div class="pd_top28 clearfix">
+            <div class="bor_style_a clearfix fl">
+                <input type="text" class="inp_style_a" placeholder="搜索电话号码或姓名" />
+                <a class="but_style_a" href="javascript:;">&nbsp;</a>
+            </div>
+            <div class="div_style_a clearfix">
+                <div class="bor_style_a bor_style_b fl">
+                    <input type="text" class="inp_style_a inp_style_b" placeholder="姓名" />
+                </div>
+                <div class="bor_style_a bor_style_c fl">
+                    <input type="text" class="inp_style_a inp_style_c" placeholder="电话号码" />
+                </div>
+                <a class="but_style_b" href="javascript:;">添加成员</a>
+            </div>
+        </div>
+
+        <div class="pd_top15 clearfix">
+            <div class="but_style_d">
+                <div class="tab_tt clearfix tab_fat_list">
+                    <p class="p_a p_a_h" data-id="one_level">最近</p>
+                    <p class="p_a" data-id="two_level">企业通讯录</p>
+                </div>
+                <div class="scorll_box">
+                    <div class="fat_list" id="one_level">
+                        <p class="p_list_tt"><i class="ic_e"></i>最近联系人 (5人)</p>
+                        <ul>
+                            <li><label class="clearfix" for="1231231"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="1231231" data-name="张z三e" class="choise_input" data-num="18412435698" /></li>
+                            <li><label class="clearfix" for="12313121"><i class="ic"></i>18412435698 (张三)</label><input type="checkbox" id="12313121" data-name="张c三cc" data-num="18412xde98" class="choise_input" /></li>
+                        </ul>
+                    </div>
+                    <div class="fat_list disNone" id="two_level">
+                        <p class="p_list_tt"><i class="ic_e"></i>企业通讯录 (5人)</p>
+                        <ul>
+                            <li><label class="clearfix" for="1231231x"><i class="ic"></i>18412435698 (张ze三)</label><input type="checkbox" id="1231231x" data-name="张e三" class="choise_input" data-num="18412435698" /></li>
+                            <li><label class="clearfix" for="12313121z"><i class="ic"></i>18412435698 (张三x)</label><input type="checkbox" id="12313121z" data-name="张h三" data-num="18412xde98" class="choise_input" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="but_style_e">
+                <p class="p_member_tt">已选成员：16/500</p>
+                <ul class="get_member_list" id="get_member_list"></ul>
+            </div>
+        </div>
+
+        <div class="clearfix pd_top15">
+            <a class="but_style_f" onclick="closeMember()" href="javascript:;">取消</a>
+            <a class="but_style_f but_style_g" id="post_member_list" href="javascript:;">确定</a>
+        </div>
+    </div>
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        /**
+        * 峻峰看这里
+        **/
+
+        /**
+        * 【加载用户列表】
+        * 接口地址：/Tools/GetUserList
+        * 请求参数示例：data: { "search": "搜索的昵称或手机号，可传空字符串" },
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
+        */
+
+        /**
+        *  处理好选中的用户后，将用户ID拼接为一个字符串，逗号分割，例如：1,2,3,4,5然后调用$("#user_id_str").val("拼接的串");就可以了
+        * 如果是编辑用户状态，需要将选中的用户还原回来，判断是否是编辑，示例：
+        **/
+        //页面加载完毕后就需要进行此操作
+        @foreach (var item in Model.user_list)
+        {
+            //接下来是你的js操作，必须用text包裹
+            <text>
+            var user_id = @item.id;
+            var user_name = @item.nick_name;
+            var user_telphone = @item.telphone;
+            //TODO 下面你的js
+            // 还原选中的用户
+
+            </text>
+        }
+
+        function memberList() {
+            $("#member li").unbind('mouseenter').unbind('mouseleave');
+            $("#member li").bind({
+                mouseenter: function () {
+                    $(this).addClass("hover");
+                },
+                mouseleave: function () {
+                    $(this).removeClass("hover");
+                }
+            });
+            $("#member em").unbind("click");
+            $("#member em").bind("click", function () {
+                $(this).parent().remove();
+                var id = $(this).attr("data-id");
+                $("#get_member_list li[data-id='" + id + "']").remove();
+                $("#" + id).prop("checked", false);
+                $("#" + id).siblings("label").removeClass("hover");
+            });
+        }
+
+        function closeMember() {
+            $('.out_box_member_chose').hide();
+            $("#pub_under_bg").remove();
+        }
+        function choiceMember() {
+            $(".choise_input").change(function () {
+                var html = '';
+                if (!$(this).prop("checked")) {
+                    $(this).siblings("label").removeClass("hover");
+                    $("#get_member_list li[data-id='" + $(this).attr("id") + "']").remove();
+                }
+                else {
+                    $(this).siblings("label").addClass("hover");
+                    html = '<li class="clearfix" data-id="' + $(this).attr("id") + '" data-name="' + $(this).attr("data-name") + '" data-num="' + $(this).attr("data-num") + '"><i class="icb remove_member" data-id="' + $(this).attr("id") + '">×</i>' + $(this).attr("data-num") + '(' + $(this).attr("data-name") + ')</li>';
+                    $("#get_member_list").append(html)
+                }
+            });
+            $(".p_list_tt").click(function () {
+                if ($(this).hasClass("under_hide")) {
+                    $(this).removeClass("under_hide");
+                    $(this).siblings("ul").slideDown();
+                }
+                else {
+                    $(this).addClass("under_hide");
+                    $(this).siblings("ul").slideUp();
+                }
+            });
+            /*
+            $("#get_member_list li").hover(function(){
+                $(this).addClass("hover");
+                },function(){
+                    $(this).removeClass("hover");
+            });
+            */
+            $("#get_member_list .remove_member").live("click", function () {
+                var getId = $(this).attr("data-id");
+                $(this).parent().remove();
+                $("#" + getId).prop("checked", false);
+                $("#" + getId).siblings("label").removeClass("hover");
+            });
+            $("#post_member_list").click(function () {
+                $(".out_box_member_chose").hide();
+                $("#pub_under_bg").remove();
+                var getMemberHtml = '';
+                $("#get_member_list li").each(function (index, element) {
+                    getMemberHtml += '<li data-id="' + $(this).attr("data-id") + '"><em data-id="' + $(this).attr("data-id") + '">×</em>' + $(this).attr("data-num") + '(' + $(this).attr("data-name") + ')</li>';
+                });
+                $("#member").html(getMemberHtml);
+                memberList();
+            });
+        }
+        $(document).ready(function (e) {
+            @if(Model.Msg == 1)
+            { 
+                @: location.href = "/Notice/Index";
+            }
+
+            memberList();
+            choiceMember();
+            $(".out_box_member_chose").css("top", ($(window).height() - 592) / 2);
+            $("#member_join").click(function () {
+                $(".out_box_member_chose").show();
+                showOutBox();
+            });
+            $(".tab_fat_list").children().click(function () {
+                var id = $(this).attr("data-id");
+                $(".tab_fat_list").children().removeClass("p_a_h");
+                $(this).addClass("p_a_h");
+                $(".scorll_box").children().hide();
+                $("#" + id).show();
+            });
+        });
+    </script>
+
+}
+<!--底部脚本 end-->

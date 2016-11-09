@@ -27,10 +27,12 @@ namespace Universal.BLL
                 return false;
 
             var department = new Entity.CusDepartment();
-            department.PID = pid;
+            if (pid == 0)
+                department.PID = null;
+            else
+                department.PID = pid;
             department.Title = title;
             department.Depth = p_department.PID == null ? 1 : p_department.Depth + 1;
-            List<Entity.CusUser> admin_user = new List<Entity.CusUser>();
             foreach (var sid in user_ids.Split(','))
             {
                 int id = Tools.TypeHelper.ObjectToInt(sid);
@@ -40,9 +42,12 @@ namespace Universal.BLL
                 if (!user.IsAdmin)
                     break;
 
-                admin_user.Add(user);
+                var admin = new Entity.CusDepartmentAdmin();
+                admin.CusDepartment = department;
+                admin.CusUser = user;
+                db.CusDepartmentAdmins.Add(admin);
             }
-            department.DepartmentAdminUsers = admin_user;
+
             db.CusDepartments.Add(department);
             db.SaveChanges();
             db.Dispose();
@@ -67,19 +72,22 @@ namespace Universal.BLL
                 return false;
 
             department.Title = title;
-            List<Entity.CusUser> admin_user = new List<Entity.CusUser>();
+            db.CusDepartmentAdmins.Where(p => p.CusDepartmentID == id).ToList().ForEach(p => db.CusDepartmentAdmins.Remove(p));
+
             foreach (var sid in user_ids.Split(','))
             {
-                int uid = Tools.TypeHelper.ObjectToInt(sid);
-                var user = db.CusUsers.Find(uid);
+                int user_id = Tools.TypeHelper.ObjectToInt(sid);
+                var user = db.CusUsers.Find(user_id);
                 if (user == null)
                     break;
                 if (!user.IsAdmin)
                     break;
 
-                admin_user.Add(user);
+                var admin = new Entity.CusDepartmentAdmin();
+                admin.CusDepartment = department;
+                admin.CusUser = user;
+                db.CusDepartmentAdmins.Add(admin);
             }
-            department.DepartmentAdminUsers = admin_user;
 
             db.SaveChanges();
             db.Dispose();

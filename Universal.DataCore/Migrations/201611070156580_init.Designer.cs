@@ -13,7 +13,7 @@ namespace Universal.DataCore.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201611040817301_init"; }
+            get { return "201611070156580_init"; }
         }
         
         string IMigrationMetadata.Source
