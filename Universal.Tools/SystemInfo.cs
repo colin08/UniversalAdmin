@@ -11,6 +11,7 @@ namespace Universal.Tools
 {
     /// <summary>
     /// 系统信息类 - 获取CPU、内存、磁盘、进程信息
+    /// 注意，生产环境下需要将对应网站的应用程序池的【进程模型】>【标识】由【ApplicationPoolIdentity】改为：LocalSystem
     /// </summary>
     public class SystemInfo
     {
