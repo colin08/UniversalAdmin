@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Universal.Tools;
@@ -126,6 +127,12 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         public ActionResult Center()
+        {            
+            return View();
+        }
+
+        //[ChildActionOnly]
+        public async Task<ActionResult> SysInfo()
         {
             Models.ViewModelSysInfo entity = new Models.ViewModelSysInfo();
             Tools.SystemInfo sys = new Tools.SystemInfo();
@@ -162,7 +169,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 entity.PhysicalDisk = WebHelper.ByteToGB(TotalSize);
                 entity.DiskScale = (int)(((float)FreeSpace / (float)TotalSize) * 100);
             }
-            List<SystemInfo_ProcessInfo> process_list = sys.GetProcessInfo().OrderByDescending(p=>p.WorkingSet64).Take(10).ToList();
+            List<SystemInfo_ProcessInfo> process_list = sys.GetProcessInfo().OrderByDescending(p => p.WorkingSet64).Take(10).ToList();
             List<Models.ViewModelSysTopList> top_list = new List<Models.ViewModelSysTopList>();
             foreach (var item in process_list)
             {
@@ -178,7 +185,8 @@ namespace Universal.Web.Areas.Admin.Controllers
                 top_list.Add(model);
             }
             entity.MemooryTopList = top_list;
-            return View(entity);
+
+            return PartialView("_SysInfo", entity);
         }
         
         /// <summary>
