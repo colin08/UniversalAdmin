@@ -27,6 +27,22 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
+                "dbo.CusCategory",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 30),
+                        PID = c.Int(),
+                        Depth = c.Int(nullable: false),
+                        Status = c.Boolean(nullable: false),
+                        SortNo = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.CusCategory", t => t.PID)
+                .Index(t => t.PID);
+            
+            CreateTable(
                 "dbo.Demo",
                 c => new
                     {
@@ -191,7 +207,131 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysUser", t => t.SysUserID, cascadeDelete: true)
                 .Index(t => t.SysUserID);
-            
+
+            //按照某一个Id查询它及它的所有子级成员存储过程
+            string SQLGetChildCusCategory = @"
+                    CREATE PROCEDURE [dbo].[sp_GetChildCusCategory] (@Id int)
+                    AS
+                    BEGIN
+                    WITH Record AS(
+                        SELECT
+                        Id,
+                        Title,
+                        PID,
+                        Depth,
+                        Status,
+                        SortNo,
+                        AddTime
+                    FROM
+                        CusCategory(NOLOCK)
+                        WHERE Id=@Id
+                        UNION ALL
+                            SELECT
+                        a.Id Id,
+                        a.Title Title,
+                        a.PID PID,
+                        a.Depth Depth,
+                        a.Status Status,
+                        a.SortNo SortNo,
+                        a.AddTime AddTime
+                    FROM
+                        CusCategory(NOLOCK) a JOIN Record b
+                        ON a.PID=b.Id
+                    )
+ 
+                    SELECT
+                        Id,
+                        Title,
+                        PID,
+                        Depth,
+                        Status,
+                        SortNo,
+                        AddTime
+                    FROM
+                        Record
+                        WHERE Status=1
+                        ORDER BY SortNo DESC     
+                    END";
+            Sql(SQLGetChildCusCategory);
+
+            //按照某一个Id查询它及它的所有父级成员存储过程
+            string SQLGetParentCusCategory = @"
+                        CREATE PROCEDURE [dbo].[sp_GetParentCusCategory] (@Id int)
+                        AS
+                        BEGIN
+                        WITH Record AS(
+                            SELECT
+                            Id,
+                            Title,
+                            PId,
+                            Depth,
+                            Status,
+                            SortNo,
+                            AddTime
+                        FROM
+                            CusCategory(NOLOCK)
+                            WHERE Id=@Id
+                            UNION ALL
+                            SELECT
+                            a.Id Id,
+                            a.Title Title,
+                            a.PId PId,
+                            a.Depth Depth,
+                            a.Status Status,
+                            a.SortNo SortNo,
+                            a.AddTime AddTime
+                        FROM
+                            CusCategory(NOLOCK) a JOIN Record b
+                            ON a.Id=b.PId
+                        )
+ 
+                        SELECT
+                            Id,
+                            Title,
+                            PId,
+                            Depth,
+                            Status,
+                            SortNo,
+                            AddTime
+                        FROM
+                            Record
+                            WHERE Status=1
+                            ORDER BY SortNo DESC
+     
+                        END";
+            Sql(SQLGetParentCusCategory);
+
+            //获取所有子类的id，以逗号分割
+            string SQLFunGetChildCusCategoryStr = @"
+                        CREATE FUNCTION [dbo].[fn_GetChildCusCategoryStr] (@Id int) RETURNS varchar(1000) 
+                        AS
+                            BEGIN
+                        declare @a VARCHAR(1000);
+                        set @a='';
+                            WITH Record AS(
+                                SELECT
+                                Id,
+                                PID,
+		                            Status
+                            FROM
+                                CusCategory(NOLOCK)
+                                WHERE Id=@Id
+                                UNION ALL
+                                    SELECT
+				                        a.Id Id,
+				                        a.PID PID,
+				                        a.Status Status
+                                    FROM
+                                        CusCategory(NOLOCK) a JOIN Record b
+                                        ON a.PID=b.Id
+                                    )
+                        SELECT @a=isnull(@a+',','')+ltrim(Id) FROM Record  WHERE Status=1  
+                        return SUBSTRING(@a, 2, len(@a))
+                        END
+                        ";
+
+            Sql(SQLFunGetChildCusCategoryStr);
+
         }
         
         public override void Down()
@@ -204,6 +344,7 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.SysUser", "SysRoleID", "dbo.SysRole");
             DropForeignKey("dbo.SysRoleRoute", "SysRouteID", "dbo.SysRoute");
             DropForeignKey("dbo.SysRoleRoute", "SysRoleID", "dbo.SysRole");
+            DropForeignKey("dbo.CusCategory", "PID", "dbo.CusCategory");
             DropIndex("dbo.SysLogMethod", new[] { "SysUserID" });
             DropIndex("dbo.DemoDept", new[] { "DemoID" });
             DropIndex("dbo.DemoAlbum", new[] { "DemoID" });
@@ -214,6 +355,7 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.SysUser", new[] { "UserName" });
             DropIndex("dbo.Demo", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Demo", new[] { "AddUserID" });
+            DropIndex("dbo.CusCategory", new[] { "PID" });
             DropTable("dbo.SysLogMethod");
             DropTable("dbo.SysLogException");
             DropTable("dbo.SysLogApiAction");
@@ -225,6 +367,7 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.SysRole");
             DropTable("dbo.SysUser");
             DropTable("dbo.Demo");
+            DropTable("dbo.CusCategory");
             DropTable("dbo.AppVersion");
         }
     }

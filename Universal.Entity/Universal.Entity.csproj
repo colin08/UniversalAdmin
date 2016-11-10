@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AppVersion.cs" />
     <Compile Include="BaseAdminEntity.cs" />
+    <Compile Include="Category\CusCategory.cs" />
     <Compile Include="Demo\Demo.cs" />
     <Compile Include="Demo\DemoAlbum.cs" />
     <Compile Include="Demo\DemoDept.cs" />
@@ -75,6 +76,7 @@
       <Name>Universal.Tools</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

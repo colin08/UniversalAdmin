@@ -77,7 +77,13 @@ namespace Universal.DataCore
         /// 测试成员
         /// </summary>
         public DbSet<Entity.DemoDept> DemoDepts { get; set; }
-        
+
+        /// <summary>
+        /// 无限级分类
+        /// </summary>
+        public DbSet<Entity.CusCategory> CusCategorys { get; set; }
+
+
         /// <summary>
         /// 
         /// </summary>
