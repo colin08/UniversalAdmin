@@ -218,7 +218,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         {
             List<SelectListItem> platformList = new List<SelectListItem>();
             platformList.Add(new SelectListItem() { Text = "所有平台", Value = "0" });
-            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.APPVersionPlatforms)))
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.APPVersionPlatforms)))
             {
                 string text = EnumHelper.GetDescription<Entity.APPVersionPlatforms>((Entity.APPVersionPlatforms)item.Key);
                 platformList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
@@ -227,7 +227,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             List<SelectListItem> typeList = new List<SelectListItem>();
             typeList.Add(new SelectListItem() { Text = "所有类别", Value = "0" });
-            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.APPVersionType)))
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.APPVersionType)))
             {
                 string text = EnumHelper.GetDescription<Entity.APPVersionType>((Entity.APPVersionType)item.Key);
                 typeList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
