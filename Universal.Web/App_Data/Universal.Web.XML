@@ -26,6 +26,36 @@
             加载平台列表
             </summary>
         </member>
+        <member name="T:Universal.Web.Areas.Admin.Controllers.CusCategoryController">
+            <summary>
+            分类管理
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Areas.Admin.Controllers.CusCategoryController.Edit(System.Nullable{System.Int32})">
+            <summary>
+            编辑页面
+            </summary>
+            <param name="id">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Areas.Admin.Controllers.CusCategoryController.Edit(Universal.Entity.CusCategory)">
+            <summary>
+            保存用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Areas.Admin.Controllers.CusCategoryController.LoadCategory">
+            <summary>
+            加载所有分类
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Areas.Admin.Controllers.CusCategoryController.LoadCategorySelect">
+            <summary>
+            加载所有分类select
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Universal.Web.Areas.Admin.Controllers.HomeController.Login">
             <summary>
             登陆页面

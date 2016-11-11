@@ -134,6 +134,46 @@ function del(url, type) {
     });
 }
 
+//列表指定删除某条数据 type=1：完成后刷新整页，type=2：完成后Ajax重新加载
+function del_item(url,ids, type) {
+    if (ids == "") {
+        layer.msg('不知道删除哪一个', { icon: 5 });
+        return;
+    }
+    layer.confirm('将同时删除所关联的数据，且不可恢复，是否继续？', { icon: 3 }, function (index) {
+        layer.close(index);
+        $.ajax({
+            type: "post",
+            url: url,
+            data: { "ids": ids },
+            async: false,
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            },
+            success: function (data) {
+                if (data.msg == 1) {
+                    layer.msg(data.msgbox, { icon: 1 });
+                    if (type == 2) {
+                        pageData(1);
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                }
+                else {
+                    layer.msg(data.msgbox, { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.msg("操作失败，请检查网络", { icon: 5 });
+            }
+        })
+    });
+}
+
 function DelPic(obj, hide_name) {
     //var pic = $(obj).parent("li").find("img").attr("src");
     $(obj).parent("li").remove();

@@ -68,6 +68,21 @@
                     </text>
                      }
 
+                    @if (CheckAdminPower("CusCategory/Index", false))
+                     {
+                     <text>
+                    <li>
+                        <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            @if (CheckAdminPower("CusCategory/Index", false))
+                            {
+                            @:<li><a class="J_menuItem" href="/Admin/CusCategory/Index">分类管理</a></li>
+                            }
+                        </ul>
+                    </li>
+                    </text>
+                     }
+
                     @if (CheckAdminPower("SysLog/LogMethod", false))
                      {
                      <text>

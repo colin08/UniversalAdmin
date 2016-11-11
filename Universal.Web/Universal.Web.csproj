@@ -261,6 +261,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AppVersionController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
@@ -377,6 +378,8 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Areas\Admin\Views\SysLog\LogApiAction.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SysInfo.cshtml" />
+    <Content Include="Areas\Admin\Views\CusCategory\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CusCategory\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -385,9 +388,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Views\SysLogApiAction\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
       <Project>{d291ef55-3d6d-4c5a-be18-25875b78342e}</Project>

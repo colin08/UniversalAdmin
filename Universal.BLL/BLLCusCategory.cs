@@ -12,62 +12,64 @@ namespace Universal.BLL
     /// </summary>
     public class BLLCusCategory
     {
+
         /// <summary>
         /// 添加分类数据
         /// </summary>
         /// <returns></returns>
-        public static int Add(int pid,string title)
+        public static int Add(Entity.CusCategory entity)
         {
-            if (pid <= 0)
+            if (entity == null)
                 return -1;
 
             var db = new DataCore.EFDBContext();
-            var p_entity = db.CusCategorys.Find(pid);
-            if (p_entity == null)
-                return -1;
-
-            var entity = new Entity.CusCategory();
-            if (pid == 0)
-                entity.PID = null;
-            else
-                entity.PID = pid;
-            entity.Title = title;
-            entity.Depth = p_entity.PID == null ? 1 : p_entity.Depth + 1;
-
+            Entity.CusCategory p_entity = null;
+            if (entity.PID != null)
+            {
+                p_entity = db.CusCategorys.Find(entity.PID);
+                if (p_entity == null)
+                {
+                    entity.PID = null;
+                    entity.Depth = 1;
+                }
+                else
+                {
+                    entity.Depth = p_entity.Depth + 1;
+                }
+            }
+            
             db.CusCategorys.Add(entity);
             db.SaveChanges();
             db.Dispose();
             return entity.ID;
         }
-
+        
         /// <summary>
         /// 修改分类数据
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="pid">父级ID,为0标识不修改</param>
-        /// <param name="title"></param>
         /// <returns></returns>
-        public static bool Modify(int id,int pid,string title)
+        public static bool Modify(Entity.CusCategory entity)
         {
-            if (id <= 0)
-                return false;
-            if (pid < 0)
+            if (entity == null)
                 return false;
 
             var db = new DataCore.EFDBContext();
-            var entity = db.CusCategorys.Find(id);
-            if (entity == null)
-                return false;
-            if (pid >0)
+            Entity.CusCategory p_entity = null;
+            if (entity.PID != null)
             {
-                var p_entity = db.CusCategorys.Find(pid);
-                if(p_entity != null)
+                p_entity = db.CusCategorys.Find(entity.PID);
+                if (p_entity == null)
                 {
-                    entity.Depth = p_entity.PID == null ? 1 : p_entity.Depth + 1;
-                    entity.PID = pid;
+                    entity.PID = null;
+                    entity.Depth = 1;
+                }
+                else
+                {
+                    entity.Depth = p_entity.Depth + 1;
                 }
             }
-            entity.Title = title;
+
+            db.Entry<Entity.CusCategory>(entity).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             db.Dispose();
             return true;
@@ -90,6 +92,20 @@ namespace Universal.BLL
             list = db.CusCategorys.SqlQuery(proc_name, param).ToList();
             db.Dispose();
             return list;
+        }
+
+        /// <summary>
+        /// 获取某个分类下所有的子类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GetChildIDStr(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                string Sql = "select dbo.fn_GetChildCusCategoryStr(" + id.ToString() + ") as idstr";
+                return db.Database.SqlQuery<string>(Sql).ToList()[0];
+            }
         }
 
         /// <summary>

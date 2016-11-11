@@ -30,7 +30,7 @@ namespace Universal.Entity
         /// <summary>
         /// 父级部门信息
         /// </summary>
-        [ForeignKey("PID")]
+        [ForeignKey("PID"),Display(Name ="父类")]
         public CusCategory PCategory { get; set; }
 
         /// <summary>
@@ -38,14 +38,14 @@ namespace Universal.Entity
         /// </summary>
         public int Depth { get; set; }
 
-        /// <summary>
-        /// 状态
-        /// </summary>
+
+        [Display(Name ="状态")]
         public bool Status { get; set; }
 
         /// <summary>
         /// 优先级，越大，同级显示的时候越靠前
         /// </summary>
+        [Display(Name = "权重")]
         public int SortNo { get; set; }
 
         /// <summary>

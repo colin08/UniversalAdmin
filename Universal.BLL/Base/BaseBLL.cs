@@ -363,16 +363,16 @@ namespace Universal.BLL
                 if (isCache)
                 {
                     if (top <= 0)
-                        return db.Set<T>().WhereCustom(where).AsNoTracking().ToList();
+                        return db.Set<T>().WhereCustom(where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                     else
-                        return db.Set<T>().WhereCustom(where).Take(top).AsNoTracking().ToList();
+                        return db.Set<T>().WhereCustom(where).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                 }
                 else
                 {
                     if (top <= 0)
-                        return db.Set<T>().WhereCustom(where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().WhereCustom(where).AsNoTracking().ToList();
                     else
-                        return db.Set<T>().WhereCustom(where).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().WhereCustom(where).Take(top).AsNoTracking().ToList();
                 }
             }
             else
@@ -380,16 +380,16 @@ namespace Universal.BLL
                 if (isCache)
                 {
                     if (top <= 0)
-                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).AsNoTracking().ToList();
+                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                     else
-                        return db.Set<T>().WhereCustom(where).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
+                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                 }
                 else
                 {
                     if (top <= 0)
-                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).AsNoTracking().ToList();
                     else
-                        return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().WhereCustom(where).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
                 }
             }
 
@@ -412,16 +412,16 @@ namespace Universal.BLL
                 if (isCache)
                 {
                     if (top <= 0)
-                        return db.Set<T>().Where(whereLambda).AsNoTracking().ToList();
+                        return db.Set<T>().Where(whereLambda).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                     else
-                        return db.Set<T>().Where(whereLambda).Take(top).AsNoTracking().ToList();
+                        return db.Set<T>().Where(whereLambda).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                 }
                 else
                 {
                     if (top <= 0)
-                        return db.Set<T>().Where(whereLambda).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().Where(whereLambda).AsNoTracking().ToList();
                     else
-                        return db.Set<T>().Where(whereLambda).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().Where(whereLambda).Take(top).AsNoTracking().ToList();
                 }
             }
             else
@@ -429,16 +429,16 @@ namespace Universal.BLL
                 if (isCache)
                 {
                     if (top <= 0)
-                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).AsNoTracking().ToList();
+                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                     else
-                        return db.Set<T>().Where(whereLambda).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
+                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
                 }
                 else
                 {
                     if (top <= 0)
-                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).AsNoTracking().ToList();
                     else
-                        return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).Take(top).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromMinutes(CacheTime))).ToList();
+                        return db.Set<T>().Where(whereLambda).Take(top).OrderByCustom(orderby).AsNoTracking().ToList();
                 }
             }
         }
