@@ -30,7 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>App_Data\Universal.Web.XML</DocumentationFile>
+    <DocumentationFile>bin\Universal.Web.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -141,7 +141,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="App_Data\mailtemplate\demo.html" />
-    <Content Include="App_Data\Universal.Web.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Assets\css\admin.css" />
     <Content Include="Assets\css\animate.min.css" />
