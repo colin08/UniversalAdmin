@@ -33,14 +33,15 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DocData(int page_size, int page_index, int doc_id, string keyword)
         {
-            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
+            //BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             int rowCount = 0;
-            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            filter.Add(new BLL.FilterSearch("DocCategoryID", doc_id.ToString(), BLL.FilterSearchContract.等于));
-            if (!string.IsNullOrWhiteSpace(keyword))
-                filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
+            //List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            //filter.Add(new BLL.FilterSearch("DocCategoryID", doc_id.ToString(), BLL.FilterSearchContract.等于));
+            //if (!string.IsNullOrWhiteSpace(keyword))
+            //    filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
 
-            List<Entity.DocPost> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc", p => p.CusUser);
+            //List<Entity.DocPost> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc", p => p.CusUser);
+            List<Entity.DocPost> list = BLL.BLLDocument.GetPowerPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
