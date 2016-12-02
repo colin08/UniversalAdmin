@@ -1,48 +1,103 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" type="text/css" href="~/Content/css/public.css" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="花伴里" />
+    <meta name="keywords" content="花伴里" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+
+    <link href="/assets/theme/css/public.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/theme/css/home.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/theme/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/Assets/theme/css/style1.css" rel="stylesheet" />
+    <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
     @RenderSection("head", required: false)
+
 </head>
 
 <body>
+
+    <!--header-->
     <div class="header">
-        <h1 class="logo"></h1>
-        <ul class="nav clearfix">
-            <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=hover": "")><a href="#">首页</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=hover": "")><a href="#">项目管理</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=hover": "")><a href="#">学院秘籍</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=hover": "")><a href="#">企业通讯</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=hover": "")><a href="#">平台统计</a></li>
-            <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=hover": "")><a href="@WorkContext.ManagerHome">系统管理</a></li>
-        </ul>
-        <ul class="menu fr">
-            <li><a class="icon i3" href="#"></a></li>
-            <li><a class="icon i2" href="#"></a></li>
-            <li><a class="icon i1" href="#"></a></li>
-            <li><a class="icon i4" href="#"></a></li>
-            @if (WorkContext.UserInfo != null)
-            {
-                <li>
-                    <div class="ac_box clearfix">
-                        <i class="pic" onclick="window.location.href='/User/Basic'"><img src="@WorkContext.UserInfo.Avatar" id="img_top_avatar" /></i>
-                        <span class="sp" id="span_top_name">@WorkContext.UserInfo.NickName</span>
-                        <em onclick="window.location.href='/Account/LoginOut'"></em>
+        <a href="#" title="花伴里" class="logosm"><img src="/assets/theme/ico/logoSm.png" /></a>
+        
+        <div class="topRight">
+            <div class="user">
+                <a href="javascript:;"><em><img class="avatar_tab" src="@WorkContext.UserInfo.Avatar" style="width:32px;height:32px;" /></em><span>@WorkContext.UserInfo.NickName  </span></a><i class="i-userArr"></i>
+                <div id="userPop" class="userPop">
+                    <div class="userPopTop">
+                        <dl>
+                            <dt><img class="avatar_tab" src="@WorkContext.UserInfo.Avatar" style="width:60px;height:60px;" /></dt>
+                            <dd>
+                                <p><span class="top_nick_name">@WorkContext.UserInfo.NickName </span> <em>@WorkContext.UserInfo.CusUserJob.Title  </em></p>
+                                <p>@WorkContext.UserInfo.Telphone</p>
+                            </dd>
+                        </dl>
                     </div>
-                </li>
-            }
-            else
-            {
-                <a class="icon i4" href="/Account/Login"></a>
-            }
-        </ul>
+                    <div class="userPopBtm">
+                        <a href="/Account/LoginOut" title="退出" class="fr">退出</a>
+                        <a href="/User/Basic" title="个人中心">个人中心</a>
+                    </div>
+                    <i class="i-popArr"></i>
+                </div>
+            </div>
+            <div class="toplink">
+                <ul>
+                    <li class="a-msg"><a href="#" title="#"><i class="i-msg"></i><em>99+</em></a></li>
+                    <li><a href="#" title="#"><i class="i-mbe"></i></a></li>
+                    <li><a href="#" title="#"><i class="i-fav"></i></a></li>
+                    <li class="search-hover"><input type="text" placeholder="请输入搜索内容" class="search-input" /><a href="/Search/Project" title="#"><i class="i-sch"></i></a></li>
+                </ul>
+                <!-- 新增消息下拉 [[ -->
+                <div class="top-msg" style="display:none;">
+                    <i class="i-arrow-t"></i>
+                    <ul>
+                        <li>
+                            <i class="i-top-msg1"></i>
+                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
+                            <a href="javascript:;" class="share">资源分享</a>
+                        </li>
+                        <li class="bg">
+                            <i class="i-top-msg2"></i>
+                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
+                            <a href="javascript:;" class="share">资源分享</a>
+                        </li>
+                        <li>
+                            <i class="i-top-msg3"></i>
+                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
+                            <a href="javascript:;" class="share">资源分享</a>
+                        </li>
+                    </ul>
+                    <div class="top-msg-more clearfix"><a href="javascript:;" class="read fl">全部标记为已读</a><a href="javascript:;" class="fr">查看更多</a></div>
+                </div>
+                <!-- 新增消息下拉 ]] -->
+            </div>
+        </div>
+
+
+        <div class="nav">
+            <ul>
+                <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")><a href="/" title="首页">首页</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")><a href="/Project/Some" title="项目管理">项目管理</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=act" : "")><a href="/Msg/index" title="企业通讯">企业通讯</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=act" : "")><a href="/TJ/index" title="平台统计">平台统计</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=act" : "")><a href="@WorkContext.ManagerHome">系统管理</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="clear"></div>
     @RenderBody()
     @Scripts.Render("~/bundles/jquery")
-    <script type="text/javascript" src="/Content/js/public.js"></script>
-
+    <script type="text/javascript" src="/assets/theme/js/common.js"></script>
     @RenderSection("foot", required: false)
 </body>
+
+<!--[if IE 6]>
+<script type="text/javascript" src="skins/js/DD_belatedPNG.js"></script>
+<script type="text/javascript">
+ DD_belatedPNG.fix('.png');
+</script>
+<![endif]-->
 </html>

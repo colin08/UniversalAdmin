@@ -109,25 +109,15 @@ namespace Universal.DataCore
         public DbSet<Entity.DocPost> DocPosts { get; set; }
 
         /// <summary>
-        /// 用户收藏
+        /// 用户秘籍收藏
         /// </summary>
-        public DbSet<Entity.CusUserFavorites> CusUserFavorites { get; set; }
-
-        /// <summary>
-        /// 秘籍文章可见权限
-        /// </summary>
-        public DbSet<Entity.DocPostPower> DocPostPowers { get; set; }
-
+        public DbSet<Entity.CusUserDocFavorites> CusUserDocFavorites { get; set; }
+        
         /// <summary>
         /// 通知
         /// </summary>
         public DbSet<Entity.CusNotice> CusNotices { get; set; }
-
-        /// <summary>
-        /// 通知用户
-        /// </summary>
-        public DbSet<Entity.CusNoticeUser> CusNoticeUsers { get; set; }
-
+        
         /// <summary>
         /// 
         /// </summary>

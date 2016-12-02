@@ -5,101 +5,96 @@
     ViewData["tabTop"] = "manager";
 }
 
-<!--头部脚本-->
-@section head
-{
 
-}
-<!--头部脚本 end-->
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
-
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            <div class="al_tt clearfix">
-                <a class="icon" href="/AdminUser/Index"></a><span>员工管理</span>
-                <span class="bf">职位管理</span>
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/AdminUser/Index" class="fl f16"><i class="i-back"></i>员工管理</a>
+                    <b class="tit1Txt fr">职位管理</b>
+                </div>
             </div>
-            <div class="pub_zhiwei_gl">
-                <div class="pd_bottom clearfix">
-                    <p class="sp_l_tt">职位列表</p>
-                    <ul class="txt_r_box clearfix">
-                        @foreach (var item in Model)
-                        {
-                            @:<li><a class="link" href="javascript:;">@item.Title<em onclick="del(this)" ids="@item.ID">×</em></a></li>
-                        }
+            <div class="zwBox">
+                <div class="userInfo">
+                    <ul>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>职位列表</div>
+                            <div class="limd">
+                                <ul class="zwList">
+                                    @foreach (var item in Model)
+                                {
+                                <li><a href="javascript:;">@item.Title<i class="i-del" onclick="del(this)" ids="@item.ID"></i></a></li>
+                                }
+                                </ul>
+                            </div>
+                            <div class="litip">&nbsp;</div>
+                        </li>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>添加职位</div>
+                            <div class="limd pr">
+                                <input type="text" class="usInput" placeholder="请输入职位名称" id="txt_job" maxlength="20" /><a href="javascript:void(0)" class="addBtn">添加职位</a>
+                            </div>
+                            <div class="litip">&nbsp;</div>
+                        </li>
+                        <li>
+                            <div class="lilt">&nbsp;</div>
+                            <div class="limd"><button type="button" class="btn1" onclick="add()">确定</button></div>
+                        </li>
                     </ul>
-                </div>
-                <div class="pd_bottom clearfix">
-                    <p class="sp_l_tt">添加职位</p>
-                    <div class="txt_r_box_bor clearfix">
-                        <input class="inp" type="text" id="txt_job" maxlength="20"/>
-                        <a href="javascript:void(0)" class="but">添加职位</a>
-                    </div>
-                </div>
-                <div class="pd_bottom clearfix">
-                    <p class="sp_l_tt">&nbsp;</p>
-                    <div class="fl">
-                        <a class="but_mid_style" href="javascript:;" onclick="add()">确定</a>
-                    </div>
                 </div>
             </div>
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+        <div class="footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
 
-<!--底部脚本-->
-@section foot
+    <!--底部脚本-->
+    @section foot
 {
-    <script type="text/javascript">
-        //$(document).ready(function (e) {
-        //    menuSun();
-        //});
-
-        function del(obj)
-        {
-            $.ajax({
-                type: "post",
-                url: "/AdminUser/DelJob",
-                data: { "id": $(obj).attr("ids") },
-                async: false,
-                success: function (data) {
-                    if (data.msg == 0) {
-                        alert(data.msgbox);
-                    } else {
-                        $(obj).parents('li').remove();
+        <script type="text/javascript">
+            function del(obj) {
+                $.ajax({
+                    type: "post",
+                    url: "/AdminUser/DelJob",
+                    data: { "id": $(obj).attr("ids") },
+                    async: false,
+                    success: function (data) {
+                        if (data.msg == 0) {
+                            alert(data.msgbox);
+                        } else {
+                            $(obj).parent().parent().remove();
+                        }
                     }
-                }
-            });            
-        }
-
-        function add() {
-            var title = $("#txt_job").val();
-            if (title.length == 0)
-            {
-                return false;
+                });
             }
-            $.ajax({
-                type: "post",
-                url: "/AdminUser/AddJob",
-                data: { "title": title },
-                async: false,
-                success: function (data) {
-                    if (data.msg == 0) {
-                        alert(data.msgbox);
-                    } else {
-                        $("#txt_job").val("");
-                        var new_id = data.msgbox;
-                        $(".txt_r_box").prepend("<li><a class=\"link\" href=\"javascript:;\">"+title+"<em onclick=\"del(this)\" ids=\""+new_id+"\">×</em></a></li>");
-                    }
+
+            function add() {
+                var title = $("#txt_job").val();
+                if (title.length == 0) {
+                    return false;
                 }
-            });
-        }
+                $.ajax({
+                    type: "post",
+                    url: "/AdminUser/AddJob",
+                    data: { "title": title },
+                    async: false,
+                    success: function (data) {
+                        if (data.msg == 0) {
+                            alert(data.msgbox);
+                        } else {
+                            $("#txt_job").val("");
+                            var new_id = data.msgbox;
+                            $(".zwList").prepend("<li><a href=\"javascript:;\">" + title + "<i class=\"i-del\" onclick=\"del(this)\" ids=\"" + new_id + "\"></i></a></li>");
+                        }
+                    }
+                });
+            }
 
-    </script>
+        </script>
 
-}
-<!--底部脚本 end-->
+    }
+    <!--底部脚本 end-->

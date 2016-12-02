@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "流程管理";
+    ViewData["tabLeft"] = "flow";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+<div class="wapper">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <span class="fr f14 col_grey">注：编辑流程时，可按住 “流程块” 调整顺序</span>
+                <div class="inner">
+                    <a href="#12" class="fl f16"><i class="i-back"></i>流程列表</a>
+                    <b class="tit1Txt fr">2016年最新流程</b>
+                </div>
+
+            </div>
+
+            <div class="liuchengEdit">
+                <img src="/assets/theme/images/temp1.jpg" />
+            </div>
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>	
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+
+}
+<!--底部脚本 end-->

@@ -10,8 +10,7 @@ namespace Universal.Web.Models
     {
         public ViewModelNotice()
         {
-            this.user_id_str = "";
-            this.user_list = new List<ViewModelNoticeUser>();
+            this.see_entity = new List<ViewModelDocumentCategory>();
         }
 
         public int id { get; set; }
@@ -21,13 +20,21 @@ namespace Universal.Web.Models
 
         [MaxLength(1000,ErrorMessage ="内容不能超过1000个字符")]
         public string content { get; set; }
+        
+        /// <summary>
+        /// 秘籍权限
+        /// </summary>
+        public Entity.DocPostSee post_see { get; set; }
 
         /// <summary>
-        /// 通知用户id串
+        /// 可以看的用户或部门id，逗号分割
         /// </summary>
-        public string user_id_str { get; set; }
+        public string see_ids { get; set; }
 
-        public List<ViewModelNoticeUser> user_list { get; set; }
+        /// <summary>
+        /// 可以看的用户或部门信息，用于还原数据
+        /// </summary>
+        public List<ViewModelDocumentCategory> see_entity { get; set; }
 
     }
 
@@ -39,4 +46,5 @@ namespace Universal.Web.Models
 
         public string nick_name { get; set; }
     }
+
 }

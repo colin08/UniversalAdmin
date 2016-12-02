@@ -68,6 +68,7 @@ namespace Universal.Web.Controllers
 
         public ActionResult Modify(int? id)
         {
+            LoadPlatform();
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelAppVersion entity = new Models.ViewModelAppVersion();
             
@@ -102,8 +103,29 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelAppVersion entity)
         {
+            LoadPlatform();
             var isAdd = entity.ID == 0 ? true : false;
 
+            if(((int)entity.APPType) == 0)
+            {
+                ModelState.AddModelError("APPType", "请选择版本类别");
+            }
+            if (((int)entity.Platforms) == 0)
+            {
+                ModelState.AddModelError("APPType", "请选择平台");
+            }
+            if (entity.Platforms == Entity.APPVersionPlatforms.IOS && string.IsNullOrWhiteSpace(entity.Version))
+            {
+                ModelState.AddModelError("Version", "IOS系统必须填写");
+            }
+            if (entity.Platforms == Entity.APPVersionPlatforms.IOS && string.IsNullOrWhiteSpace(entity.LinkUrl))
+            {
+                ModelState.AddModelError("LinkUrl", "IOS系统必须填写");
+            }
+            if(entity.Platforms == Entity.APPVersionPlatforms.Android && string.IsNullOrWhiteSpace(entity.DownUrl))
+            {
+                ModelState.AddModelError("DownUrl", "必须上传APK文件");
+            }
 
             BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
             if (!isAdd)
@@ -148,6 +170,30 @@ namespace Universal.Web.Controllers
 
             return View(entity);
         }
-        
+
+        /// <summary>
+        /// 加载平台列表
+        /// </summary>
+        private void LoadPlatform()
+        {
+            List<SelectListItem> platformList = new List<SelectListItem>();
+            platformList.Add(new SelectListItem() { Text = "所有平台", Value = "0" });
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.APPVersionPlatforms)))
+            {
+                string text = EnumHelper.GetDescription<Entity.APPVersionPlatforms>((Entity.APPVersionPlatforms)item.Key);
+                platformList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
+            }
+            ViewData["PlatformsList"] = platformList;
+
+            List<SelectListItem> typeList = new List<SelectListItem>();
+            typeList.Add(new SelectListItem() { Text = "所有类别", Value = "0" });
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.APPVersionType)))
+            {
+                string text = EnumHelper.GetDescription<Entity.APPVersionType>((Entity.APPVersionType)item.Key);
+                typeList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
+            }
+            ViewData["TypeList"] = typeList;
+        }
+
     }
 }

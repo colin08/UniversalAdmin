@@ -17,25 +17,18 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Basic()
         {
-            //TODO 年月日问题未处理
             var model = new Models.ViewModelUserBasic();
             model.about_me = WorkContext.UserInfo.AboutMe;
-            model.email = WorkContext.UserInfo.Email;
             model.gender = WorkContext.UserInfo.Gender;
             model.nick_name = WorkContext.UserInfo.NickName;
             model.short_num = WorkContext.UserInfo.ShorNum;
-            if(WorkContext.UserInfo.Brithday != null)
-            {
-                DateTime dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
-                model.year = dt.Year.ToString();
-                model.month = dt.Month.ToString();
-                model.day = dt.Day.ToString();
-            }else
-            {
-                model.year = "";
-                model.month = "";
-                model.day = "";
-            }
+            DateTime dt = DateTime.Now;
+            if (WorkContext.UserInfo.Brithday != null)
+                dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
+
+            model.year = dt.Year.ToString();
+            model.month = dt.Month.ToString();
+            model.day = dt.Day.ToString();
 
             return View(model);
         }
@@ -45,15 +38,15 @@ namespace Universal.Web.Controllers
         public ActionResult Basic(Models.ViewModelUserBasic req)
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            if(bll.Exists(p => p.Email == req.email && p.ID != WorkContext.UserInfo.ID))
+
+            if (string.IsNullOrWhiteSpace(req.year) || string.IsNullOrWhiteSpace(req.month) || string.IsNullOrWhiteSpace(req.day))
             {
-                ModelState.AddModelError("email","邮箱已经存在");
+                ModelState.AddModelError("year", "请填写完整");
             }
 
             if (ModelState.IsValid)
             {
                 var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
-                model.Email = req.email;
                 model.AboutMe = req.about_me;
                 model.Gender = req.gender;
                 model.NickName = req.nick_name;
@@ -62,8 +55,8 @@ namespace Universal.Web.Controllers
                     model.Brithday = TypeHelper.ObjectToDateTime(req.year + "/" + req.month + "/" + req.day);
                 else
                     model.Brithday = null;
-                bll.Modify(model, "Email", "AboutMe", "Gender", "NickName", "ShorNum", "Brithday");
-                BLL.BLLCusUser.ModifySession(model);
+                bll.Modify(model, "AboutMe", "Gender", "NickName", "ShorNum", "Brithday");
+                BLL.BLLCusUser.ModifySession(BLL.BLLCusUser.GetModel(WorkContext.UserInfo.ID));
 
 
                 req.State = true;
@@ -103,13 +96,15 @@ namespace Universal.Web.Controllers
 
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
-            if(model != null)
+            if (model != null)
             {
                 model.Avatar = avatar;
                 bll.Modify(model, "Avatar");
                 WorkContext.AjaxStringEntity.msg = 1;
+                BLL.BLLCusUser.ModifySession(BLL.BLLCusUser.GetModel(WorkContext.UserInfo.ID));
                 return Json(WorkContext.AjaxStringEntity);
-            }else
+            }
+            else
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -145,7 +140,7 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult CheckPwd(string pwd,string code)
+        public JsonResult CheckPwd(string pwd, string code)
         {
             if (WorkContext.UserInfo == null)
             {
@@ -159,13 +154,13 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(!SecureHelper.MD5(pwd).Equals(WorkContext.UserInfo.Password))
+            if (!SecureHelper.MD5(pwd).Equals(WorkContext.UserInfo.Password))
             {
                 WorkContext.AjaxStringEntity.msgbox = "密码错误";
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(!Session["ValidateCode"].ToString().Equals(code))
+            if (!Session["ValidateCode"].ToString().Equals(code))
             {
                 WorkContext.AjaxStringEntity.msgbox = "验证码错误";
                 return Json(WorkContext.AjaxStringEntity);
@@ -182,7 +177,7 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult ModifyEmail(string email)
         {
-            if(WorkContext.UserInfo == null)
+            if (WorkContext.UserInfo == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "Time Out";
                 return Json(WorkContext.AjaxStringEntity);
@@ -195,7 +190,7 @@ namespace Universal.Web.Controllers
             }
 
             var model = WorkContext.UserInfo;
-            if(email.Equals(model.Email))
+            if (email.Equals(model.Email))
             {
                 WorkContext.AjaxStringEntity.msgbox = "新邮箱和原来的邮箱不能一样";
                 return Json(WorkContext.AjaxStringEntity);
@@ -263,12 +258,13 @@ namespace Universal.Web.Controllers
             string msg = "";
             Guid guid = Guid.NewGuid();
             BLL.BLLVerification.Send(tel, guid, Entity.CusVerificationType.Modify, out msg);
-            if(msg.Equals("OK"))
+            if (msg.Equals("OK"))
             {
                 WorkContext.AjaxStringEntity.msg = 1;
                 WorkContext.AjaxStringEntity.data = guid.ToString();
                 return Json(WorkContext.AjaxStringEntity);
-            }else
+            }
+            else
             {
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);
@@ -281,7 +277,7 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult CheckTelCode(string guid,string code)
+        public JsonResult CheckTelCode(string guid, string code)
         {
             if (WorkContext.UserInfo == null)
             {
@@ -306,11 +302,12 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
+            if (BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
             {
                 WorkContext.AjaxStringEntity.msg = 1;
                 return Json(WorkContext.AjaxStringEntity);
-            }else
+            }
+            else
             {
                 WorkContext.AjaxStringEntity.msgbox = "验证码错误";
                 return Json(WorkContext.AjaxStringEntity);
@@ -337,7 +334,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(tel.Equals(WorkContext.UserInfo.Telphone))
+            if (tel.Equals(WorkContext.UserInfo.Telphone))
             {
                 WorkContext.AjaxStringEntity.msgbox = "新手机号不能和原手机号一样";
                 return Json(WorkContext.AjaxStringEntity);
@@ -345,7 +342,7 @@ namespace Universal.Web.Controllers
 
 
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            if(bll.Exists(p=>p.Telphone == tel))
+            if (bll.Exists(p => p.Telphone == tel))
             {
                 WorkContext.AjaxStringEntity.msgbox = "手机号已被使用";
                 return Json(WorkContext.AjaxStringEntity);
@@ -374,12 +371,12 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(!ValidateHelper.IsMobile(tel))
+            if (!ValidateHelper.IsMobile(tel))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法手机号2";
                 return Json(WorkContext.AjaxStringEntity);
             }
-                        
+
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             if (bll.Exists(p => p.Telphone == tel))
             {
@@ -388,7 +385,7 @@ namespace Universal.Web.Controllers
             }
 
             var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
-            if(model == null)
+            if (model == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -408,35 +405,35 @@ namespace Universal.Web.Controllers
         /// <param name="old"></param>
         /// <param name="newp"></param>
         /// <returns></returns>
-        public JsonResult ModifyPwd(string old,string newp)
+        public JsonResult ModifyPwd(string old, string newp)
         {
             if (WorkContext.UserInfo == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "Time Out";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            
+
             if (string.IsNullOrWhiteSpace(old) || string.IsNullOrWhiteSpace(newp))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if(newp.Length <3 || newp.Length >30)
+            if (newp.Length < 3 || newp.Length > 30)
             {
                 WorkContext.AjaxStringEntity.msgbox = "密码在3-30位之间";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            
+
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
-            if(model==null)
+            if (model == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return Json(WorkContext.AjaxStringEntity);
             }
             string old_pwd = SecureHelper.MD5(old);
             string new_pwd = SecureHelper.MD5(newp);
-            if(!model.Password.Equals(old_pwd))
+            if (!model.Password.Equals(old_pwd))
             {
                 WorkContext.AjaxStringEntity.msgbox = "旧密码不正确";
                 return Json(WorkContext.AjaxStringEntity);
@@ -447,6 +444,139 @@ namespace Universal.Web.Controllers
             BLL.BLLCusUser.LoginOut();
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
+        }
+
+
+        /// <summary>
+        /// 会议召集
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HYZJ()
+        {
+            return View();
+        }
+
+
+        public ActionResult HYZJADD()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 任务指派
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RWZP()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 任务指派
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RWZPADD()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 工作计划
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GZJH()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 工作计划
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GZJHADD()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 项目收藏
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult XMSC()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 文件(秘籍)收藏
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DocFavorites()
+        {
+            int default_id = 0;
+            string data = BLL.BLLDocCategory.CreateDocCategoryTreeData(out default_id);
+            ViewData["TreeData"] = data;
+            ViewData["DefaultID"] = default_id;
+            return View();
+        }
+
+        /// <summary>
+        /// 文件(秘籍)收藏Json数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DocFavoritesData(int page_size, int page_index, int doc_id, string keyword)
+        {
+            List<Entity.DocPost> list = new List<Entity.DocPost>();
+            int rowCount = 0;
+            list = BLL.BllCusUserFavorites.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
+            WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 删除收藏
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DelDocFavorites(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.CusUserDocFavorites> bll = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 我的下载
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyDown()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 我的消息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyMsg()
+        {
+            return View();
         }
 
     }

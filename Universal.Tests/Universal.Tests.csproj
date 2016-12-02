@@ -75,6 +75,7 @@
     <Compile Include="SystemInfoTests.cs" />
     <Compile Include="TreeTests.cs" />
     <Compile Include="JFData.cs" />
+    <Compile Include="APITokenTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">

@@ -15,9 +15,12 @@ namespace Universal.Web.Models
         {
             this.password = "";
             this.gender = Entity.CusUserGender.male;
-            this.avatar = "/Content/images/tx_icon01.jpg";
+            this.avatar = "/uploads/avatar.jpg";
             this.user_route = new List<BLL.Model.AdminUserRoute>();
             this.MsgBox = "success";
+            this.year = DateTime.Now.Year.ToString();
+            this.month = DateTime.Now.Month.ToString();
+            this.day = DateTime.Now.Day.ToString();
         }
 
         /// <summary>
@@ -55,7 +58,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 职位名称
         /// </summary>
-        public string jon_title { get; set; }
+        public string job_title { get; set; }
         
         /// <summary>
         /// 邮箱
@@ -81,7 +84,20 @@ namespace Universal.Web.Models
         [Display(Name = "性别"), Required]
         public Entity.CusUserGender gender { get; set; }
 
-        //TODO 缺少生日
+        /// <summary>
+        /// 年
+        /// </summary>
+        public string year { get; set; }
+
+        /// <summary>
+        /// 月
+        /// </summary>
+        public string month { get; set; }
+
+        /// <summary>
+        /// 日
+        /// </summary>
+        public string day { get; set; }
 
         [Display(Name = "短号"), MaxLength(20, ErrorMessage = "不能超过20位")]
         public string short_num { get; set; }

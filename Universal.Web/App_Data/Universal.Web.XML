@@ -876,27 +876,31 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Universal.Web.Controllers.APIController">
-            <summary>
-            测试接口
-            </summary>
-        </member>
-        <member name="M:Universal.Web.Controllers.APIController.Test">
-            <summary>
-            测试接口
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Universal.Web.Controllers.APIController.UpdateUserAvatar">
-            <summary>
-            修改用户头像，From表单中头像标识：user_id
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Universal.Web.Controllers.CusUserController">
             <summary>
             用户接口
             </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.CusUserController.UserLogin(Universal.Web.Models.Request.ModelUserLogin)">
+            <summary>
+            用户登录
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.CusUserController.GetUserInfo(System.Int32)">
+            <summary>
+            获取用户信息
+            </summary>
+            <param name="user_id">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.CusUserController.BuilderAPPUser(Universal.Entity.CusUser)">
+            <summary>
+            构造用户信息
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="T:Universal.Web.Controllers.DepartmentController">
             <summary>
@@ -927,6 +931,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Universal.Web.Controllers.DepartmentController.Del(System.Int32)">
+            <summary>
+            删除部门
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Universal.Web.Controllers.AppVersionController">
             <summary>
             秘籍
@@ -946,6 +956,97 @@
             删除
             </summary>
             <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.AppVersionController.LoadPlatform">
+            <summary>
+            加载平台列表
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Controllers.SearchController">
+            <summary>
+            搜索
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.SearchController.Project">
+            <summary>
+            项目
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.SearchController.Document">
+            <summary>
+            秘籍
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.SearchController.Node">
+            <summary>
+            节点
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.SearchController.Notice">
+            <summary>
+            公告
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Universal.Web.Controllers.ShoolController">
+            <summary>
+            学院秘籍
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.DocData(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            分页数据
+            </summary>
+            <param name="page_size"></param>
+            <param name="page_index"></param>
+            <param name="doc_id">部门ID</param>
+            <param name="keyword">搜索关键字</param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.DelDoc(System.String)">
+            <summary>
+            删除
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.LoadCategory">
+            <summary>
+            加载分类
+            </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.JHLX">
+            <summary>
+            计划立项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.DYGH">
+            <summary>
+            单元规划
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.XXHC">
+            <summary>
+            信息核查
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.ZTQR">
+            <summary>
+            主体确认
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ShoolController.YDSP">
+            <summary>
+            用地审批
+            </summary>
             <returns></returns>
         </member>
         <member name="T:Universal.Web.Controllers.NoticeController">
@@ -969,18 +1070,22 @@
             <param name="ids"></param>
             <returns></returns>
         </member>
-        <member name="M:Universal.Web.Controllers.NoticeController.LoadNoticeUser(System.Int32,System.String@)">
-            <summary>
-            加载通知用户数据
-            </summary>
-            <param name="id"></param>
-            <param name="id_str"></param>
-            <returns></returns>
-        </member>
         <member name="T:Universal.Web.Controllers.ProjectController">
             <summary>
             秘籍
             </summary>
+        </member>
+        <member name="M:Universal.Web.Controllers.ProjectController.Add">
+            <summary>
+            新增项目-临时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.ProjectController.Some">
+            <summary>
+            项目(用户对应有权限的才会显示)
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Universal.Web.Controllers.NodeController">
             <summary>
@@ -1019,6 +1124,19 @@
             <param name="title"></param>
             <returns></returns>
         </member>
+        <member name="M:Universal.Web.Controllers.DocCategoryController.Del(System.Int32)">
+            <summary>
+            删除分类
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.DocCategoryController.Sort(System.String)">
+            <summary>
+            排序
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
         <member name="T:Universal.Web.Controllers.DocumentController">
             <summary>
             秘籍
@@ -1051,7 +1169,7 @@
             <summary>
              秘籍收藏
             </summary>
-            <param name="doc_id"></param>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Universal.Web.Controllers.DocumentController.LoadCategory">
@@ -1186,6 +1304,158 @@
             <param name="newp"></param>
             <returns></returns>
         </member>
+        <member name="M:Universal.Web.Controllers.UserController.HYZJ">
+            <summary>
+            会议召集
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.RWZP">
+            <summary>
+            任务指派
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.RWZPADD">
+            <summary>
+            任务指派
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.GZJH">
+            <summary>
+            工作计划
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.GZJHADD">
+            <summary>
+            工作计划
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.XMSC">
+            <summary>
+            项目收藏
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.DocFavorites">
+            <summary>
+            文件(秘籍)收藏
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.DocFavoritesData(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            文件(秘籍)收藏Json数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.DelDocFavorites(System.String)">
+            <summary>
+            删除收藏
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.MyDown">
+            <summary>
+            我的下载
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Universal.Web.Controllers.UserController.MyMsg">
+            <summary>
+            我的消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Universal.Web.Models.Request.ModelUserLogin">
+            <summary>
+            用户登录
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Request.ModelUserLogin.phone_email">
+            <summary>
+            手机号或邮箱
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Request.ModelUserLogin.pwd">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="T:Universal.Web.Models.Response.ModelUserInfo">
+            <summary>
+            用户信息
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.id">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.telphone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.email">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.nick_name">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.department_id">
+            <summary>
+            所属部门id
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.department_name">
+            <summary>
+            所属部门名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.job_id">
+            <summary>
+            所属职位id
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.job_name">
+            <summary>
+            所属职位名称
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.gender">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.brithday">
+            <summary>
+            生日，可为空
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.shor_num">
+            <summary>
+            短号
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.Response.ModelUserInfo.about_me">
+            <summary>
+            简介
+            </summary>
+        </member>
         <member name="T:Universal.Web.Models.ViewModelAdminUser">
             <summary>
             编辑管理员用户
@@ -1221,7 +1491,7 @@
             职位
             </summary>
         </member>
-        <member name="P:Universal.Web.Models.ViewModelAdminUser.jon_title">
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.job_title">
             <summary>
             职位名称
             </summary>
@@ -1244,6 +1514,21 @@
         <member name="P:Universal.Web.Models.ViewModelAdminUser.gender">
             <summary>
             性别
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.year">
+            <summary>
+            年
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.month">
+            <summary>
+            月
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelAdminUser.day">
+            <summary>
+            日
             </summary>
         </member>
         <member name="P:Universal.Web.Models.ViewModelAdminUser.about_me">
@@ -1331,19 +1616,34 @@
             主管名称
             </summary>
         </member>
-        <member name="P:Universal.Web.Models.ViewModelDocument.category_list">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="P:Universal.Web.Models.ViewModelDocument.post_see">
             <summary>
             秘籍权限
             </summary>
         </member>
-        <member name="P:Universal.Web.Models.ViewModelNotice.user_id_str">
+        <member name="P:Universal.Web.Models.ViewModelDocument.see_ids">
             <summary>
-            通知用户id串
+            可以看的用户或部门id，逗号分割
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelDocument.see_entity">
+            <summary>
+            可以看的用户或部门信息，用于还原数据
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelNotice.post_see">
+            <summary>
+            秘籍权限
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelNotice.see_ids">
+            <summary>
+            可以看的用户或部门id，逗号分割
+            </summary>
+        </member>
+        <member name="P:Universal.Web.Models.ViewModelNotice.see_entity">
+            <summary>
+            可以看的用户或部门信息，用于还原数据
             </summary>
         </member>
         <member name="T:Universal.Web.Models.ViewModelSendPwd">
@@ -1389,11 +1689,6 @@
         <member name="P:Universal.Web.Models.ViewModelUserBasic.short_num">
             <summary>
             短号
-            </summary>
-        </member>
-        <member name="P:Universal.Web.Models.ViewModelUserBasic.email">
-            <summary>
-            邮箱
             </summary>
         </member>
         <member name="P:Universal.Web.Models.ViewModelUserBasic.about_me">

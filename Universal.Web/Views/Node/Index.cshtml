@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "秘籍管理";
+    ViewBag.Title = "节点管理";
     ViewData["tabLeft"] = "node";
     ViewData["tabTop"] = "manager";
 }
@@ -11,16 +11,118 @@
 }
 <!--头部脚本 end-->
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            节点管理
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <b>节点设置</b>
+                <div class="search"><input type="text" id="" value="" placeholder="请输入节点名称" /><input type="button" id="" value="" /></div>
+                <span class="banbenOp fr"><a href="/Node/Modify" title="发布版本"><i class="i-redbb"></i> 发布版本</a><a href="#" title="删除"><i class="i-barrel"></i> 删除</a></span>
+            </div>
+            <div class="projectColl">
+                <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <tr>
+                        <th width="20"><input type="checkbox" name="" id="" value="" /></th>
+                        <th width="20%">节点名称</th>
+                        <th width="30%">办事地址</th>
+                        <th width="10%">联系人</th>
+                        <th width="10%">联系人电话</th>
+                        <th width="20%">办事流程说明</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><input type="checkbox" name="" id="" value="" /></td>
+                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
+                        <td><span class="tfe">法律法规</span></td>
+                        <td>Jacky</td>
+                        <td>1556558520</td>
+                        <td>--</td>
+                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                </table>
+                <div class="listBtm">
+                    <div class="page fr">
+                        共有1条，每页显示
+                        <select name="" class="selt">
+                            <option value="">1</option>
+                        </select>  条
+
+                        <a href=""><i class="i-pgLbig"></i></a>
+                        <a href=""><i class="i-pgLsm"></i></a>
+                        <span>1/2</span>
+                        <a href=""><i class="i-pgRsm"></i></a>
+                        <a href=""><i class="i-pgRbig"></i></a>
+                        <input type="" name="" id="" value="" class="pginput" /><input type="button" id="" value="跳转" class="pgbtn" />
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
-    </div>
 
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>	
 </div>
 
 <!--底部脚本-->

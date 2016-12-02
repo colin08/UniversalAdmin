@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "节点管理";
+    ViewData["tabLeft"] = "node";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/Node/Index" class="fl f16"><i class="i-back"></i>节点设置</a>
+                    <b class="tit1Txt fr">新增节点</b>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+
+
+                    <li>
+                        <div class="lilt">节点名称</div>
+                        <div class="limd">
+                            <input type="text" id="" value="" class="usInput" placeholder="请输入节点名称" />
+                        </div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">办事地址</div>
+                        <div class="limd">
+                            <input type="text" id="" value="" class="usInput" placeholder="办事地址" />
+                        </div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">联系人</div>
+                        <div class="limd big">
+                            <span><a href="#" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+
+                            <div class="menlist">
+                                <ul>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)1</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)2</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)3</span><i class="i-mdel"></i></a></li>
+                                    <li class="act"><a href="javascript:;"><span>18412435698 (张三)4</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)5</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)6</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)7</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)8</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)9</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)0</span><i class="i-mdel"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="lilt">通知成员</div>
+                        <div class="limd big">
+                            <span><a href="#" title="添加成员"><i class="i-circleP"></i>上传附件</a></span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="lilt">办事流程说明</div>
+                        <div class="limd big">
+                            <div class="editBox"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd"><button type="button" onclick="location.href='/Node/Index'" class="btn1">发布</button> <button type="button" onclick="location.href='/Node/Index'" class="btn1 grey">取消</button></div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>	
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+
+}
+<!--底部脚本 end-->

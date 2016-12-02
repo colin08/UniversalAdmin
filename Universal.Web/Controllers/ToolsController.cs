@@ -110,13 +110,7 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<List<Models.ViewModelNoticeUser>> result = new WebAjaxEntity<List<Models.ViewModelNoticeUser>>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             List<Models.ViewModelNoticeUser> list = new List<Models.ViewModelNoticeUser>();
-            List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                filters.Add(new BLL.FilterSearch("NickName", search, BLL.FilterSearchContract.like));
-                filters.Add(new BLL.FilterSearch("Telphone", search, BLL.FilterSearchContract.like));
-            }
-            foreach (var item in bll.GetListBy(0, filters, "ID asc"))
+            foreach (var item in bll.GetListBy(0, p=>p.Telphone.Contains(search)||p.NickName.Contains(search), "ID asc"))
             {
                 Models.ViewModelNoticeUser model = new Models.ViewModelNoticeUser();
                 model.id = item.ID;
@@ -126,6 +120,7 @@ namespace Universal.Web.Controllers
             }
             result.data = list;
             result.msg = 1;
+            result.total = list.Count;
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

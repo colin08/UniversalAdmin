@@ -6,31 +6,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>找回密码</title>
-    <link type="text/css" rel="stylesheet" href="/Content/css/public.css" />
+    <meta charset="UTF-8" />
+    <meta name="description" content="花伴里" />
+    <meta name="keywords" content="花伴里" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <link href="/Assets/theme/css/public.css" rel="stylesheet" type="text/css" />
+    <link href="/Assets/theme/css/login.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="login_bg">
-    <div class="login_content">
-        <div class="f_pw_step">
-            <span class="icon_a">1</span>
-            <span>确认身份</span>
-            <span class="line"></span>
-            <span class="icon_a">2</span>
-            <span>重置密码</span>
-        </div>
-        <div class="content f_pw_bg">
-            <p class="tt">找回密码</p>
-            <div class="f_pw_st2">
-                <span class="icon_c"></span>
-                <p class="p1">恭喜您，<span>@ViewBag.Telphone</span></p>
-                <p class="p1 p2">您的账号已重置为初始密码</p>
-                <p class="p3">请重新登录，并及时修改登录密码。</p>
-                <a class="but" href="/account/login">立即登录</a>
+<body>
+
+    <!--fgBox-->
+    <div class="fgBox">
+        <h3><img src="/Assets/theme/ico/ico_forgetPw2.png" /></h3>
+        <div class="fgBoxIner">
+            <h4>找回密码</h4>
+            <div class="fgokTips">
+                <em><img src="/Assets/theme/ico/ico_ok.png" /></em>
+                <h5>恭喜您，<span class="col_red">@ViewBag.Telphone</span> </h5>
+                <h6>您的账号已重置为初始密码</h6>
+                <p>请重新登录，并及时修改登录密码。</p>
+                <p><a class="btnLg" href="#">立即登录</a></p>
             </div>
         </div>
     </div>
-    <p class="login_footer">Copyright &copy; 深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
+
+
+
+    <!--footer-->
+    <div class="footer">
+        <div class="center">
+            Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1
+        </div>
+    </div>
+
+
+
 </body>
+
+<!--[if IE 6]>
+<script type="text/javascript" src="skins/js/DD_belatedPNG.js"></script>
+<script type="text/javascript">
+ DD_belatedPNG.fix('.png');
+</script>
+<![endif]-->
 </html>

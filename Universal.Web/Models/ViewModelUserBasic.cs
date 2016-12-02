@@ -11,6 +11,13 @@ namespace Universal.Web.Models
     /// </summary>
     public class ViewModelUserBasic
     {
+        public ViewModelUserBasic()
+        {
+            this.year = DateTime.Now.Year.ToString();
+            this.month = DateTime.Now.Month.ToString();
+            this.day = DateTime.Now.Day.ToString();
+        }
+
         /// <summary>
         /// 用户名
         /// </summary>
@@ -43,11 +50,6 @@ namespace Universal.Web.Models
         [Display(Name = "短号"), MaxLength(20, ErrorMessage = "不能超过20位")]
         public string short_num { get; set; }
 
-        /// <summary>
-        /// 邮箱
-        /// </summary>
-        [Display(Name = "邮箱"), RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", ErrorMessage = "邮箱格式不正确")]
-        public string email { get; set; }
 
         /// <summary>
         /// 关于我

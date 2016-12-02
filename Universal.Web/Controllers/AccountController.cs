@@ -16,6 +16,10 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Login()
         {
+            //string key = "lizd@fd9^hblyalsd!&" + Tools.WebHelper.ConvertDateTimeInt(DateTime.Now);
+            //Tools.Crypto3DES des = new Tools.Crypto3DES(Tools.SiteKey.DES3KEY);
+            //string val = des.DESEnCode(key);
+
             var viewModelLogin = new Models.ViewModelUserLogin();
             if (WorkContext.UserInfo != null)
                 return Redirect("/");
@@ -26,15 +30,12 @@ namespace Universal.Web.Controllers
                 {
                     int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Web_Login_UserID));
                     string upwd = WebHelper.GetCookie(CookieKey.Web_Login_UserPassword);
-                    BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-                    List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
-                    filters.Add(new BLL.FilterSearch("ID", uid.ToString(), BLL.FilterSearchContract.等于));
-                    filters.Add(new BLL.FilterSearch("Password", upwd, BLL.FilterSearchContract.等于));
-                    Entity.CusUser model = bll.GetModel(filters, p => p.CusUserRoute.Select(s => s.CusRoute));
+                    Entity.CusUser model = BLL.BLLCusUser.GetModelID(uid, upwd);
                     if (model != null)
                     {
                         if (model.Status)
                         {
+                            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
                             Session[SessionKey.Web_User_Info] = model;
                             Session.Timeout = 60; //一小时不操作，session就过期
                             model.LastLoginTime = DateTime.Now;
@@ -63,15 +64,14 @@ namespace Universal.Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
                 string passworld = SecureHelper.MD5(req.password);
                 Entity.CusUser model = null;
-                
+
                 //如果是邮箱
-                if(ValidateHelper.IsEmail(req.user_name))
-                    model = bll.GetModel(p => p.Email == req.user_name && p.Password == passworld, p => p.CusUserRoute.Select(s => s.CusRoute));
+                if (ValidateHelper.IsEmail(req.user_name))
+                    model = BLL.BLLCusUser.GetModel(req.user_name, passworld);
                 else
-                    model = bll.GetModel(p => p.Telphone == req.user_name && p.Password == passworld, p => p.CusUserRoute.Select(s => s.CusRoute));
+                    model = BLL.BLLCusUser.GetModelTelphone(req.user_name, passworld);
                 if(model == null)
                 {
                     ModelState.AddModelError("user_name", "用户不存在或密码错误");
@@ -96,6 +96,7 @@ namespace Universal.Web.Controllers
                     WebHelper.SetCookie(CookieKey.Web_Login_UserID, model.ID.ToString());
                     WebHelper.SetCookie(CookieKey.Web_Login_UserPassword, model.Password);
                 }
+                BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
                 model.LastLoginTime = DateTime.Now;
                 bll.Modify(model, new string[] { "LastLoginTime" });
                 return Redirect("/");

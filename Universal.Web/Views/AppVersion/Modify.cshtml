@@ -5,180 +5,153 @@
     ViewData["tabTop"] = "manager";
 }
 
-<!--头部脚本-->
-@section head
-{
-    <link href="~/Content/css/gg.css" rel="stylesheet" />
-}
-<!--头部脚本 end-->
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
-
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            <div class="al_tt clearfix">
-                <a class="icon" href="/AppVersion/Index"></a>
-                <span>版本列表</span>
-                <span class="bf">发布版本</span>
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/AppVersion/Index" class="fl f16"><i class="i-back"></i>版本列表</a>
+                    <b class="tit1Txt fr">发布版本</b>
+                </div>
             </div>
-            <div class="form_gl_box form_gonggao_box">
+
+            <div class="userInfo sysIn">
                 <form method="post" class="form-horizontal" id="form">
                     @Html.AntiForgeryToken()
 
-                    @Html.HiddenFor(p => p.Platforms)
-                    @Html.HiddenFor(p => p.APPType)
                     @Html.HiddenFor(p => p.MD5)
                     @Html.HiddenFor(p => p.Size)
                     @Html.HiddenFor(p => p.VersionCode)
                     @Html.HiddenFor(p => p.LogoImg)
                     @Html.HiddenFor(p => p.DownUrl)
+                    <ul>
 
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>所属系统</p>
-                        <div class="p_c">
-                            <div class="pub_select_box">
-                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="请选择" />
-                                <div class="select_list">
-                                    <p class="first"></p>
-                                    <div class="select_sun_list" id="select_sun_list">
-                                        @foreach (var item in Universal.Tools.EnumHelper.BEnumToDictionary(typeof(Universal.Entity.APPVersionPlatforms)))
-                                        {
-                                            string text = Universal.Tools.EnumHelper.GetDescription<Universal.Entity.APPVersionPlatforms>((Universal.Entity.APPVersionPlatforms)item.Key);
-                                            <a href="javascript:;" onclick="set_system(@item.Key)">@text</a>
-                                        }
-                                    </div>
-                                </div>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>所属系统</div>
+                            <div class="limd">
+                                @Html.DropDownListFor(p => p.Platforms, ViewData["PlatformsList"] as List<SelectListItem>, new { @class = "tb_select",@style= "width: 94%;" })
                             </div>
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>版本类型</p>
-                        <div class="p_c">
-                            <div class="pub_select_box zindex">
-                                <input class="inp_select" disabled="disabled" type="text" id="select_value" value="请选择" />
-                                <div class="select_list">
-                                    <p class="first"></p>
-                                    <div class="select_sun_list" id="select_sun_list">
-                                        @foreach (var item in Universal.Tools.EnumHelper.BEnumToDictionary(typeof(Universal.Entity.APPVersionType)))
-                                        {
-                                            string text = Universal.Tools.EnumHelper.GetDescription<Universal.Entity.APPVersionType>((Universal.Entity.APPVersionType)item.Key);
-                                            <a href="javascript:;" onclick="set_type(@item.Key)">@text</a>
-                                        }
-                                    </div>
-                                </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.APPType)</div>
+                        </li>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>版本类型</div>
+                            <div class="limd">
+                                @Html.DropDownListFor(p => p.APPType, ViewData["TypeList"] as List<SelectListItem>, new { @class = "tb_select", @style = "width: 94%;" })
                             </div>
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>版本号</p>
-                        <div class="p_c">
-                            <div class="inp_a">@Html.TextBoxFor(p => p.Version, new { placeholder = "版本号" })</div>
-                            @Html.ValidationMessageFor(p=>p.Version)
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>App Store连接地址</p>
-                        <div class="p_c">
-                            <div class="inp_a">@Html.TextBoxFor(p => p.LinkUrl, new { placeholder = "App Store连接地址" })</div>
-                            @Html.ValidationMessageFor(p => p.LinkUrl)
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>上传apk文件</p>
-                        <div class="p_c">
-                            <label class="lab_a" for="upload_apk"><i></i>添加文件<input type="file" id="upload_apk" /></label>
-                            <span id="span_filename">@Model.DownUrl</span> &nbsp; <span id="span_upload_status"></span>
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b"><span class="p_d">*</span>版本更新内容</p>
-                        <div class="p_c">
-                            @Html.TextAreaFor(p => p.Content, new { @style = "margin: 0px; width: 600px; height: 150px;" })
-                            @Html.ValidationMessageFor(p => p.Content)
-                        </div>
-                    </div>
-                    <div class="p_a clearfix">
-                        <p class="p_b">&nbsp;</p>
-                        <div class="p_c">
-                            <input type="submit" value="确定" class="but" />
-                            <a class="but but_z" href="/AppVersion/Index">取消</a>
-                        </div>
-                    </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.APPType)</div>
+                        </li>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>版本号</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.Version, new { placeholder = "版本号", @class = "usInput" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.Version)</div>
+                        </li>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>App Store 连接地址</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.LinkUrl, new { placeholder = "App Store连接地址", @class = "usInput" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.LinkUrl)</div>
+                        </li>
+
+
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>上传apk文件</div>
+                            <div class="limd big">
+                                <label class="lab_a" for="upload_apk"><i></i>添加文件<input type="file" id="upload_apk" /></label>
+                                <span id="span_filename">@Model.DownUrl</span> &nbsp; <span id="span_upload_status"></span>
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.DownUrl)</div>
+                        </li>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>版本更新内容</div>
+                            <div class="limd big">
+                                @Html.TextAreaFor(p => p.Content, new { @style = "margin: 0px; width: 530px; height: 150px;" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.LinkUrl)</div>
+                        </li>
+
+                        <li>
+                            <div class="lilt">&nbsp;</div>
+                            <div class="limd"><button type="submit" class="btn1">发布</button> <button type="button" onclick="location.href = '/APPVersion/Index';" class="btn1 grey">取消</button></div>
+                        </li>
+                    </ul>
                 </form>
-
             </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
+
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
-<!--底部脚本-->
-@section foot
+
+    <!--底部脚本-->
+    @section foot
 {
-    <script type="text/javascript">
-        $(document).ready(function (e) {
-            @if(Model.Msg == 1)
+        <script type="text/javascript">
+
+            $(document).ready(function (e) {
+                @if(Model.Msg == 1)
             {
                 @: location.href = "/APPVersion/Index";
-            }
+                                                        }
 
-        });
+            });
 
-        function set_system(id)
-        {
-            $("#Platforms").val(id);
-        }
 
-        function set_type(id)
-        {
-            $("#APPType").val(id);
-        }
+            $(function () {
+                $("#upload_apk").on("change", function () {
+                    var filePath = $(this).val().toLowerCase();
+                    if (filePath.indexOf("apk") != -1) {
+                        var arr = filePath.split('\\');
+                        var fileName = arr[arr.length - 1];
+                        upload();
+                    } else {
+                        alert("您未上传文件，或者您上传文件类型有误！");
+                        return false
+                    }
+                })
 
-        $(function () {
-            $("#upload_apk").on("change", function () {
-                var filePath = $(this).val().toLowerCase();
-                if (filePath.indexOf("apk") != -1) {
-                    var arr = filePath.split('\\');
-                    var fileName = arr[arr.length - 1];
-                    upload();
-                } else {
-                    alert("您未上传文件，或者您上传文件类型有误！");
-                    return false
-                }
             })
 
-        })
-
-        function upload() {
-            var fd = new FormData();
-            fd.append("FileData", document.getElementById('upload_apk').files[0]);
-            $("#span_upload_status").html("上传中...");
-            $.ajax({
-                url: '/Tools/UploadAPK',
-                type: 'POST',
-                cache: false,
-                contentType: "multipart/form-data",
-                data: fd,
-                processData: false,
-                contentType: false
-            }).done(function (res) {
-                $("#span_upload_status").html("");
-                if (res.msg == 1) {
-                    $("#DownUrl").val(res.down_url);
-                    $("#Size").val(res.size);
-                    $("#MD5").val(res.md5)
-                    $("#Version").val(res.version);
-                    $("#VersionCode").val(res.version_code);
-                    $("#LogoImg").val(res.logo_img);
-                    $("#span_filename").html(res.down_url);
-                } else {
-                    alert(res.msgbox);
-                }
-            }).fail(function (res) { });
-        }
+            function upload() {
+                var fd = new FormData();
+                fd.append("FileData", document.getElementById('upload_apk').files[0]);
+                $("#span_upload_status").html("上传中...");
+                $.ajax({
+                    url: '/Tools/UploadAPK',
+                    type: 'POST',
+                    cache: false,
+                    contentType: "multipart/form-data",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    $("#span_upload_status").html("");
+                    if (res.msg == 1) {
+                        $("#DownUrl").val(res.down_url);
+                        $("#Size").val(res.size);
+                        $("#MD5").val(res.md5)
+                        $("#Version").val(res.version);
+                        $("#VersionCode").val(res.version_code);
+                        $("#LogoImg").val(res.logo_img);
+                        $("#span_filename").html(res.down_url);
+                    } else {
+                        alert(res.msgbox);
+                    }
+                }).fail(function (res) { });
+            }
 
 
-    </script>
+        </script>
 
-}
-<!--底部脚本 end-->
+    }
+    <!--底部脚本 end-->

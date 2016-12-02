@@ -41,16 +41,43 @@ namespace Universal.Entity
         /// </summary>
         public virtual CusUser CusUser { get; set; }
 
-        
+        /// <summary>
+        /// 权限类别
+        /// </summary>
+        public DocPostSee See { get; set; }
+
+        /// <summary>
+        /// 通知范围
+        /// </summary>
+        [NotMapped]
+        public string NoticeStr
+        {
+            get
+            {
+                switch (this.See)
+                {
+                    case DocPostSee.everyone:
+                        return "所有人";
+                    case DocPostSee.department:
+                        return "特定部门";
+                    case DocPostSee.user:
+                        return "特定用户";
+                    default:
+                        return "未知";
+                }
+            }
+        }
+
+        /// <summary>
+        /// 部门ID或用户ID，逗号分割，前后要加逗号:,1,2,3,4,
+        /// </summary>
+        [MaxLength(1000)]
+        public string TOID { get; set; }
+
         /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime AddTime { get; set; }
-
-        /// <summary>
-        /// 通知用户
-        /// </summary>
-        public virtual ICollection<CusNoticeUser> CusNoticeUser { get; set; }
-
+        
     }
 }

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "秘籍管理";
+    ViewBag.Title = "项目管理";
     ViewData["tabLeft"] = "project";
     ViewData["tabTop"] = "manager";
 }
@@ -11,14 +11,144 @@
 }
 <!--头部脚本 end-->
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            项目列表
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <b>公告列表</b>
+                <div class="search"><input type="text" id="" value="" placeholder="请输入项目名称/责任人" /><input type="button" id="" value="" /></div>
+
+            </div>
+            <div class="itemOp">
+                <div class="itemOpLt">
+                    <a href="javascript:;" class="act">未完结</a>
+                    <a href="javascript:;">已完结</a>
+                    <a href="javascript:;">全部</a>
+                </div>
+                <div class="itemOpRt">
+                    <span class="selDiv" style="width: 20%;">
+                        <span>所有节点</span><i class="i-arr"></i>
+                        <ul style="display: none;">
+                            <li class="act">所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                            <li>所有节点</li>
+                        </ul>
+                    </span>
+                    <span class="selDiv" style="width: 20%;">
+                        <span>所有状态</span><i class="i-arr"></i>
+                        <ul style="display: none;">
+                            <li class="act">所有状态</li>
+                            <li>所有状态</li>
+                            <li>所有状态</li>
+                            <li>所有状态</li>
+                            <li>所有状态</li>
+                        </ul>
+                    </span>
+                    <span class="selDiv" style="width: 20%;">
+                        <span>全部时间</span><i class="i-arr"></i>
+                        <ul style="display: none;">
+                            <li class="act">1990</li>
+                            <li>1990</li>
+                            <li>1990</li>
+                            <li>1990</li>
+                            <li>1990</li>
+                        </ul>
+                    </span>
+                    <a href="/Project/Modify" class="newplan">+ 新增项目</a>
+                </div>
+            </div>
+            <div class="projectColl mt_10">
+                <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <tr>
+                        <th width="20%">项目名称</th>
+                        <th width="20%">当前节点</th>
+                        <th width="20%">节点描述</th>
+                        <th width="10%">责任人</th>
+                        <th width="20%">更新时间</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="hover">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                    </tr>
+                </table>
+                <div class="listBtm">
+                    <div class="page fr">
+                        共有1条，每页显示
+                        <select name="" class="selt">
+                            <option value="">1</option>
+                        </select>  条
+
+                        <a href=""><i class="i-pgLbig"></i></a>
+                        <a href=""><i class="i-pgLsm"></i></a>
+                        <span>1/2</span>
+                        <a href=""><i class="i-pgRsm"></i></a>
+                        <a href=""><i class="i-pgRbig"></i></a>
+                        <input type="" name="" id="" value="" class="pginput" /><input type="button" id="" value="跳转" class="pgbtn" />
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>

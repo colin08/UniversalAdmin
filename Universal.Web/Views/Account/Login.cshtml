@@ -6,29 +6,41 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>登录</title>
-    <link type="text/css" rel="stylesheet" href="/Content/css/public.css" />
+    <title>花伴里</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content="花伴里" />
+    <meta name="keywords" content="花伴里" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+
+    <link href="/Assets/theme/css/public.css" rel="stylesheet" type="text/css" />
+    <link href="/Assets/theme/css/login.css" rel="stylesheet" type="text/css" />
+    <link href="/Assets/theme/css/dev.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="login_bg">
-    <div class="login_content">
-        <div class="content">
-            <h1 class="logo"></h1>
-            <form class="form_login" id="signIn" method="post">
-                @Html.AntiForgeryToken()
-                <p class="form_pad">@Html.TextBoxFor(s => s.user_name, new { placeholder = "手机号/邮箱", @class= "form_inp" })</p>
-                <p class="form_pad">@Html.PasswordFor(s => s.password, new { placeholder = "密码",@class= "form_inp" })</p>
-                <input type="submit" class="form_but" id="button" value="登录" />
-                <div class="clearfix">
-                    <label for="@Html.DisplayNameFor(s=>s.is_rember)" class="lab">@Html.CheckBoxFor(s => s.is_rember) 自动登录</label>
-                    <a class="sp" href="/account/resetpwd">忘记密码?</a>
-                </div>
+<body>
+
+    <!--loginBox-->
+    <div class="loginBox">
+        <h1><img src="/assets/theme/ico/logoBig.png" /></h1>
+        <form class="form_login" id="signIn" method="post">
+            @Html.AntiForgeryToken()
+            <ul>
+                <li>@Html.TextBoxFor(s => s.user_name, new { placeholder = "手机号/邮箱" })</li>
+                <li>@Html.PasswordFor(s => s.password, new { placeholder = "密码"})</li>
+                <li><input type="submit" class="btnLg" id="button" value="登录" /></li>
+                <li><a href="/account/resetpwd" title="忘记密码" class="fr col_red">忘记密码?</a> <label for="@Html.DisplayNameFor(s=>s.is_rember)">@Html.CheckBoxFor(s => s.is_rember) 自动登录</label></li>
                 <p class="error" id="error">@Html.ValidationSummary()</p>
-            </form>
+            </ul>
+        </form>
+    </div>
+        
+    <!--footer-->
+    <div class="footer">
+        <div class="center">
+            Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1
         </div>
     </div>
-    <p class="login_footer">Copyright &copy; 深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -46,4 +58,10 @@
 
     </script>
 </body>
+<!--[if IE 6]>
+<script type="text/javascript" src="skins/js/DD_belatedPNG.js"></script>
+<script type="text/javascript">
+ DD_belatedPNG.fix('.png');
+</script>
+<![endif]-->
 </html>

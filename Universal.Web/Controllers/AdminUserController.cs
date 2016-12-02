@@ -33,13 +33,13 @@ namespace Universal.Web.Controllers
         /// <param name="keyword">搜索关键字</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult UserData(int page_size,int page_index,int department_id,string keyword)
+        public JsonResult UserData(int page_size, int page_index, int department_id, string keyword)
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             int rowCount = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             filter.Add(new BLL.FilterSearch("CusDepartmentID", department_id.ToString(), BLL.FilterSearchContract.等于));
-            if(!string.IsNullOrWhiteSpace(keyword))
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
                 filter.Add(new BLL.FilterSearch("NickName", keyword, BLL.FilterSearchContract.like));
                 filter.Add(new BLL.FilterSearch("Telphone", keyword, BLL.FilterSearchContract.like));
@@ -67,6 +67,22 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
+            if(ids == "1")
+            {
+                WorkContext.AjaxStringEntity.msgbox = "初始用户不可删除";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if(ids.IndexOf("1,") > -1)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "不能删除初始用户";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (ids.IndexOf(",1") > -1)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "不能删除初始用户";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
             bll.DelBy(p => id_list.Contains(p.ID));
@@ -86,7 +102,7 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             Entity.CusUser model = bll.GetModel(p => p.ID == id);
-            if(model == null)
+            if (model == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -94,7 +110,7 @@ namespace Universal.Web.Controllers
             model.Password = SecureHelper.MD5(WebSite.ResetPwd);
             bll.Modify(model, "Password");
             WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "密码已重置为："+WebSite.ResetPwd;
+            WorkContext.AjaxStringEntity.msgbox = "密码已重置为：" + WebSite.ResetPwd;
             return Json(WorkContext.AjaxStringEntity);
         }
 
@@ -109,11 +125,13 @@ namespace Universal.Web.Controllers
             int user_id = Tools.TypeHelper.ObjectToInt(id);
             Models.ViewModelAdminUser entity = new Models.ViewModelAdminUser();
             entity.user_route = BLL.BLLCusRoute.GetRouteExists(user_id);
+            DateTime dt = DateTime.Now;
             if (user_id > 0)
             {
                 Entity.CusUser model = BLL.BLLCusUser.GetModel(user_id);
                 if (model != null)
                 {
+                    dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
                     entity.about_me = model.AboutMe;
                     entity.avatar = model.Avatar;
                     entity.department_id = model.CusDepartmentID;
@@ -122,11 +140,14 @@ namespace Universal.Web.Controllers
                     entity.gender = model.Gender;
                     entity.id = model.ID;
                     entity.job_id = model.CusUserJobID;
-                    entity.jon_title = model.CusUserJob.Title;
+                    entity.job_title = model.CusUserJob.Title;
                     entity.nick_name = model.NickName;
                     entity.password = "litdev";
                     entity.short_num = model.ShorNum;
                     entity.telphone = model.Telphone;
+                    entity.year = dt.Year.ToString();
+                    entity.month = dt.Month.ToString();
+                    entity.day = dt.Day.ToString();
                 }
                 else
                 {
@@ -179,14 +200,13 @@ namespace Universal.Web.Controllers
             if (ModelState.IsValid)
             {
                 Entity.CusUser model = null;
-
                 //添加
                 if (isAdd)
                 {
-                    model = new Entity.CusUser();                    
+                    model = new Entity.CusUser();
                     entity.password = SecureHelper.MD5(pwd);
                     if (string.IsNullOrWhiteSpace(entity.avatar))
-                        entity.avatar = "/Content/images/tx_icon01.jpg";
+                        entity.avatar = "/uploads/avatar.jpg";
                     model.Password = entity.password;
                 }
                 else //修改
@@ -208,6 +228,10 @@ namespace Universal.Web.Controllers
                 model.ShorNum = entity.short_num;
                 model.Status = true;
                 model.Telphone = entity.telphone;
+                if (!string.IsNullOrWhiteSpace(entity.year) && !string.IsNullOrWhiteSpace(entity.month) && !string.IsNullOrWhiteSpace(entity.day))
+                    model.Brithday = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
+                else
+                    model.Brithday = null;
 
                 if (isAdd)
                     BLL.BLLCusUser.Modify(model, entity.user_route_str);
@@ -218,8 +242,7 @@ namespace Universal.Web.Controllers
             entity.Msg = 1;
             return View(entity);
         }
-
-
+        
         /// <summary>
         /// 职位管理
         /// </summary>
@@ -243,7 +266,7 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if(id == 1)
+            if (id == 1)
             {
                 WorkContext.AjaxStringEntity.msgbox = "为保证测试继续进行，初始化的数据不能删除";
                 return Json(WorkContext.AjaxStringEntity);

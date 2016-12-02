@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "会议召集";
+    ViewData["tabLeft"] = "hyzj";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/User/HYZJ" class="fl f16"><i class="i-back"></i>会议召集</a>
+                    <b class="tit1Txt fr">新建会议</b>
+                </div>
+            </div>
+            <div class="userInfo">
+                <ul>
+
+                    <li>
+                        <div class="lilt">主题</div>
+                        <div class="limd"><input type="text" id="" value="" class="usInput" placeholder="必填" /></div>
+                        <div class="litip"><span>请填写 一个漂亮的主题，方便他人识别</span></div>
+                    </li>
+                    <li>
+                        <div class="lilt">议程</div>
+                        <div class="limd pr"><textarea name="" rows="" cols="" class="usTextarea"></textarea><em class="textTips">0/1000</em></div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+
+
+                    <li>
+                        <div class="lilt">时间</div>
+                        <div class="limd">
+                            <select name="" class="tb_select">
+                                <option value="">年</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                            </select>
+                            <select name="" class="tb_select">
+                                <option value="">月</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                                <option value="">6</option>
+                            </select>
+                            <select name="" class="tb_select">
+                                <option value="">日</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                                <option value="">6</option>
+                            </select>
+
+
+                        </div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">地点</div>
+                        <div class="limd"><input type="text" id="" value="" class="usInput" placeholder="" /></div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">与会人员</div>
+                        <div class="limd big">
+                            <span><a href="#" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+
+                            <div class="menlist">
+                                <ul>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li class="act"><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                    <li><a href="javascript:;"><span>18412435698 (张三)</span><i class="i-mdel"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </li>
+
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd"><button type="button" onclick="location.href = '/User/HYZJ'" class="btn1">保存</button></div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>	
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+    </script>
+
+}
+<!--底部脚本 end-->

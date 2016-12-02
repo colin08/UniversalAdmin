@@ -10,7 +10,7 @@ namespace Universal.Web.Models
     {
         public ViewModelDocument()
         {
-            this.category_list = new List<ViewModelDocumentCategory>();
+            this.see_entity = new List<ViewModelDocumentCategory>();
         }
 
         public int id { get; set; }
@@ -28,20 +28,36 @@ namespace Universal.Web.Models
         [Required(ErrorMessage ="请选择所属分类")]
         public int category_id { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<ViewModelDocumentCategory> category_list { get; set; }
-
+        
         /// <summary>
         /// 秘籍权限
         /// </summary>
         public Entity.DocPostSee post_see { get; set; }
-        
+
+        /// <summary>
+        /// 可以看的用户或部门id，逗号分割
+        /// </summary>
+        public string see_ids { get; set; }
+
+        /// <summary>
+        /// 可以看的用户或部门信息，用于还原数据
+        /// </summary>
+        public List<ViewModelDocumentCategory> see_entity { get; set; }
     }
 
     public class ViewModelDocumentCategory
     {
+        public ViewModelDocumentCategory()
+        {
+
+        }
+
+        public ViewModelDocumentCategory(int id,string title)
+        {
+            this.id = id;
+            this.title = title;
+        }
+
         public int id { get; set; }
 
         public string title { get; set; }

@@ -73,15 +73,40 @@ namespace Universal.Web.Controllers
             Models.ViewModelNotice model = new Models.ViewModelNotice();
             if (ids != 0)
             {
-                string id_str = "";
-                model.user_list = LoadNoticeUser(ids, out id_str);
-                model.user_id_str = id_str;
                 BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
                 Entity.CusNotice entity = bll.GetModel(p => p.ID == id);
                 if (entity != null)
                 {
                     model.content = entity.Content;
                     model.title = entity.Title;
+                    model.post_see = entity.See;
+                    System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                    switch (entity.See)
+                    {
+                        case Entity.DocPostSee.everyone:
+                            break;
+                        case Entity.DocPostSee.department:
+                            foreach (var item in BLL.BLLDepartment.GetListByIds(entity.TOID))
+                            {
+                                str_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                            }
+                            break;
+                        case Entity.DocPostSee.user:
+                            foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
+                            {
+                                str_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    if (str_ids.Length > 0)
+                    {
+                        str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                    }
+                    model.see_ids = str_ids.ToString();
                 }
                 else
                 {
@@ -111,6 +136,37 @@ namespace Universal.Web.Controllers
                 }
             }
 
+            #region 处理用户或部门的ID
+            System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+            entity.see_entity = new List<Models.ViewModelDocumentCategory>();
+            switch (entity.post_see)
+            {
+                case Entity.DocPostSee.everyone:
+                    break;
+                case Entity.DocPostSee.department:
+                    foreach (var item in BLL.BLLDepartment.GetListByIds(entity.see_ids))
+                    {
+                        str_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                    }
+                    break;
+                case Entity.DocPostSee.user:
+                    foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
+                    {
+                        str_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            string final_ids = "";
+            if (str_ids.Length > 0)
+            {
+                final_ids = "," + str_ids.ToString();
+            }
+            #endregion
+
             if (ModelState.IsValid)
             {
 
@@ -126,53 +182,18 @@ namespace Universal.Web.Controllers
 
                 model.Content = entity.content;
                 model.Title = entity.title;
+                model.See = entity.post_see;
+                model.TOID = final_ids;
+
                 if (isAdd)
-                    BLL.BLLCusNotice.Add(model, entity.user_id_str);
+                    bll.Add(model);
                 else
-                    BLL.BLLCusNotice.Edit(model, entity.user_id_str);
+                    bll.Modify(model);
 
                 entity.Msg = 1;
             }
 
             return View(entity);
         }
-        
-
-        /// <summary>
-        /// 加载通知用户数据
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="id_str"></param>
-        /// <returns></returns>
-        private List<Models.ViewModelNoticeUser> LoadNoticeUser(int id,out string id_str)
-        {
-            System.Text.StringBuilder user_str = new System.Text.StringBuilder();
-            List<Models.ViewModelNoticeUser> result = new List<Models.ViewModelNoticeUser>();
-            BLL.BaseBLL<Entity.CusNoticeUser> bll = new BLL.BaseBLL<Entity.CusNoticeUser>();
-            List<Entity.CusNoticeUser> list = bll.GetListBy(0, p => p.CusNoticeID == id, "ID asc", p => p.CusUser);
-            foreach (var item in list)
-            {
-                user_str.Append(item.ID + ",");
-                Models.ViewModelNoticeUser model = new Models.ViewModelNoticeUser();
-                model.id = item.ID;
-                if(item.CusUser != null)
-                {
-                    model.nick_name = item.CusUser.NickName;
-                    model.telphone = item.CusUser.Telphone;
-                }else
-                {
-                    model.nick_name = "用户不存在";
-                    model.telphone = "";
-                }
-                result.Add(model);
-            }
-            if(user_str.Length > 0)
-            {
-                user_str = user_str.Remove(user_str.Length - 1, 1);
-            }
-            id_str = user_str.ToString();
-            return result;
-        }
-
     }
 }

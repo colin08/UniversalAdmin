@@ -94,7 +94,7 @@ namespace Universal.Web.Framework
             //判断是否登陆
             if (WorkContext.UserInfo == null)
             {
-                if (WorkContext.PageKey.ToLower() != "/account/login")
+                if (WorkContext.PageKey.ToLower() != "/account/login" && WorkContext.PageKey.ToLower()!= "/account/resetpwd" && WorkContext.PageKey.ToLower()!= "/account/resetsuc" && WorkContext.PageKey.ToLower()!= "/account/sendcode")
                 {
                     if (WebHelper.IsAjax())
                     {

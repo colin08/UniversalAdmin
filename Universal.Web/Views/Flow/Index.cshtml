@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "秘籍管理";
+    ViewBag.Title = "流程管理";
     ViewData["tabLeft"] = "flow";
     ViewData["tabTop"] = "manager";
 }
@@ -10,25 +10,106 @@
 
 }
 <!--头部脚本 end-->
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <b>流程列表</b>
+                <a href="/Flow/Modify" title="#" class="add_lc fr">+ 新增流程</a>
+            </div>
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            流程管理
+            <div class="projectColl">
+                <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <tr>
+                        <th width="20%">流程名称</th>
+                        <th width="30%">流程名称</th>
+                        <th width="20%">更新时间</th>
+                        <th width="15%">操作</th>
+                        <th width="15%">&nbsp;</th>
+                    </tr>
+                    <tr class="">
+                        <td><a href="#">2016年最新流程</a></td>
+                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
+                        <td>2016-10-30 12:30</td>
+                        <td>
+                            <div class="tbOpare">
+                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
+                            </div>
+                        </td>
+                        <td><a href="#" title="#" class="lc_default">默认流程</a></td>
+                    </tr>
+                    <tr class="">
+                        <td><a href="#">2016年10月流程</a></td>
+                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
+                        <td>2016-10-30 12:30</td>
+                        <td>
+                            <div class="tbOpare">
+                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
+                            </div>
+                        </td>
+                        <td><a href="#" title="#" class="lc_">默认流程</a></td>
+                    </tr>
+                    <tr class="hover">
+                        <td><a href="#">城市更新流程图（新修改）</a></td>
+                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
+                        <td>2016-10-30 12:30</td>
+                        <td>
+                            <div class="tbOpare">
+                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
+                            </div>
+                        </td>
+                        <td><a href="#" title="#" class="lc_">设为默认</a></td>
+                    </tr>
+                    <tr class="">
+                        <td><a href="#">城市更新流程图（8月版）</a></td>
+                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
+                        <td>2016-10-30 12:30</td>
+                        <td>
+                            <div class="tbOpare">
+                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
+                            </div>
+                        </td>
+                        <td><a href="#" title="#" class="lc_">默认流程</a></td>
+                    </tr>
+                </table>
+                <!--<div class="listBtm">
+                    <div class="page fr">
+                        共有1条，每页显示
+                        <select name="" class="selt">
+                            <option value="">1</option>
+                        </select>  条
+
+                        <a href=""><i class="i-pgLbig"></i></a>
+                        <a href=""><i class="i-pgLsm"></i></a>
+                        <span>1/2</span>
+                        <a href=""><i class="i-pgRsm"></i></a>
+                        <a href=""><i class="i-pgRbig"></i></a>
+                        <input type="" name="" id="" value="" class="pginput" /><input type="button" id="" value="跳转" class="pgbtn" />
+                    </div>
+
+                    <a href="#1" title="清空所有收藏" ><i class="i-barrel"></i> 清空所有收藏</a>
+
+                </div>-->
+
+            </div>
+
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
-    </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>	
 
 </div>
 
-<!--底部脚本-->
-@section foot
+    <!--底部脚本-->
+    @section foot
 {
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-    </script>
+        </script>
 
-}
-<!--底部脚本 end-->
+    }
+    <!--底部脚本 end-->

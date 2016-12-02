@@ -57,9 +57,9 @@ namespace Universal.Entity
                 switch (Platforms)
                 {
                     case APPVersionPlatforms.Android:
-                        return "bb_icon3";
+                        return "i-andriod";
                     case APPVersionPlatforms.IOS:
-                        return "bb_icon2";
+                        return "i-ios";
                     default:
                         return "";
                 }

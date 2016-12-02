@@ -55,14 +55,12 @@
     <Compile Include="CusDepartmentAdmin.cs" />
     <Compile Include="CusDepartment.cs" />
     <Compile Include="CusNotice.cs" />
-    <Compile Include="CusNoticeUser.cs" />
     <Compile Include="CusRoute.cs" />
     <Compile Include="CusUserRoute.cs" />
     <Compile Include="CusUser\CusUser.cs" />
-    <Compile Include="CusUser\CusUserFavorites.cs" />
+    <Compile Include="CusUser\CusUserDocFavorites.cs" />
     <Compile Include="CusUser\CusUserJob.cs" />
     <Compile Include="CusUser\CusVerification.cs" />
-    <Compile Include="Doc\DocPostPower.cs" />
     <Compile Include="Doc\DocCategory.cs" />
     <Compile Include="Doc\DocPost.cs" />
     <Compile Include="Feedback.cs" />

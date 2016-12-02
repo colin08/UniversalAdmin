@@ -52,49 +52,29 @@ namespace Universal.Web.Framework
                     string[] vals = des.DESDeCode(oauth).Split('&');
                     if (vals.Length == 2)
                     {
-                        string valstr = "lizd@fd9^orderfood!";
+                        string valstr = "lizd@fd9^hblyalsd!";
                         if (vals[0].Equals(valstr))
                         {
-
-                            var userNameClaim = new Claim(ClaimTypes.Name, valstr);
-                            var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
-                            var principal = new ClaimsPrincipal(identity);
-                            Thread.CurrentPrincipal = principal;
-
-                            if (System.Web.HttpContext.Current != null)
+                            DateTime dt_now = DateTime.Now;
+                            DateTime dt_old = Tools.WebHelper.GetTime(vals[1], dt_now);
+                            double diff = Tools.WebHelper.DateTimeDiff(dt_old, dt_now, "as");
+                            int ss = 10;
+                            if (diff < ss) //10秒前的数据，则失败
                             {
-                                System.Web.HttpContext.Current.User = principal;
+                                var userNameClaim = new Claim(ClaimTypes.Name, valstr);
+                                var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
+                                var principal = new ClaimsPrincipal(identity);
+                                Thread.CurrentPrincipal = principal;
+
+                                if (System.Web.HttpContext.Current != null)
+                                {
+                                    System.Web.HttpContext.Current.User = principal;
+                                }
                             }
-
-                            //DateTime dt_now = DateTime.Now;
-                            //DateTime dt_old = WebHelper.GetTime(vals[1], dt_now);
-                            //if (dt_now != dt_old)
-                            //{
-                            //    double diff = WebHelper.DateTimeDiff(dt_old, dt_now, "as");
-                            //    int ss = 10;
-                            //    if (request.Headers.UserAgent.ToString() == "Fiddler")
-                            //        ss = 100000;
-                            //    if (diff < ss) //10秒前的数据，则失败
-                            //    {
-                            //        var userNameClaim = new Claim(ClaimTypes.Name, valstr);
-                            //        var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
-                            //        var principal = new ClaimsPrincipal(identity);
-                            //        Thread.CurrentPrincipal = principal;
-
-                            //        if (System.Web.HttpContext.Current != null)
-                            //        {
-                            //            System.Web.HttpContext.Current.User = principal;
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        return requestCancel(request, cancellationToken, "{\"_data\":null,\"_msgbox\":\"超时\",\"_msg\":0}");
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    return requestCancel(request, cancellationToken, "{\"_data\":null,\"_msgbox\":\"授权数据错误2\",\"_msg\":0}");
-                            //}
+                            else
+                            {
+                                return requestCancel(request, cancellationToken, "{\"data\":null,\"msgbox\":\"超时\",\"msg\":0}");
+                            }
                         }
                         else
                         {

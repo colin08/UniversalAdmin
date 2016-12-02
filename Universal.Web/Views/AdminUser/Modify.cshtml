@@ -12,321 +12,380 @@
 }
 <!--头部脚本 end-->
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            <div class="al_tt clearfix">
-                <a class="icon" href="/AdminUser/Index"></a><span>员工管理</span>
-                <span class="bf">@(Model.id > 0 ? "修改" : "添加")员工</span>
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/AdminUser/Index" class="fl f16"><i class="i-back"></i>员工管理</a>
+                    <b class="tit1Txt fr">@(Model.id > 0 ? "修改" : "添加")员工员工</b>
+                </div>
             </div>
 
-            <form method="post" class="form-horizontal" id="form">
+            <div class="step step_1">
+                <span class="sp_1" id="tab_one">1 填写资料</span>
+                <span class="sp_2" id="tab_two">2 设置权限</span>
+                <span class="sp_3" id="tab_three">3 完成@(Model.id > 0 ? "修改" : "添加")</span>
+            </div>
+
+            <form method="post" class="form-horizontal" name="form1">
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(p=>p.user_route_str)
-                <div class="pub_step_style disNone" id="step_a">
-                    <div class="clearfix">
-                        <p class="p1 pz"><i class="p2"></i>1 填写资料</p>
-                        <p class="p1 p3"><i class="p2"></i>2 设置权限</p>
-                        <p class="p1">3 完成@(Model.id > 0 ? "修改" : "添加")</p>
+                @Html.HiddenFor(p => p.user_route_str)
+                @Html.HiddenFor(p => p.year)
+                @Html.HiddenFor(p => p.month)
+                @Html.HiddenFor(p => p.day)
+                <!--第一步-->
+                <div class="addmb" style="display: block;" id="div_one">
+                    <h4 class="tit2">基本信息</h4>
+                    <div class="userInfo">
+                        <ul>
+
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>姓名</div>
+                                <div class="limd">
+                                    @Html.TextBoxFor(p => p.nick_name, new { @class = "usInput", placeholder = "必填" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.nick_name)</div>
+                            </li>
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>手机号</div>
+                                <div class="limd">
+                                    @Html.TextBoxFor(p => p.telphone, new { @class = "usInput", placeholder = "请输入11位手机号", maxlength = "11" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.telphone)</div>
+                            </li>
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>部门</div>
+                                <div class="limd pr">
+                                    @Html.HiddenFor(p => p.department_id)
+                                    <input type="text" value="@Model.department_title" class="usInput" placeholder="" /><a href="#" class="addBtn">选择部门</a>
+                                </div>
+                                <div class="litip">&nbsp;</div>
+                            </li>
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>职位</div>
+                                <div class="limd pr">
+                                    @Html.HiddenFor(p => p.job_id)
+                                    <input type="text" value="@Model.job_title" class="usInput" placeholder="" /><a href="#" class="addBtn">选择职位</a>
+                                </div>
+                                <div class="litip">&nbsp;</div>
+                            </li>
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>登录邮箱</div>
+                                <div class="limd">
+                                    @Html.TextBoxFor(p => p.email, new { @class = "usInput", placeholder = "必填" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.email)</div>
+                            </li>
+                            <li>
+                                <div class="lilt"><em class="col_red">*</em>登录密码</div>
+                                <div class="limd">
+                                    @Html.PasswordFor(p => p.password, Model.id == 0 ? (object)new { @class = "usInput", placeholder = ViewData["DefaultPwd"] } : (object)new { @class = "usInput", value = "litdev" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.password)</div>
+                            </li>
+
+                        </ul>
                     </div>
 
-                    <p class="p4_under_tt">权限列表</p>
-                    <ul class="checked_ul clearfix">
-                        @if (Model.user_route.Count > 0)
+
+                    <h4 class="tit2 mt_20">个人信息</h4>
+                    <div class="userInfo">
+                        <ul>
+                            <li>
+                                <div class="lilt">头像</div>
+                                <div class="limd">
+                                    @Html.HiddenFor(p => p.avatar)
+                                    <a href="javascript:;" class="Btn2 uploadBtnBox">上传头像 <input type="file" class="uploadBtn" id="but_upload_img" /> </a><span class="col_grey f12 ml_10">仅支持JPG,PNG格式的图片,且文件小于3MB</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="lilt">&nbsp;</div>
+                                <div class="limd"><img style="width:150px;" src="@Model.avatar" id="img_avatar" /></div>
+                                <div class="litip">&nbsp;</div>
+                            </li>
+                            <li>
+                                <div class="lilt">性别</div>
+                                <div class="limd">
+                                    <span>
+                                        <label for="@Universal.Entity.CusUserGender.male">
+                                            @Html.RadioButtonFor(x => x.gender, "1", Model.gender == Universal.Entity.CusUserGender.male ? (object)new { id = Universal.Entity.CusUserGender.male, @checked = true } : (object)new { id = Universal.Entity.CusUserGender.male })
+                                            <i class="pub_radio"></i>
+                                            <span>男</span>
+                                        </label>
+                                        <label for="@Universal.Entity.CusUserGender.female">
+                                            @Html.RadioButtonFor(x => x.gender, "2", Model.gender == Universal.Entity.CusUserGender.female ? (object)new { id = Universal.Entity.CusUserGender.female, @checked = true } : (object)new { id = Universal.Entity.CusUserGender.female })
+                                            <i class="pub_radio"></i>
+                                            <span>女</span>
+                                        </label>
+                                    </span>
+                                </div>
+                                <div class="litip"></div>
+                            </li>
+                            <li>
+                                <div class="lilt">生日</div>
+                                <div class="limd">
+                                    <select name="YYYY" onChange="YYYYDD(this.value)" class="tb_select"></select>
+                                    <select name="MM" onChange="MMDD(this.value)" class="tb_select"></select>
+                                    <select name="DD" onchange="DDChan(this.value)" class="tb_select"></select>
+
+                                </div>
+                                <div class="litip">&nbsp;</div>
+                            </li>
+                            <li>
+                                <div class="lilt">短号</div>
+                                <div class="limd">
+                                    @Html.TextBoxFor(p => p.short_num, new { @class = "usInput" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.short_num)</div>
+                            </li>
+                            <li>
+                                <div class="lilt">个人简介</div>
+                                <div class="limd pr">
+                                    @Html.TextAreaFor(p => p.about_me, new { @class = "usTextarea" })
+                                </div>
+                                <div class="litip">
+                                    @Html.ValidationMessageFor(p => p.about_me)
+                                </div>
+                            </li>
+                            <li>
+                                <div class="lilt">&nbsp;</div>
+                                <div class="limd"><button type="button" onclick="next_2()" class="btn1">下一步</button></div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!--第二步-->
+                <div class="addmb" style="display: none;" id="div_two">
+                    <h4 class="f16 mb_10">权限列表</h4>
+                    <div class="qxList">
+                        <ul>
+                            @if (Model.user_route.Count > 0)
                         {
                             foreach (var item in Model.user_route)
                             {
-                                <li>@item.title<label class="lab  @(item.is_check>0 ? "hover" : "")" for="id_siodwoe_@item.id"><input type="checkbox" ids="@item.id" onclick="rad_check()" id="id_siodwoe_@item.id" class="zw_checkbox_inp" @(item.is_check>0 ? "checked=checked" : "") /></label></li>
+                        <li>@item.title<label for="id_siodwoe_@item.id"><input type="checkbox" ids="@item.id" onclick="rad_check()" id="id_siodwoe_@item.id" class="qxcheck" @(item.is_check > 0 ? "checked=checked" : "") /></label></li>
                             }
 
                         }
-                    </ul>
-                    <p class="p8_pd_top10">
-                        <a class="but_mid_style but_col_style" href="javascript:;"  onclick="goToStepNext('step_b')">上一步</a>
-                        <input type="submit"  class="but_mid_style" value="确定@(Model.id>0 ? "修改" : "添加")"/>
-                    </p>
+                        </ul>
+                    </div>
+                    <div class="mt_35"><button type="submit" class="btn1">确定@(Model.id > 0 ? "修改" : "添加")</button> <button type="button" class="btn1 grey" onclick="show_div(1)">上一步</button></div>
+
                 </div>
 
-                <div class="pub_step_style" id="step_b">
-                    <div class="clearfix">
-                        <p class="p1 p3"><i class="p2"></i>1 填写资料</p>
-                        <p class="p1"><i class="p2"></i>2 设置权限</p>
-                        <p class="p1">3 完成@(Model.id>0 ? "修改" : "添加")</p>
-                    </div>
-
-                    <p class="p4_under_tt">基本信息</p>
-                    <ul class="p8_pd_top10">
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"><i>*</i>姓名</p>
-                            <div class="p6_right_inp">
-                                @Html.TextBoxFor(p => p.nick_name, new { @class = "inp", placeholder = "必填" })
-
-                            </div>
-                                @Html.ValidationMessageFor(p=>p.nick_name)
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"><i>*</i>手机号</p>
-                            <div class="p6_right_inp">
-                                @Html.TextBoxFor(p => p.telphone, new { @class = "inp", placeholder = "请输入11位手机号", maxlength = "11" })
-
-                            </div>
-                                @Html.ValidationMessageFor(p => p.telphone)
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"><i>*</i>部门</p>
-                            <div class="p6_right_inp clearfix">
-                                <input type="text" class="inp inp_a" value="@Model.department_title" />
-                                @Html.HiddenFor(p => p.department_id)
-                                
-                                <a class="but" href="javascript:;">选择部门</a>
-                            </div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"><i>*</i>职位</p>
-                            <div class="p6_right_inp clearfix">
-                                <input type="text" class="inp inp_a" value="@Model.jon_title" />
-                                @Html.HiddenFor(p => p.job_id)
-                                <a class="but" href="javascript:;">选择职位</a>
-                            </div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"><i>*</i>登录邮箱</p>
-                            <div class="p6_right_inp">
-                                @Html.TextBoxFor(p => p.email, new { @class = "inp", placeholder = "必填" })
-                            </div>
-                                @Html.ValidationMessageFor(p => p.email)
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">登录密码</p>
-                            <div class="p6_right_inp">
-                                @Html.PasswordFor(p => p.password, Model.id == 0 ? (object)new { @class = "inp", placeholder = ViewData["DefaultPwd"] } : (object)new { @class = "inp", value = "litdev" })
-                            </div>
-                                @Html.ValidationMessageFor(p => p.password)
-                        </li>
-                    </ul>
-
-                    <p class="p4_under_tt">个人信息</p>
-                    <ul class="p8_pd_top10">
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">头像</p>
-                            <label class="p6_right_inp but_upload_img" for="but_upload_img">
-                                上传头像
-                                <input type="file" id="but_upload_img" />
-                                @Html.HiddenFor(p=>p.avatar)
-                            </label>
-                            <p class="p9_right_txt">仅支持JPG,PNG格式的图片,且文件小于3MB</p>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt"></p>
-                            <div class="img_upload_box"><img src="@Model.avatar" id="img_avatar" /></div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">性别</p>
-                            <div class="sex_box clearfix">
-                                <label class="lab pub_lab" for="@Universal.Entity.CusUserGender.male">
-                                    @Html.RadioButtonFor(x => x.gender, "1", Model.gender == Universal.Entity.CusUserGender.male ? (object)new { id = Universal.Entity.CusUserGender.male, @checked= true } : (object)new { id = Universal.Entity.CusUserGender.male })
-                                    <i class="pub_radio"></i>
-                                    <span>男</span>
-                                </label>
-                                <label class="lab pub_lab" for="@Universal.Entity.CusUserGender.female">
-                                    @Html.RadioButtonFor(x => x.gender, "2", Model.gender == Universal.Entity.CusUserGender.female ? (object)new { id = Universal.Entity.CusUserGender.female, @checked = true } : (object)new { id = Universal.Entity.CusUserGender.female })
-                                    <i class="pub_radio"></i>
-                                    <span>女</span>
-                                </label>
-                            </div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">生日</p>
-                            <div class="fl">
-                                <div class="pub_select_box year">
-                                    <input class="inp_select" disabled="disabled" type="text" id="select_value" value="年" />
-                                    <div class="select_list">
-                                        <p class="first"></p>
-                                        <div class="select_sun_list" id="select_sun_list">
-                                            <a href="javascript:;">1990年</a>
-                                            <a href="javascript:;">1991年</a>
-                                            <a href="javascript:;">1992年</a>
-                                            <a href="javascript:;">1993年</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="pub_select_box day">
-                                    <input class="inp_select" disabled="disabled" type="text" id="select_value" value="月" />
-                                    <div class="select_list">
-                                        <p class="first"></p>
-                                        <div class="select_sun_list" id="select_sun_list">
-                                            <a href="javascript:;">1月</a>
-                                            <a href="javascript:;">2月</a>
-                                            <a href="javascript:;">3月</a>
-                                            <a href="javascript:;">4月</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="pub_select_box day">
-                                    <input class="inp_select" disabled="disabled" type="text" id="select_value" value="日" />
-                                    <div class="select_list">
-                                        <p class="first"></p>
-                                        <div class="select_sun_list" id="select_sun_list">
-                                            <a href="javascript:;">1日</a>
-                                            <a href="javascript:;">3日</a>
-                                            <a href="javascript:;">5日</a>
-                                            <a href="javascript:;">7日</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">短号</p>
-                            <div class="p6_right_inp">
-                                @Html.TextBoxFor(p => p.short_num, new { @class = "inp"})
-                            </div>
-                                @Html.ValidationMessageFor(p => p.short_num)
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">个人简介</p>
-                            <div class="inp_texreater_box">
-                                @Html.TextAreaFor(p => p.about_me)
-                                @Html.ValidationMessageFor(p => p.about_me)
-                            </div>
-                        </li>
-                        <li class="p8_pd_top10 clearfix">
-                            <p class="p5_left_txt">&nbsp;</p>
-                            <a class="next_step" href="javascript:;" onclick="goToStepNext('step_a')">下一步</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="pub_step_style disNone" id="step_c">
-                    <div class="clearfix">
-                        <p class="p1 pz"><i class="p2"></i>1 填写资料</p>
-                        <p class="p1 pz"><i class="p2"></i>2 设置权限</p>
-                        <p class="p1 pz">3 完成@(Model.id > 0 ? "修改" : "添加")</p>
-                    </div>
-                    <div class="success_box">
-                        <i></i>
-                        <p class="p_suc">恭喜您，@(Model.id > 0 ? "修改" : "添加")员工成功</p>
-                        <div>
-                            <a class="but_mid_style" href="/AdminUser/Index">员工管理</a>
-                            @if(Model.id>0)
-                            {
-                            @:<a class="but_mid_style but_col_style" href="/AdminUser/Modify">继续添加下一个</a>
-                            }
+                <!--第三步-->
+                <div class="addmb" style="display:none;" id="div_three">
+                    <div class="addsuccess">
+                        <p><img src="/Assets/theme/ico/ico_43.png" /></p>
+                        <p>恭喜您，@(Model.id > 0 ? "修改" : "添加")员工成功</p>
+                        <div class="mt_35">
+                            <button type="button" class="btn1" onclick="location.href = '/AdminUser/Index'">员工管理</button>
+                            @if (Model.id > 0)
+                        {
+                        @:<button type="button" class="btn1 grey" onclick="location.href = '/AdminUser/Modify'">保存并添加下一个</button>
+                        }
                         </div>
                     </div>
-                </div>
 
+
+                </div>
             </form>
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+        <div class="footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
 
-<!--底部脚本-->
-@section foot
+    <!--底部脚本-->
+    @section foot
 {
-@Scripts.Render("~/bundles/jqueryval")
-@Scripts.Render("~/bundles/textareacounter")
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/textareacounter")
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#about_me").textAreaCount({ maxlength: 500, speed: 256 });
-        })
-
-        function rad_check()
-        {
-            var ids = "";
-            $(".zw_checkbox_inp").each(function () {
-                if ($(this).is(':checked')) {
-                    ids = ids + $(this).attr("ids") + ","
-                }
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#about_me").textAreaCount({ maxlength: 500, speed: 256 });
             })
-            if(ids.length>0)
-            {
-                ids = ids.substring(0, ids.length - 1);
 
+            function rad_check() {
+                var ids = "";
+                $(".qxcheck").each(function () {
+                    if ($(this).is(':checked')) {
+                        ids = ids + $(this).attr("ids") + ","
+                    }
+                })
+                if (ids.length > 0) {
+                    ids = ids.substring(0, ids.length - 1);
+
+                }
+                $("#user_route_str").val(ids);
             }
-            $("#user_route_str").val(ids);
-        }
 
-        $(function () {
-            $("#but_upload_img").on("change", function () {
-                var filePath = $(this).val().toLowerCase();
-                if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1 || filePath.indexOf("jpeg") != -1) {
-                    var arr = filePath.split('\\');
-                    var fileName = arr[arr.length - 1];
-                    upload();
-                } else {
-                    alert("您未上传文件，或者您上传文件类型有误！");
-                    return false
-                }
+            $(function () {
+                $("#but_upload_img").on("change", function () {
+                    var filePath = $(this).val().toLowerCase();
+                    if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1 || filePath.indexOf("jpeg") != -1) {
+                        var arr = filePath.split('\\');
+                        var fileName = arr[arr.length - 1];
+                        upload();
+                    } else {
+                        alert("您未上传文件，或者您上传文件类型有误！");
+                        return false
+                    }
+                })
+
             })
 
-        })
+            function upload() {
+                var fd = new FormData();
+                fd.append("FileData", document.getElementById('but_upload_img').files[0]);
 
-        function upload()
-        {
-            var fd = new FormData();
-            fd.append("FileData", document.getElementById('but_upload_img').files[0]);
-
-            $.ajax({
-                url: '/Tools/UploadAvatar',
-                type: 'POST',
-                cache: false,
-                contentType: "multipart/form-data",
-                data: fd,
-                processData: false,
-                contentType: false
-            }).done(function (res) {
-                if (res.msg == 1) {
-                    $("#avatar").val(res.data);
-                    $("#img_avatar").attr("src", res.data);
-                } else {
-                    alert(res.msgbox);
-                }
-            }).fail(function (res) { });
-        }
+                $.ajax({
+                    url: '/Tools/UploadAvatar',
+                    type: 'POST',
+                    cache: false,
+                    contentType: "multipart/form-data",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    if (res.msg == 1) {
+                        $("#avatar").val(res.data);
+                        $("#img_avatar").attr("src", res.data);
+                    } else {
+                        alert(res.msgbox);
+                    }
+                }).fail(function (res) { });
+            }
 
 
-        function goToStepNext(obj) {
-            $(".pub_step_style").hide();
-            $("#" + obj).show();
-        }
-        $(document).ready(function (e) {
-            @if(Model.id>0)
+            $(document).ready(function (e) {
+                @if(Model.id>0)
             {
                 @:rad_check();
-            }
-            @if(Model.Msg == 1)
-            {
-                @:goToStepNext('step_c');
+                                                                            }
+                @if(Model.Msg == 1)
+                {
+                    @:show_div(3);
 
-                @:getWindow();
-
-            }
+                }
             else if(Model.Msg == 2)
             {
                 @:alert("数据不存在");
+                                              }
+
+            });
+
+            function next_2() {
+                if ($("#nick_name").val() == "" || $("#telphone").val() == "" || $("#email").val() == "" || $("#password").val() == "") {
+                    alert("请填写完整");
+                    return;
+                }
+                show_div(2);
             }
 
+            function show_div(num) {
+                switch (num) {
+                    case 1:
+                        $("#div_one").show();
+                        $("#div_two").hide();
+                        $("#div_three").hide();
+                        $("#tab_one").attr("class", "sp_1");
+                        $("#tab_two").attr("class", "sp_2");
+                        $("#tab_three").attr("class", "sp_3");
+                        break;
+                    case 2:
+                        $("#div_one").hide();
+                        $("#div_two").show();
+                        $("#div_three").hide();
+                        $("#tab_one").attr("class", "sp_2");
+                        $("#tab_two").attr("class", "sp_1");
+                        $("#tab_three").attr("class", "sp_3");
+                        break;
+                    case 3:
+                        $("#div_one").hide();
+                        $("#div_two").hide();
+                        $("#div_three").show();
+                        $("#tab_one").attr("class", "sp_3");
+                        $("#tab_two").attr("class", "sp_2");
+                        $("#tab_three").attr("class", "sp_1");
+                        break;
+                    default:
 
-            $(".zw_checkbox_inp").change(function () {
-                if (!$(this).prop("checked")) {
-                    $(this).parent().removeClass("hover");
                 }
-                else {
-                    $(this).parent().addClass("hover");
-                }
-            });
-        });
-    </script>
+            }
 
-}
-<!--底部脚本 end-->
+        </script>
+
+
+        <script type="text/javascript">
+            function YYYYMMDDstart() {
+                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                //先给年下拉框赋内容
+                var y = new Date().getFullYear();
+                for (var i = (y - 50) ; i < (y + 1) ; i++) //以今年为准，前30年，后30年
+                    document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
+                //赋月份的下拉框
+                for (var i = 1; i < 13; i++)
+                    document.form1.MM.options.add(new Option(" " + i + " 月", i));
+
+                document.form1.YYYY.value = $("#year").val();
+
+                //document.form1.MM.value = new Date().getMonth() + 1;
+                document.form1.MM.value = $("#month").val();
+                var n = MonHead[new Date().getMonth()];
+                if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+                writeDay(n); //赋日期下拉框Author:meizz
+                //document.form1.DD.value = new Date().getDate();
+                document.form1.DD.value = $("#day").val();
+            }
+            if (document.attachEvent)
+                window.attachEvent("onload", YYYYMMDDstart);
+            else
+                window.addEventListener('load', YYYYMMDDstart, false);
+
+            function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
+            {
+                var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
+                $("#year").val(str);
+                if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+                var n = MonHead[MMvalue - 1];
+                if (MMvalue == 2 && IsPinYear(str)) n++;
+                writeDay(n)
+            }
+            function MMDD(str)   //月发生变化时日期联动
+            {
+                var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
+                $("#month").val(str);
+                if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+                var n = MonHead[str - 1];
+                if (str == 2 && IsPinYear(YYYYvalue)) n++;
+                writeDay(n)
+            }
+            function DDChan(str) {
+                $("#day").val(str);
+            }
+            function writeDay(n)   //据条件写日期的下拉框
+            {
+                var e = document.form1.DD; optionsClear(e);
+                for (var i = 1; i < (n + 1) ; i++)
+                    e.options.add(new Option(" " + i + " 日", i));
+            }
+            function IsPinYear(year)//判断是否闰平年
+            {
+                return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+            }
+            function optionsClear(e) {
+                e.options.length = 1;
+            }
+
+        </script>
+
+    }
+    <!--底部脚本 end-->

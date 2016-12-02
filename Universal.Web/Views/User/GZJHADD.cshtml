@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "工作计划";
+    ViewData["tabLeft"] = "gzjh";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/User/GZJH" class="fl f16"><i class="i-back"></i>工作计划</a>
+                    <b class="tit1Txt fr">基本资料</b>
+                </div>
+            </div>
+            <div class="userInfo">
+                <ul>
+                    <li>
+                        <div class="lilt">周次/周期</div>
+                        <div class="limd">
+                            <select name="" class="tb_select" style="width: 94%;">
+                                <option value="">请选择</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="lilt">本周工作记录</div>
+                        <div class="limd pr"><textarea name="" rows="" cols="" class="usTextarea"></textarea><em class="textTips">0/1000</em></div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">下周工作计划</div>
+                        <div class="limd pr"><textarea name="" rows="" cols="" class="usTextarea"></textarea><em class="textTips">0/1000</em></div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划完成时间</div>
+                        <div class="limd">
+                            <select name="" class="tb_select">
+                                <option value="">年</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                                <option value="">1990</option>
+                            </select>
+                            <select name="" class="tb_select">
+                                <option value="">月</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                                <option value="">6</option>
+                            </select>
+                            <select name="" class="tb_select">
+                                <option value="">日</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                                <option value="">4</option>
+                                <option value="">5</option>
+                                <option value="">6</option>
+                            </select>
+
+
+                        </div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">审批人</div>
+                        <div class="limd"><span>王小帅</span></div>
+                        <div class="litip">&nbsp;</div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd"><button type="button" onclick="location.href='/User/GZJH'" class="btn1">发布</button></div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+    </script>
+
+}
+<!--底部脚本 end-->

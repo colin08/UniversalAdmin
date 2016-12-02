@@ -64,6 +64,7 @@
     <Compile Include="BLLCusUser.cs" />
     <Compile Include="BLLDepartment.cs" />
     <Compile Include="BLLDocCategory.cs" />
+    <Compile Include="BLLDocument.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BllCusUserFavorites.cs" />
     <Compile Include="BLLSysRole.cs" />

@@ -9,34 +9,46 @@ namespace Universal.BLL
 {
     public class BLLDocCategory
     {
+        static string CacheDataKey1 = "CreateDocCategoryTreeDataKEY";
+        static string CacheDataKey2 = "CreateDocCategoryTreeDataDEFAULTID";
         /// <summary>
         /// 添加分类数据
         /// </summary>
         /// <returns></returns>
         public static int Add(int pid, string title)
         {
-            if (pid <= 0)
+            if (pid < 0)
                 return 0;
 
             if (string.IsNullOrWhiteSpace(title))
                 return 0;
 
             var db = new DataCore.EFDBContext();
-            var p_entity = db.DocCategorys.Find(pid);
-            if (p_entity == null)
-                return 0;
-
             var entity = new Entity.DocCategory();
             if (pid == 0)
+            {
+                //顶级
                 entity.PID = null;
+                entity.Depth = 1;
+            }
             else
+            {
+                var p_entity = db.DocCategorys.Find(pid);
+                if (p_entity == null)
+                    return 0;
                 entity.PID = pid;
+                entity.Depth = p_entity.Depth + 1;
+
+                if (entity.Depth > 3)
+                    return 0;
+            }
             entity.Title = title;
-            entity.Depth = p_entity.PID == null ? 1 : p_entity.Depth + 1;
-            
+
             db.DocCategorys.Add(entity);
             db.SaveChanges();
             db.Dispose();
+            Tools.CacheHelper.Remove(CacheDataKey1);
+            Tools.CacheHelper.Remove(CacheDataKey2);
             return entity.ID;
         }
 
@@ -46,7 +58,7 @@ namespace Universal.BLL
         /// <param name="id"></param>
         /// <param name="title"></param>
         /// <returns></returns>
-        public static bool Modify(int id,string title)
+        public static bool Modify(int id, string title)
         {
             if (id <= 0)
                 return false;
@@ -60,9 +72,111 @@ namespace Universal.BLL
                 return false;
             p_entity.Title = title;
             db.SaveChanges();
+            Tools.CacheHelper.Remove(CacheDataKey1);
+            Tools.CacheHelper.Remove(CacheDataKey2);
             return true;
         }
 
+        /// <summary>
+        /// 根据分类ID获取分类子或父数据
+        /// </summary>
+        /// <param name="up">查找父级，否则为查找子级</param>
+        /// <param name="id">当前分类ID</param>
+        /// <returns></returns>
+        public static List<Entity.DocCategory> GetList(bool up, int id)
+        {
+            List<Entity.DocCategory> list = new List<Entity.DocCategory>();
+            var db = new DataCore.EFDBContext();
+            SqlParameter[] param = { new SqlParameter("@Id", id) };
+            string proc_name = "dbo.sp_GetParentCategorys @Id";
+            if (!up)
+                proc_name = "dbo.sp_GetChildCategorys @Id";
+            list = db.DocCategorys.SqlQuery(proc_name, param).ToList();
+            db.Dispose();
+            return list;
+        }
+
+        /// <summary>
+        /// 删除分类，同时删除其子数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool Del(int id)
+        {
+            if (id <= 0)
+                return false;
+            var db = new DataCore.EFDBContext();
+            List<Entity.DocCategory> child_list = GetList(false, id);
+            foreach (var item in child_list)
+            {
+                db.Set<Entity.DocCategory>().Attach(item);
+                db.Set<Entity.DocCategory>().Remove(item);
+            }
+            var entity = db.DocCategorys.Find(id);
+            db.DocCategorys.Remove(entity);
+            db.SaveChanges();
+            db.Dispose();
+            Tools.CacheHelper.Remove(CacheDataKey1);
+            Tools.CacheHelper.Remove(CacheDataKey2);
+            return true;
+        }
+
+        /// <summary>
+        /// 同级排序
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static bool Sort(string ids,out string msg)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                msg = "非法参数";
+                return false;
+            }
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse).ToList();
+            var temp_id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse).OrderByDescending(p=>p).ToList();
+            if (temp_id_list.Count == 0)
+            {
+                msg = "非法参数2";
+                return false;
+            }
+            var db = new DataCore.EFDBContext();
+            var entity_frist = db.DocCategorys.Find(id_list[0]);
+            if (entity_frist == null)
+            {
+                msg = "第一个数据不存在";
+                return false;
+            }
+
+            //查询当前同级所有的数据
+            string sql = "";
+            if (entity_frist.PID == null)
+                sql = "select ID from DocCategory where PID is null and Status = 1";
+            else
+                sql = "select ID from DocCategory where PID = " + entity_frist.PID.ToString() + " and Status = 1";
+            var db_id_list = db.Database.SqlQuery<int>(sql).OrderByDescending(p => p).ToList();
+            if(!(temp_id_list.All(db_id_list.Contains) && temp_id_list.Count == db_id_list.Count))
+            {
+                msg = "数据与db里不一致";
+                return false;
+            }
+            //排序
+            StringBuilder str_sql = new StringBuilder();
+            int total = id_list.Count;
+            for (int i = 0; i < total; i++)
+            {
+                str_sql.Append("update DocCategory set Priority = " + (total - i).ToString() + " where ID = " + id_list[i].ToString() + ";") ;
+            }
+            if (str_sql.Length > 0)
+            {
+                int ssss = db.Database.ExecuteSqlCommand(str_sql.ToString());
+            }
+            db.Dispose();
+            Tools.CacheHelper.Remove(CacheDataKey1);
+            Tools.CacheHelper.Remove(CacheDataKey2);
+            msg = "成功";
+            return true;
+        }
 
         /// <summary>
         /// 构造秘籍树数据
@@ -72,21 +186,20 @@ namespace Universal.BLL
         public static string CreateDocCategoryTreeData(out int default_id)
         {
             default_id = 0;
-            string DataKey1 = "CreateDocCategoryTreeDataKEY";
-            string DataKey2 = "CreateDocCategoryTreeDataDEFAULTID";
-            object tree_data = Tools.CacheHelper.Get(DataKey1);
+
+            object tree_data = Tools.CacheHelper.Get(CacheDataKey1);
             if (tree_data == null)
             {
                 tree_data = DocCategoryTreeData(out default_id);
                 if (tree_data != null)
                 {
-                    Tools.CacheHelper.Insert(DataKey1, tree_data, Tools.SiteKey.CACHE_TIME);
-                    Tools.CacheHelper.Insert(DataKey2, default_id, Tools.SiteKey.CACHE_TIME);
+                    Tools.CacheHelper.Insert(CacheDataKey1, tree_data, Tools.SiteKey.CACHE_TIME);
+                    Tools.CacheHelper.Insert(CacheDataKey2, default_id, Tools.SiteKey.CACHE_TIME);
                 }
             }
             else
             {
-                default_id = Tools.TypeHelper.ObjectToInt(Tools.CacheHelper.Get(DataKey2));
+                default_id = Tools.TypeHelper.ObjectToInt(Tools.CacheHelper.Get(CacheDataKey2));
             }
 
 
@@ -101,33 +214,27 @@ namespace Universal.BLL
             System.Text.StringBuilder data = new System.Text.StringBuilder();
             default_id = 0;
             var db = new DataCore.EFDBContext();
-            data.Append("<li>");
-            foreach (var one in list.Where(p => p.Depth == 1))
+            foreach (var one in list.Where(p => p.Depth == 1).OrderByDescending(p=>p.Priority))
             {
                 if (default_id == 0)
                     default_id = one.ID;
 
                 //构建第一层
-                data.Append("<p class=\"ls_list_tt\" onclick='pageData(1," + one.ID + ",true)'><i></i>" + one.Title + "</p>");
-                data.Append("<ul class=\"ls_menu_ul\">");
-                foreach (var two in list.Where(p => p.Depth == 2 && p.PID == one.ID))
+                data.Append("<li><span class=\"tree2\" onclick='pageData(1," + one.ID + ",true)'><b class=\"Off\">" + one.Title + "</b></span>");
+                data.Append("<ul style=\"display: none; \">");
+                foreach (var two in list.Where(p => p.Depth == 2 && p.PID == one.ID).OrderByDescending(p => p.Priority))
                 {
-                    data.Append("<li>");
-                    data.Append("<p class=\"ls_list_tt\"  onclick='pageData(1," + two.ID + ",true)'>><i></i>" + two.Title + "</p>");
-                    data.Append("<ul class=\"ls_menu_ul\">");
-                    foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID))
+                    data.Append("<li><span class=\"tree3\"  onclick='pageData(1," + two.ID + ",true)'><b class=\"Off\">" + two.Title + "</b></span>");
+                    data.Append("<ul style=\"display: none;\">");
+                    foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID).OrderByDescending(p => p.Priority))
                     {
-                        data.Append("<li><a href=\"javascript:void(0)\" onclick='pageData(1," + three.ID + ",true)'>" + three.Title + "</a></li>");
-
+                        data.Append("<li><span class=\"tree4\" onclick='pageData(1," + three.ID + ",true)'><b>" + three.Title + "</b></span></li>");
                     }
-                    data.Append("</ul>");
-                    data.Append("</li>");
-
+                    data.Append("</ul></li>");
                 }
-                data.Append("</ul>");
+                data.Append("</ul></li>");
 
             }
-            data.Append("</li>");
             db.Dispose();
             return data.ToString();
         }

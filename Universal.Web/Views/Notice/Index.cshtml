@@ -4,240 +4,222 @@
     ViewData["tabTop"] = "manager";
 }
 
-<!--头部脚本-->
-@section head
-{
-<link href="~/Content/css/gg.css" rel="stylesheet" />
-}
-<!--头部脚本 end-->
 
-<div class="container" id="getHeight">
-    @Html.Partial("_AdminMenuLeft", this.ViewData)
+<div class="wapper">
+@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            <div class="al_tt clearfix">
-                <div class="pub_yuangong_gl_search clearfix fr">
-                    <input type="text" class="inp" id="txt_search" placeholder="请输入标题搜索" />
-                    <a class="but" href="javascript:void(0);" onclick="pageData(1)">&nbsp;</a>
-                </div>
-                <a class="page_gl_but" href="javascript:void(0);" onclick="del(0)"><i class="ic"></i>删除</a>
-                <a class="page_gl_but" href="/Notice/Modify"><i></i>发布公告</a>
-                <span>公告列表</span>
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <b>公告列表</b>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索" /><input type="button" onclick="pageData(1)" /></div>
+                <span class="banbenOp fr"><a href="/Notice/Modify" title="发布版本"><i class="i-redbb"></i> 发布版本</a><a href="javascript:;" onclick="del(0)" title="删除"><i class="i-barrel"></i> 删除</a></span>
             </div>
-            <div class="gl_list_box">
-                <div class="rs">
-                    <ul class="member_list">
-                        <li class="mb_tp_tt clearfix">
-                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" type="checkbox" /></span></p>
-                            <p class="rs_w2">通知标题</p>
-                            <p class="rs_w3">通知内容</p>
-                            <p class="rs_w4">通知范围</p>
-                            <p class="rs_w5">发布人</p>
-                            <p class="rs_w6">发布时间</p>
-                            <p class="rs_w7">操作</p>
-                        </li>
-
-                        @*<li class="mb_list_li clearfix">
-                            <p class="rs_w1"><span class="sp_a"><input class="all_checked_but" type="checkbox" /></span></p>
-                            <p class="rs_w2 ellipsis">城市更新公司报建...</p>
-                            <p class="rs_w3 ellipsis">城市更新公司报城市更新公司报建城市更新公司报建建 </p>
-                            <p class="rs_w4">全体员工</p>
-                            <p class="rs_w5">Jacky</p>
-                            <p class="rs_w6">2016-08-22 18:05:24</p>
-                            <p class="rs_w7">
-                                <a class="edit_but" href="javascript:;">&nbsp;</a>
-                                <a class="edit_but del_but" href="javascript:;">&nbsp;</a>
-                            </p>
-                        </li>*@
-                    </ul>
-                    <div class="member_bottom">
-                        <div class="pub_page_style fr">
-                            <span>共有<span id="span_data_total"></span>条，每页显示</span>
-                            <select class="sel" id="select_page_size">
-                                <option value="10" selected>10</option>
-                                <option value="20">20</option>
-                            </select>
-                            <span>条</span>
-
-                            <div id="pager"></div>
-                        </div>
+            <div class="projectColl">
+                <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <thead>
+                        <tr>
+                            <th width="5%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
+                            <th width="20%">通知标题</th>
+                            <th width="30%">通知内容</th>
+                            <th width="10%">通知范围</th>
+                            <th width="10%">发布人</th>
+                            <th width="15%">添加时间</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listData"></tbody>
+                    <!--
+                    <tr class="imp">
+                            <td><input type="checkbox" name="" id="" value="" /></td>
+                            <td><a href="#">活动通知</a></td>
+                            <td><span class="tfe">通知内容通知内容通知内容通知内容...</span></td>
+                            <td>营销部</td>
+                            <td>Jacky</td>
+                            <td>2016-08-22 18:05:24</td>
+                            <td><div class="tbOpare"><a href="" class="alook"><i class="i-look"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
+                        </tr>
+                    -->
+                </table>
+                <div class="listBtm">
+                    <div class="page fr">
+                        <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                        <select class="sel" id="select_page_size">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                        <span>条</span>
+                        <div id="pager"></div>
                     </div>
                 </div>
+
             </div>
+
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
-
-<!--底部脚本-->
-@section foot
+    <!--底部脚本-->
+    @section foot
 {
-    <script type="text/javascript">
-        $(document).ready(function (e) {
-            pageData(1,false)
-        });
-
-        function clear_data() {
-            $('.mb_list_li').each(function (index) {
-                $(this).remove();
+        @Scripts.Render("~/bundles/laypage")
+        <script type="text/javascript">
+            $(document).ready(function (e) {
+                pageData(1, false)
             });
-        }
-        
-        /*******************列表 end *************************/
-        //分页方法
-        function pageData(page_index) {
-            $.ajax({
-                type: "post",
-                url: "/Notice/NoticeData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index,"keyword": $("#txt_search").val() },
-                async: false, //同步请求
-                datatype: "json",
-                beforeSend: function () {
-                    //Loading....
-                },
-                complete: function () {
-                    //Loading Complete
-                },
-                success: function (data) {
-                    if (data.msg == 0) {
-                        alert(data.msgbox);
-                        return;
-                    }
 
-                    clear_data();
-                    var dataHtml = "";
-                    $.each(data.data, function (i, item) {
-                        var notice_user = "";
-
-                        dataHtml += "<li class=\"mb_list_li clearfix\">";
-                        dataHtml += "<p class=\"rs_w1\"><span class=\"sp_a\"><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></span></p>"
-                        dataHtml += "<p class=\"rs_w2 ellipsis\">" + CutString(item.Title,10) + "</p>";
-                        dataHtml += "<p class=\"rs_w3 ellipsis\">" + CutString(item.Content,10) + "</p>";
-                        dataHtml += "<p class=\"rs_w4\">" + notice_user + "</p>";
-                        dataHtml += "<p class=\"rs_w5\">" + item.CusUser.NickName + "</p>";
-                        dataHtml += "<p class=\"rs_w6\">" + ChangeDateFormat(item.AddTime, "yyyy-MM-dd HH:mm:ss") + "</p>";
-                        dataHtml += "<p class=\"rs_w7\">";
-                        dataHtml += "<a class=\"edit_but\" href=\"javascript:location.href='/Notice/Modify?id=" + item.ID + "';\">&nbsp;</a>";
-                        dataHtml += "<a class=\"edit_but del_but\" href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\">&nbsp;</a>";
-                        dataHtml += "</p>";
-                    });
-                    if (data.data.length == 0) {
-                        dataHtml += "<li class=\"mb_list_li clearfix\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></li>";
-                    }
-                    $("#span_data_total").text(data.total);
-                    $(".member_list").append(dataHtml);
-                    //$("#pager").show();
-                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
-                    //显示分页
-                    laypage({
-                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-                        pages: data.msgbox, //通过后台拿到的总页数
-                        curr: page_index || 1, //当前页
-                        groups: 7, //连续显示分页数
-                        skip: true, //是否开启跳页
-                        jump: function (obj, first) { //触发分页后的回调
-                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
-                                pageData(obj.curr);
-                            }
+            /*******************列表 end *************************/
+            //分页方法
+            function pageData(page_index) {
+                $.ajax({
+                    type: "post",
+                    url: "/Notice/NoticeData",
+                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
+                    async: false, //同步请求
+                    datatype: "json",
+                    beforeSend: function () {
+                        //Loading....
+                    },
+                    complete: function () {
+                        //Loading Complete
+                    },
+                    success: function (data) {
+                        if (data.msg == 0) {
+                            alert(data.msgbox);
+                            return;
                         }
-                    });
 
-                },
-                error: function () {
-                    alert("加载失败");
-                }
-            })
-        }
-        /*******************列表 end *************************/
+                        $("#listData").html("");
+                        var dataHtml = "";
+                        $.each(data.data, function (i, item) {
+                            dataHtml += "<tr>";
+                            dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
+                            dataHtml += "<td><a href=\"/Notice/Modify?id=" + item.ID + "\">" + CutString(item.Title, 15) + "</a></td>";
+                            dataHtml += "<td><span class=\"tfe\">" + CutString(item.Content, 48) + "</span></td>";
+                            dataHtml += "<td>" + item.NoticeStr + "</td>";
+                            dataHtml += "<td>" + item.CusUser.NickName + "</td>";
+                            dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Notice/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "</tr>";
+                        });
+                        if (data.data.length == 0) {
+                            dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                        }
+                        $("#span_data_total").text(data.total);
+                        $("#listData").html(dataHtml);
+                        //$("#pager").show();
+                        //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                        //显示分页
+                        laypage({
+                            cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                            pages: data.msgbox, //通过后台拿到的总页数
+                            curr: page_index || 1, //当前页
+                            groups: 7, //连续显示分页数
+                            skip: true, //是否开启跳页
+                            jump: function (obj, first) { //触发分页后的回调
+                                if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                    pageData(obj.curr);
+                                }
+                            }
+                        });
 
-        //列表的选中
-        function CheckAll(obj) {
-            if ($(obj).is(':checked')) {
-                $(".all_checked_but").prop("checked", true);
-            } else {
-                $(".all_checked_but").prop("checked", false);
-            }
-        }
-
-        //截取字符串
-        function CutString(str, len) {
-            if (str.length > len) {
-                return str.substring(0, len) + "...";
-            } else {
-                return str;
-            }
-        }
-
-        //格式化时间
-        function ChangeDateFormat(cellval, format) {
-            try {
-                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                switch (format) {
-                    case "yyyy-MM-dd":
-                        return date.getFullYear() + "-" + month + "-" + currentDate;
-                    case "yyyy-MM-dd HH:mm:ss":
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    default:
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                }
-            }
-            catch (e) {
-                return "";
-            }
-        }
-
-        function del(id) {
-            var ids = "";
-            if (id == 0) {
-                $(".all_checked_but").each(function () {
-                    if ($(this).is(':checked')) {
-                        ids = ids + $(this).attr("hid") + ","
+                    },
+                    error: function () {
+                        alert("加载失败");
                     }
                 })
-                if (ids == "") {
-                    alert("请先选中要删除的数据");
-                    return;
-                }
-                ids = ids.substring(0, ids.length - 1);
             }
-            else {
-                ids = id;
-            }
-            $.ajax({
-                type: "post",
-                url: "/Notice/DelNotice",
-                data: { "ids": ids },
-                async: false,
-                beforeSend: function () {
+            /*******************列表 end *************************/
 
-                },
-                complete: function () {
-
-                },
-                success: function (data) {
-                    if (data.msg == 1) {
-                        pageData(1);
-                    }
-                    else {
-                        alert(data.msgbox);
-                    }
-                },
-                error: function () {
-                    alert("操作失败，请检查网络");
+            //列表的选中
+            function CheckAll(obj) {
+                if ($(obj).is(':checked')) {
+                    $(".all_checked_but").prop("checked", true);
+                } else {
+                    $(".all_checked_but").prop("checked", false);
                 }
-            })
-        }
+            }
+
+            //截取字符串
+            function CutString(str, len) {
+                if (str.length > len) {
+                    return str.substring(0, len) + "...";
+                } else {
+                    return str;
+                }
+            }
+
+            //格式化时间
+            function ChangeDateFormat(cellval, format) {
+                try {
+                    var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                    var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                    var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                    var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                    var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                    var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                    switch (format) {
+                        case "yyyy-MM-dd":
+                            return date.getFullYear() + "-" + month + "-" + currentDate;
+                        case "yyyy-MM-dd HH:mm:ss":
+                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                        default:
+                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    }
+                }
+                catch (e) {
+                    return "";
+                }
+            }
+
+            function del(id) {
+                var ids = "";
+                if (id == 0) {
+                    $(".all_checked_but").each(function () {
+                        if ($(this).is(':checked')) {
+                            ids = ids + $(this).attr("hid") + ","
+                        }
+                    })
+                    if (ids == "") {
+                        alert("请先选中要删除的数据");
+                        return;
+                    }
+                    ids = ids.substring(0, ids.length - 1);
+                }
+                else {
+                    ids = id;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "/Notice/DelNotice",
+                    data: { "ids": ids },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            pageData(1);
+                        }
+                        else {
+                            alert(data.msgbox);
+                        }
+                    },
+                    error: function () {
+                        alert("操作失败，请检查网络");
+                    }
+                })
+            }
 
 
 
-    </script>
+        </script>
 
-}
-<!--底部脚本 end-->
+    }
+    <!--底部脚本 end-->

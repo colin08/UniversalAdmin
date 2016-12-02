@@ -1,0 +1,146 @@
+﻿@model Universal.Web.Models.ViewModelDocument
+@{
+    ViewBag.Title = "学院秘籍";
+    ViewData["tabTop"] = "school";
+    ViewData["tabLeft"] = "index";
+}
+
+<div class="wapper">
+
+    @Html.Partial("_ShoolMenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="new-head mb-40 clearfix">
+                <a href="/Shool/index" class="fl f16 go-prev"><i class="i-back"></i><span>秘籍列表</span></a>
+                <b class="f20">上传秘籍</b>
+            </div>
+            <form method="post" class="form-horizontal" id="form">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.see_ids)
+                <div class="creater-box new-box-min demolition">
+                    <ul>
+                        <li>
+                            <div class="lilt"><em class="col_red">*</em>秘籍标题</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
+                        </li>
+                        <li>
+                            <label for="" class="lab1"><span class="red">*</span>所属分类</label>
+                            @Html.DropDownListFor(p => p.category_id, ViewData["category"] as List<SelectListItem>, new { @class = "select-input academy-select" })
+                            @Html.ValidationMessageFor(p => p.category_id)
+                        </li>
+                        <li>
+                            <label for="" class="lab1"><span class="red">*</span>文件</label>
+                            @Html.HiddenFor(p => p.filepath)
+                            @Html.HiddenFor(p => p.filesize)
+                            <a href="javascript:;" class="btn-add uploadBtnBox">
+                                <i class="i-attach"></i>
+                                上传文件
+                                <input type="file" class="uploadBtn" id="but_upload" />
+                            </a>
+                            <span id="span_filename">@Model.filepath</span> &nbsp; <span id="span_upload_status"></span>
+                        </li>
+                        <li>
+                            <label for="" class="lab1"><span class="red">*</span>谁可以看</label>
+                            <div class="create-radio">
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.everyone">
+                                    @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
+                                    <span>所有人</span>
+                                </label>
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
+                                    @Html.RadioButtonFor(x => x.post_see, "1", (int)Model.post_see == 1 ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
+                                    <span>同事分组</span>
+                                </label>
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
+                                    @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
+                                    <span>自定义</span>
+                                </label>
+                                <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
+                            </div>
+                            <div class="scrollbox scrollbox-big">
+                                <ul>
+                                    @foreach (var item in Model.see_entity)
+                                    {
+                                        <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="creater-box-submit creater-box1-submit">
+                        <input type="submit" class="btn-major btn-submit" value="确定" />
+                        <a href="javascript:location.href='/Shool/Index';" class="btn-cencel">取消</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+            $(function () {
+                $("#but_upload").on("change", function () {
+                    var filePath = $(this).val().toLowerCase();
+                    if (filePath != "") {
+                        upload();
+                    }
+                })
+
+            })
+
+            function upload() {
+                var fd = new FormData();
+                fd.append("FileData", document.getElementById('but_upload').files[0]);
+                $("#span_upload_status").html("上传中...");
+                $.ajax({
+                    url: '/Tools/UploadDocument',
+                    type: 'POST',
+                    cache: false,
+                    contentType: "multipart/form-data",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    $("#span_upload_status").html("");
+                    if (res.msg == 1) {
+                        $("#span_filename").html(res.data);
+                        $("#filepath").val(res.data);
+                        $("#filesize").val(res.msgbox);
+                    } else {
+                        alert(res.msgbox);
+                    }
+                }).fail(function (res) { });
+            }
+
+
+
+            $(document).ready(function (e) {
+            @if(Model.Msg == 1)
+            {
+                @:alert("操作成功");
+                @:location.href = "/Shool/index";
+                @:getWindow();
+
+            }
+            else if(Model.Msg == 2)
+            {
+                @:alert("数据不存在");
+            }
+            });
+    </script>
+
+}
+<!--底部脚本 end-->
+

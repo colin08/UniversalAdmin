@@ -65,21 +65,26 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
-            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "删除成功";
-            return Json(WorkContext.AjaxStringEntity);
+            if(BLL.BLLDocument.Del(ids))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "删除成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "删除失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
 
         }
 
 
         public ActionResult Modify(int? id)
         {
+            LoadCategory();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelDocument model = new Models.ViewModelDocument();
-            model.category_list = LoadCategory();
             if (ids != 0)
             {
                 BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
@@ -91,6 +96,34 @@ namespace Universal.Web.Controllers
                     model.filesize = entity.FileSize;
                     model.title = entity.Title;
                     model.id = entity.ID;
+                    model.post_see = entity.See;
+                    System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                    switch (entity.See)
+                    {
+                        case Entity.DocPostSee.everyone:
+                            break;
+                        case Entity.DocPostSee.department:
+                            foreach (var item in BLL.BLLDepartment.GetListByIds(entity.TOID))
+                            {
+                                str_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                            }
+                            break;
+                        case Entity.DocPostSee.user:
+                            foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
+                            {
+                                str_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    if(str_ids.Length>0)
+                    {
+                        str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                    }
+                    model.see_ids = str_ids.ToString();
                 }
                 else
                 {
@@ -125,21 +158,21 @@ namespace Universal.Web.Controllers
         /// <summary>
         ///  秘籍收藏
         /// </summary>
-        /// <param name="doc_id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult DocFavorites(int id)
         {
             if(id <=0)
             {
-                WorkContext.AjaxStringEntity.msgbox = "秘籍不存在";
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-
-            bool isOK = BLL.BllCusUserFavorites.Add(id, WorkContext.UserInfo.ID, Entity.CusUserFavoritesType.docment);
+            string msg = "";
+            bool isOK = BLL.BllCusUserFavorites.AddDocFav(id, WorkContext.UserInfo.ID,out msg);
             if(!isOK)
             {
-                WorkContext.AjaxStringEntity.msgbox = "收藏失败";
+                WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);
             }
 
@@ -155,13 +188,8 @@ namespace Universal.Web.Controllers
         {
             var isAdd = entity.id == 0 ? true : false;
 
-            entity.category_list = LoadCategory();
-
-            if (entity.category_id == 0)
-            {
-                ModelState.AddModelError("category_id", "请选择所属分类");
-            }
-
+            LoadCategory();
+            
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             if (!isAdd)
             {
@@ -172,11 +200,40 @@ namespace Universal.Web.Controllers
                 }
             }
 
+            #region 处理用户或部门的ID
+            System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+            entity.see_entity = new List<Models.ViewModelDocumentCategory>();
+            switch (entity.post_see)
+            {
+                case Entity.DocPostSee.everyone:
+                    break;
+                case Entity.DocPostSee.department:
+                    foreach (var item in BLL.BLLDepartment.GetListByIds(entity.see_ids))
+                    {
+                        str_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                    }
+                    break;
+                case Entity.DocPostSee.user:
+                    foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
+                    {
+                        str_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            string final_ids = "";
+            if (str_ids.Length > 0)
+            {
+                final_ids = "," + str_ids.ToString();
+            } 
+            #endregion
+
             if (ModelState.IsValid)
             {
-
                 Entity.DocPost model = null;
-
                 if (isAdd)
                 {
                     model = new Entity.DocPost();
@@ -189,6 +246,8 @@ namespace Universal.Web.Controllers
                 model.FilePath = entity.filepath;
                 model.FileSize = entity.filesize;
                 model.Title = entity.title;
+                model.TOID = final_ids;
+                model.See = entity.post_see;
                 if (isAdd)
                     bll.Add(model);
                 else
@@ -201,36 +260,49 @@ namespace Universal.Web.Controllers
         }
 
 
+        public ActionResult Some()
+        {
+            return View();
+        }
+
+
         /// <summary>
         /// 加载分类
         /// </summary>
-        private List<Models.ViewModelDocumentCategory> LoadCategory()
+        private void LoadCategory()
         {
-            List<Models.ViewModelDocumentCategory> result = new List<Models.ViewModelDocumentCategory>();
+            //List<Models.ViewModelDocumentCategory> result = new List<Models.ViewModelDocumentCategory>();
             BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
             List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc", true);
-            foreach (var one in list.Where(p => p.Depth == 1))
+
+            List<SelectListItem> userRoleList = new List<SelectListItem>();
+            userRoleList.Add(new SelectListItem() { Text = "全部分类", Value = "0" });
+            foreach (var item in list)
             {
-                Models.ViewModelDocumentCategory one_model = new Models.ViewModelDocumentCategory();
-                one_model.id = one.ID;
-                one_model.title = one.Title;
-                result.Add(one_model);
-                foreach (var two in list.Where(p => p.Depth == 2 && p.PID == one.ID))
-                {
-                    Models.ViewModelDocumentCategory two_model = new Models.ViewModelDocumentCategory();
-                    two_model.id = two.ID;
-                    two_model.title = two.Title;
-                    result.Add(two_model);
-                    foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID))
-                    {
-                        Models.ViewModelDocumentCategory three_model = new Models.ViewModelDocumentCategory();
-                        three_model.id = three.ID;
-                        three_model.title = three.Title;
-                        result.Add(three_model);
-                    }
-                }
+                userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
             }
-            return result;
+            ViewData["category"] = userRoleList;
+            //foreach (var one in list.Where(p => p.Depth == 1))
+            //{
+            //    Models.ViewModelDocumentCategory one_model = new Models.ViewModelDocumentCategory();
+            //    one_model.id = one.ID;
+            //    one_model.title = one.Title;
+            //    result.Add(one_model);
+            //    foreach (var two in list.Where(p => p.Depth == 2 && p.PID == one.ID))
+            //    {
+            //        Models.ViewModelDocumentCategory two_model = new Models.ViewModelDocumentCategory();
+            //        two_model.id = two.ID;
+            //        two_model.title = two.Title;
+            //        result.Add(two_model);
+            //        foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID))
+            //        {
+            //            Models.ViewModelDocumentCategory three_model = new Models.ViewModelDocumentCategory();
+            //            three_model.id = three.ID;
+            //            three_model.title = three.Title;
+            //            result.Add(three_model);
+            //        }
+            //    }
+            //}
         }
 
     }

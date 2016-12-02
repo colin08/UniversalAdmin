@@ -30,11 +30,7 @@ namespace Universal.BLL
                 string upwd = WebHelper.GetCookie(CookieKey.Web_Login_UserPassword);
                 if (uid != 0 && !string.IsNullOrWhiteSpace(upwd))
                 {
-                    BaseBLL<Entity.CusUser> bll = new BaseBLL<Entity.CusUser>();
-                    List<FilterSearch> filters = new List<FilterSearch>();
-                    filters.Add(new FilterSearch("ID", uid.ToString(), FilterSearchContract.等于));
-                    filters.Add(new FilterSearch("Password", upwd, FilterSearchContract.等于));
-                    Entity.CusUser model = bll.GetModel(filters, p => p.CusUserRoute.Select(s=>s.CusRoute));
+                    Entity.CusUser model = GetModelID(uid, upwd);
                     if (model != null)
                     {
                         if (model.Status)
@@ -144,10 +140,82 @@ namespace Universal.BLL
         public static Entity.CusUser GetModel(int user_id)
         {
             var db = new DataCore.EFDBContext();
-            Entity.CusUser entity = db.CusUsers.Include(p=>p.CusDepartment).Include(p=>p.CusUserJob).Where(p=>p.ID == user_id).AsNoTracking().FirstOrDefault();
+            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p=>p.CusDepartment).Include(p=>p.CusUserJob).Where(p=>p.ID == user_id).AsNoTracking().FirstOrDefault();
             db.Dispose();
             return entity;
         }
-        
+     
+        /// <summary>
+        /// 根据邮箱和密码获取用户实体
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        public static Entity.CusUser GetModel(string email,string pwd)
+        {
+            var db = new DataCore.EFDBContext();
+            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.Email == email && p.Password == pwd).AsNoTracking().FirstOrDefault();
+            db.Dispose();
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据手机号和密码获取用户实体
+        /// </summary>
+        /// <param name="telphone"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        public static Entity.CusUser GetModelTelphone(string telphone, string pwd)
+        {
+            var db = new DataCore.EFDBContext();
+            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.Telphone == telphone && p.Password == pwd).AsNoTracking().FirstOrDefault();
+            db.Dispose();
+            return entity;
+        }
+
+        /// <summary>
+        /// 根据ID和密码获取用户实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        public static Entity.CusUser GetModelID(int id, string pwd)
+        {
+            var db = new DataCore.EFDBContext();
+            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.ID == id && p.Password == pwd).AsNoTracking().FirstOrDefault();
+            db.Dispose();
+            return entity;
+        }
+
+
+        /// <summary>
+        /// 根据多个用户id获取集合
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUser> GetListByIds(string ids)
+        {
+            if(string.IsNullOrWhiteSpace(ids))
+            {
+                return new List<Entity.CusUser>();
+            }
+            //开头有逗号
+            if(ids.StartsWith(","))
+            {
+                ids = ids.Substring(1, ids.Length - 1);
+            }
+            if(ids.EndsWith(","))
+            {
+                ids = ids.Substring(0, ids.Length - 1);
+            }
+
+            List<Entity.CusUser> response_entity = new List<Entity.CusUser>();
+            var db = new DataCore.EFDBContext();
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse).ToList();
+            response_entity = db.CusUsers.Where(p => id_list.Contains(p.ID)).ToList();
+            db.Dispose();
+            return response_entity;
+        }
+
     }
 }

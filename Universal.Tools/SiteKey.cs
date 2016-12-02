@@ -14,7 +14,7 @@ namespace Universal.Tools
         /// <summary>
         /// 3DES加密KEY
         /// </summary>
-        public static readonly string DES3KEY = "Orderfood";
+        public static readonly string DES3KEY = "HBLYLSDA";
 
         /// <summary>
         /// 后台分页默认每页大小

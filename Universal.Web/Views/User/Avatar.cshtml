@@ -11,129 +11,109 @@
 }
 <!--头部脚本 end-->
 
-<div class="container" id="getHeight">
-    @Html.Partial("_MenuLeft", this.ViewData)
+<div class="wapper">
+@Html.Partial("_MenuLeft", this.ViewData)
 
-    <div class="right_content" id="minHeight">
-        <div class="content">
-            <p class="al_tt">基本资料</p>
-            <div class="tx_change clearfix">
-                <input type="hidden" value="@WorkContext.UserInfo.Avatar" id="old_avatar" />
-                <div class="l_bor">
-                    <form id="uploadForm" enctype="multipart/form-data" method="post">
-                        <p class="sp">
-                            <a href="javascript:;" class="a-upload">
-                                <input type="file" name="file" id="">上 传 图 片
-                            </a>
-
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">修改头像</div>
+            <input type="hidden" value="@WorkContext.UserInfo.Avatar" id="old_avatar" />
+            <div class="touxiang">
+                <div class="txLt">
+                    <div class="opare">
+                        <a href="javascript:;" class="Btn2 uploadBtnBox">上传头像 <input type="file" id="but_upload_img" class="uploadBtn" /> </a>
+                        <span class="col_grey f12 ml_10">仅支持JPG,PNG格式的图片,且文件小于3MB</span>
                         <p class="fileerrorTip"></p>
-
-                        <p>仅支持JPG,PNG格式的图片,且文件小于3MB</p>
-                        </p>
-                    </form>
-                    <div class="big_pic"><img src="@WorkContext.UserInfo.Avatar" id="img" /></div>
-                    <a class="sub_but" href="javascript:void(0);" onclick="save()">保存头像</a>
+                    </div>
+                    <div class="txBox"><img src="@WorkContext.UserInfo.Avatar" id="img" /></div>
+                    <div class="txBtn"><button type="button" onclick="save()" class="btn1">保存头像</button></div>
                 </div>
-                <div class="r_bor">
-                    <p class="p1">头像预览</p>
-                    <div class="s_pic p80"><img src="@WorkContext.UserInfo.Avatar" id="img80" /></div>
-                    <p class="p2">大头像80*80</p>
-                    <div class="s_pic p60"><img src="@WorkContext.UserInfo.Avatar" id="img60" /></div>
-                    <p class="p2">大头像60*60</p>
-                    <div class="s_pic p36"><img src="@WorkContext.UserInfo.Avatar" id="img36" /></div>
-                    <p class="p2">大头像36*36</p>
+                <div class="txRt">
+                    <dl>
+                        <dt>头像预览</dt>
+                        <dd><em><img class="avatar_small" src="@WorkContext.UserInfo.Avatar" style="width:80px; height:80px;" /></em><span>大头像80*80</span></dd>
+                        <dd><em><img class="avatar_small" src="@WorkContext.UserInfo.Avatar" style="width:60px; height:60px;" /></em><span>中头像60*60</span></dd>
+                        <dd><em><img class="avatar_small" src="@WorkContext.UserInfo.Avatar" style="width:36px; height:36px;" /></em><span>小头像36*36</span></dd>
+                    </dl>
                 </div>
             </div>
+
+
         </div>
-        <p class="r_footer">Copyright &copy;  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</p>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
 
-
-<!--底部脚本-->
-@section foot
+    <!--底部脚本-->
+    @section foot
 {
-    <script type="text/javascript">
-        window.onload = function () {
-            if (document.getElementById("minHeight").offsetHeight < 600) {
-                if (600 > window.innerHeight - 67) {
-                    document.getElementById("minHeight").style.height = 600 + 'px';
-                }
-                else {
-                    document.getElementById("minHeight").style.height = (window.innerHeight - 67) + 'px';
-                }
-            }
-            else {
-                if (document.getElementById("minHeight").offsetHeight < window.innerHeight - 67) {
-                    document.getElementById("minHeight").style.height = (window.innerHeight - 67) + 'px';
-                }
-            }
-        }
+        <script type="text/javascript">
 
-        $(".a-upload").on("change", "input[type='file']", function () {
-            var filePath = $(this).val().toLowerCase();
-            if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1 || filePath.indexOf("jpeg") != -1) {
-                $(".fileerrorTip").html("").hide();
-                var arr = filePath.split('\\');
-                var fileName = arr[arr.length - 1];
-                upload();
-            } else {
-                $(".fileerrorTip").html("您未上传文件，或者您上传文件类型有误！").show();
-                return false
-            }
-        })
-
-        function upload()
-        {
-            $.ajax({
-                url: '/Tools/UploadAvatar',
-                type: 'POST',
-                cache: false,
-                data: new FormData($('#uploadForm')[0]),
-                processData: false,
-                contentType: false
-            }).done(function (res) {
-                if(res.msg == 1)
-                {
-                    $("#img").attr("src", res.data);
-                    $("#img80").attr("src", res.data);
-                    $("#img60").attr("src", res.data);
-                    $("#img36").attr("src", res.data);
-                }else
-                {
-                    alert(res.msgbox);
-                }
-            }).fail(function (res) { });
-        }
-
-        function save()
-        {
-            var new_avatar = $("#img").attr("src");
-            if ($("#old_avatar").val() == new_avatar)
-            {
-                alert("无更改");
-                return false;
-            }
-
-            $.ajax({
-                type: "post",
-                url: "/User/Avatar",
-                data: { "avatar": $("#img").attr("src") },
-                async: false,
-                success: function (data) {
-                    if (data.msg == 0) {
-                        alert("保存失败");
-                    }else
-                    {
-                        $("#img_top_avatar").attr("src", new_avatar);
-                        alert("修改头像成功");
+            $(function () {
+                $("#but_upload_img").on("change", function () {
+                    var filePath = $(this).val().toLowerCase();
+                    if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1 || filePath.indexOf("jpeg") != -1) {
+                        var arr = filePath.split('\\');
+                        var fileName = arr[arr.length - 1];
+                        upload();
+                    } else {
+                        alert("您未上传文件，或者您上传文件类型有误！");
+                        return false
                     }
+                })
+
+            })
+
+            function upload() {
+                var fd = new FormData();
+                fd.append("FileData", document.getElementById('but_upload_img').files[0]);
+
+                $.ajax({
+                    url: '/Tools/UploadAvatar',
+                    type: 'POST',
+                    cache: false,
+                    contentType: "multipart/form-data",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    if (res.msg == 1) {
+                        $("#img").attr("src", res.data);
+                        $(".avatar_small").attr("src", res.data);
+                    } else {
+                        alert(res.msgbox);
+                    }
+                }).fail(function (res) { });
+            }
+
+            function save() {
+                var new_avatar = $("#img").attr("src");
+                if ($("#old_avatar").val() == new_avatar) {
+                    alert("无更改");
+                    return false;
                 }
-            });
-        }
 
-    </script>
+                $.ajax({
+                    type: "post",
+                    url: "/User/Avatar",
+                    data: { "avatar": $("#img").attr("src") },
+                    async: false,
+                    success: function (data) {
+                        if (data.msg == 0) {
+                            alert("保存失败");
+                        } else {
+                            $(".avatar_tab").attr("src", new_avatar);
+                            alert("修改头像成功");
+                        }
+                    }
+                });
+            }
 
-}
-<!--底部脚本 end-->
+        </script>
+
+    }
+    <!--底部脚本 end-->

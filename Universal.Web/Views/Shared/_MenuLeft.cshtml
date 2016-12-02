@@ -1,22 +1,30 @@
-﻿<div class="left_menu">
-    <p class="menu_tt">个人中心</p>
-    <p class="tt">账号资料</p>
-    <ul class="menu_ul">
-        <li @(ViewData["tabLeft"].ToString().Equals("basic") ? "class=hover": "")><a href="/User/Basic"><i class="i1"></i>基本资料</a></li>
-        <li @(ViewData["tabLeft"].ToString().Equals("avatar") ? "class=hover": "")><a href="/User/Avatar"><i class="i2"></i>修改头像</a></li>
-        <li @(ViewData["tabLeft"].ToString().Equals("safe") ? "class=hover": "")><a href="/User/Safe"><i class="i3"></i>安全设置</a></li>
-    </ul>
-    <p class="tt">我的收藏</p>
-    <ul class="menu_ul">
-        <li @(ViewData["tabLeft"].ToString().Equals("project") ? "class=hover": "")><a href="#"><i class="i4"></i>项目收藏</a></li>
-        <li @(ViewData["tabLeft"].ToString().Equals("file") ? "class=hover": "")><a href="#"><i class="i5"></i>文件收藏</a></li>
-    </ul>
-    <p class="tt">下载记录</p>
-    <ul class="menu_ul">
-        <li @(ViewData["tabLeft"].ToString().Equals("down") ? "class=hover": "")><a href="#"><i class="i6"></i>我的下载</a></li>
-    </ul>
-    <p class="tt">消息待办</p>
-    <ul class="menu_ul">
-        <li @(ViewData["tabLeft"].ToString().Equals("msg") ? "class=hover": "")><a href="#"><i class="i7"></i>我的消息</a></li>
-    </ul>
+﻿<div class="leftMenu">
+    <h2>个人中心</h2>
+    <div class="ltMenu">
+        <dl>
+            <dt>帐号资料</dt>
+            <dd @(ViewData["tabLeft"].ToString().Equals("basic") ? "class=act" : "")><a href="/User/Basic" title="基本资料"><em><i class="i-lm1"></i></em><span>基本资料</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("avatar") ? "class=act" : "")><a href="/User/Avatar" title="修改头像"><em><i class="i-lm2"></i></em><span>修改头像</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("safe") ? "class=act" : "")><a href="/User/Safe" title="安全设置"><em><i class="i-lm3"></i></em><span>安全设置</span></a></dd>
+        </dl>
+        <dl>
+            <dt>工作待办</dt>
+            <dd @(ViewData["tabLeft"].ToString().Equals("hyzj") ? "class=act" : "")><a href="/User/HYZJ" title="会议召集"><em><i class="i-lm9"></i></em><span>会议召集</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("rwzp") ? "class=act" : "")><a href="/User/RWZP" title="任务指派"><em><i class="i-lm10"></i></em><span>任务指派</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("gzjh") ? "class=act" : "")><a href="/User/GZJH" title="工作计划"><em><i class="i-lm11"></i></em><span>工作计划</span></a></dd>
+        </dl>
+        <dl>
+            <dt>我的收藏</dt>
+            <dd @(ViewData["tabLeft"].ToString().Equals("project") ? "class=act" : "")><a href="/User/XMSC" title="项目收藏"><em><i class="i-lm5"></i></em><span>项目收藏</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("file") ? "class=act" : "")><a href="/User/DocFavorites" title="文件收藏"><em><i class="i-lm6"></i></em><span>文件收藏</span></a></dd>
+        </dl>
+        <dl>
+            <dt>下载记录</dt>
+            <dd @(ViewData["tabLeft"].ToString().Equals("down") ? "class=act" : "")><a href="/User/MyDown" title="我的下载"><em><i class="i-lm7"></i></em><span>我的下载</span></a></dd>
+        </dl>
+        <dl>
+            <dt>消息待办</dt>
+            <dd @(ViewData["tabLeft"].ToString().Equals("msg") ? "class=act" : "")><a href="/User/MyMsg" title="我的消息"><em><i class="i-lm8"></i></em><span>我的消息</span></a></dd>
+        </dl>
+    </div>
 </div>

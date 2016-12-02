@@ -77,7 +77,14 @@ namespace Universal.Entity
         /// </summary>
         [MaxLength(30)]
         public string FileSize { get; set; }
-        
+
+        /// <summary>
+        /// 部门ID或用户ID，逗号分割，前后要加逗号:,1,2,3,4,
+        /// </summary>
+        [MaxLength(1000)]
+        public string TOID { get; set; }
+
+
         /// <summary>
         /// 添加时间
         /// </summary>
@@ -87,6 +94,6 @@ namespace Universal.Entity
         /// 最后更新时间
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
-
+        
     }
 }

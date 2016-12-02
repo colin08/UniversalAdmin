@@ -13,6 +13,45 @@
 }
 <!--头部脚本 end-->
 
+@Html.Partial("_MenuLeft", this.ViewData)
+
+<div class="rightBox">
+    <div class="container">
+        <div class="tit1">安全设置</div>
+
+        <div class="safety">
+
+            <div class="sfBox">
+                <span class="sfIco"><img src="theme/ico/ico_9.png" /></span>
+                <h4><b>邮箱</b> <em>jztx2012@qq.com</em> 已绑定</h4>
+                <p>邮箱可以用来登录花伴里和找回密码</p>
+                <a href="javascript:emailMdy();;" class="Btn2">更改邮箱</a>
+            </div>
+
+            <div class="sfBox">
+                <span class="sfIco"><img src="theme/ico/ico_10.png" /></span>
+                <h4><b>手机</b> <em>159*****465</em> 已绑定</h4>
+                <p>手机可以用来登录花伴里和找回密码</p>
+                <a href="javascript:moblieMdy();" class="Btn2">更改手机号</a>
+            </div>
+
+            <div class="sfBox">
+                <span class="sfIco"><img src="theme/ico/ico_11.png" /></span>
+                <h4><b>密码</b> 已设置</h4>
+                <p>用于保护账号信息和登录安全</p>
+                <a href="javascript:pwdMdy();" class="Btn2">修改密码</a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+</div>
+<!-- TODO 安全设置待定 -->
+
 <div class="container" id="getHeight">
     @Html.Partial("_MenuLeft", this.ViewData)
     <div class="right_content" id="minHeight">

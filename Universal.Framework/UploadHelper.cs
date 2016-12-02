@@ -288,7 +288,6 @@ namespace Universal.Web.Framework
                     hash["msgbox"] = "只允许上传APK格式的文件";
                     return hash;
                 }
-
                 string filePath = IOHelper.GetMapPath(ServerPath);
                 if (!Directory.Exists(filePath))
                 {
@@ -367,8 +366,9 @@ namespace Universal.Web.Framework
                 //获取ICON
                 IOHelper.UnZipPath(apk_path, icon_path, model.ApplicationIcon, default_icon_name);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                IOHelper.WriteLogs("解析apk异常："+ex.Message);
                 IOHelper.DeleteFile(apk_path); //删除APK
             }
             return model;

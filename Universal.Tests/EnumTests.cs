@@ -15,9 +15,23 @@ namespace Universal.Tests
         [TestMethod]
         public void Testxzz()
         {
-            string s = EnumHelper.GetEnumShowName(typeof(Tools.ConfigFileEnum), 1);
-            string s2=  Enum.GetName(typeof(ConfigFileEnum), 1);
-            Trace.WriteLine(s);
+            string ids = ",1,2,3,4,5,";
+            //开头有逗号
+            if (ids.StartsWith(","))
+            {
+                ids = ids.Substring(1, ids.Length - 1);
+            }
+            if (ids.EndsWith(","))
+            {
+                ids = ids.Substring(0,ids.Length - 1);
+            }
+
+
+            //string s = SecureHelper.MD5("hbl123");
+
+            //string s = EnumHelper.GetEnumShowName(typeof(Tools.ConfigFileEnum), 1);
+            //string s2=  Enum.GetName(typeof(ConfigFileEnum), 1);
+            //Trace.WriteLine(s);
             Assert.AreEqual(1, 1);
         }
     }

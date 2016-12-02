@@ -473,6 +473,101 @@ namespace Universal.DataCore.Migrations
                     end
                     ";
             Sql(SQLProcGetCusRouteExists);
+
+
+            //按照某一个Id查询它及它的所有子级成员存储过程
+            string SQLGetChildDocCategory = @"
+                    CREATE PROCEDURE [dbo].[sp_GetChildCategorys] (@Id int)
+                    AS
+                    BEGIN
+                    WITH Record AS(
+                        SELECT
+                        Id,
+                        Title,
+                        PID,
+                        Depth,
+                        Status,
+                        Priority,
+                        AddTime
+                    FROM
+                        DocCategory(NOLOCK)
+                        WHERE Id=@Id
+                        UNION ALL
+                            SELECT
+                        a.Id Id,
+                        a.Title Title,
+                        a.PID PID,
+                        a.Depth Depth,
+                        a.Status Status,
+                        a.Priority Priority,
+                        a.AddTime AddTime
+                    FROM
+                        DocCategory(NOLOCK) a JOIN Record b
+                        ON a.PID=b.Id
+                    )
+ 
+                    SELECT
+                        Id,
+                        Title,
+                        PID,
+                        Depth,
+                        Status,
+                        Priority,
+                        AddTime
+                    FROM
+                        Record
+                        WHERE Status=1
+                        ORDER BY Priority DESC     
+                    END";
+            Sql(SQLGetChildDocCategory);
+
+            //按照某一个Id查询它及它的所有父级成员存储过程
+            string SQLGetParentCategory = @"
+                        CREATE PROCEDURE [dbo].[sp_GetParentCategorys] (@Id int)
+                        AS
+                        BEGIN
+                        WITH Record AS(
+                            SELECT
+                            Id,
+                            Title,
+                            PId,
+                            Depth,
+                            Status,
+                            Priority,
+                            AddTime
+                        FROM
+                            DocCategory(NOLOCK)
+                            WHERE Id=@Id
+                            UNION ALL
+                            SELECT
+                            a.Id Id,
+                            a.Title Title,
+                            a.PId PId,
+                            a.Depth Depth,
+                            a.Status Status,
+                            a.Priority Priority,
+                            a.AddTime AddTime
+                        FROM
+                            DocCategory(NOLOCK) a JOIN Record b
+                            ON a.Id=b.PId
+                        )
+ 
+                        SELECT
+                            Id,
+                            Title,
+                            PId,
+                            Depth,
+                            Status,
+                            Priority,
+                            AddTime
+                        FROM
+                            Record
+                            WHERE Status=1
+                            ORDER BY Priority DESC
+     
+                        END";
+            Sql(SQLGetParentCategory);
+
         }
         
         public override void Down()

@@ -69,7 +69,7 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Add(int pid, string title, string user_ids)
         {
-            if (pid <= 0)
+            if (pid < 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "父级ID错误";
                 return Json(WorkContext.AjaxStringEntity);
@@ -119,5 +119,26 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msgbox = "修改失败";
             return Json(WorkContext.AjaxStringEntity);
         }
+
+        /// <summary>
+        /// 删除部门
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Del(int id)
+        {
+            if (BLL.BLLDepartment.Del(id))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "删除成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "删除失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+        }
+
     }
 }

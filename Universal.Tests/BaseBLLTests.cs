@@ -14,6 +14,9 @@ namespace Universal.BLL.Tests
         [TestMethod()]
         public void BLLMethod()
         {
+            string msg = "";
+            BLLDocCategory.Sort("1,15,17,16,18", out msg);
+
             Assert.AreEqual(1,1);
         }
     }
