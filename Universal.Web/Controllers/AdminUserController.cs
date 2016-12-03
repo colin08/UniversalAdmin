@@ -67,12 +67,12 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if(ids == "1")
+            if (ids == "1")
             {
                 WorkContext.AjaxStringEntity.msgbox = "初始用户不可删除";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if(ids.IndexOf("1,") > -1)
+            if (ids.IndexOf("1,") > -1)
             {
                 WorkContext.AjaxStringEntity.msgbox = "不能删除初始用户";
                 return Json(WorkContext.AjaxStringEntity);
@@ -219,8 +219,16 @@ namespace Universal.Web.Controllers
                 model.AboutMe = entity.about_me;
                 model.Avatar = entity.avatar;
                 //TOOD 部门职位定死值
-                model.CusDepartmentID = 5;
-                model.CusUserJobID = 1;
+                if (entity.department_id == 0 || entity.job_id == 0)
+                {
+                    model.CusDepartmentID = 5;
+                    model.CusUserJobID = 1;
+
+                }else
+                {
+                    model.CusDepartmentID = entity.department_id;
+                    model.CusUserJobID = entity.job_id;
+                }
                 model.Email = entity.email;
                 model.Gender = entity.gender;
                 model.IsAdmin = string.IsNullOrWhiteSpace(entity.user_route_str) ? false : true;
@@ -242,7 +250,7 @@ namespace Universal.Web.Controllers
             entity.Msg = 1;
             return View(entity);
         }
-        
+
         /// <summary>
         /// 职位管理
         /// </summary>
