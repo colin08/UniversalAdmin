@@ -36,6 +36,7 @@ namespace Universal.Web.Controllers
         public JsonResult DocData(int page_size, int page_index, int doc_id, string keyword)
         {
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
+            BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
             int rowCount = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             filter.Add(new BLL.FilterSearch("DocCategoryID", doc_id.ToString(), BLL.FilterSearchContract.等于));
@@ -43,6 +44,11 @@ namespace Universal.Web.Controllers
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
 
             List<Entity.DocPost> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc", p => p.CusUser);
+
+            foreach (var item in list)
+            {
+                item.IsFavorites = bll_fav.Exists(p=>p.CusUserID == WorkContext.UserInfo.ID && p.DocPostID == item.ID);// db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == item.ID);
+            }
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();

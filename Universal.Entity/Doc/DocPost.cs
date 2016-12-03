@@ -84,6 +84,46 @@ namespace Universal.Entity
         [MaxLength(1000)]
         public string TOID { get; set; }
 
+        /// <summary>
+        /// 用户是否收藏
+        /// </summary>
+        [NotMapped]
+        public bool IsFavorites { get; set; }
+
+        /// <summary>
+        /// 收藏状态icon
+        /// </summary>
+        [NotMapped]
+        public string FavIcon
+        {
+            get
+            {
+                if (this.IsFavorites)
+                    return "i-fav";
+                else
+                    return "i-favG";
+            }
+        }
+
+        /// <summary>
+        /// 文件后缀名
+        /// </summary>
+        [NotMapped]
+        public string FileExt
+        {
+            get
+            {
+                if(string.IsNullOrWhiteSpace(this.FilePath))
+                    return "";
+                return Tools.IOHelper.GetFileExt(this.FilePath);
+            }
+        }
+        
+        /// <summary>
+        /// 所属分类名字
+        /// </summary>
+        [NotMapped]
+        public string CategoryName { get; set; }
 
         /// <summary>
         /// 添加时间

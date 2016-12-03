@@ -141,7 +141,7 @@
                         dataHtml += "<td>"+item.CusUser.NickName+"</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td>" + si + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Shool/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del("+item.ID+")\" class=\"afav\"><i class=\"i-fav\"></i></a><a href=\"\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Shool/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\""+item.FavIcon+"\"></i></a><a href=\"\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -257,6 +257,34 @@
                 }
             })
         }
+
+        function fav(id) {
+                
+            $.ajax({
+                type: "post",
+                url: "/Document/DocFavorites",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        data_search();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
     </script>
 
 }

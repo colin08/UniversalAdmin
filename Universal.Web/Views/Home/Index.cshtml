@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Universal.Web.Models.ViewModelIndex
+@{
     ViewBag.Title = "首页";
     ViewData["tabTop"] = "home";
 }
@@ -6,7 +7,7 @@
 <!--头部脚本-->
 @section head
 {
-<link href="~/Assets/theme/css/home.css" rel="stylesheet" />
+    <link href="~/Assets/theme/css/home.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
 
@@ -96,49 +97,20 @@
             </div>
 
             <div class="homeBox mt_20">
-                <div class="titH"><i class="i-lm6"></i><span>最新秘籍</span><a href="#" title="#" class="btn25 red fr"><i class="i-puload"></i><em>上传</em></a></div>
+                <div class="titH"><i class="i-lm6"></i><span>最新秘籍</span><a href="/Shool/Modify" title="上传秘籍" class="btn25 red fr"><i class="i-puload"></i><em>上传</em></a></div>
                 <div class="homelist">
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
-                        <tr>
-                            <td width="15%">城市更新报建指引</td>
-                            <td width="20%">政策相关 - 政策法规</td>
-                            <td width="10%">png</td>
-                            <td width="10%">张嘉</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td width="15%">城市更新报建指引</td>
-                            <td width="20%">政策相关 - 政策法规</td>
-                            <td width="10%">png</td>
-                            <td width="10%">张嘉</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td width="15%">城市更新报建指引</td>
-                            <td width="20%">政策相关 - 政策法规</td>
-                            <td width="10%">png</td>
-                            <td width="10%">张嘉</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td width="15%">城市更新报建指引</td>
-                            <td width="20%">政策相关 - 政策法规</td>
-                            <td width="10%">png</td>
-                            <td width="10%">张嘉</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td width="15%">城市更新报建指引</td>
-                            <td width="20%">政策相关 - 政策法规</td>
-                            <td width="10%">png</td>
-                            <td width="10%">张嘉</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
+                        @foreach (var item in Model.DocumentList)
+                        {
+                            <tr>
+                                <td width="15%">@item.Title</td>
+                                <td width="20%">@item.CategoryName</td>
+                                <td width="10%">@item.FileExt</td>
+                                <td width="10%">@item.CusUser.NickName</td>
+                                <td width="20%">@item.LastUpdateTime</td>
+                                <td width="15%" align="center"><a href="javascript:;" onclick="down('@item.FilePath')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="@item.FavIcon"></i></a></td>
+                            </tr>
+                        }
                     </table>
                 </div>
             </div>
@@ -220,3 +192,48 @@
 
 
 <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+        function down(linkstr)
+        {
+            if(linkstr.length>0)
+            {
+                window.open(linkstr);
+            }
+        }
+
+        function fav(id) {
+
+            $.ajax({
+                type: "post",
+                url: "/Document/DocFavorites",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        data_search();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+}
+
+<!--底部脚本 end-->

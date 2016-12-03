@@ -129,7 +129,7 @@
                             dataHtml += "<td>"+item.CusUser.NickName+"</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</td>";
                             dataHtml += "<td>" + si + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Document/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\"i-fav\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Document/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\""+item.FavIcon+"\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

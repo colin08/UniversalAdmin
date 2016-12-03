@@ -505,6 +505,7 @@
     <Compile Include="Models\ViewModelCustomFormBase.cs" />
     <Compile Include="Models\ViewModelDepartment.cs" />
     <Compile Include="Models\ViewModelDocument.cs" />
+    <Compile Include="Models\ViewModelIndex.cs" />
     <Compile Include="Models\ViewModelJob.cs" />
     <Compile Include="Models\ViewModelNotice.cs" />
     <Compile Include="Models\ViewModelSendPwd.cs" />
