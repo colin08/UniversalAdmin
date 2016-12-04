@@ -2,7 +2,7 @@ namespace Universal.DataCore.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class init : DbMigration
     {
         public override void Up()
@@ -10,332 +10,332 @@ namespace Universal.DataCore.Migrations
             CreateTable(
                 "dbo.AppVersion",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Platforms = c.Byte(nullable: false),
-                        APPType = c.Byte(nullable: false),
-                        MD5 = c.String(nullable: false, maxLength: 100),
-                        Size = c.Long(nullable: false),
-                        Version = c.String(nullable: false, maxLength: 20),
-                        VersionCode = c.Int(nullable: false),
-                        LogoImg = c.String(nullable: false, maxLength: 255),
-                        DownUrl = c.String(nullable: false, maxLength: 255),
-                        LinkUrl = c.String(maxLength: 500),
-                        Content = c.String(nullable: false, maxLength: 500),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Platforms = c.Byte(nullable: false),
+                    APPType = c.Byte(nullable: false),
+                    MD5 = c.String(nullable: false, maxLength: 100),
+                    Size = c.Long(nullable: false),
+                    Version = c.String(nullable: false, maxLength: 20),
+                    VersionCode = c.Int(nullable: false),
+                    LogoImg = c.String(nullable: false, maxLength: 255),
+                    DownUrl = c.String(nullable: false, maxLength: 255),
+                    LinkUrl = c.String(maxLength: 500),
+                    Content = c.String(nullable: false, maxLength: 500),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.CusDepartmentAdmin",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        CusDepartmentID = c.Int(nullable: false),
-                        CusUserID = c.Int(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    CusDepartmentID = c.Int(nullable: false),
+                    CusUserID = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusDepartment", t => t.CusDepartmentID, cascadeDelete: true)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: false)
                 .Index(t => t.CusDepartmentID)
                 .Index(t => t.CusUserID);
-            
+
             CreateTable(
                 "dbo.CusDepartment",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 30),
-                        PID = c.Int(),
-                        Depth = c.Int(nullable: false),
-                        Status = c.Boolean(nullable: false),
-                        Priority = c.Int(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 30),
+                    PID = c.Int(),
+                    Depth = c.Int(nullable: false),
+                    Status = c.Boolean(nullable: false),
+                    Priority = c.Int(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusDepartment", t => t.PID)
                 .Index(t => t.PID);
-            
+
             CreateTable(
                 "dbo.CusUser",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Telphone = c.String(nullable: false, maxLength: 20),
-                        NickName = c.String(maxLength: 20),
-                        Password = c.String(nullable: false, maxLength: 255),
-                        IsAdmin = c.Boolean(nullable: false),
-                        CusDepartmentID = c.Int(nullable: false),
-                        CusUserJobID = c.Int(nullable: false),
-                        Gender = c.Byte(nullable: false),
-                        Status = c.Boolean(nullable: false),
-                        Avatar = c.String(),
-                        Brithday = c.DateTime(),
-                        ShorNum = c.String(maxLength: 20),
-                        Email = c.String(),
-                        AboutMe = c.String(maxLength: 500),
-                        RegTime = c.DateTime(nullable: false),
-                        LastLoginTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Telphone = c.String(nullable: false, maxLength: 20),
+                    NickName = c.String(maxLength: 20),
+                    Password = c.String(nullable: false, maxLength: 255),
+                    IsAdmin = c.Boolean(nullable: false),
+                    CusDepartmentID = c.Int(nullable: false),
+                    CusUserJobID = c.Int(nullable: false),
+                    Gender = c.Byte(nullable: false),
+                    Status = c.Boolean(nullable: false),
+                    Avatar = c.String(),
+                    Brithday = c.DateTime(),
+                    ShorNum = c.String(maxLength: 20),
+                    Email = c.String(),
+                    AboutMe = c.String(maxLength: 500),
+                    RegTime = c.DateTime(nullable: false),
+                    LastLoginTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusDepartment", t => t.CusDepartmentID, cascadeDelete: true)
                 .ForeignKey("dbo.CusUserJob", t => t.CusUserJobID, cascadeDelete: true)
                 .Index(t => t.Telphone, unique: true)
                 .Index(t => t.CusDepartmentID)
                 .Index(t => t.CusUserJobID);
-            
+
             CreateTable(
                 "dbo.CusUserJob",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 100),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 100),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.CusUserRoute",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        CusUserID = c.Int(nullable: false),
-                        CusRouteID = c.Int(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    CusUserID = c.Int(nullable: false),
+                    CusRouteID = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusRoute", t => t.CusRouteID, cascadeDelete: true)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: true)
                 .Index(t => t.CusUserID)
                 .Index(t => t.CusRouteID);
-            
+
             CreateTable(
                 "dbo.CusRoute",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 30),
-                        ControllerName = c.String(nullable: false, maxLength: 30),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 30),
+                    ControllerName = c.String(nullable: false, maxLength: 30),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.CusNotice",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 100),
-                        Content = c.String(nullable: false, unicode: false, storeType: "text"),
-                        CusUserID = c.Int(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 100),
+                    Content = c.String(nullable: false, unicode: false, storeType: "text"),
+                    CusUserID = c.Int(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: true)
                 .Index(t => t.CusUserID);
-            
+
             CreateTable(
                 "dbo.CusNoticeUser",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        CusNoticeID = c.Int(nullable: false),
-                        CusUserID = c.Int(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    CusNoticeID = c.Int(nullable: false),
+                    CusUserID = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusNotice", t => t.CusNoticeID, cascadeDelete: true)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: false)
                 .Index(t => t.CusNoticeID)
                 .Index(t => t.CusUserID);
-            
+
             CreateTable(
                 "dbo.CusUserFavorites",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        CusUserID = c.Int(nullable: false),
-                        Type = c.Int(nullable: false),
-                        TOID = c.Int(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    CusUserID = c.Int(nullable: false),
+                    Type = c.Int(nullable: false),
+                    TOID = c.Int(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: true)
                 .Index(t => t.CusUserID);
-            
+
             CreateTable(
                 "dbo.CusVerification",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Guid = c.Guid(nullable: false),
-                        Code = c.String(nullable: false, maxLength: 10),
-                        Type = c.Byte(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Guid = c.Guid(nullable: false),
+                    Code = c.String(nullable: false, maxLength: 10),
+                    Type = c.Byte(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.DocCategory",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 30),
-                        PID = c.Int(),
-                        Depth = c.Int(nullable: false),
-                        Status = c.Boolean(nullable: false),
-                        Priority = c.Int(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 30),
+                    PID = c.Int(),
+                    Depth = c.Int(nullable: false),
+                    Status = c.Boolean(nullable: false),
+                    Priority = c.Int(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.DocCategory", t => t.PID)
                 .Index(t => t.PID);
-            
+
             CreateTable(
                 "dbo.DocPostPower",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        DocPostID = c.Int(nullable: false),
-                        TOID = c.Int(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    DocPostID = c.Int(nullable: false),
+                    TOID = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.DocPost", t => t.DocPostID, cascadeDelete: true)
                 .Index(t => t.DocPostID);
-            
+
             CreateTable(
                 "dbo.DocPost",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 255),
-                        See = c.Int(nullable: false),
-                        DocCategoryID = c.Int(nullable: false),
-                        CusUserID = c.Int(nullable: false),
-                        FilePath = c.String(maxLength: 500),
-                        FileSize = c.String(maxLength: 30),
-                        AddTime = c.DateTime(nullable: false),
-                        LastUpdateTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Title = c.String(nullable: false, maxLength: 255),
+                    See = c.Int(nullable: false),
+                    DocCategoryID = c.Int(nullable: false),
+                    CusUserID = c.Int(nullable: false),
+                    FilePath = c.String(maxLength: 500),
+                    FileSize = c.String(maxLength: 30),
+                    AddTime = c.DateTime(nullable: false),
+                    LastUpdateTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.CusUser", t => t.CusUserID, cascadeDelete: true)
                 .ForeignKey("dbo.DocCategory", t => t.DocCategoryID, cascadeDelete: true)
                 .Index(t => t.DocCategoryID)
                 .Index(t => t.CusUserID);
-            
+
             CreateTable(
                 "dbo.Feedback",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 20),
-                        Telphone = c.String(maxLength: 20),
-                        Email = c.String(maxLength: 50),
-                        IsRead = c.Boolean(nullable: false),
-                        Content = c.String(maxLength: 500),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Name = c.String(maxLength: 20),
+                    Telphone = c.String(maxLength: 20),
+                    Email = c.String(maxLength: 50),
+                    IsRead = c.Boolean(nullable: false),
+                    Content = c.String(maxLength: 500),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.SysLogApiAction",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Uri = c.String(maxLength: 500),
-                        ControllerName = c.String(maxLength: 20),
-                        ActionName = c.String(maxLength: 20),
-                        ExecuteStartTime = c.DateTime(nullable: false),
-                        ExecuteEndTime = c.DateTime(nullable: false),
-                        ExecuteTime = c.Double(nullable: false),
-                        ActionParams = c.String(),
-                        HttpRequestHeaders = c.String(),
-                        IP = c.String(maxLength: 20),
-                        HttpMethod = c.String(maxLength: 10),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Uri = c.String(maxLength: 500),
+                    ControllerName = c.String(maxLength: 20),
+                    ActionName = c.String(maxLength: 20),
+                    ExecuteStartTime = c.DateTime(nullable: false),
+                    ExecuteEndTime = c.DateTime(nullable: false),
+                    ExecuteTime = c.Double(nullable: false),
+                    ActionParams = c.String(),
+                    HttpRequestHeaders = c.String(),
+                    IP = c.String(maxLength: 20),
+                    HttpMethod = c.String(maxLength: 10),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.SysLogException",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Message = c.String(nullable: false, maxLength: 255),
-                        Source = c.String(nullable: false, maxLength: 50),
-                        StackTrace = c.String(nullable: false),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Message = c.String(nullable: false, maxLength: 255),
+                    Source = c.String(nullable: false, maxLength: 50),
+                    StackTrace = c.String(nullable: false),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
-            
+
             CreateTable(
                 "dbo.SysLogMethod",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        SysUserID = c.Int(nullable: false),
-                        Type = c.Byte(nullable: false),
-                        Detail = c.String(nullable: false, maxLength: 500),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    SysUserID = c.Int(nullable: false),
+                    Type = c.Byte(nullable: false),
+                    Detail = c.String(nullable: false, maxLength: 500),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysUser", t => t.SysUserID, cascadeDelete: true)
                 .Index(t => t.SysUserID);
-            
+
             CreateTable(
                 "dbo.SysUser",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        UserName = c.String(nullable: false, maxLength: 20),
-                        NickName = c.String(nullable: false, maxLength: 30),
-                        Gender = c.Byte(nullable: false),
-                        Password = c.String(nullable: false, maxLength: 255),
-                        Status = c.Boolean(nullable: false),
-                        Avatar = c.String(),
-                        SysRoleID = c.Int(nullable: false),
-                        RegTime = c.DateTime(nullable: false),
-                        LastLoginTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    UserName = c.String(nullable: false, maxLength: 20),
+                    NickName = c.String(nullable: false, maxLength: 30),
+                    Gender = c.Byte(nullable: false),
+                    Password = c.String(nullable: false, maxLength: 255),
+                    Status = c.Boolean(nullable: false),
+                    Avatar = c.String(),
+                    SysRoleID = c.Int(nullable: false),
+                    RegTime = c.DateTime(nullable: false),
+                    LastLoginTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysRole", t => t.SysRoleID, cascadeDelete: true)
                 .Index(t => t.UserName, unique: true)
                 .Index(t => t.SysRoleID);
-            
+
             CreateTable(
                 "dbo.SysRole",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        RoleName = c.String(nullable: false, maxLength: 30),
-                        IsAdmin = c.Boolean(nullable: false),
-                        RoleDesc = c.String(nullable: false, maxLength: 255),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    RoleName = c.String(nullable: false, maxLength: 30),
+                    IsAdmin = c.Boolean(nullable: false),
+                    RoleDesc = c.String(nullable: false, maxLength: 255),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .Index(t => t.RoleName, unique: true);
-            
+
             CreateTable(
                 "dbo.SysRoleRoute",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        SysRoleID = c.Int(nullable: false),
-                        SysRouteID = c.Int(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    SysRoleID = c.Int(nullable: false),
+                    SysRouteID = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysRole", t => t.SysRoleID, cascadeDelete: true)
                 .ForeignKey("dbo.SysRoute", t => t.SysRouteID, cascadeDelete: true)
                 .Index(t => t.SysRoleID)
                 .Index(t => t.SysRouteID);
-            
+
             CreateTable(
                 "dbo.SysRoute",
                 c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Tag = c.String(maxLength: 30),
-                        IsPost = c.Boolean(nullable: false),
-                        Route = c.String(maxLength: 30),
-                        Desc = c.String(maxLength: 30),
-                        AddTime = c.DateTime(nullable: false),
-                    })
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Tag = c.String(maxLength: 30),
+                    IsPost = c.Boolean(nullable: false),
+                    Route = c.String(maxLength: 30),
+                    Desc = c.String(maxLength: 30),
+                    AddTime = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.ID);
 
             //按照某一个Id查询它及它的所有子级成员存储过程
@@ -568,8 +568,54 @@ namespace Universal.DataCore.Migrations
                         END";
             Sql(SQLGetParentCategory);
 
+            //根据部门ID获取主管、自动向上级查找
+            string fn_GetWorkPlanApproveUserIdsStr = @"CREATE FUNCTION fn_GetWorkPlanApproveUserIds(@department_id int)
+                        RETURNS varchar(100)
+                        AS
+                        BEGIN
+                        declare @a VARCHAR(100);
+                        set @a='';
+
+                        WITH Record AS(
+                            SELECT
+                            Id,
+                            PId
+                        FROM
+                            CusDepartment(NOLOCK)
+                            WHERE Id=@department_id
+                            UNION ALL
+                            SELECT
+                            a.Id Id,
+                            a.PId PId
+                        FROM
+                            CusDepartment(NOLOCK) a JOIN Record b
+                            ON a.Id=b.PId
+                        ),AAAAAA as 
+                        (
+                        select (
+                        select (Cast(CusUserID as nvarchar(10)) +',')  from(
+                        select TOP 1 ID FROM(
+                        SELECT
+                            R.Id,
+                            R.PId,
+		                        A.CusUserID
+                        FROM
+                            Record as R LEFT JOIN CusDepartmentAdmin as A on R.Id = A.CusDepartmentID
+                        ) as T where CusUserID is not null GROUP BY ID ) as ZZ left join CusDepartmentAdmin as SS on ZZ.Id = SS.CusDepartmentID
+                        for xml path('')
+                        ) as ids
+                        ) 
+
+                        select @a = ids from AAAAAA
+                        if(@a is null)
+	                        set @a= ''
+                        ELSE
+	                        set @a = SUBSTRING(@a,0, len(@a))
+                        return @a
+                        END";
+            Sql(fn_GetWorkPlanApproveUserIdsStr);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.SysLogMethod", "SysUserID", "dbo.SysUser");

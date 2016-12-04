@@ -73,19 +73,19 @@ namespace Universal.BLL
 
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%'";
             }
 
             if (category_id > 0)
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + ") AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + ") AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + "";
             }
 
             if (!string.IsNullOrWhiteSpace(search_title) && category_id > 0)
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,FilePath,FileSize,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%'";
             }
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];

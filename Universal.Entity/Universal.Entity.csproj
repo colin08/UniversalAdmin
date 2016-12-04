@@ -72,6 +72,7 @@
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
+    <Compile Include="WorkPlan.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

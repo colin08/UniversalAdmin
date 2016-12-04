@@ -199,6 +199,42 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取部门主管，如果当前部门没有主管，则向上层查找，以此类推
+        /// </summary>
+        /// <param name="department_id">部门ID</param>
+        /// <returns></returns>
+        public static List<Entity.CusUser> GetDepartmentAdminUp(int department_id)
+        {
+            List<Entity.CusUser> response_entity = new List<Entity.CusUser>();
+            var db = new DataCore.EFDBContext();
+            string strSql = "select dbo.fn_GetWorkPlanApproveUserIds(" + department_id.ToString() + ")";
+            var ids = db.Database.SqlQuery<string>(strSql).ToList()[0];
+            if (string.IsNullOrWhiteSpace(ids))
+                return response_entity;
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            response_entity = db.CusUsers.Where(p => id_list.Contains(p.ID)).ToList();
+            db.Dispose();
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 获取部门主管，如果当前部门没有主管，则向上层查找，以此类推
+        /// </summary>
+        /// <param name="department_id">部门ID</param>
+        /// <returns></returns>
+        public static List<Entity.CusUser> GetDepartmentAdminUp(DataCore.EFDBContext db,int department_id)
+        {
+            List<Entity.CusUser> response_entity = new List<Entity.CusUser>();
+            string strSql = "select dbo.fn_GetWorkPlanApproveUserIds(" + department_id.ToString() + ")";
+            var ids = db.Database.SqlQuery<string>(strSql).ToList()[0];
+            if (string.IsNullOrWhiteSpace(ids))
+                return response_entity;
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            response_entity = db.CusUsers.Where(p => id_list.Contains(p.ID)).ToList();
+            return response_entity;
+        }
+
+        /// <summary>
         /// 构造部门树数据
         /// </summary>
         /// <param name="default_id">返回默认第一个供加载数据的分类ID</param>

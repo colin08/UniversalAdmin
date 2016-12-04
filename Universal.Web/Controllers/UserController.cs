@@ -480,25 +480,7 @@ namespace Universal.Web.Controllers
         {
             return View();
         }
-
-        /// <summary>
-        /// 工作计划
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult GZJH()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 工作计划
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult GZJHADD()
-        {
-            return View();
-        }
-
+        
         /// <summary>
         /// 项目收藏
         /// </summary>

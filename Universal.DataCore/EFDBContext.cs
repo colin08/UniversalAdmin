@@ -117,7 +117,12 @@ namespace Universal.DataCore
         /// 通知
         /// </summary>
         public DbSet<Entity.CusNotice> CusNotices { get; set; }
-        
+
+        /// <summary>
+        /// 工作计划
+        /// </summary>
+        public DbSet<Entity.WorkPlan> WorkPlans { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

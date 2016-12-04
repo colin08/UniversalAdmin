@@ -217,5 +217,41 @@ namespace Universal.BLL
             return response_entity;
         }
 
+        /// <summary>
+        /// 用户所属部门的主管信息，如果当前部门没有主管，则向上层查找，以此类推
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUser> GetUserDepartmentAdmin(int user_id)
+        {
+            List<Entity.CusUser> response_entity = new List<Entity.CusUser>();
+            var db = new DataCore.EFDBContext();
+            var entity_user = db.CusUsers.Find(user_id);
+            if (entity_user == null)
+                return response_entity;
+            response_entity = BLLDepartment.GetDepartmentAdminUp(db, entity_user.CusDepartmentID);
+            db.Dispose();
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 用户所属部门的主管信息【返回文本】，如果当前部门没有主管，则向上层查找，以此类推
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static string GetUserDepartmentAdminText(int user_id)
+        {
+            System.Text.StringBuilder name_text = new System.Text.StringBuilder();
+            foreach (var User in BLL.BLLCusUser.GetUserDepartmentAdmin(user_id))
+                name_text.Append(User.NickName + ",");
+            if (name_text.Length > 0)
+            {
+                name_text = name_text.Remove(name_text.Length - 1, 1);
+                return name_text.ToString();
+            }
+            else
+                return "";
+        }
+
     }
 }

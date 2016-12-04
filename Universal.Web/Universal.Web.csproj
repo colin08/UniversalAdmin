@@ -494,6 +494,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WorkPlanController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -511,6 +512,7 @@
     <Compile Include="Models\ViewModelSendPwd.cs" />
     <Compile Include="Models\ViewModelUserBasic.cs" />
     <Compile Include="Models\ViewModelUserLogin.cs" />
+    <Compile Include="Models\ViewModelWorkPlan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -628,6 +630,9 @@
     <Content Include="Views\User\HYZJADD.cshtml" />
     <Content Include="Views\User\RWZPADD.cshtml" />
     <Content Include="Views\User\GZJHADD.cshtml" />
+    <Content Include="Views\WorkPlan\Index.cshtml" />
+    <Content Include="Views\WorkPlan\Approve.cshtml" />
+    <Content Include="Views\WorkPlan\Modify.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
