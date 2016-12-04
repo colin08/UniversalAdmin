@@ -34,7 +34,12 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<List<Models.ViewModelDepartment>> result = new WebAjaxEntity<List<Models.ViewModelDepartment>>();
             List<Models.ViewModelDepartment> list = new List<Models.ViewModelDepartment>();
             BLL.BaseBLL<Entity.CusDepartment> bll = new BLL.BaseBLL<Entity.CusDepartment>();
-            foreach (var item in bll.GetListBy(0, p => p.PID == pid, "Priority Desc", p => p.CusDepartmentAdmins.Select(s => s.CusUser)))
+            var db_list = new List<Entity.CusDepartment>();
+            if (TypeHelper.ObjectToInt(pid, 0) >= 0)
+                db_list = bll.GetListBy(0, p => p.PID == pid, "Priority Desc", p => p.CusDepartmentAdmins.Select(s => s.CusUser));
+            else
+                db_list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "Priority Desc", p => p.CusDepartmentAdmins.Select(s => s.CusUser));
+            foreach (var item in db_list)
             {
                 Models.ViewModelDepartment model = new Models.ViewModelDepartment();
                 model.department_id = item.ID;
