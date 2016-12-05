@@ -183,20 +183,20 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             if (!ValidateHelper.IsEmail(email))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法邮箱格式";
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            var model = WorkContext.UserInfo;
+            var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
             if (email.Equals(model.Email))
             {
                 WorkContext.AjaxStringEntity.msgbox = "新邮箱和原来的邮箱不能一样";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            model.Email = email;
-            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            model.Email = email;            
             bll.Modify(model, "Email");
             BLL.BLLCusUser.ModifySession(model);
             WorkContext.AjaxStringEntity.msg = 1;
