@@ -1,0 +1,127 @@
+﻿@model Universal.Entity.WorkPlan
+@{
+    ViewBag.Title = "工作计划详情";
+    ViewData["tabLeft"] = "gzjh";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/WorkPlan/Approve" class="fl f16"><i class="i-back"></i>审批工作计划</a>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">周次/周期</div>
+                        <div class="limd">
+                            @Model.WeekText
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+
+                    <li>
+                        <div class="lilt">本周工作记录</div>
+                        <div class="limd pr">@Model.NowJob</div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">下周工作计划</div>
+                        <div class="limd pr">
+                            @Model.NextPlan
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划完成时间</div>
+                        <div class="limd">
+                            @Model.DoneTime
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划者</div>
+                        <div class="limd">
+                            @Model.CusUser.NickName
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">审批人</div>
+                        <div class="limd"><span>@ViewData["ApproveUser"]</span></div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            @if ((bool)ViewData["IsDepartmentAdmin"])
+                            {
+                                if (Model.IsApprove)
+                                {
+                                    <button type="button"  class="btn1" style="background:#ccc">已审批</button>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="approve()" class="btn1" id="btn_s">审批</button>
+
+                                }
+                            }
+                            <button type="button" onclick="location.href = '/WorkPlan/Approve';" class="btn1 grey">返回</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        function approve() {
+            $.ajax({
+                type: "post",
+                url: "/WorkPlan/DoApprove",
+                data: { "id": @Model.ID },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("审批成功");
+                        $("#btn_s").attr({"disabled":"disabled"});
+                        $("#btn_s").attr({"style":"background:#ccc"});
+                        $("#btn_s").text("已审批");
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+}
+<!--底部脚本 end-->

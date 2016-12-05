@@ -633,6 +633,7 @@
     <Content Include="Views\WorkPlan\Index.cshtml" />
     <Content Include="Views\WorkPlan\Approve.cshtml" />
     <Content Include="Views\WorkPlan\Modify.cshtml" />
+    <Content Include="Views\WorkPlan\Info.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

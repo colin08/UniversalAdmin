@@ -72,6 +72,7 @@
     <Compile Include="Base\DynamicLinq.cs" />
     <Compile Include="Base\FilterSearch.cs" />
     <Compile Include="BLLVerification.cs" />
+    <Compile Include="BLLWorkPlan.cs" />
     <Compile Include="Model\AdminUserRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

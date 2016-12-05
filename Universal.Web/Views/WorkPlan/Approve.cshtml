@@ -17,8 +17,7 @@
     <div class="rightBox">
         <div class="container">
             <div class="tit1">
-                <span>工作计划</span>
-                <a href="/WorkPlan/Modify" class="newplan">+ 新建计划</a>
+                <span>审批工作计划</span>
             </div>
             <div class="projectColl">
                 <table border="0" cellspacing="0" cellpadding="0" class="table1">
@@ -27,22 +26,13 @@
                             <th width="15%">周次/周期</th>
                             <th width="20%">本周工作记录</th>
                             <th width="20%">下周工作计划</th>
-                            <th width="20%">计划完成时间</th>
-                            <th width="10%">审批人</th>
-                            <th width="15%">操作</th>
+                            <th width="10%">计划完成时间</th>
+                            <th width="10%">计划人</th>
+                            <th width="10%">审批状态</th>
+                            <th width="10%">操作</th>
                         </tr>
                     </thead>
                     <tbody id="listData"></tbody>
-                    <!--
-                    <tr>
-                            <td>第12周</td>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>2016-08-22 18:05:24</td>
-                            <td>李明</td>
-                            <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                        </tr>
-                        -->
                 </table>
                 <div class="listBtm">
                     <div class="page fr">
@@ -73,6 +63,16 @@
 {
     @Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
+            }
+        }
+
         $(document).ready(function (e) {
             pageData(1, false)
         });
@@ -82,7 +82,7 @@
         function pageData(page_index) {
             $.ajax({
                 type: "post",
-                url: "/WorkPlan/PageData",
+                url: "/WorkPlan/ApprovePageData",
                 data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": "" },
                 async: false, //同步请求
                 datatype: "json",
@@ -101,14 +101,19 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
+                        var app_text = "未审批";
+                        if (item.IsApprove)
+                        {
+                            app_text = "已审批";
+                        }
                         dataHtml += "<tr>";
-                        dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>" + item.WeekText + "</td>";
-                        dataHtml += "<td>" + item.NowJob + "</td>";
-                        dataHtml += "<td>" + item.NextPlat + "</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
-                        dataHtml += "<td>" + item.ApproveNickName + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkPlan/Modify\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "<td>" + CutString(item.NowJob, 20) + "</td>";
+                        dataHtml += "<td>" + CutString(item.NextPlan, 20) + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd") + "</td>";
+                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
+                        dataHtml += "<td>" + app_text + "</td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkPlan/Info?id="+item.ID+"\" class=\"aEdt\"><i class=\"i-edt\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -170,48 +175,6 @@
             catch (e) {
                 return "";
             }
-        }
-
-        function del(id) {
-            var ids = "";
-            if (id == 0) {
-                $(".all_checked_but").each(function () {
-                    if ($(this).is(':checked')) {
-                        ids = ids + $(this).attr("hid") + ","
-                    }
-                })
-                if (ids == "") {
-                    alert("请先选中要删除的数据");
-                    return;
-                }
-                ids = ids.substring(0, ids.length - 1);
-            }
-            else {
-                ids = id;
-            }
-            $.ajax({
-                type: "post",
-                url: "/AppVersion/DelVersion",
-                data: { "ids": ids },
-                async: false,
-                beforeSend: function () {
-
-                },
-                complete: function () {
-
-                },
-                success: function (data) {
-                    if (data.msg == 1) {
-                        pageData(1);
-                    }
-                    else {
-                        alert(data.msgbox);
-                    }
-                },
-                error: function () {
-                    alert("操作失败，请检查网络");
-                }
-            })
         }
     </script>
 

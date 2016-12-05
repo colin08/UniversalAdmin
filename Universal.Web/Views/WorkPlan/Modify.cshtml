@@ -41,15 +41,15 @@
 
                         <li>
                             <div class="lilt">本周工作记录</div>
-                            <div class="limd pr">@Html.TextAreaFor(p => p.next_plan, new { @class = "usTextarea" })</div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.next_plan)</div>
+                            <div class="limd pr">@Html.TextAreaFor(p => p.now_job, new { @class = "usTextarea" })</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.now_job)</div>
                         </li>
                         <li>
                             <div class="lilt">下周工作计划</div>
                             <div class="limd pr">
-                                @Html.TextAreaFor(p => p.now_job, new { @class = "usTextarea" })
+                                @Html.TextAreaFor(p => p.next_plan, new { @class = "usTextarea" })
                             </div>
-                            <div class="litip">@Html.ValidationMessageFor(p=>p.now_job)</div>
+                            <div class="litip">@Html.ValidationMessageFor(p=>p.next_plan)</div>
                         </li>
                         <li>
                             <div class="lilt">计划完成时间</div>

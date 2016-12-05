@@ -50,7 +50,7 @@ namespace Universal.Web.Controllers
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult DelVersion(string ids)
+        public JsonResult Del(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
             {
@@ -74,6 +74,85 @@ namespace Universal.Web.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// 审核工作计划数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ApprovePageData(int page_size, int page_index, string keyword)
+        {
+            int rowCount = 0;
+            List<Entity.WorkPlan> list = BLL.BLLWorkPlan.GetAdminApprovePageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID);
+            //foreach (var item in list)
+            //    item.ApproveNickName = BLL.BLLCusUser.GetUserDepartmentAdminText(item.CusUserID);
+            WebAjaxEntity<List<Entity.WorkPlan>> result = new WebAjaxEntity<List<Entity.WorkPlan>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 工作计划详情
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Info(int id)
+        {
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            Entity.WorkPlan entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
+            if (entity == null)
+                return View("Error");
+            ViewData["ApproveUser"] = BLL.BLLCusUser.GetUserDepartmentAdminText(entity.CusUserID);
+
+            BLL.BaseBLL<Entity.CusDepartmentAdmin> bll_admin = new BLL.BaseBLL<Entity.CusDepartmentAdmin>();
+            bool isAdmin = bll_admin.Exists(p => p.CusUserID == WorkContext.UserInfo.ID);
+            ViewData["IsDepartmentAdmin"] = isAdmin;
+            return View(entity);
+        }
+
+        /// <summary>
+        /// 计划审批
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DoApprove(int id)
+        {
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "要审批的计划不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            if(entity.IsApprove)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "已审批";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            entity.IsApprove = true;
+            entity.ApproveTime = DateTime.Now;
+            if(bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "审批成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "审批失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+        }
+
 
         public ActionResult Modify(int? id)
         {
@@ -131,6 +210,11 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("week_text", "信息不存在");
                 }
+                if (bll.GetModel(p => p.ID == entity.id).IsApprove)
+                {
+                    //审批过的不能再编辑
+                    entity.Msg = 4;
+                }
             }
 
             DateTime DoneTime = DateTime.Now;
@@ -178,17 +262,17 @@ namespace Universal.Web.Controllers
         /// <summary>
         /// 加载平台列表
         /// </summary>
-        private void LoadPlatform(string def_week="")
+        private void LoadPlatform(string def_week = "")
         {
             //加载审批人
             ViewData["ApproveUser"] = BLL.BLLCusUser.GetUserDepartmentAdminText(WorkContext.UserInfo.ID);
-            
+
             List<SelectListItem> WeekList = new List<SelectListItem>();
             WeekList.Add(new SelectListItem() { Text = "请选择", Value = "" });
             DateTime dt = DateTime.Now;
             DateTime startWeek = GetMondayInWeek(DateTime.Now);  //本周周一
             DateTime endWeek = startWeek.AddDays(6);  //本周周日
-            
+
             DateTime up_1 = startWeek.AddDays(-7);
             DateTime up_1_end = up_1.AddDays(6);
             string up_1_str = up_1.ToString("yyyy/MM/dd") + "-" + up_1_end.ToString("yyyy/MM/dd");
@@ -209,7 +293,7 @@ namespace Universal.Web.Controllers
             DateTime next_2_end = next_2.AddDays(6);
             string next_2_str = next_2.ToString("yyyy/MM/dd") + "-" + next_2_end.ToString("yyyy/MM/dd");
 
-            if(!string.IsNullOrWhiteSpace(def_week))
+            if (!string.IsNullOrWhiteSpace(def_week))
                 WeekList.Add(new SelectListItem() { Text = def_week, Value = def_week });
             WeekList.Add(new SelectListItem() { Text = up_2_str, Value = up_2_str });
             WeekList.Add(new SelectListItem() { Text = up_1_str, Value = up_1_str });
