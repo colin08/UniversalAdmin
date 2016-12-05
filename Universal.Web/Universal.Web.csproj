@@ -610,7 +610,7 @@
     <Content Include="Views\TJ\Index.cshtml" />
     <Content Include="Views\User\XMSC.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
-    <Content Include="Views\User\MyDown.cshtml" />
+    <Content Include="Views\User\DownloadLog.cshtml" />
     <Content Include="Views\User\MyMsg.cshtml" />
     <Content Include="Views\Shool\Index.cshtml" />
     <Content Include="Views\Shared\_ShoolMenuLeft.cshtml" />

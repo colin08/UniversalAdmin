@@ -512,10 +512,59 @@ namespace Universal.Web.Controllers
         /// 我的下载
         /// </summary>
         /// <returns></returns>
-        public ActionResult MyDown()
+        public ActionResult DownloadLog()
         {
             return View();
         }
+
+        /// <summary>
+        /// 我的下载 分页数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DownLogData(int page_size, int page_index, string keyword)
+        {
+            BLL.BaseBLL<Entity.DownloadLog> bll = new BLL.BaseBLL<Entity.DownloadLog>();
+            int rowCount = 0;
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
+            if (!string.IsNullOrWhiteSpace(keyword))
+                filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
+
+            List<Entity.DownloadLog> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc");
+            WebAjaxEntity<List<Entity.DownloadLog>> result = new WebAjaxEntity<List<Entity.DownloadLog>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 删除下载记录
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DelDownLog(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.DownloadLog> bll = new BLL.BaseBLL<Entity.DownloadLog>();
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
 
         /// <summary>
         /// 我的消息

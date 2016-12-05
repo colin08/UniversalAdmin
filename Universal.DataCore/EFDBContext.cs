@@ -138,6 +138,11 @@ namespace Universal.DataCore
         public DbSet<Entity.WorkMeetingUser> WorkMeetingUsers { get; set; }
 
         /// <summary>
+        /// 下载记录
+        /// </summary>
+        public DbSet<Entity.DownloadLog> DownloadLogs { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201612050342458_add_job_meeting.Designer.cs">
       <DependentUpon>201612050342458_add_job_meeting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612051240295_add_down_log.cs" />
+    <Compile Include="Migrations\201612051240295_add_down_log.Designer.cs">
+      <DependentUpon>201612051240295_add_down_log.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -116,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612050342458_add_job_meeting.resx">
       <DependentUpon>201612050342458_add_job_meeting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612051240295_add_down_log.resx">
+      <DependentUpon>201612051240295_add_down_log.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
