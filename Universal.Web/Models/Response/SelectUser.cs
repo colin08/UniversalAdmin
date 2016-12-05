@@ -6,26 +6,24 @@ using System.Web;
 namespace Universal.Web.Models.Response
 {
     /// <summary>
-    /// 通用树数据
+    /// 选择用户
     /// </summary>
-    public class TreeData
+    public class SelectUser
     {
         /// <summary>
-        /// 数据ID
+        /// 用户ID
         /// </summary>
-        public int id { get; set; }
+        public int user_id { get; set; }
 
         /// <summary>
-        /// 父级ID
+        /// 手机号
         /// </summary>
-        public int pid { get; set; }
-
-        public string title { get; set; }
+        public string telphone { get; set; }
 
         /// <summary>
-        /// 部门里对应的人数
+        /// 昵称
         /// </summary>
-        public int data_total { get; set; }
+        public string nickname { get; set; }
 
     }
 }

@@ -199,6 +199,18 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取所属某个分类的用户数量，包含子类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static int GetDepartChildDataTotal(int id)
+        {
+            var db = new DataCore.EFDBContext();
+            string Sql = "select count(1) as total from CusUser where charindex(','+LTRIM(CusDepartmentID)+',',','+(select dbo.fn_GetChildDepartmentStr(" + id.ToString() + "))+',')>0";
+            return db.Database.SqlQuery<int>(Sql).ToList()[0];
+        }
+
+        /// <summary>
         /// 获取部门主管，如果当前部门没有主管，则向上层查找，以此类推
         /// </summary>
         /// <param name="department_id">部门ID</param>

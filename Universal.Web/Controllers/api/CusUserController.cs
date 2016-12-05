@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Universal.Tools;
 using Universal.Web.Framework;
+using System.Data.Entity;
 
-namespace Universal.Web.Controllers
+namespace Universal.Web.Controllers.api
 {
     /// <summary>
     /// 用户接口
@@ -94,6 +95,62 @@ namespace Universal.Web.Controllers
             return response_entity;
 
 
+        }
+
+        /// <summary>
+        /// 搜索用户
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/search")]
+        public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(string search_word)
+        {
+            WebAjaxEntity<List<Models.Response.ModelUserInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ModelUserInfo>>();
+            List<Models.Response.ModelUserInfo> response_list = new List<Models.Response.ModelUserInfo>();
+            if (string.IsNullOrWhiteSpace(search_word))
+            {
+                response_entity.msg = 1;
+                response_entity.msgbox = "关键字不能为空";
+                response_entity.data = response_list;
+                return response_entity;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+            filters.Add(new BLL.FilterSearch("NickName", search_word, BLL.FilterSearchContract.like));
+            filters.Add(new BLL.FilterSearch("Telphone", search_word, BLL.FilterSearchContract.like));
+            filters.Add(new BLL.FilterSearch("ShorNum", search_word, BLL.FilterSearchContract.like));
+            filters.Add(new BLL.FilterSearch("Email", search_word, BLL.FilterSearchContract.like));
+            foreach (var item in bll.GetListBy(0,filters, "RegTime Asc"))
+                response_list.Add(BuilderAPPUser(item));
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.data = response_list;
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 获取所有用户列表,供秘籍选择用户使用
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/all")]
+        public WebAjaxEntity<List<Models.Response.SelectUser>> GetAllUser()
+        {
+            WebAjaxEntity<List<Models.Response.SelectUser>> response_entity = new WebAjaxEntity<List<Models.Response.SelectUser>>();
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            List<Models.Response.SelectUser> response_list = new List<Models.Response.SelectUser>();
+            foreach (var item in bll.GetListBy(0, p => p.Status == true, "RegTime asc"))
+            {
+                Models.Response.SelectUser model = new Models.Response.SelectUser();
+                model.user_id = item.ID;
+                model.telphone = item.Telphone;
+                model.nickname = item.NickName;
+                response_list.Add(model);
+            }
+            response_entity.data = response_list;
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            return response_entity;
         }
 
         /// <summary>

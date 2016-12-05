@@ -479,6 +479,7 @@
     <Compile Include="Controllers\AdminUserController.cs" />
     <Compile Include="Controllers\api\APIController.cs" />
     <Compile Include="Controllers\api\CusUserController.cs" />
+    <Compile Include="Controllers\api\Department.cs" />
     <Compile Include="Controllers\api\DocumentController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />
@@ -509,6 +510,7 @@
     <Compile Include="Models\Request\RemoveFav.cs" />
     <Compile Include="Models\Response\DocumentInfo.cs" />
     <Compile Include="Models\Response\ModelUserInfo.cs" />
+    <Compile Include="Models\Response\SelectUser.cs" />
     <Compile Include="Models\Response\TreeData.cs" />
     <Compile Include="Models\ViewModelAdminUser.cs" />
     <Compile Include="Models\ViewModelAppVersion.cs" />
