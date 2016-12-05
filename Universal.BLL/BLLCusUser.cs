@@ -218,7 +218,7 @@ namespace Universal.BLL
         }
 
         /// <summary>
-        /// 用户所属部门的主管信息，如果当前部门没有主管，则向上层查找，以此类推
+        /// 用户所属部门的主管信息，如果该用户已是主管，则向上层查找；如果当前部门没有主管，则向上层查找
         /// </summary>
         /// <param name="user_id"></param>
         /// <returns></returns>
@@ -229,7 +229,17 @@ namespace Universal.BLL
             var entity_user = db.CusUsers.Find(user_id);
             if (entity_user == null)
                 return response_entity;
-            response_entity = BLLDepartment.GetDepartmentAdminUp(db, entity_user.CusDepartmentID);
+            int department_id = entity_user.CusDepartmentID;
+            //如果用户是主管,则查找上级
+            if(db.CusDepartmentAdmins.Any(p=>p.CusUserID == user_id && p.CusDepartmentID == entity_user.CusDepartmentID))
+            {
+                var entity_department = db.CusDepartments.Where(p => p.ID == department_id).FirstOrDefault();
+                if(entity_department != null)
+                {
+                    department_id = TypeHelper.ObjectToInt(entity_department.PID, department_id);
+                }
+            }
+            response_entity = BLLDepartment.GetDepartmentAdminUp(db, department_id);
             db.Dispose();
             return response_entity;
         }
