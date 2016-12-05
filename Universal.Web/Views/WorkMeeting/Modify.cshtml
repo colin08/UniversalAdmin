@@ -1,0 +1,183 @@
+﻿@model Universal.Web.Models.ViewModelWorkMeeting
+@{
+    ViewBag.Title = "会议召集";
+    ViewData["tabLeft"] = "workmeeting";
+    ViewData["tabTop"] = "manager";
+}
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/WorkMeeting/Index" class="fl f16"><i class="i-back"></i>会议召集</a>
+                    <b class="tit1Txt fr">编辑会议</b>
+                </div>
+            </div>
+            <div class="userInfo">
+                <form method="post" class="form-horizontal" id="form" name="form1">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(p => p.user_ids)
+                    @Html.HiddenFor(p => p.year)
+                    @Html.HiddenFor(p => p.month)
+                    @Html.HiddenFor(p => p.day)
+                    <ul>
+
+                        @if (Model.id > 0)
+                        {
+                            <li>
+                                <div class="lilt">会议状态</div>
+                                <div class="limd">
+                                    @Html.DropDownListFor(p => p.status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select", @style = "width: 94%;" })
+                                </div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.status)</div>
+                            </li>
+                         }
+
+                        <li>
+                            <div class="lilt">主题</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p=>p.title)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">议程</div>
+                            <div class="limd pr">@Html.TextAreaFor(p => p.content, new { @class = "usTextarea" })</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
+                        </li>
+
+
+                        <li>
+                            <div class="lilt">时间</div>
+                            <div class="limd">
+                                <select name="YYYY" onChange="YYYYDD(this.value)" class="tb_select"></select>
+                                <select name="MM" onChange="MMDD(this.value)" class="tb_select"></select>
+                                <select name="DD" onchange="DDChan(this.value)" class="tb_select"></select>
+                            </div>
+                            <div class="litip">&nbsp;</div>
+                        </li>
+
+                        <li>
+                            <div class="lilt">地点</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.location, new { @class = "usInput" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.location)</div>
+                        </li>
+
+                        <li>
+                            <div class="lilt">与会人员</div>
+                            <div class="limd big">
+                                <span><a href="#" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+
+                                <div class="menlist">
+                                    <ul>
+                                        @foreach (var item in Model.users_entity)
+                                        {
+                                            <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <div class="lilt">&nbsp;</div>
+                            <div class="limd"><button type="submit" class="btn1">发布</button> <button type="button" onclick="location.href = '/WorkMeeting/Index';" class="btn1 grey">取消</button></div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+
+</div>
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            @if(Model.Msg == 1)
+            {
+                @: location.href = "/WorkMeeting/Index";
+            }
+
+
+        });
+    </script>
+<script type="text/javascript">
+            function YYYYMMDDstart() {
+                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+                //先给年下拉框赋内容
+                var y = new Date().getFullYear();
+                for (var i = y ; i < (y + 10) ; i++) //以今年为准，前30年，后30年
+                    document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
+                //赋月份的下拉框
+                for (var i = 1; i < 13; i++)
+                    document.form1.MM.options.add(new Option(" " + i + " 月", i));
+
+                document.form1.YYYY.value = $("#year").val();
+
+                //document.form1.MM.value = new Date().getMonth() + 1;
+                document.form1.MM.value = $("#month").val();
+                var n = MonHead[new Date().getMonth()];
+                if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+                writeDay(n); //赋日期下拉框Author:meizz
+                //document.form1.DD.value = new Date().getDate();
+                document.form1.DD.value = $("#day").val();
+            }
+            if (document.attachEvent)
+                window.attachEvent("onload", YYYYMMDDstart);
+            else
+                window.addEventListener('load', YYYYMMDDstart, false);
+
+            function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
+            {
+                var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
+                $("#year").val(str);
+                if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+                var n = MonHead[MMvalue - 1];
+                if (MMvalue == 2 && IsPinYear(str)) n++;
+                writeDay(n)
+            }
+            function MMDD(str)   //月发生变化时日期联动
+            {
+                var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
+                $("#month").val(str);
+                if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+                var n = MonHead[str - 1];
+                if (str == 2 && IsPinYear(YYYYvalue)) n++;
+                writeDay(n)
+            }
+            function DDChan(str) {
+                $("#day").val(str);
+            }
+            function writeDay(n)   //据条件写日期的下拉框
+            {
+                var e = document.form1.DD; optionsClear(e);
+                for (var i = 1; i < (n + 1) ; i++)
+                    e.options.add(new Option(" " + i + " 日", i));
+            }
+            function IsPinYear(year)//判断是否闰平年
+            {
+                return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+            }
+            function optionsClear(e) {
+                e.options.length = 1;
+            }
+
+</script>
+}
+<!--底部脚本 end-->

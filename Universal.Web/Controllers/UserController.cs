@@ -445,42 +445,7 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
         }
-
-
-        /// <summary>
-        /// 会议召集
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult HYZJ()
-        {
-            return View();
-        }
-
-
-        public ActionResult HYZJADD()
-        {
-            return View();
-        }
-
-
-        /// <summary>
-        /// 任务指派
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult RWZP()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 任务指派
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult RWZPADD()
-        {
-            return View();
-        }
-        
+                
         /// <summary>
         /// 项目收藏
         /// </summary>

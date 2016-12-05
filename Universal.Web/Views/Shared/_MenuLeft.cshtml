@@ -9,8 +9,8 @@
         </dl>
         <dl>
             <dt>工作待办</dt>
-            <dd @(ViewData["tabLeft"].ToString().Equals("hyzj") ? "class=act" : "")><a href="/User/HYZJ" title="会议召集"><em><i class="i-lm9"></i></em><span>会议召集</span></a></dd>
-            <dd @(ViewData["tabLeft"].ToString().Equals("rwzp") ? "class=act" : "")><a href="/User/RWZP" title="任务指派"><em><i class="i-lm10"></i></em><span>任务指派</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("workmeeting") ? "class=act" : "")><a href="/WorkMeeting/Index" title="会议召集"><em><i class="i-lm9"></i></em><span>会议召集</span></a></dd>
+            <dd @(ViewData["tabLeft"].ToString().Equals("workjob") ? "class=act" : "")><a href="/WorkJob/Index" title="任务指派"><em><i class="i-lm10"></i></em><span>任务指派</span></a></dd>
             <dd @(ViewData["tabLeft"].ToString().Equals("gzjh") ? "class=act" : "")><a href="/WorkPlan/Index" title="工作计划"><em><i class="i-lm11"></i></em><span>工作计划</span></a></dd>
         </dl>
         <dl>

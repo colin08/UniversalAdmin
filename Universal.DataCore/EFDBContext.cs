@@ -124,6 +124,20 @@ namespace Universal.DataCore
         public DbSet<Entity.WorkPlan> WorkPlans { get; set; }
 
         /// <summary>
+        /// 任务指派
+        /// </summary>
+        public DbSet<Entity.WorkJob> WorkJobs { get; set; }
+
+        public DbSet<Entity.WorkJobUser> WorkJobUsers { get; set; }
+
+        /// <summary>
+        /// 任务召集
+        /// </summary>
+        public DbSet<Entity.WorkMeeting> WorkMeetings { get; set; }
+
+        public DbSet<Entity.WorkMeetingUser> WorkMeetingUsers { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

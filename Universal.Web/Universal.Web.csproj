@@ -481,6 +481,8 @@
     <Compile Include="Controllers\api\CusUserController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />
+    <Compile Include="Controllers\WorkMeetingController.cs" />
+    <Compile Include="Controllers\WorkJobController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ShoolController.cs" />
     <Compile Include="Controllers\TJController.cs" />
@@ -512,6 +514,8 @@
     <Compile Include="Models\ViewModelSendPwd.cs" />
     <Compile Include="Models\ViewModelUserBasic.cs" />
     <Compile Include="Models\ViewModelUserLogin.cs" />
+    <Compile Include="Models\ViewModelWorkMeeting.cs" />
+    <Compile Include="Models\ViewModelWorkJob.cs" />
     <Compile Include="Models\ViewModelWorkPlan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -604,9 +608,6 @@
     <Content Include="Views\Project\Some.cshtml" />
     <Content Include="Views\Msg\Index.cshtml" />
     <Content Include="Views\TJ\Index.cshtml" />
-    <Content Include="Views\User\HYZJ.cshtml" />
-    <Content Include="Views\User\RWZP.cshtml" />
-    <Content Include="Views\User\GZJH.cshtml" />
     <Content Include="Views\User\XMSC.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
     <Content Include="Views\User\MyDown.cshtml" />
@@ -627,13 +628,14 @@
     <Content Include="Views\Project\Add.cshtml" />
     <Content Include="Views\Node\Modify.cshtml" />
     <Content Include="Views\Flow\Modify.cshtml" />
-    <Content Include="Views\User\HYZJADD.cshtml" />
-    <Content Include="Views\User\RWZPADD.cshtml" />
-    <Content Include="Views\User\GZJHADD.cshtml" />
     <Content Include="Views\WorkPlan\Index.cshtml" />
     <Content Include="Views\WorkPlan\Approve.cshtml" />
     <Content Include="Views\WorkPlan\Modify.cshtml" />
     <Content Include="Views\WorkPlan\Info.cshtml" />
+    <Content Include="Views\WorkJob\Index.cshtml" />
+    <Content Include="Views\WorkJob\Modify.cshtml" />
+    <Content Include="Views\WorkMeeting\Index.cshtml" />
+    <Content Include="Views\WorkMeeting\Modify.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
