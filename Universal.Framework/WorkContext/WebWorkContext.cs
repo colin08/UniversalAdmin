@@ -18,5 +18,15 @@ namespace Universal.Web.Framework
         /// </summary>
         public string ManagerHome { get; set; }
 
+        /// <summary>
+        /// 消息数量
+        /// </summary>
+        public int MessageTotal { get; set; }
+
+        /// <summary>
+        /// 未读消息列表
+        /// </summary>
+        public List<Entity.CusUserMessage> UnReadMessageTopList { get; set; }
+
     }
 }

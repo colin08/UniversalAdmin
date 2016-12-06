@@ -196,9 +196,9 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "新邮箱和原来的邮箱不能一样";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            model.Email = email;            
+            model.Email = email;
             bll.Modify(model, "Email");
-            BLL.BLLCusUser.ModifySession(model);
+            BLL.BLLCusUser.ModifySession(BLL.BLLCusUser.GetModel(model.ID));
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
         }
@@ -445,7 +445,7 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
         }
-                
+
         /// <summary>
         /// 项目收藏
         /// </summary>
@@ -570,9 +570,96 @@ namespace Universal.Web.Controllers
         /// 我的消息
         /// </summary>
         /// <returns></returns>
-        public ActionResult MyMsg()
+        public ActionResult Message()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 我的消息 分页数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult MessageData(int page_size, int page_index, string keyword)
+        {
+            BLL.BaseBLL<Entity.CusUserMessage> bll = new BLL.BaseBLL<Entity.CusUserMessage>();
+            int rowCount = 0;
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
+            if (!string.IsNullOrWhiteSpace(keyword))
+                filter.Add(new BLL.FilterSearch("Content", keyword, BLL.FilterSearchContract.like));
+
+            List<Entity.CusUserMessage> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "IsRead DESC,AddTime desc");
+            WebAjaxEntity<List<Entity.CusUserMessage>> result = new WebAjaxEntity<List<Entity.CusUserMessage>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 消息设置为已读,id=-1为将所有消息置为已读
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult MessageSetRead(int id)
+        {
+            if (id < -1 || id == 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.CusUserMessage> bll = new BLL.BaseBLL<Entity.CusUserMessage>();
+            if(id == -1)
+            {
+                //将所有消息置为已读
+                BLL.BLLCusUserMessage.SetAllRead(WorkContext.UserInfo.ID);
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "ok";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "消息不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (!entity.IsRead)
+            {
+                entity.IsRead = true;
+                bll.Modify(entity, "IsRead");
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 删除消息
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DelMessage(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.CusUserMessage> bll = new BLL.BaseBLL<Entity.CusUserMessage>();
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            return Json(WorkContext.AjaxStringEntity);
         }
 
     }

@@ -21,7 +21,7 @@
     <!--header-->
     <div class="header">
         <a href="#" title="花伴里" class="logosm"><img src="/assets/theme/ico/logoSm.png" /></a>
-        
+
         <div class="topRight">
             <div class="user">
                 <a href="javascript:;"><em><img class="avatar_tab" src="@WorkContext.UserInfo.Avatar" style="width:32px;height:32px;" /></em><span>@WorkContext.UserInfo.NickName  </span></a><i class="i-userArr"></i>
@@ -44,7 +44,12 @@
             </div>
             <div class="toplink">
                 <ul>
-                    <li class="a-msg"><a href="#" title="#"><i class="i-msg"></i><em>99+</em></a></li>
+                    <li class="a-msg"><a href="#" title="#"><i class="i-msg"></i>
+                        @if(WorkContext.MessageTotal>0)
+                        {
+                            <em>@WorkContext.MessageTotal</em>
+                        }
+                        </a></li>
                     <li><a href="#" title="#"><i class="i-mbe"></i></a></li>
                     <li><a href="#" title="#"><i class="i-fav"></i></a></li>
                     <li class="search-hover"><input type="text" placeholder="请输入搜索内容" class="search-input" /><a href="/Search/Project" title="#"><i class="i-sch"></i></a></li>
@@ -53,23 +58,32 @@
                 <div class="top-msg" style="display:none;">
                     <i class="i-arrow-t"></i>
                     <ul>
-                        <li>
-                            <i class="i-top-msg1"></i>
-                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
-                            <a href="javascript:;" class="share">资源分享</a>
-                        </li>
-                        <li class="bg">
-                            <i class="i-top-msg2"></i>
-                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
-                            <a href="javascript:;" class="share">资源分享</a>
-                        </li>
-                        <li>
-                            <i class="i-top-msg3"></i>
-                            <span class="tit">城市更新报建指引<span class="time">16:30</span></span>
-                            <a href="javascript:;" class="share">资源分享</a>
-                        </li>
+                        @if (WorkContext.UnReadMessageTopList != null && WorkContext.UnReadMessageTopList.Count > 0)
+                        {
+                            foreach (var item in WorkContext.UnReadMessageTopList)
+                            {
+                                <li>
+                                    <i class="i-top-msg1"></i>
+                                    <span class="tit">@(Universal.Tools.StringHelper.CutString(item.Content,14))<span class="time">@item.AddTime</span></span>
+                                    <a href="@item.LinkUrl" class="share">@item.TypeName</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <span class="tit" style="text-align: center;width: 100%;">没有未读消息</span>
+                            </li>
+                        }
+
                     </ul>
-                    <div class="top-msg-more clearfix"><a href="javascript:;" class="read fl">全部标记为已读</a><a href="javascript:;" class="fr">查看更多</a></div>
+                    <div class="top-msg-more clearfix">
+                        @if (WorkContext.MessageTotal > 0)
+                        {
+                            <a href="javascript:;" class="read fl">全部标记为已读</a>
+                        }
+                            <a href="/User/Message" class="fr">查看更多</a>
+                    </div>
                 </div>
                 <!-- 新增消息下拉 ]] -->
             </div>
@@ -78,12 +92,12 @@
 
         <div class="nav">
             <ul>
-                <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")><a href="/" title="首页">首页</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")><a href="/Project/Some" title="项目管理">项目管理</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=act" : "")><a href="/Msg/index" title="企业通讯">企业通讯</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=act" : "")><a href="/TJ/index" title="平台统计">平台统计</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=act" : "")><a href="@WorkContext.ManagerHome">系统管理</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")=)><a href="/" title="首页">首页</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")=)><a href="/Project/Some" title="项目管理">项目管理</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")=)><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=act" : "")=)><a href="/Msg/index" title="企业通讯">企业通讯</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=act" : "")=)><a href="/TJ/index" title="平台统计">平台统计</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=act" : "")=)><a href="@WorkContext.ManagerHome">系统管理</a></li>
             </ul>
         </div>
     </div>
@@ -92,7 +106,25 @@
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript" src="/assets/theme/js/common.js"></script>
     @RenderSection("foot", required: false)
+    <script type="text/javascript">
+        $(function () {
+            $(".top-msg").hide();
+            $(".a-msg").hover(function () {
+                $(".top-msg").show();
+            }, function () {
+                $(".top-msg").hide();
+            })
+            // 鼠标移动到list的div上的时候list div不会被隐藏
+            $(".top-msg").hover(function () {
+                $(".top-msg").show();
+            }, function () {
+                $(".top-msg").hide();
+            })
+        });
+    </script>
+
 </body>
+
 
 <!--[if IE 6]>
 <script type="text/javascript" src="skins/js/DD_belatedPNG.js"></script>

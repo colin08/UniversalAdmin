@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "文件信息";
+    ViewData["tabLeft"] = "msg";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/User/Message" class="fl f16"><i class="i-back"></i>消息列表</a>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">标题</div>
+                        <div class="limd">
+                            <span>Kongo</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            <button type="button" onclick="location.href = '/User/Message';" class="btn1 grey">返回消息列表</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+}
+<!--底部脚本 end-->

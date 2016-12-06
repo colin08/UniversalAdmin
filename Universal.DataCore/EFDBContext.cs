@@ -143,6 +143,12 @@ namespace Universal.DataCore
         public DbSet<Entity.DownloadLog> DownloadLogs { get; set; }
 
         /// <summary>
+        /// 用户消息
+        /// </summary>
+        public DbSet<Entity.CusUserMessage> CusUserMessages { get; set; }
+
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

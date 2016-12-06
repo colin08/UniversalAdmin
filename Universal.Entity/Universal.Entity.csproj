@@ -60,6 +60,7 @@
     <Compile Include="CusUser\CusUser.cs" />
     <Compile Include="CusUser\CusUserDocFavorites.cs" />
     <Compile Include="CusUser\CusUserJob.cs" />
+    <Compile Include="CusUser\CusUserMessage.cs" />
     <Compile Include="CusUser\CusVerification.cs" />
     <Compile Include="Doc\DocCategory.cs" />
     <Compile Include="Doc\DocPost.cs" />

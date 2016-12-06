@@ -62,6 +62,7 @@
     <Compile Include="BLLCusNotice.cs" />
     <Compile Include="BLLCusRoute.cs" />
     <Compile Include="BLLCusUser.cs" />
+    <Compile Include="BLLCusUserMessage.cs" />
     <Compile Include="BLLDepartment.cs" />
     <Compile Include="BLLDocCategory.cs" />
     <Compile Include="BLLDocument.cs" />

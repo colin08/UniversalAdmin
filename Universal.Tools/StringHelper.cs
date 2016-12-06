@@ -112,6 +112,20 @@ namespace Universal.Tools
         #region 截取字符串
 
         /// <summary>
+        /// 截取指定长度的字符串，超出部分..
+        /// </summary>
+        /// <param name="sourceStr"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string CutString(string sourceStr,int length)
+        {
+            if (sourceStr.Length < length)
+                return sourceStr;
+
+            return sourceStr.Substring(0, length) + "..";
+        }
+
+        /// <summary>
         /// 截取字符串
         /// </summary>
         /// <param name="sourceStr">源字符串</param>

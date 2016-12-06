@@ -1,0 +1,110 @@
+﻿@model Universal.Entity.AppVersion
+@{
+    ViewBag.Title = "版本信息";
+    ViewData["tabLeft"] = "msg";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/User/Message" class="fl f16"><i class="i-back"></i>消息列表</a>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">平台</div>
+                        <div class="limd">
+                            <span>@Model.PlatformsStr</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">版本</div>
+                        <div class="limd">
+                            <span>@Model.APPType</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">大小</div>
+                        <div class="limd">
+                            <span>@Model.Size</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">版本</div>
+                        <div class="limd">
+                            <span>@Model.Version</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">更新内容</div>
+                        <div class="limd">
+                            <span>@Model.Content</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">下载地址</div>
+                        <div class="limd">
+                            <span>
+                            @switch (Model.Platforms)
+                            {
+                                case Universal.Entity.APPVersionPlatforms.Android:
+                                    <a href="@Model.DownUrl" target="_blank">APK下载</a>
+                                    break;
+                                case Universal.Entity.APPVersionPlatforms.IOS:
+                                    <a href="@Model.LinkUrl" target="_blank">前往APP Store</a>
+                                    break;
+                                default:
+                                    break;
+                            }
+                            </span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">发布时间</div>
+                        <div class="limd">
+                            <span>@Model.AddTime</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            <button type="button" onclick="location.href = '/User/Message';" class="btn1 grey">返回消息列表</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+}
+<!--底部脚本 end-->

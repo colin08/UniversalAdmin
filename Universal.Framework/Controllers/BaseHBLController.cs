@@ -6,6 +6,7 @@ using Universal.Tools;
 using System.Data.Entity;
 using Universal.BLL;
 using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace Universal.Web.Framework
 {
@@ -15,6 +16,7 @@ namespace Universal.Web.Framework
         /// 工作上下文
         /// </summary>
         public WebWorkContext WorkContext = new WebWorkContext();
+
         /// <summary>
         /// 站点配置文件
         /// </summary>
@@ -45,8 +47,8 @@ namespace Universal.Web.Framework
 
             //用户
             WorkContext.UserInfo = BLLCusUser.GetUserInfo();
-            
-            if(WorkContext.UserInfo == null)
+
+            if (WorkContext.UserInfo == null)
             {
                 WorkContext.ManagerHome = "/Account/Login";
             }
@@ -64,6 +66,7 @@ namespace Universal.Web.Framework
                         WorkContext.ManagerHome = "/" + controll + "/index";
                 }
             }
+            GetMessage();
         }
 
         /// <summary>
@@ -81,6 +84,21 @@ namespace Universal.Web.Framework
             return TypeHelper.ObjectToInt(Math.Ceiling(Convert.ToDouble(total) / Convert.ToDouble(page_size)));
         }
 
+
+        /// <summary>
+        /// 更新消息信息
+        /// </summary>
+        protected void GetMessage()
+        {
+            if(WorkContext.UserInfo != null)
+            {
+                //获取消息
+                BLL.BaseBLL<Entity.CusUserMessage> bll = new BaseBLL<Entity.CusUserMessage>();
+                WorkContext.UnReadMessageTopList = bll.GetListBy(5, p => p.CusUserID == WorkContext.UserInfo.ID && p.IsRead == false, "IsRead DESC,AddTime desc").ToList();
+                WorkContext.MessageTotal = bll.GetCount(p => p.CusUserID == WorkContext.UserInfo.ID && p.IsRead == false);
+            }
+        }
+
         /// <summary>
         /// 在进行授权时调用
         /// </summary>
@@ -94,7 +112,7 @@ namespace Universal.Web.Framework
             //判断是否登陆
             if (WorkContext.UserInfo == null)
             {
-                if (WorkContext.PageKey.ToLower() != "/account/login" && WorkContext.PageKey.ToLower()!= "/account/resetpwd" && WorkContext.PageKey.ToLower()!= "/account/resetsuc" && WorkContext.PageKey.ToLower()!= "/account/sendcode")
+                if (WorkContext.PageKey.ToLower() != "/account/login" && WorkContext.PageKey.ToLower() != "/account/resetpwd" && WorkContext.PageKey.ToLower() != "/account/resetsuc" && WorkContext.PageKey.ToLower() != "/account/sendcode")
                 {
                     if (WebHelper.IsAjax())
                     {
@@ -108,7 +126,7 @@ namespace Universal.Web.Framework
                     }
                 }
             }
-            
+
         }
 
 

@@ -483,6 +483,7 @@
     <Compile Include="Controllers\api\DocumentController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />
+    <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\WorkMeetingController.cs" />
     <Compile Include="Controllers\WorkJobController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -620,7 +621,7 @@
     <Content Include="Views\User\XMSC.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
     <Content Include="Views\User\DownloadLog.cshtml" />
-    <Content Include="Views\User\MyMsg.cshtml" />
+    <Content Include="Views\User\Message.cshtml" />
     <Content Include="Views\Shool\Index.cshtml" />
     <Content Include="Views\Shared\_ShoolMenuLeft.cshtml" />
     <Content Include="Views\Shool\JHLX.cshtml" />
@@ -645,6 +646,12 @@
     <Content Include="Views\WorkJob\Modify.cshtml" />
     <Content Include="Views\WorkMeeting\Index.cshtml" />
     <Content Include="Views\WorkMeeting\Modify.cshtml" />
+    <Content Include="Views\Info\NotFound.cshtml" />
+    <Content Include="Views\Info\Notice.cshtml" />
+    <Content Include="Views\Info\AppUpdate.cshtml" />
+    <Content Include="Views\Info\FileShare.cshtml" />
+    <Content Include="Views\Info\Meeting.cshtml" />
+    <Content Include="Views\Info\Plan.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
