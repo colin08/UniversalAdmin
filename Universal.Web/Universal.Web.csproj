@@ -520,6 +520,7 @@
     <Compile Include="Models\ViewModelDocument.cs" />
     <Compile Include="Models\ViewModelIndex.cs" />
     <Compile Include="Models\ViewModelJob.cs" />
+    <Compile Include="Models\ViewModelNode.cs" />
     <Compile Include="Models\ViewModelNotice.cs" />
     <Compile Include="Models\ViewModelSendPwd.cs" />
     <Compile Include="Models\ViewModelUserBasic.cs" />

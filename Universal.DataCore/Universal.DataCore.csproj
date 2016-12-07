@@ -86,6 +86,14 @@
     <Compile Include="Migrations\201612060236192_add_message.Designer.cs">
       <DependentUpon>201612060236192_add_message.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612070730187_add_project.cs" />
+    <Compile Include="Migrations\201612070730187_add_project.Designer.cs">
+      <DependentUpon>201612070730187_add_project.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612070831416_modify_project.cs" />
+    <Compile Include="Migrations\201612070831416_modify_project.Designer.cs">
+      <DependentUpon>201612070831416_modify_project.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -130,6 +138,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612060236192_add_message.resx">
       <DependentUpon>201612060236192_add_message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612070730187_add_project.resx">
+      <DependentUpon>201612070730187_add_project.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612070831416_modify_project.resx">
+      <DependentUpon>201612070831416_modify_project.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

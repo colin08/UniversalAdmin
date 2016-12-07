@@ -147,6 +147,66 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.CusUserMessage> CusUserMessages { get; set; }
 
+        /// <summary>
+        /// 节点
+        /// </summary>
+        public DbSet<Entity.Node> Nodes { get; set; }
+
+        /// <summary>
+        /// 节点附件
+        /// </summary>
+        public DbSet<Entity.NodeFile> NodeFiles { get; set; }
+
+        /// <summary>
+        /// 节点联系人
+        /// </summary>
+        public DbSet<Entity.NodeUser> NodeUsers { get; set; }
+
+        /// <summary>
+        /// 流程
+        /// </summary>
+        public DbSet<Entity.Flow> Flows { get; set; }
+
+        /// <summary>
+        /// 项目信息
+        /// </summary>
+        public DbSet<Entity.Project> Projects { get; set; }
+
+        /// <summary>
+        /// 项目附件
+        /// </summary>
+        public DbSet<Entity.ProjectFile> ProjectFiles { get; set; }
+
+        /// <summary>
+        /// 项目节点
+        /// </summary>
+        public DbSet<Entity.ProjectNode> ProjectNodes { get; set; }
+
+        /// <summary>
+        /// 项目节点附件
+        /// </summary>
+        public DbSet<Entity.ProjectNodeFile> ProjectNodeFiles { get; set; }
+
+        /// <summary>
+        /// 项目节点联系人
+        /// </summary>
+        public DbSet<Entity.ProjectNodeUser> ProjectNodeUsers { get; set; }
+
+        /// <summary>
+        /// 项目分期情况
+        /// </summary>
+        public DbSet<Entity.ProjectStage> ProjectStages { get; set; }
+
+        /// <summary>
+        /// 项目分期附件
+        /// </summary>
+        public DbSet<Entity.ProjectStageFile> ProjectStageFiles { get; set; }
+
+        /// <summary>
+        /// 项目联系人
+        /// </summary>
+        public DbSet<Entity.ProjectUser> ProjectUsers { get; set; }
+
 
         /// <summary>
         /// 
