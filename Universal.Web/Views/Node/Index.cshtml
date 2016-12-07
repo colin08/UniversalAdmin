@@ -12,107 +12,40 @@
 <!--头部脚本 end-->
 
 <div class="wapper">
-@Html.Partial("_AdminMenuLeft", this.ViewData)
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
 
     <div class="rightBox">
         <div class="container">
             <div class="tit1">
                 <b>节点设置</b>
-                <div class="search"><input type="text" id="" value="" placeholder="请输入节点名称" /><input type="button" id="" value="" /></div>
-                <span class="banbenOp fr"><a href="/Node/Modify" title="发布版本"><i class="i-redbb"></i> 发布版本</a><a href="#" title="删除"><i class="i-barrel"></i> 删除</a></span>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索" /><input type="button" onclick="pageData(1)" /></div>
+                <span class="banbenOp fr"><a href="/Node/Modify" title="新增节点"><i class="i-redbb"></i> 新增节点</a></span>
             </div>
             <div class="projectColl">
                 <table border="0" cellspacing="0" cellpadding="0" class="table1">
-                    <tr>
-                        <th width="20"><input type="checkbox" name="" id="" value="" /></th>
-                        <th width="20%">节点名称</th>
-                        <th width="30%">办事地址</th>
-                        <th width="10%">联系人</th>
-                        <th width="10%">联系人电话</th>
-                        <th width="20%">办事流程说明</th>
-                        <th width="10%">操作</th>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
-                    <tr class="">
-                        <td><input type="checkbox" name="" id="" value="" /></td>
-                        <td><span class="tfe"><a href="">城市更新公司报建...</a></span></td>
-                        <td><span class="tfe">法律法规</span></td>
-                        <td>Jacky</td>
-                        <td>1556558520</td>
-                        <td>--</td>
-                        <td><div class="tbOpare"><a href="" class=""><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-barrel"></i></a></div></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th width="20"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
+                            <th width="20%">节点名称</th>
+                            <th width="30%">办事地址</th>
+                            <th width="20%">添加时间</th>
+                            <th width="20%">最后修改时间</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listData"></tbody>
                 </table>
                 <div class="listBtm">
                     <div class="page fr">
-                        共有1条，每页显示
-                        <select name="" class="selt">
-                            <option value="">1</option>
-                        </select>  条
-
-                        <a href=""><i class="i-pgLbig"></i></a>
-                        <a href=""><i class="i-pgLsm"></i></a>
-                        <span>1/2</span>
-                        <a href=""><i class="i-pgRsm"></i></a>
-                        <a href=""><i class="i-pgRbig"></i></a>
-                        <input type="" name="" id="" value="" class="pginput" /><input type="button" id="" value="跳转" class="pgbtn" />
+                        <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                        <select class="sel" id="select_page_size">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                        <span>条</span>
+                        <div id="pager"></div>
                     </div>
-
-
-
+                    <a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>
                 </div>
 
             </div>
@@ -122,14 +55,162 @@
 
 
         <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
-    </div>	
+    </div>
 </div>
 
 <!--底部脚本-->
 @section foot
 {
+    @Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
+        $(document).ready(function (e) {
+            pageData(1, false)
+        });
 
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index) {
+            $.ajax({
+                type: "post",
+                url: "/Node/PageData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
+
+                    $("#listData").html("");
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        dataHtml += "<tr>";
+                        dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
+                        dataHtml += "<td>" + CutString(item.Title, 18) + "</td>";
+                        dataHtml += "<td>" + CutString(item.Location, 48) + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Node/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "</tr>";
+                    });
+                    if (data.total == 0) {
+                        dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $("#listData").html(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //列表的选中
+        function CheckAll(obj) {
+            if ($(obj).is(':checked')) {
+                $(".all_checked_but").prop("checked", true);
+            } else {
+                $(".all_checked_but").prop("checked", false);
+            }
+        }
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
+            }
+        }
+
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        function del(id) {
+            var ids = "";
+            if (id == 0) {
+                $(".all_checked_but").each(function () {
+                    if ($(this).is(':checked')) {
+                        ids = ids + $(this).attr("hid") + ","
+                    }
+                })
+                if (ids == "") {
+                    alert("请先选中要删除的数据");
+                    return;
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            else {
+                ids = id;
+            }
+            $.ajax({
+                type: "post",
+                url: "/Node/Del",
+                data: { "ids": ids },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
     </script>
 
 }

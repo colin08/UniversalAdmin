@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "节点管理";
+﻿@model Universal.Web.Models.ViewModelNode
+@{
+    ViewBag.Title = "编辑节点";
     ViewData["tabLeft"] = "node";
     ViewData["tabTop"] = "manager";
 }
@@ -19,67 +20,62 @@
         <div class="container">
             <div class="tit1">
                 <div class="inner">
-                    <a href="/Node/Index" class="fl f16"><i class="i-back"></i>节点设置</a>
-                    <b class="tit1Txt fr">新增节点</b>
+                    <a href="/Node/Index" class="fl f16"><i class="i-back"></i>编辑节点</a>
+                    <b class="tit1Txt fr">编辑节点</b>
                 </div>
             </div>
 
             <div class="userInfo sysIn">
-                <ul>
-
-
-                    <li>
-                        <div class="lilt">节点名称</div>
-                        <div class="limd">
-                            <input type="text" id="" value="" class="usInput" placeholder="请输入节点名称" />
-                        </div>
-                        <div class="litip">&nbsp;</div>
-                    </li>
-                    <li>
-                        <div class="lilt">办事地址</div>
-                        <div class="limd">
-                            <input type="text" id="" value="" class="usInput" placeholder="办事地址" />
-                        </div>
-                        <div class="litip">&nbsp;</div>
-                    </li>
-                    <li>
-                        <div class="lilt">联系人</div>
-                        <div class="limd big">
-                            <span><a href="#" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
-
-                            <div class="menlist">
-                                <ul>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)1</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)2</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)3</span><i class="i-mdel"></i></a></li>
-                                    <li class="act"><a href="javascript:;"><span>18412435698 (张三)4</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)5</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)6</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)7</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)8</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)9</span><i class="i-mdel"></i></a></li>
-                                    <li><a href="javascript:;"><span>18412435698 (张三)0</span><i class="i-mdel"></i></a></li>
-                                </ul>
+                <form method="post" class="form-horizontal" id="form" name="form1">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(p => p.user_ids)
+                    <ul>
+                        <li>
+                            <div class="lilt">节点名称</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput", placeholder= "请输入节点名称" })
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="lilt">通知成员</div>
-                        <div class="limd big">
-                            <span><a href="#" title="添加成员"><i class="i-circleP"></i>上传附件</a></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="lilt">办事流程说明</div>
-                        <div class="limd big">
-                            <div class="editBox"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="lilt">&nbsp;</div>
-                        <div class="limd"><button type="button" onclick="location.href='/Node/Index'" class="btn1">发布</button> <button type="button" onclick="location.href='/Node/Index'" class="btn1 grey">取消</button></div>
-                    </li>
-                </ul>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">办事地址</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.location, new { @class = "usInput", placeholder = "请输入办事地址" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.location)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">联系人</div>
+                            <div class="limd big">
+                                <span><a id="add_users" href="javascript:" onclick="selUser(this)" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+                                <div class="menlist" id="user_list">
+                                    <ul>
+                                        @foreach (var item in Model.users_entity)
+                                        {
+                                            <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </li>
+                        <li>
+                            <div class="lilt">节点附件</div>
+                            <div class="limd big">
+                                <span><a href="#" title="添加附件"><i class="i-circleP"></i>上传附件</a></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="lilt">办事流程说明</div>
+                            <div class="limd pr">@Html.TextAreaFor(p => p.content, new { @class = "usTextarea" })</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">&nbsp;</div>
+                            <div class="limd"><button type="submit" class="btn1">发布</button> <button type="button" onclick="location.href = '/Node/Index';" class="btn1 grey">取消</button></div>
+                        </li>
+                    </ul>
+                </form>
             </div>
 
 
@@ -97,7 +93,57 @@
 @section foot
 {
     <script type="text/javascript">
+        function selUser(obj) {
+            selUserDialog({
+                callback: function (data) {
+                    var ids = $("#user_ids").val().split(',');
+                    var ul = $('#user_list').find('ul');
+                    $(data).each(function () {
+                        if (ul.find('#user_' + this.id).size() > 0) {
+                            return true;
+                        }
+                        var li = $('<li></li>').appendTo(ul).attr('id', 'user_' + this.id);
+                        var a = $('<a href="javascript:;"></a>').attr('data-id', this.id).appendTo(li).click(function () {
+                            var id = $(this).attr('data-id');
+                            moveId(id);
+                        });
+                        $('<span></span>').appendTo(a).html(this.telphone + ' (' + this.nick_name + ')');
+                        $('<i class="i-mdel"></i>').appendTo(a);
+                        ids.push(this.id);
+                    });
+                    $("#user_ids").val(ids.join(','));
+                }
+            });
 
+        }
+        var tmp = [];
+        $('#user_list ul li a').each(function () {
+            tmp.push($(this).attr('data-id'));
+            $(this).click(function () {
+                var id = $(this).attr('data-id');
+                moveId(id);
+            });
+
+        });
+        $("#user_ids").val(tmp.join(','));
+        function moveId(id) {
+            var ids = [];
+            $($("#user_ids").val().split(',')).each(function () {
+                if (this != id) {
+                    ids.push(this);
+                }
+            });
+            $('#user_' + id).remove();
+            $("#user_ids").val(ids.join(','));
+        }
+
+
+        $(document).ready(function (e) {
+            @if (Model.Msg == 1)
+            {
+                @: location.href = "/Node/Index";
+            }
+        });
     </script>
 
 }
