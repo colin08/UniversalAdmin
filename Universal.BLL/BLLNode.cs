@@ -96,7 +96,13 @@ namespace Universal.BLL
                     }
                 }
             }
-
+            List<Entity.NodeFile> file_list = model.NodeFiles.ToList();
+            foreach (var item in file_list)
+            {
+                item.NodeID = model.ID;
+                db.NodeFiles.Add(item);
+            }
+            model.NodeFiles.Clear();
             //附件到DbContext上下文
             var entity = db.Entry<Entity.Node>(model);
             //标识状态为修改

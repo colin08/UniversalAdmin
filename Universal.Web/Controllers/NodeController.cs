@@ -64,9 +64,7 @@ namespace Universal.Web.Controllers
             return Json(WorkContext.AjaxStringEntity);
 
         }
-
-
-
+        
         public ActionResult Modify(int? id)
         {
             int ids = TypeHelper.ObjectToInt(id);
@@ -91,12 +89,8 @@ namespace Universal.Web.Controllers
                         str_ids = str_ids.Remove(str_ids.Length - 1, 1);
                     }
                     model.user_ids = str_ids.ToString();
-
-                    foreach (var item in entity.NodeFiles)
-                    {
-                        model.file_list.Add(new Models.ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
-                    }
-
+                    
+                    model.BuildViewModelListFile(entity.NodeFiles.ToList());
                 }
                 else
                 {
@@ -139,7 +133,7 @@ namespace Universal.Web.Controllers
                 final_ids = str_ids.Remove(str_ids.Length - 1, 1).ToString();
             }
             #endregion
-
+            
             if (ModelState.IsValid)
             {
 
@@ -157,16 +151,7 @@ namespace Universal.Web.Controllers
                 model.Title = entity.title;
                 model.Location = entity.location;
 
-                foreach (var item in entity.file_list)
-                {
-                    var entity_file = new Entity.NodeFile();
-                    entity_file.AddTime = DateTime.Now;
-                    entity_file.CusUserID = WorkContext.UserInfo.ID;
-                    entity_file.FileSize = item.file_size;
-                    entity_file.FilePath = item.file_path;
-                    entity_file.FileName = item.file_name;
-                    model.NodeFiles.Add(entity_file);
-                }
+                model.NodeFiles = entity.BuildFileList(WorkContext.UserInfo.ID);
 
                 if (isAdd)
                     BLL.BLLNode.Add(model, final_ids);

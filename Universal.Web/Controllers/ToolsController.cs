@@ -73,13 +73,25 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<string> result = uh.Upload(file, "/uploads/doc/");
             if (result.msg == 1)
             {
-                int size = IOHelper.GetFileSize(result.data);
-                if (size >= 1024)
-                {
-                    result.msgbox = (size / 1024).ToString() + "MB";
-                }
-                else
-                    result.msgbox = size.ToString() + "KB";
+                result.msgbox = IOHelper.GetFileSizeTxt(result.data);
+            }
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 上传附件
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UploadFile(HttpPostedFileBase file)
+        {
+            if (file == null)
+                file = Request.Files[0];
+            UploadHelper uh = new UploadHelper();
+            WebAjaxEntity<string> result = uh.Upload(file, "/uploads/file/");
+            if (result.msg == 1)
+            {
+                result.msgbox = IOHelper.GetFileSizeTxt(result.data);
             }
             return Json(result);
         }

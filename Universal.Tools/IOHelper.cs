@@ -533,6 +533,34 @@ namespace Universal.Tools
         }
 
         /// <summary>
+        /// 获取文件大小，KB或MB显示
+        /// </summary>
+        /// <param name="_filePath"></param>
+        /// <returns></returns>
+        public static string GetFileSizeTxt(string _filePath)
+        {
+            int kb = GetFileSize(_filePath);
+            if (kb > 1024)
+                return (kb / 1024).ToString() + "MB";
+            else
+                return kb + "KB";
+        }
+
+        /// <summary>
+        /// 获取文件大小，KB或MB显示
+        /// </summary>
+        /// <param name="_filePath"></param>
+        /// <returns></returns>
+        public static string GetFileSizeTxt(long size)
+        {
+            long kb = size / 1024;
+            if (kb > 1024)
+                return (kb / 1024).ToString() + "MB";
+            else
+                return kb + "KB";
+        }
+
+        /// <summary>
         /// 返回文件大小Byte
         /// </summary>
         /// <param name="_filepath">文件相对路径</param>
