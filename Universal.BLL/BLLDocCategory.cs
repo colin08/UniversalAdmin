@@ -106,14 +106,10 @@ namespace Universal.BLL
             if (id <= 0)
                 return false;
             var db = new DataCore.EFDBContext();
+            var entity = db.DocCategorys.Find(id);
             List<Entity.DocCategory> child_list = GetList(false, id);
             foreach (var item in child_list)
-            {
-                db.Set<Entity.DocCategory>().Attach(item);
-                db.Set<Entity.DocCategory>().Remove(item);
-            }
-            var entity = db.DocCategorys.Find(id);
-            db.DocCategorys.Remove(entity);
+                db.DocCategorys.Remove(db.DocCategorys.Find(item.ID));
             db.SaveChanges();
             db.Dispose();
             Tools.CacheHelper.Remove(CacheDataKey1);
