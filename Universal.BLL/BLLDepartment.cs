@@ -143,14 +143,12 @@ namespace Universal.BLL
             if (id <= 0)
                 return false;
             var db = new DataCore.EFDBContext();
+            var entity = db.CusDepartments.Find(id);
+            if (entity == null)
+                return false;
             List<Entity.CusDepartment> child_list = GetList(false, id);
             foreach (var item in child_list)
-            {
-                db.Set<Entity.CusDepartment>().Attach(item);
-                db.Set<Entity.CusDepartment>().Remove(item);
-            }
-            var entity = db.CusDepartments.Find(id);
-            db.CusDepartments.Remove(entity);
+                db.CusDepartments.Remove(db.CusDepartments.Find(item.ID));
             db.SaveChanges();
             db.Dispose();
             Tools.CacheHelper.Remove(CacheDataKey1);

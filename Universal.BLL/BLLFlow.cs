@@ -42,14 +42,16 @@ namespace Universal.BLL
             if (id <= 0)
                 return false;
             var db = new DataCore.EFDBContext();
+            var entity = db.Flows.Find(id);
+            if (entity == null)
+            {
+                db.Dispose();
+                return false;
+            }
+
             List<Entity.Flow> child_list = GetList(false, id);
             foreach (var item in child_list)
-            {
-                db.Set<Entity.Flow>().Attach(item);
-                db.Set<Entity.Flow>().Remove(item);
-            }
-            var entity = db.Flows.Find(id);
-            db.Flows.Remove(entity);
+                db.Flows.Remove(db.Flows.Find(item.ID));
             db.SaveChanges();
             db.Dispose();
             return true;
@@ -98,7 +100,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static bool SetFlowToID(int flow_id,string toid, out string msg)
+        public static bool SetFlowToID(int flow_id, string toid, out string msg)
         {
             msg = "ok";
             if (flow_id <= 0 || string.IsNullOrWhiteSpace(toid))
@@ -108,7 +110,7 @@ namespace Universal.BLL
             }
             var db = new DataCore.EFDBContext();
             var entity = db.Flows.Find(flow_id);
-            if(entity == null)
+            if (entity == null)
             {
                 msg = "流程不存在";
                 return false;
@@ -143,18 +145,19 @@ namespace Universal.BLL
             }
 
             var entity = new Entity.Flow();
-            if (pid == -1)
+            if (pid != -1)
             {
                 var p_entity = db.Flows.Find(pid);
-                if(p_entity == null)
+                if (p_entity == null)
                 {
                     msg = "父级流程不存在";
                     return 0;
                 }
                 entity.PID = pid;
-                entity.TopPID = p_entity.TopPID == null ? p_entity.ID : p_entity.ID;
-                entity.Depth = p_entity.Depth +1;                
-            }else
+                entity.TopPID = p_entity.TopPID == null ? p_entity.ID : p_entity.TopPID;
+                entity.Depth = p_entity.Depth + 1;
+            }
+            else
             {
                 entity.PID = null;
                 entity.TopPID = null;
@@ -162,6 +165,7 @@ namespace Universal.BLL
                 entity.FlowName = entity_node.Title;
             }
             entity.NodeID = node_id;
+            db.Flows.Add(entity);
             db.SaveChanges();
             db.Dispose();
             return entity.ID;
@@ -175,7 +179,7 @@ namespace Universal.BLL
         /// <param name="node_id"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static bool ModifyFlow(int flow_id,int node_id,out string msg)
+        public static bool ModifyFlow(int flow_id, int node_id, out string msg)
         {
             msg = "ok";
             if (flow_id <= 0 || node_id == 0)
