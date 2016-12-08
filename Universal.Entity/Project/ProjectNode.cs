@@ -43,6 +43,11 @@ namespace Universal.Entity
         public ProjectNode PProjectNode { get; set; }
 
         /// <summary>
+        /// 顶级父ID
+        /// </summary>
+        public int? TopPID { get; set; }
+
+        /// <summary>
         /// 节点名称
         /// </summary>
         [MaxLength(255)]

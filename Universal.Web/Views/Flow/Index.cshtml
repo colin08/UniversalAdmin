@@ -11,7 +11,7 @@
 }
 <!--头部脚本 end-->
 <div class="wapper">
-@Html.Partial("_AdminMenuLeft", this.ViewData)
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
 
     <div class="rightBox">
         <div class="container">
@@ -22,14 +22,18 @@
 
             <div class="projectColl">
                 <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <thead>
+                        <tr>
+                            <th width="20%">流程名称</th>
+                            <th width="30%">流程名称</th>
+                            <th width="20%">更新时间</th>
+                            <th width="15%">操作</th>
+                            <th width="15%">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listData"></tbody>
+                    <!--
                     <tr>
-                        <th width="20%">流程名称</th>
-                        <th width="30%">流程名称</th>
-                        <th width="20%">更新时间</th>
-                        <th width="15%">操作</th>
-                        <th width="15%">&nbsp;</th>
-                    </tr>
-                    <tr class="">
                         <td><a href="#">2016年最新流程</a></td>
                         <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
                         <td>2016-10-30 12:30</td>
@@ -40,59 +44,20 @@
                         </td>
                         <td><a href="#" title="#" class="lc_default">默认流程</a></td>
                     </tr>
-                    <tr class="">
-                        <td><a href="#">2016年10月流程</a></td>
-                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
-                        <td>2016-10-30 12:30</td>
-                        <td>
-                            <div class="tbOpare">
-                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
-                            </div>
-                        </td>
-                        <td><a href="#" title="#" class="lc_">默认流程</a></td>
-                    </tr>
-                    <tr class="hover">
-                        <td><a href="#">城市更新流程图（新修改）</a></td>
-                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
-                        <td>2016-10-30 12:30</td>
-                        <td>
-                            <div class="tbOpare">
-                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
-                            </div>
-                        </td>
-                        <td><a href="#" title="#" class="lc_">设为默认</a></td>
-                    </tr>
-                    <tr class="">
-                        <td><a href="#">城市更新流程图（8月版）</a></td>
-                        <td><span class="tfe"><a href="#1"><img src="/assets/theme/images/img5.jpg" /></a></span></td>
-                        <td>2016-10-30 12:30</td>
-                        <td>
-                            <div class="tbOpare">
-                                <a href="">详情</a>|<a href="">编辑</a>|<a href="">删除</a>
-                            </div>
-                        </td>
-                        <td><a href="#" title="#" class="lc_">默认流程</a></td>
-                    </tr>
+                     -->
                 </table>
-                <!--<div class="listBtm">
+                <div class="listBtm">
                     <div class="page fr">
-                        共有1条，每页显示
-                        <select name="" class="selt">
-                            <option value="">1</option>
-                        </select>  条
-
-                        <a href=""><i class="i-pgLbig"></i></a>
-                        <a href=""><i class="i-pgLsm"></i></a>
-                        <span>1/2</span>
-                        <a href=""><i class="i-pgRsm"></i></a>
-                        <a href=""><i class="i-pgRbig"></i></a>
-                        <input type="" name="" id="" value="" class="pginput" /><input type="button" id="" value="跳转" class="pgbtn" />
+                        <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                        <select class="sel" id="select_page_size">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                        <span>条</span>
+                        <div id="pager"></div>
                     </div>
-
-                    <a href="#1" title="清空所有收藏" ><i class="i-barrel"></i> 清空所有收藏</a>
-
-                </div>-->
-
+                    <a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>
+                </div>
             </div>
 
         </div>
@@ -100,16 +65,154 @@
 
 
         <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
-    </div>	
+    </div>
 
 </div>
 
-    <!--底部脚本-->
-    @section foot
+<!--底部脚本-->
+@section foot
 {
-        <script type="text/javascript">
+@Scripts.Render("~/bundles/laypage")
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            pageData(1, false)
+        });
 
-        </script>
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index) {
+            $.ajax({
+                type: "post",
+                url: "/Flow/PageData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
 
-    }
-    <!--底部脚本 end-->
+                    $("#listData").html("");
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        var def_txt = "默认流程";
+                        var def_class = "lc_default";
+                        var def_click = "";
+                        if (item.IsDefault)
+                        {
+                            def_txt = "设置默认";
+                            def_class = "lc_";
+                            def_click = "onclick=\"setDef(" + item.ID + ")\"";
+                        }
+                        dataHtml += "<tr>";
+                        dataHtml += "<td>" + item.FlowName + "</td>";
+                        dataHtml += "<td></td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Flow/Modify?id=" + item.ID + "\">详情</a>|<a href=\"/Flow/Modify?id=" + item.ID + "\">编辑</a>|<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\">删除</a></div></td>";
+                        dataHtml += "<td><a href=\"javascript:;\" " + def_click + " class=\"" + def_class + "\">" + def_txt + "</a></td>";
+                        dataHtml += "</tr>";
+                    });
+                    if (data.total == 0) {
+                        dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $("#listData").html(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        function del(id) {
+            $.ajax({
+                type: "post",
+                url: "/Flow/Del",
+                data: { "id": id },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
+        function setDef(id) {
+            $.ajax({
+                type: "post",
+                url: "/Flow/SetDefault",
+                data: { "id": id },
+                async: false,
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
+    </script>
+
+}
+<!--底部脚本 end-->

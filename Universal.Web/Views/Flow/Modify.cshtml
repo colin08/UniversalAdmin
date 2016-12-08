@@ -41,7 +41,49 @@
 @section foot
 {
     <script type="text/javascript">
+        /**
+        * 【获取流程】
+        * 接口地址：/Flow/GetFlow?PId=
+        * 请求参数：PID，父级ID，如果是一级，则不传数据，为-1获取所有
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
+        */
 
+        /**
+        * 【获取所有节点】
+        * 接口地址：/Flow/GetAllNode
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
+        */
+
+        /**
+        * 【添加流程】
+        * 接口地址：/Flow/AddFlow
+        * 请求参数示例：data: { "pid": 父级ID, "node_id": 节点ID },
+        * 请求方式：Post
+        * 返回数据：json
+        * 操作状态判断：result.data 是添加成功后的流程ID
+        */
+
+        /**
+        * 【修改流程节点】
+        * 接口地址：/Flow/ModifyFlowNode
+        * 请求参数示例：data: { "flow_id": 流程ID, "node_id": 新节点ID },
+        * 请求方式：Post
+        * 返回数据：json
+        * 操作状态判断：同上上
+        */
+
+        /**
+        * 【设置流程箭头指引】
+        * 接口地址：/Flow/SetFlowTOID
+        * 请求参数示例：data: { "flow_id": 流程ID, "to_id": "指向的流程ID" },
+        * 请求方式：Post
+        * 返回数据：json
+        * 操作状态判断：0 or 1
+        */
     </script>
 
 }

@@ -94,6 +94,14 @@
     <Compile Include="Migrations\201612070831416_modify_project.Designer.cs">
       <DependentUpon>201612070831416_modify_project.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612080629586_add_top_pid.cs" />
+    <Compile Include="Migrations\201612080629586_add_top_pid.Designer.cs">
+      <DependentUpon>201612080629586_add_top_pid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612080638309_add_last_update_time.cs" />
+    <Compile Include="Migrations\201612080638309_add_last_update_time.Designer.cs">
+      <DependentUpon>201612080638309_add_last_update_time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -144,6 +152,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612070831416_modify_project.resx">
       <DependentUpon>201612070831416_modify_project.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612080629586_add_top_pid.resx">
+      <DependentUpon>201612080629586_add_top_pid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612080638309_add_last_update_time.resx">
+      <DependentUpon>201612080638309_add_last_update_time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -68,6 +68,7 @@
     <Compile Include="BLLDocument.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BllCusUserFavorites.cs" />
+    <Compile Include="BLLFlow.cs" />
     <Compile Include="BLLNode.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />

@@ -15,6 +15,7 @@ namespace Universal.Entity
         {
             this.Depth = 0;
             this.AddTime = DateTime.Now;
+            this.LastUpdateTime = DateTime.Now;
         }
 
         public int ID { get; set; }
@@ -28,6 +29,12 @@ namespace Universal.Entity
         /// 节点信息
         /// </summary>
         public virtual Node Node { get; set; }
+
+        /// <summary>
+        /// 流程名称,为顶级时使用
+        /// </summary>
+        [MaxLength(50)]
+        public string FlowName { get; set; }
 
         /// <summary>
         /// 某个流程名称，如果为顶级，则为流程标题
@@ -45,6 +52,11 @@ namespace Universal.Entity
         /// </summary>
         [ForeignKey("PID")]
         public Flow PFlow { get; set; }
+
+        /// <summary>
+        /// 顶级父ID
+        /// </summary>
+        public int? TopPID { get; set; }
 
         /// <summary>
         /// 指向流程ID
@@ -70,6 +82,11 @@ namespace Universal.Entity
         /// 添加时间
         /// </summary>
         public DateTime AddTime { get; set; }
+
+        /// <summary>
+        /// 最后更新时间
+        /// </summary>
+        public DateTime LastUpdateTime { get; set; }
 
     }
 }
