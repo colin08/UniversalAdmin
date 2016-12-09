@@ -53,6 +53,14 @@
         */
 
         /**
+        * 【获取某个流程节点】
+        * 接口地址：/Flow/GetFLowNode?flow_node_id=流程节点ID
+        * 请求方式：GET
+        * 返回数据：json
+        * 返回数据格式：直接在浏览器打开地址就可以看到
+        */
+
+        /**
         * 【添加流程节点】
         * 接口地址：/Flow/AddNode
         * 请求参数：data: { "flow_id": flow_id, "node_id": 选择的节点ID, "top": 整型, "left": 整型, "icon": "对号入座", "color": "对号入座","process_to":"对号入座" },
@@ -60,6 +68,14 @@
         * 返回数据：json
         * 返回数据说明：result.total是流程ID(如果flow_id==-1，则需要取这个值作为后续接口的参数)
         *               result.data是流程节点ID，process_to里面的id是这个，下面保存也需要这个
+        */
+
+        /**
+        * 【删除某个流程节点】
+        * 接口地址：/Flow/DelFlowNode?flow_node_id=流程节点ID
+        * 请求方式：POST
+        * 返回数据：json
+        * 返回数据格式：1 OR 0
         */
         
         /**
@@ -72,7 +88,7 @@
 ]};
            
             $.ajax({
-                url: "/Test/Save",
+                url: "/Flow/SaveFlow",
                 type: "post",
                 dataType: "json",
                 async:false,
@@ -92,6 +108,32 @@
         }
         */
 
+
+        /**
+        * 【保存某个流程节点】
+               function SaveFlowNode() {
+                   var jsonObj = {"flow_node_id":流程节点ID(添加节点返回的result.data),"top":整型,"left":整型,"color":"对号入座","icon":"对号入座","process_to":"对号入座"};
+          
+                   $.ajax({
+                       url: "/Flow/SaveFlowNode",
+                       type: "post",
+                       dataType: "json",
+                       async:false,
+                       data: JSON.stringify(jsonObj),
+                       success: function (data) {
+                           if(data.msg ==1)
+                           {
+                               //TODO OK
+                           }
+                       },
+                       error: function (XMLHttpRequest, textStatus, errorThrown) {
+                           alert(XMLHttpRequest.status);
+                           alert(XMLHttpRequest.readyState);
+                           alert(textStatus);
+                       }
+                   });
+               }
+        */
         
     </script>
 
