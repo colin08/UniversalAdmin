@@ -8,15 +8,20 @@ using System.Web.Http.WebHost;
 using System.Text;
 using System.Collections.Generic;
 using System.Web.Http.Results;
+using Universal.Tools;
 
 namespace Universal.Web.Framework
 {
     public class BaseAPIController : ApiController
     {
         public APIWorkContext WorkContext = new APIWorkContext();
-
+        /// <summary>
+        /// 站点配置文件
+        /// </summary>
+        public WebSiteModel WebSite = null;
         protected override void Initialize(System.Web.Http.Controllers.HttpControllerContext controllerContext)
         {
+            WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
             WorkContext.AjaxStringEntity = new WebAjaxEntity<string>();
             WorkContext.AjaxStringEntity.msg = 0;
             WorkContext.AjaxStringEntity.data = "";

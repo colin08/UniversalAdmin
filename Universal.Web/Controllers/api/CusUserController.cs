@@ -20,6 +20,93 @@ namespace Universal.Web.Controllers.api
     public class CusUserController : BaseAPIController
     {
         /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <param name="tel">手机号</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/code/send")]
+        public WebAjaxEntity<string> SendCode(string tel)
+        {
+            if (string.IsNullOrWhiteSpace(tel))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法手机号";
+                return WorkContext.AjaxStringEntity;
+            }
+            if(!BLL.BLLCusUser.Exists(tel))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "手机号不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            string msg = "";
+            Guid guid = Guid.NewGuid();
+            BLL.BLLVerification.Send(tel, guid, Entity.CusVerificationType.Modify, out msg);
+            if (msg.Equals("OK"))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.data = guid.ToString();
+                return WorkContext.AjaxStringEntity;
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return WorkContext.AjaxStringEntity;
+            }
+
+        }
+
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="code">验证码</param>
+        /// <param name="tel"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/code/check")]
+        public WebAjaxEntity<string> CheckCode(string guid, string code,string tel)
+        {
+            if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(code))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.Telphone == tel);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            Guid new_guid = new Guid();
+            try
+            {
+                new_guid = new Guid(guid);
+            }
+            catch (Exception)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法guid";
+                return WorkContext.AjaxStringEntity;
+            }
+            
+
+            if (BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
+            {                
+                model.Password = SecureHelper.MD5(WebSite.ResetPwd);
+                bll.Modify(model, "Password");
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "密码已重置为:" + WebSite.ResetPwd;
+                return WorkContext.AjaxStringEntity;
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "验证码错误";
+                return WorkContext.AjaxStringEntity;
+            }
+        }
+
+        /// <summary>
         /// 用户登录
         /// </summary>
         /// <param name="req"></param>

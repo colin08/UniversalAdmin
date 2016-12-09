@@ -144,6 +144,19 @@ namespace Universal.BLL
             db.Dispose();
             return entity;
         }
+
+        /// <summary>
+        /// 获取用户信息，不包含incloud
+        /// </summary>
+        /// <param name="telphone"></param>
+        /// <returns></returns>
+        public static Entity.CusUser GetModel(string telphone)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.CusUsers.Where(p => p.Telphone == telphone).FirstOrDefault();
+            }
+        }
      
         /// <summary>
         /// 根据邮箱和密码获取用户实体
@@ -261,6 +274,19 @@ namespace Universal.BLL
             }
             else
                 return "";
+        }
+
+        /// <summary>
+        /// 校验用户是否存在
+        /// </summary>
+        /// <param name="telphone"></param>
+        /// <returns></returns>
+        public static bool Exists(string telphone)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.CusUsers.Any(p => p.Telphone == telphone);
+            }
         }
 
     }
