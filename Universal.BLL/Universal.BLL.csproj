@@ -70,6 +70,7 @@
     <Compile Include="BllCusUserFavorites.cs" />
     <Compile Include="BLLFlow.cs" />
     <Compile Include="BLLNode.cs" />
+    <Compile Include="BLLProject.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="BLLWorkJob.cs" />
     <Compile Include="BLLWorkPlan.cs" />
     <Compile Include="Model\AdminUserRoute.cs" />
+    <Compile Include="Model\WebFlow.cs" />
+    <Compile Include="Model\WebSaveFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

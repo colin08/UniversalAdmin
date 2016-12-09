@@ -96,7 +96,7 @@ namespace Universal.Entity
         public virtual CusUser ApproveUser { get; set; }
         
         /// <summary>
-        /// 流程ID
+        /// 引用的流程ID
         /// </summary>
         public int FlowID { get; set; }
 
@@ -205,6 +205,27 @@ namespace Universal.Entity
         /// 统计使用，季度,根据立项时间来获取
         /// </summary>
         public int TJQuarter { get; set; }
+
+        /// <summary>
+        /// 设置年份
+        /// </summary>
+        public void SetYear()
+        {
+            TJYear = LiXiangTime.Year;
+        }
+
+        /// <summary>
+        /// 设置季度
+        /// </summary>
+        public void SetQuarter()
+        {
+            double f = Convert.ToDouble(LiXiangTime.Month) / 3f;
+            if (f > Convert.ToInt32(f))
+            {
+                TJQuarter = Convert.ToInt32(f) + 1;
+            }
+            TJQuarter = Convert.ToInt32(f);
+        }
         
         /// <summary>
         /// 专项规划时间
@@ -246,12 +267,7 @@ namespace Universal.Entity
         /// 项目联系人
         /// </summary>
         public ICollection<ProjectUser> ProjectUsers { get; set; }
-
-        /// <summary>
-        /// 项目流程信息
-        /// </summary>
-        public ICollection<ProjectNode> ProjectNodes { get; set; }
-
+        
         /// <summary>
         /// 项目附件
         /// </summary>

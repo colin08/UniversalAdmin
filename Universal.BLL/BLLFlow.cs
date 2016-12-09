@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -12,26 +14,6 @@ namespace Universal.BLL
     /// </summary>
     public class BLLFlow
     {
-
-        /// <summary>
-        /// 根据部门ID获取部门子或父数据
-        /// </summary>
-        /// <param name="up">查找父级，否则为查找子级</param>
-        /// <param name="id">当前分类ID</param>
-        /// <returns></returns>
-        public static List<Entity.Flow> GetList(bool up, int id)
-        {
-            List<Entity.Flow> list = new List<Entity.Flow>();
-            var db = new DataCore.EFDBContext();
-            SqlParameter[] param = { new SqlParameter("@Id", id) };
-            string proc_name = "dbo.sp_GetParentFlows @Id";
-            if (!up)
-                proc_name = "dbo.sp_GetChildFlows @Id";
-            list = db.Flows.SqlQuery(proc_name, param).ToList();
-            db.Dispose();
-            return list;
-        }
-
         /// <summary>
         /// 删除流程，同时删除其子数据
         /// </summary>
@@ -48,10 +30,8 @@ namespace Universal.BLL
                 db.Dispose();
                 return false;
             }
-
-            List<Entity.Flow> child_list = GetList(false, id);
-            foreach (var item in child_list)
-                db.Flows.Remove(db.Flows.Find(item.ID));
+            
+            db.Flows.Remove(entity);
             db.SaveChanges();
             db.Dispose();
             return true;
@@ -70,24 +50,14 @@ namespace Universal.BLL
                 msg = "非法参数";
                 return false;
             }
+
             var db = new DataCore.EFDBContext();
             var entity = db.Flows.Find(id);
-            if (entity.TopPID != null)
-            {
-                msg = "非顶级节点";
-                db.Dispose();
-                return false;
-            }
             if (entity.IsDefault)
             {
                 msg = "已经是默认了";
                 db.Dispose();
                 return false;
-            }
-            var db_list = db.Flows.Where(p => p.TopPID == null && p.IsDefault == true).ToList();
-            foreach (var item in db_list)
-            {
-                item.IsDefault = false;
             }
             entity.IsDefault = true;
             db.SaveChanges();
@@ -96,114 +66,142 @@ namespace Universal.BLL
         }
 
         /// <summary>
-        /// 修改流程指向箭头
+        /// 添加流程节点
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="flow_id">所属流程ID</param>
+        /// <param name="node_id">节点ID</param>
+        /// <param name="top"></param>
+        /// <param name="left"></param>
+        /// <param name="icon"></param>
+        /// <param name="color"></param>
+        /// <param name="process_to"></param>
         /// <returns></returns>
-        public static bool SetFlowToID(int flow_id, string toid, out string msg)
+        public static int[] AddFlowNode(int user_id,int flow_id,int node_id,int top,int left,string icon,string color,string process_to,out string msg)
         {
+            int[] result = new int[2];
+            result[0] = -1;
+            result[1] = -1;
             msg = "ok";
-            if (flow_id <= 0 || string.IsNullOrWhiteSpace(toid))
+            if(flow_id <-1 || flow_id == 0 || node_id <=0 || user_id<=0)
+            {
+                msg = "非法参数";
+                return result;
+            }
+
+            var db = new DataCore.EFDBContext();
+            var entity_node = db.Nodes.Find(node_id);
+            if(!db.CusUsers.Any(p=>p.ID == user_id))
+            {
+                msg = "用户不存在";
+                return result;
+            }
+            if(entity_node == null)
+            {
+                msg = "节点不存在";
+                return result;
+            }
+            var entity_flow = new Entity.Flow();
+            if(flow_id != -1)
+            {
+                entity_flow = db.Flows.Find(flow_id);
+                if(entity_flow == null)
+                {
+                    msg = "流程不存在";
+                    return result;
+                }
+            }
+            else
+            {
+                entity_flow.CusUserID = user_id;
+                entity_flow.Title = entity_node.Title;
+                db.Flows.Add(entity_flow);
+            }
+            var entity_flow_node = new Entity.FlowNode();
+            entity_flow_node.Color = color;
+            entity_flow_node.Flow = entity_flow;
+            entity_flow_node.ICON = icon;
+            entity_flow_node.Left = left;
+            entity_flow_node.NodeID = entity_node.ID;
+            entity_flow_node.ProcessTo = process_to;
+            entity_flow_node.Top = top;
+            db.FlowNodes.Add(entity_flow_node);
+            db.SaveChanges();
+            db.Dispose();
+            result[0] = entity_flow.ID;
+            result[1] = entity_flow_node.ID;
+            return result;
+        }
+
+        /// <summary>
+        /// 前端：获取流程节点信息
+        /// </summary>
+        /// <param name="flow_id">流程ID</param>
+        /// <returns></returns>
+        public static Model.WebFlow GetWebFlowData(int flow_id)
+        {
+            Model.WebFlow response_entity = new Model.WebFlow();
+            List<Model.WebFlowNode> response_list = new List<Model.WebFlowNode>();
+            var db = new DataCore.EFDBContext();
+            BLL.BaseBLL<Entity.FlowNode> bll = new BaseBLL<Entity.FlowNode>();
+            var db_list = bll.GetListBy(0, p => p.FlowID == flow_id, "ID ASC", p => p.Node);
+            foreach (var item in db_list)
+            {
+                Model.WebFlowNode model = new Model.WebFlowNode();
+                model.flow_node_id = item.NodeID;
+                model.flow_node_title = item.Node.Title;
+                model.icon = item.ICON;
+                model.process_tog = item.ProcessTo;
+                model.style = "width:120px;height:30px;line-height:30px;color:" + item.ICON + ";left:" + item.Left + "px;top:" + item.Top + "px;";                
+                response_list.Add(model);
+            }
+            response_entity.flow_id = flow_id;
+            response_entity.total = response_list.Count;
+            response_entity.list = response_list;
+            db.Dispose();
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 前端：保存流程信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool WebSaveFlowData(Model.WebSaveFlow model,out string msg)
+        {
+            msg = "";
+            if (model == null)
             {
                 msg = "非法参数";
                 return false;
             }
+            if (model.flow_node_list == null)
+            {
+                msg = "节点信息不能为空";
+                return false;
+            }
+
             var db = new DataCore.EFDBContext();
-            var entity = db.Flows.Find(flow_id);
-            if (entity == null)
+            var entity_flow = db.Flows.Find(model.flow_id);
+            if(entity_flow == null)
             {
                 msg = "流程不存在";
                 return false;
             }
-            entity.TOID = toid;
-            db.SaveChanges();
-            db.Dispose();
-            return true;
-        }
 
-        /// <summary>
-        /// 添加流程
-        /// </summary>
-        /// <param name="pid">父级流程ID</param>
-        /// <param name="node_id">节点ID</param>
-        /// <returns></returns>
-        public static int AddFlow(int pid, int node_id, out string msg)
-        {
-            msg = "成功";
-            if (pid == 0 || pid < -1 || node_id == 0)
+            foreach (var item in model.flow_node_list)
             {
-                msg = "非法参数";
-                return 0;
-            }
-
-            var db = new DataCore.EFDBContext();
-            var entity_node = db.Nodes.Find(node_id);
-            if (entity_node == null)
-            {
-                msg = "节点不存在";
-                return 0;
-            }
-
-            var entity = new Entity.Flow();
-            if (pid != -1)
-            {
-                var p_entity = db.Flows.Find(pid);
-                if (p_entity == null)
+                var entity_flow_node = db.FlowNodes.Find(item.flow_node_id);
+                if(entity_flow_node == null)
                 {
-                    msg = "父级流程不存在";
-                    return 0;
+                    msg = "节点" + item.flow_node_id.ToString() + "不存在";
+                    return false;
                 }
-                entity.PID = pid;
-                entity.TopPID = p_entity.TopPID == null ? p_entity.ID : p_entity.TopPID;
-                entity.Depth = p_entity.Depth + 1;
+                entity_flow_node.Top = item.top;
+                entity_flow_node.ProcessTo = item.process_to;
+                entity_flow_node.Left = item.left;
+                entity_flow_node.ICON = item.icon;
+                entity_flow_node.Color = item.color;
             }
-            else
-            {
-                entity.PID = null;
-                entity.TopPID = null;
-                entity.Depth = 1;
-                entity.FlowName = entity_node.Title;
-            }
-            entity.NodeID = node_id;
-            db.Flows.Add(entity);
-            db.SaveChanges();
-            db.Dispose();
-            return entity.ID;
-
-        }
-
-        /// <summary>
-        /// 修改流程
-        /// </summary>
-        /// <param name="flow_id"></param>
-        /// <param name="node_id"></param>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public static bool ModifyFlow(int flow_id, int node_id, out string msg)
-        {
-            msg = "ok";
-            if (flow_id <= 0 || node_id == 0)
-            {
-                msg = "非法参数";
-                return false;
-            }
-            var db = new DataCore.EFDBContext();
-            var entity_node = db.Nodes.Find(node_id);
-            if (entity_node == null)
-            {
-                msg = "节点不存在";
-                return false;
-            }
-            var entity_flow = db.Flows.Find(flow_id);
-            if (entity_flow == null)
-            {
-                msg = "要修改的流程不存在";
-                return false;
-            }
-            if (entity_flow.TopPID == null)
-                entity_flow.FlowName = entity_node.Title;
-            entity_flow.LastUpdateTime = DateTime.Now;
-            entity_flow.NodeID = node_id;
             db.SaveChanges();
             db.Dispose();
             return true;

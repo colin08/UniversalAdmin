@@ -168,6 +168,11 @@ namespace Universal.DataCore
         public DbSet<Entity.Flow> Flows { get; set; }
 
         /// <summary>
+        /// 流程的节点
+        /// </summary>
+        public DbSet<Entity.FlowNode> FlowNodes { get; set; }
+
+        /// <summary>
         /// 项目信息
         /// </summary>
         public DbSet<Entity.Project> Projects { get; set; }
@@ -176,22 +181,7 @@ namespace Universal.DataCore
         /// 项目附件
         /// </summary>
         public DbSet<Entity.ProjectFile> ProjectFiles { get; set; }
-
-        /// <summary>
-        /// 项目节点
-        /// </summary>
-        public DbSet<Entity.ProjectNode> ProjectNodes { get; set; }
-
-        /// <summary>
-        /// 项目节点附件
-        /// </summary>
-        public DbSet<Entity.ProjectNodeFile> ProjectNodeFiles { get; set; }
-
-        /// <summary>
-        /// 项目节点联系人
-        /// </summary>
-        public DbSet<Entity.ProjectNodeUser> ProjectNodeUsers { get; set; }
-
+        
         /// <summary>
         /// 项目分期情况
         /// </summary>
@@ -206,7 +196,11 @@ namespace Universal.DataCore
         /// 项目联系人
         /// </summary>
         public DbSet<Entity.ProjectUser> ProjectUsers { get; set; }
-
+        
+        /// <summary>
+        /// 项目流程的节点信息
+        /// </summary>
+        public DbSet<Entity.ProjectFlowNode> ProjectFlowNodes { get; set; }
 
         /// <summary>
         /// 

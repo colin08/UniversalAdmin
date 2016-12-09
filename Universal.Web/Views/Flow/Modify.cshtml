@@ -41,49 +41,58 @@
 @section foot
 {
     <script type="text/javascript">
-        /**
-        * 【获取流程】
-        * 接口地址：/Flow/GetFlow?PId=
-        * 请求参数：PID，父级ID，如果是一级，则不传数据，为-1获取所有
-        * 请求方式：GET
-        * 返回数据：json
-        * 返回数据格式：直接在浏览器打开地址就可以看到
-        */
+        //获取当前编辑的流程ID，如果是新增流程，则值为-1，可以直接传入后续的接口里
+        var flow_id = @ViewData["flow_id"];
 
         /**
         * 【获取所有节点】
-        * 接口地址：/Flow/GetAllNode
+        * 接口地址：/Flow/GetAllFlowNode?flow_id=流程ID
         * 请求方式：GET
         * 返回数据：json
         * 返回数据格式：直接在浏览器打开地址就可以看到
         */
 
         /**
-        * 【添加流程】
-        * 接口地址：/Flow/AddFlow
-        * 请求参数示例：data: { "pid": 父级ID, "node_id": 节点ID },
-        * 请求方式：Post
+        * 【添加流程节点】
+        * 接口地址：/Flow/AddNode
+        * 请求参数：data: { "flow_id": flow_id, "node_id": 选择的节点ID, "top": 整型, "left": 整型, "icon": "对号入座", "color": "对号入座","process_to":"对号入座" },
+        * 请求方式：POST
         * 返回数据：json
-        * 操作状态判断：result.data 是添加成功后的流程ID
+        * 返回数据说明：result.total是流程ID(如果flow_id==-1，则需要取这个值作为后续接口的参数)
+        *               result.data是流程节点ID，process_to里面的id是这个，下面保存也需要这个
+        */
+        
+        /**
+        * 【保存流程节点】
+        function Save() {
+            var jsonObj = {"flow_id":流程ID,"flow_node_list":[
+{"flow_node_id":流程节点ID(添加节点返回的result.data),"top":整型,"left":整型,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
+{"flow_node_id":流程节点ID(添加节点返回的result.data),"top":整型,"left":整型,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
+{"flow_node_id":流程节点ID(添加节点返回的result.data),"top":整型,"left":整型,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
+]};
+           
+            $.ajax({
+                url: "/Test/Save",
+                type: "post",
+                dataType: "json",
+                async:false,
+                data: JSON.stringify(jsonObj),
+                success: function (data) {
+                    if(data.msg ==1)
+                    {
+                        //TODO OK
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+            });
+        }
         */
 
-        /**
-        * 【修改流程节点】
-        * 接口地址：/Flow/ModifyFlowNode
-        * 请求参数示例：data: { "flow_id": 流程ID, "node_id": 新节点ID },
-        * 请求方式：Post
-        * 返回数据：json
-        * 操作状态判断：同上上
-        */
-
-        /**
-        * 【设置流程箭头指引】
-        * 接口地址：/Flow/SetFlowTOID
-        * 请求参数示例：data: { "flow_id": 流程ID, "to_id": "指向的流程ID" },
-        * 请求方式：Post
-        * 返回数据：json
-        * 操作状态判断：0 or 1
-        */
+        
     </script>
 
 }

@@ -102,6 +102,18 @@
     <Compile Include="Migrations\201612080638309_add_last_update_time.Designer.cs">
       <DependentUpon>201612080638309_add_last_update_time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612090256078_modify_something.cs" />
+    <Compile Include="Migrations\201612090256078_modify_something.Designer.cs">
+      <DependentUpon>201612090256078_modify_something.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612090727103_modify_flow.cs" />
+    <Compile Include="Migrations\201612090727103_modify_flow.Designer.cs">
+      <DependentUpon>201612090727103_modify_flow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612090922092_remove_project_flow.cs" />
+    <Compile Include="Migrations\201612090922092_remove_project_flow.Designer.cs">
+      <DependentUpon>201612090922092_remove_project_flow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -158,6 +170,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612080638309_add_last_update_time.resx">
       <DependentUpon>201612080638309_add_last_update_time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612090256078_modify_something.resx">
+      <DependentUpon>201612090256078_modify_something.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612090727103_modify_flow.resx">
+      <DependentUpon>201612090727103_modify_flow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612090922092_remove_project_flow.resx">
+      <DependentUpon>201612090922092_remove_project_flow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

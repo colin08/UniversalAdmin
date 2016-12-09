@@ -147,5 +147,4 @@ namespace Universal.Web.Models
         public string file_size { get; set; }
 
     }
-
 }
