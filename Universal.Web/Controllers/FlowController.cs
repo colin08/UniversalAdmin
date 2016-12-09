@@ -177,7 +177,16 @@ namespace Universal.Web.Controllers
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            var flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(stream);
+            BLL.Model.WebSaveFlow flow_info = null;
+            try
+            {
+                flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (flow_info != null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
@@ -200,7 +209,16 @@ namespace Universal.Web.Controllers
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            var flow_node_info = js.Deserialize<BLL.Model.WebSaveFlowNode>(stream);
+            BLL.Model.WebSaveFlowNode flow_node_info = null;
+            try
+            {
+                flow_node_info = js.Deserialize<BLL.Model.WebSaveFlowNode>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (flow_node_info != null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
