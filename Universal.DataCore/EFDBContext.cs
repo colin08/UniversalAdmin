@@ -203,6 +203,12 @@ namespace Universal.DataCore
         public DbSet<Entity.ProjectFlowNode> ProjectFlowNodes { get; set; }
 
         /// <summary>
+        /// 用户项目收藏
+        /// </summary>
+        public DbSet<Entity.CusUserProjectFavorites> CusUserProjectFavorites { get; set; }
+
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

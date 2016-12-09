@@ -247,7 +247,7 @@ namespace Universal.Web.Controllers.api
             }
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             int rowCount = 0;
-            foreach (var item in BLL.BllCusUserFavorites.GetPageData(req.page_index, req.page_size, ref rowCount, req.user_id, "", 0))
+            foreach (var item in BLL.BllCusUserFavorites.GetDocPageData(req.page_index, req.page_size, ref rowCount, req.user_id, "", 0))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
                 model.add_time = item.AddTime;

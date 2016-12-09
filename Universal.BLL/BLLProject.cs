@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -109,7 +110,20 @@ namespace Universal.BLL
             return entity.ID;
         }
 
-        //TODO 删除
+        /// <summary>
+        /// 删除项目
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool Del(int id)
+        {
+            if (id <= 0)
+                return false;
+            var db = new DataCore.EFDBContext();
+            db.Projects.Remove(db.Projects.Find(id));
+            db.Dispose();
+            return true;
+        }
 
         //TODO 获取列表
 

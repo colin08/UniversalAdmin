@@ -450,10 +450,50 @@ namespace Universal.Web.Controllers
         /// 项目收藏
         /// </summary>
         /// <returns></returns>
-        public ActionResult XMSC()
+        public ActionResult ProjectFavorites()
         {
             return View();
         }
+
+        /// <summary>
+        /// 文件(秘籍)收藏Json数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ProjectFavoritesData(int page_size, int page_index, string keyword)
+        {
+            List<Entity.Project> list = new List<Entity.Project>();
+            int rowCount = 0;
+            list = BLL.BllCusUserFavorites.GetProjectPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword);
+            WebAjaxEntity<List<Entity.Project>> result = new WebAjaxEntity<List<Entity.Project>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 删除收藏
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DelProjectFavorites(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
 
         /// <summary>
         /// 文件(秘籍)收藏
@@ -477,7 +517,7 @@ namespace Universal.Web.Controllers
         {
             List<Entity.DocPost> list = new List<Entity.DocPost>();
             int rowCount = 0;
-            list = BLL.BllCusUserFavorites.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
+            list = BLL.BllCusUserFavorites.GetDocPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();

@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201612090922092_remove_project_flow.Designer.cs">
       <DependentUpon>201612090922092_remove_project_flow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612091347425_add_project_fav.cs" />
+    <Compile Include="Migrations\201612091347425_add_project_fav.Designer.cs">
+      <DependentUpon>201612091347425_add_project_fav.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -179,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612090922092_remove_project_flow.resx">
       <DependentUpon>201612090922092_remove_project_flow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612091347425_add_project_fav.resx">
+      <DependentUpon>201612091347425_add_project_fav.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

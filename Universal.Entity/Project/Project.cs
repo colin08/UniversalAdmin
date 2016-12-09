@@ -96,6 +96,12 @@ namespace Universal.Entity
         public virtual CusUser ApproveUser { get; set; }
         
         /// <summary>
+        /// 当前项目节点信息
+        /// </summary>
+        [NotMapped]
+        public virtual ProjectFlowNode NowNode { get; set; }
+
+        /// <summary>
         /// 引用的流程ID
         /// </summary>
         public int FlowID { get; set; }

@@ -619,7 +619,6 @@
     <Content Include="Views\Project\Some.cshtml" />
     <Content Include="Views\Msg\Index.cshtml" />
     <Content Include="Views\TJ\Index.cshtml" />
-    <Content Include="Views\User\XMSC.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
     <Content Include="Views\User\DownloadLog.cshtml" />
     <Content Include="Views\User\Message.cshtml" />
@@ -653,6 +652,7 @@
     <Content Include="Views\Info\FileShare.cshtml" />
     <Content Include="Views\Info\Meeting.cshtml" />
     <Content Include="Views\Info\Plan.cshtml" />
+    <Content Include="Views\User\ProjectFavorites.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
