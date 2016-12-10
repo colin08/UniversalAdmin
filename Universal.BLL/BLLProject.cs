@@ -125,7 +125,55 @@ namespace Universal.BLL
             return true;
         }
 
-        //TODO 获取列表
+        /// <summary>
+        /// 获取项目分页列表
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name=""></param>
+        /// <param name="rowCount"></param>
+        /// <param name="user_id">0为所有，否则为某个用户的项目</param>
+        /// <param name="search_title">搜索标题</param>
+        /// <param name="category_id">所属分类</param>
+        /// <returns></returns>
+        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title)
+        {
+            //TODO 项目列表
+            rowCount = 0;
+            List<Entity.Project> response_entity = new List<Entity.Project>();
+            if (user_id == 0)
+                return response_entity;
+
+            var db = new DataCore.EFDBContext();
+            string sql = "";
+            string sql_total = "";
+            int begin_index = (page_index - 1) * page_size + 1;
+            int end_index = page_index * page_size;
+
+            if (!string.IsNullOrWhiteSpace(search_title))
+            {
+                sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row, *from( select W.*, U.NickName, u.Telphone from(select pro.*, fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID = u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%'";
+            }
+            else
+            {
+                sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select W.*,U.NickName,u.Telphone from (select pro.*,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T) as Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T";
+            }
+            rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
+            response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();
+            foreach (var item in response_entity)
+            {
+                var entity = db.CusUsers.Find(item.CusUserID);
+                if (entity == null)
+                {
+                    entity = new Entity.CusUser();
+                }
+                item.CusUser = entity;
+            }
+            db.Dispose();
+            return response_entity;
+        }
+
 
         //TODO 获取项目拆迁列表
 

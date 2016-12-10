@@ -107,7 +107,7 @@ namespace Universal.DataCore.Migrations
             //context.CusRoutes.AddOrUpdate(route_6);
 
             //var route_7 = new Entity.CusRoute();
-            //route_7.ControllerName = "project";
+            //route_7.ControllerName = "adminproject";
             //route_7.Title = "项目列表";
             //context.CusRoutes.AddOrUpdate(route_7);
 

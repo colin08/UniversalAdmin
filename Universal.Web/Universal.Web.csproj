@@ -476,6 +476,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminProjectController.cs" />
     <Compile Include="Controllers\AdminUserController.cs" />
     <Compile Include="Controllers\api\APIController.cs" />
     <Compile Include="Controllers\api\CusUserController.cs" />
@@ -616,7 +617,6 @@
     <Content Include="Views\Notice\Modify.cshtml" />
     <Content Include="Views\AppVersion\Modify.cshtml" />
     <None Include="Properties\PublishProfiles\HBL_NEW.pubxml" />
-    <Content Include="Views\Project\Some.cshtml" />
     <Content Include="Views\Msg\Index.cshtml" />
     <Content Include="Views\TJ\Index.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
@@ -653,6 +653,11 @@
     <Content Include="Views\Info\Meeting.cshtml" />
     <Content Include="Views\Info\Plan.cshtml" />
     <Content Include="Views\User\ProjectFavorites.cshtml" />
+    <Content Include="Views\Project\BasicInfo.cshtml" />
+    <Content Include="Views\AdminProject\Index.cshtml" />
+    <Content Include="Views\Project\Info.cshtml" />
+    <Content Include="Views\Project\FlowInfo.cshtml" />
+    <Content Include="Views\Project\FlowStage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
