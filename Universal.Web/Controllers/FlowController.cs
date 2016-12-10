@@ -187,7 +187,7 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if (flow_info != null)
+            if (flow_info == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
                 return Json(WorkContext.AjaxStringEntity);
@@ -219,7 +219,7 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if (flow_node_info != null)
+            if (flow_node_info == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
                 return Json(WorkContext.AjaxStringEntity);

@@ -147,11 +147,11 @@ namespace Universal.BLL
             foreach (var item in db_list)
             {
                 Model.WebFlowNode model = new Model.WebFlowNode();
-                model.flow_node_id = item.NodeID;
+                model.flow_node_id = item.ID;
                 model.flow_node_title = item.Node.Title;
                 model.icon = item.ICON;
                 model.process_to = item.ProcessTo;
-                model.style = "width:120px;height:30px;line-height:30px;color:" + item.ICON + ";left:" + item.Left + "px;top:" + item.Top + "px;";
+                model.style = "color:" + item.Color + ";left:" + item.Left + "px;top:" + item.Top + "px;";
                 response_list.Add(model);
             }
             response_entity.flow_id = flow_id;
@@ -174,11 +174,11 @@ namespace Universal.BLL
             if (entity != null)
             {
                 response_entity = new Model.WebFlowNode();
-                response_entity.flow_node_id = entity.NodeID;
+                response_entity.flow_node_id = entity.ID;
                 response_entity.flow_node_title = entity.Node.Title;
                 response_entity.icon = entity.ICON;
                 response_entity.process_to = entity.ProcessTo;
-                response_entity.style = "width:120px;height:30px;line-height:30px;color:" + entity.ICON + ";left:" + entity.Left + "px;top:" + entity.Top + "px;";
+                response_entity.style = "color:" + entity.Color + ";left:" + entity.Left + "px;top:" + entity.Top + "px;";
             }
             return response_entity;
         }
@@ -228,6 +228,11 @@ namespace Universal.BLL
                 if (entity_flow_node == null)
                 {
                     msg = "节点" + item.flow_node_id.ToString() + "不存在";
+                    return false;
+                }
+                if(entity_flow_node.FlowID != model.flow_id)
+                {
+                    msg = "流程节点" + item.flow_node_id.ToString() + "不属于流程" + model.flow_id.ToString();
                     return false;
                 }
                 entity_flow_node.Top = item.top;
