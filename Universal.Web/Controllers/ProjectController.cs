@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Universal.Tools;
 using Universal.Web.Framework;
 
@@ -109,6 +111,10 @@ namespace Universal.Web.Controllers
         {
             if (id <= 0)
                 return Content("项目不存在");
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+                return Content("项目不存在");
 
             return View();
         }
@@ -120,6 +126,10 @@ namespace Universal.Web.Controllers
         public ActionResult Info(int id)
         {
             if (id <= 0)
+                return Content("项目不存在");
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
                 return Content("项目不存在");
 
             return View();
@@ -133,7 +143,11 @@ namespace Universal.Web.Controllers
         {
             if (id <= 0)
                 return Content("项目不存在");
-
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+                return Content("项目不存在");
+            ViewData["project_id"] = id;
             return View();
         }
 
@@ -144,6 +158,10 @@ namespace Universal.Web.Controllers
         public ActionResult FlowStage(int id)
         {
             if (id <= 0)
+                return Content("项目不存在");
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
                 return Content("项目不存在");
 
             return View();
@@ -268,7 +286,7 @@ namespace Universal.Web.Controllers
                     ModelState.AddModelError("title", "信息不存在");
                 }
             }
-            
+
 
             #region 处理联系人ID
             System.Text.StringBuilder str_user_ids = new System.Text.StringBuilder();
@@ -415,5 +433,139 @@ namespace Universal.Web.Controllers
 
         }
 
+        #region 前端流程接口
+
+        /// <summary>
+        /// 获取所有项目的流程节点信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APIGetProjectFlowNode(int project_id)
+        {
+            WebAjaxEntity<BLL.Model.ProjectFlow> result = new WebAjaxEntity<BLL.Model.ProjectFlow>();
+            result.data = BLL.BLLProjectFlowNode.GetProjectFlow(project_id);
+            result.msg = 1;
+            result.msgbox = "ok";
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 删除节点
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APIDelProjectFlowNode(int id,string project_pieces)
+        {
+            string msg = "";
+            BLL.BLLProjectFlowNode.DelProjectFlowNode(id, project_pieces,out msg);
+            if(msg == "")
+                WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 保存修改的节点信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APISave()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.ProjectFlowNode data = null;
+            try
+            {
+                data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            string msg = "";
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveNode(data, out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 保存修改的节点信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APISaveALL()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.ProjectFlow data = null;
+            try
+            {
+                data = js.Deserialize<BLL.Model.ProjectFlow>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            string msg = "";
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveAllNode(data, out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 添加项目流程节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APIAddProjectFlowNode(int project_id,string project_pieces)
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.ProjectFlowNode data = null;
+            try
+            {
+                data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            string msg = "";
+            int id = BLL.BLLProjectFlowNode.AddNode(project_id, project_pieces, data, out msg);
+            if (id > 0)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.data = id.ToString();
+            }
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        #endregion
     }
 }
