@@ -39,6 +39,11 @@ namespace Universal.Entity
         public bool Status { get; set; }
 
         /// <summary>
+        /// 所属块ID
+        /// </summary>
+        public int Piece { get; set; }
+
+        /// <summary>
         /// 是否开始
         /// </summary>
         public bool IsStart { get; set; }
@@ -72,5 +77,16 @@ namespace Universal.Entity
         /// 节点的图标
         /// </summary>
         public string ICON { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime? BeginTime { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime? EndTime { get; set; }
+
     }
 }

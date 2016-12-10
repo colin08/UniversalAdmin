@@ -7,11 +7,11 @@
         </dl>
         <dl>
             <dt>流程指引</dt>
-            <dd @(ViewData["tabLeft"].ToString().Equals("jhlx") ? "class=act" : "")><a href="/Shool/JHLX" title="计划立项"><em><i class="ico-nav2"></i></em><span>计划立项</span></a></dd>
-            <dd @(ViewData["tabLeft"].ToString().Equals("dygh") ? "class=act" : "")><a href="/Shool/DYGH" title="单元规划"><em><i class="ico-nav3"></i></em><span>单元规划</span></a></dd>
-            <dd @(ViewData["tabLeft"].ToString().Equals("xxhc") ? "class=act" : "")><a href="/Shool/XXHC" title="信息核查"><em><i class="ico-nav4"></i></em><span>信息核查</span></a></dd>
-            <dd @(ViewData["tabLeft"].ToString().Equals("ztqr") ? "class=act" : "")><a href="/Shool/ZTQR" title="主体确认"><em><i class="ico-nav5"></i></em><span>主体确认</span></a></dd>
-            <dd @(ViewData["tabLeft"].ToString().Equals("ydsp") ? "class=act" : "")><a href="/Shool/YDSP" title="用地审批"><em><i class="ico-nav6"></i></em><span>用地审批</span></a></dd>
+            @foreach (var item in Universal.BLL.BLLFlow.GetFlowPieceType())
+            {
+                <dd @(ViewData["tabLeft"].ToString().Equals("piece" + item.id.ToString()) ? "class=act" : "")><a href="/Shool/Piece?id=@item.id" title="@item.title"><em><i class="@item.other"></i></em><span>@item.title</span></a></dd>
+                
+            }
         </dl>
     </div>
 </div>

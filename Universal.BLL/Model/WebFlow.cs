@@ -13,6 +13,11 @@ namespace Universal.BLL.Model
 
         public int flow_id { get; set; }
 
+        /// <summary>
+        /// 块内容
+        /// </summary>
+        public string reference_pieces { get; set; }
+
         public List<WebFlowNode> list { get; set; }
     }
 
@@ -33,6 +38,11 @@ namespace Universal.BLL.Model
         public string flow_node_title { get; set; }
 
         public string process_to { get; set; }
+
+        /// <summary>
+        /// 所属块
+        /// </summary>
+        public int piece { get; set; }
 
         /// <summary>
         /// 拼接的样式

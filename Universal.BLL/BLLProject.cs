@@ -30,7 +30,7 @@ namespace Universal.BLL
                 msg = "所选流程不存在";
                 return 0;
             }
-
+            entity.Pieces = flow_entity.Pieces;
             //处理项目联系人
             foreach (var item in user_ids.Split(','))
             {
@@ -57,6 +57,7 @@ namespace Universal.BLL
                 entity_node.ProcessTo = item.ProcessTo;
                 entity_node.Project = entity;
                 entity_node.Status = true;
+                entity_node.Piece = item.Piece;
                 entity_node.Top = item.Top;
                 db.ProjectFlowNodes.Add(entity_node);
             }
@@ -126,16 +127,16 @@ namespace Universal.BLL
         }
 
         /// <summary>
-        /// 获取项目分页列表
+        /// 获取用户可见的项目分页列表
         /// </summary>
         /// <param name=""></param>
         /// <param name=""></param>
         /// <param name="rowCount"></param>
-        /// <param name="user_id">0为所有，否则为某个用户的项目</param>
+        /// <param name="user_id">当前登录的用户</param>
         /// <param name="search_title">搜索标题</param>
-        /// <param name="category_id">所属分类</param>
+        /// <param name="only_mine">是否只获取我的</param>
         /// <returns></returns>
-        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title)
+        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title,bool only_mine)
         {
             //TODO 项目列表
             rowCount = 0;
@@ -151,13 +152,13 @@ namespace Universal.BLL
 
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row, *from( select W.*, U.NickName, u.Telphone from(select pro.*, fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID = u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%'";
+                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project] where CHARINDEX(N'"+search_title+"', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) FROM (select * from  [dbo].[Project] where CHARINDEX(N'"+search_title+"',Title) > 0 ) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end) + TOID)> 0";
             }
             else
             {
-                sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select W.*,U.NickName,u.Telphone from (select pro.*,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T) as Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T";
+                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) FROM (select * from  [dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end) + TOID)> 0";
             }
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();

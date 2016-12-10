@@ -1,18 +1,18 @@
 ﻿
 @{
-    ViewBag.Title = "单元规划";
+    ViewBag.Title = ViewData["TabTitle"];
     ViewData["tabTop"] = "school";
     ViewData["tabLeft"] = "dygh";
 }
 
 <div class="wapper">
-    
+
     @Html.Partial("_ShoolMenuLeft", this.ViewData)
 
     <div class="rightBox">
         <div class="container">
             <div class="tit1">
-                <span>单元规划</span>
+                <span>@ViewData["TabTitle"]</span>
             </div>
             <div class="academy-con tc">
                 <img src="/assets/theme/images/academy.png" alt="" />
@@ -25,3 +25,11 @@
         <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 </div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        var flow_id = ViewData["flow_id"];
+    </script>
+}

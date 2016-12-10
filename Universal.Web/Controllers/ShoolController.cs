@@ -225,50 +225,24 @@ namespace Universal.Web.Controllers
             ViewData["category"] = userRoleList;
         }
 
-        /// <summary>
-        /// 计划立项
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult JHLX()
-        {
-            return View();
-        }
 
         /// <summary>
-        /// 单元规划
+        /// 块
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult DYGH()
+        public ActionResult Piece(int id)
         {
+            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+            {
+                return Content("无此块");
+            }
+            ViewData["flow_id"] = entity.ID;
+            ViewData["TabTitle"] = entity.Title;
+            ViewData["Tag"] ="piece" + entity.ID.ToString();
             return View();
         }
-
-        /// <summary>
-        /// 信息核查
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult XXHC()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 主体确认
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult ZTQR()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 用地审批
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult YDSP()
-        {
-            return View();
-        }
-
     }
 }

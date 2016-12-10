@@ -114,6 +114,7 @@ namespace Universal.BLL
             {
                 entity_flow.CusUserID = user_id;
                 entity_flow.Title = entity_node.Title;
+                entity_flow.FlowType = Entity.FlowType.basic;
                 db.Flows.Add(entity_flow);
             }
             var entity_flow_node = new Entity.FlowNode();
@@ -124,11 +125,41 @@ namespace Universal.BLL
             entity_flow_node.NodeID = entity_node.ID;
             entity_flow_node.ProcessTo = process_to;
             entity_flow_node.Top = top;
+            entity_flow_node.Piece = 0;
             db.FlowNodes.Add(entity_flow_node);
             db.SaveChanges();
             db.Dispose();
             result[0] = entity_flow.ID;
             result[1] = entity_flow_node.ID;
+            return result;
+        }
+
+        /// <summary>
+        /// 获取流程块，不包含基本的
+        /// </summary>
+        /// <returns></returns>
+        public static List<Model.AdminUserRoute> GetFlowPieceType()
+        {
+            List<Model.AdminUserRoute> result = new List<Model.AdminUserRoute>();
+            BLL.BaseBLL<Entity.Flow> bll = new BaseBLL<Entity.Flow>();
+            foreach (var item in Tools.EnumHelper.EnumToDictionary(typeof(Entity.FlowType)))
+            {
+                if (item.Key != 0)
+                {
+                    var entity_piece = bll.GetModel(p => p.FlowType == (Entity.FlowType)item.Key);
+                    if(entity_piece == null)
+                    {
+                        entity_piece = new Entity.Flow();
+                        entity_piece.FlowType = (Entity.FlowType)item.Key;
+                        entity_piece.CusUserID = 1;
+                        entity_piece.Pieces = "";
+                        entity_piece.Title = item.Value;
+                        bll.Add(entity_piece);
+                    }
+                    result.Add(new Model.AdminUserRoute(entity_piece.ID, item.Value,entity_piece.FlowTypeICON));
+                }
+            }
+
             return result;
         }
 
@@ -150,11 +181,50 @@ namespace Universal.BLL
                 model.flow_node_id = item.ID;
                 model.flow_node_title = item.Node.Title;
                 model.icon = item.ICON;
+                model.piece = item.Piece;
                 model.process_to = item.ProcessTo;
                 model.style = "color:" + item.Color + ";left:" + item.Left + "px;top:" + item.Top + "px;";
                 response_list.Add(model);
             }
             response_entity.flow_id = flow_id;
+            response_entity.total = response_list.Count;
+            response_entity.list = response_list;
+            db.Dispose();
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 前端：根据块类别获取流程节点信息
+        /// </summary>
+        /// <param name="piece_id">块ID</param>
+        /// <returns></returns>
+        public static Model.WebFlow GetWebFlowNodeDataByPiectID(int piece_id)
+        {
+            Model.WebFlow response_entity = new Model.WebFlow();
+            List<Model.WebFlowNode> response_list = new List<Model.WebFlowNode>();
+            var db = new DataCore.EFDBContext();
+            var flow_entity = db.Flows.Where(p => p.FlowType == (Entity.FlowType)piece_id).FirstOrDefault();
+            if(flow_entity == null)
+            {
+                db.Dispose();
+                return response_entity;
+            }
+            response_entity.reference_pieces = flow_entity.Pieces;
+
+            BLL.BaseBLL<Entity.FlowNode> bll = new BaseBLL<Entity.FlowNode>();
+            var db_list = bll.GetListBy(0, p => p.FlowID == flow_entity.ID, "ID ASC", p => p.Node);
+            foreach (var item in db_list)
+            {
+                Model.WebFlowNode model = new Model.WebFlowNode();
+                model.flow_node_id = item.ID;
+                model.flow_node_title = item.Node.Title;
+                model.icon = item.ICON;
+                model.piece = item.Piece;
+                model.process_to = item.ProcessTo;
+                model.style = "color:" + item.Color + ";left:" + item.Left + "px;top:" + item.Top + "px;";
+                response_list.Add(model);
+            }
+            response_entity.flow_id = flow_entity.ID;
             response_entity.total = response_list.Count;
             response_entity.list = response_list;
             db.Dispose();
@@ -177,6 +247,7 @@ namespace Universal.BLL
                 response_entity.flow_node_id = entity.ID;
                 response_entity.flow_node_title = entity.Node.Title;
                 response_entity.icon = entity.ICON;
+                response_entity.piece = entity.Piece;
                 response_entity.process_to = entity.ProcessTo;
                 response_entity.style = "color:" + entity.Color + ";left:" + entity.Left + "px;top:" + entity.Top + "px;";
             }
@@ -221,6 +292,8 @@ namespace Universal.BLL
                 msg = "流程不存在";
                 return false;
             }
+            //修改引用的块
+            entity_flow.Pieces = model.reference_pieces;
 
             foreach (var item in model.flow_node_list)
             {
@@ -235,9 +308,11 @@ namespace Universal.BLL
                     msg = "流程节点" + item.flow_node_id.ToString() + "不属于流程" + model.flow_id.ToString();
                     return false;
                 }
+                
                 entity_flow_node.Top = item.top;
                 entity_flow_node.ProcessTo = item.process_to;
                 entity_flow_node.Left = item.left;
+                entity_flow_node.Piece = item.piece;
                 entity_flow_node.ICON = item.icon;
                 entity_flow_node.Color = item.color;
             }
@@ -271,6 +346,7 @@ namespace Universal.BLL
             entity_flow_node.ProcessTo = model.process_to;
             entity_flow_node.Left = model.left;
             entity_flow_node.ICON = model.icon;
+            entity_flow_node.Piece = model.piece;
             entity_flow_node.Color = model.color;
             db.SaveChanges();
             db.Dispose();

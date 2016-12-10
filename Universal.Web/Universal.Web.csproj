@@ -624,11 +624,6 @@
     <Content Include="Views\User\Message.cshtml" />
     <Content Include="Views\Shool\Index.cshtml" />
     <Content Include="Views\Shared\_ShoolMenuLeft.cshtml" />
-    <Content Include="Views\Shool\JHLX.cshtml" />
-    <Content Include="Views\Shool\YDSP.cshtml" />
-    <Content Include="Views\Shool\DYGH.cshtml" />
-    <Content Include="Views\Shool\XXHC.cshtml" />
-    <Content Include="Views\Shool\ZTQR.cshtml" />
     <Content Include="Views\Search\Project.cshtml" />
     <Content Include="Views\Search\Document.cshtml" />
     <Content Include="Views\Search\Notice.cshtml" />
@@ -658,6 +653,7 @@
     <Content Include="Views\Project\Info.cshtml" />
     <Content Include="Views\Project\FlowInfo.cshtml" />
     <Content Include="Views\Project\FlowStage.cshtml" />
+    <Content Include="Views\Shool\Piece.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

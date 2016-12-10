@@ -34,6 +34,11 @@ namespace Universal.Entity
         public virtual Node Node { get; set; }
 
         /// <summary>
+        /// 所属块
+        /// </summary>
+        public int Piece { get; set; }
+
+        /// <summary>
         /// 元素距离顶部位置
         /// </summary>
         public int Top { get; set; }

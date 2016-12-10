@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Universal.Tools;
 using Universal.Web.Framework;
 
@@ -107,7 +109,7 @@ namespace Universal.Web.Controllers
                 file = Request.Files[0];
             UploadHelper uh = new UploadHelper();
             Hashtable ht = new Hashtable();
-            ht = uh.Upload_APK(file);            
+            ht = uh.Upload_APK(file);
             return Json(ht);
         }
 
@@ -122,7 +124,7 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<List<Models.ViewModelNoticeUser>> result = new WebAjaxEntity<List<Models.ViewModelNoticeUser>>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             List<Models.ViewModelNoticeUser> list = new List<Models.ViewModelNoticeUser>();
-            foreach (var item in bll.GetListBy(0, p=>p.Telphone.Contains(search)||p.NickName.Contains(search), "ID asc"))
+            foreach (var item in bll.GetListBy(0, p => p.Telphone.Contains(search) || p.NickName.Contains(search), "ID asc"))
             {
                 Models.ViewModelNoticeUser model = new Models.ViewModelNoticeUser();
                 model.id = item.ID;
@@ -146,7 +148,7 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<List<Models.ViewModelDepartment>> result = new WebAjaxEntity<List<Models.ViewModelDepartment>>();
             BLL.BaseBLL<Entity.CusDepartment> bll = new BLL.BaseBLL<Entity.CusDepartment>();
             List<Models.ViewModelDepartment> list = new List<Models.ViewModelDepartment>();
-            foreach (var item in bll.GetListBy(0,new List<BLL.FilterSearch>(), "Priority desc"))
+            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "Priority desc"))
             {
                 Models.ViewModelDepartment model = new Models.ViewModelDepartment();
                 model.department_id = item.ID;
@@ -169,17 +171,180 @@ namespace Universal.Web.Controllers
             WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
             List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
             BLL.BaseBLL<Entity.CusUserJob> bll = new BLL.BaseBLL<Entity.CusUserJob>();
-            foreach (var item in bll.GetListBy(0,new List<BLL.FilterSearch>(), "AddTime Asc"))
+            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
             {
                 Models.ViewModelJob model = new Models.ViewModelJob();
                 model.id = item.ID;
                 model.title = item.Title;
                 list.Add(model);
-            }            
+            }
             result.data = list;
             result.msg = 1;
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+        #region  流程节点给前端的接口
+
+        /// <summary>
+        /// 获取所有流程节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetAllFlowNode(int flow_id)
+        {
+            var result = BLL.BLLFlow.GetWebFlowData(flow_id);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取单个流程节点
+        /// </summary>
+        /// <param name="flow_node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetFLowNode(int flow_node_id)
+        {
+            WebAjaxEntity<BLL.Model.WebFlowNode> response_entity = new WebAjaxEntity<BLL.Model.WebFlowNode>();
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.data = BLL.BLLFlow.GetWebFlowNodeData(flow_node_id);
+            return Json(response_entity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 删除某个流程节点
+        /// </summary>
+        /// <param name="flow_node_id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult DelFlowNode(int flow_node_id)
+        {
+            if (BLL.BLLFlow.DelWebFlowNode(flow_node_id))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "ok";
+            }
+            WorkContext.AjaxStringEntity.msgbox = "删除失败";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 添加流程
+        /// </summary>
+        /// <param name="flow_id">为-1时为顶级</param>
+        /// <param name="node_id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult AddNode(int flow_id, int node_id, int top, int left, string icon, string color, string process_to)
+        {
+            string msg = "";
+            var ids = BLL.BLLFlow.AddFlowNode(WorkContext.UserInfo.ID, flow_id, node_id, top, left, icon, color, process_to, out msg);
+            if (TypeHelper.ObjectToInt(ids[0]) != -1)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.data = ids[1].ToString();
+                WorkContext.AjaxStringEntity.total = TypeHelper.ObjectToInt(ids[0]);
+            }
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 修改流程的节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveFlow()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.WebSaveFlow flow_info = null;
+            try
+            {
+                flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (flow_info == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            if (BLL.BLLFlow.WebSaveFlowData(flow_info, out msg))
+                WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 修改某个流程节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveFlowNode()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.WebSaveFlowNode flow_node_info = null;
+            try
+            {
+                flow_node_info = js.Deserialize<BLL.Model.WebSaveFlowNode>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (flow_node_info == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            if (BLL.BLLFlow.WebSaveFlowNodeData(flow_node_info, out msg))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "ok";
+            }
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 获取流程所有块类别类别信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetFlowPiece()
+        {
+            WebAjaxEntity<List<BLL.Model.AdminUserRoute>> response_entity = new WebAjaxEntity<List<BLL.Model.AdminUserRoute>>();
+            response_entity.msg = 1;
+            response_entity.data = BLL.BLLFlow.GetFlowPieceType();
+            return Json(response_entity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 根据块获取流程节点信息
+        /// </summary>
+        /// <param name="piece_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetFlowNodeByPiece(int piece_id)
+        {
+            WebAjaxEntity<BLL.Model.WebFlow> response_entity = new WebAjaxEntity<BLL.Model.WebFlow>();
+            response_entity.msg = 1;
+            response_entity.data = BLL.BLLFlow.GetWebFlowNodeDataByPiectID(piece_id);
+            return Json(response_entity, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+        
     }
 }

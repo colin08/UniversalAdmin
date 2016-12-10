@@ -118,6 +118,14 @@
     <Compile Include="Migrations\201612091347425_add_project_fav.Designer.cs">
       <DependentUpon>201612091347425_add_project_fav.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612100740178_modify_flow1.cs" />
+    <Compile Include="Migrations\201612100740178_modify_flow1.Designer.cs">
+      <DependentUpon>201612100740178_modify_flow1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612100833236_modify_project_flow.cs" />
+    <Compile Include="Migrations\201612100833236_modify_project_flow.Designer.cs">
+      <DependentUpon>201612100833236_modify_project_flow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,6 +194,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612091347425_add_project_fav.resx">
       <DependentUpon>201612091347425_add_project_fav.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612100740178_modify_flow1.resx">
+      <DependentUpon>201612100740178_modify_flow1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612100833236_modify_project_flow.resx">
+      <DependentUpon>201612100833236_modify_project_flow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

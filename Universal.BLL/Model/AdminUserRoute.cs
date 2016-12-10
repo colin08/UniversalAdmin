@@ -8,6 +8,15 @@ namespace Universal.BLL.Model
 {
     public class AdminUserRoute
     {
+        public AdminUserRoute() { }
+
+        public AdminUserRoute(int id,string title,string other)
+        {
+            this.id = id;
+            this.title = title;
+            this.other = other;
+        }
+
         /// <summary>
         /// 权限ID
         /// </summary>
@@ -17,6 +26,11 @@ namespace Universal.BLL.Model
         /// 权限说明
         /// </summary>
         public string title { get; set; }
+
+        /// <summary>
+        /// 其他信息
+        /// </summary>
+        public string other { get; set; }
 
         /// <summary>
         /// 是否选中,大于0为选中

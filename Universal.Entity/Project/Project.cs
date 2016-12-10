@@ -118,6 +118,12 @@ namespace Universal.Entity
         public string TOID { get; set; }
 
         /// <summary>
+        /// 此项目引用到的流程块,逗号分割，前后要加逗号:,1,2,3,4,
+        /// </summary>
+        [MaxLength(100)]
+        public string Pieces { get; set; }
+
+        /// <summary>
         /// 项目区域
         /// </summary>
         public ProjectArea Area { get; set; }
