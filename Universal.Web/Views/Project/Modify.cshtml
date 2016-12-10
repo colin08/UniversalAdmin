@@ -30,6 +30,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(p => p.user_ids)
             @Html.HiddenFor(p => p.files)
+            @Html.HiddenFor(p => p.see_ids)
             <!--第一步-->
             <div class="addmb" style="display: block;" id="div_one">
                 <h4 class="tit2">基本信息</h4>
@@ -88,15 +89,27 @@
                         <li>
                             <label for="" class="lab1"><span class="red">*</span>谁可以看</label>
                             <div class="create-radio">
-                                <span><input type="radio" />所有人</span>
-                                <span><input type="radio" />同事分组</span>
-                                <span><input type="radio" />自定义</span>
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.everyone">
+                                    @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
+                                    <span>所有人</span>
+                                </label>
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
+                                    @Html.RadioButtonFor(x => x.post_see, "1", (int)Model.post_see == 1 ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
+                                    <span>同事分组</span>
+                                </label>
+                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
+                                    @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
+                                    <span>自定义</span>
+                                </label>
                                 <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
                             </div>
                             <div class="scrollbox scrollbox-big">
-                                <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
-                                <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
-                                <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
+                                <ul>
+                                    @foreach (var item in Model.see_entity)
+                                    {
+                                        <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                    }
+                                </ul>
                             </div>
                         </li>
                         <li>
