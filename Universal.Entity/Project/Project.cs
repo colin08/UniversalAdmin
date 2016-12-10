@@ -61,6 +61,8 @@ namespace Universal.Entity
     {
         public Project()
         {
+            this.ProjectUsers = new List<ProjectUser>();
+            this.ProjectFiles = new List<ProjectFile>();
             this.See = DocPostSee.everyone;
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
@@ -274,6 +276,12 @@ namespace Universal.Entity
         public DateTime AddTime { get; set; }
 
         public DateTime LastUpdateTime { get; set; }
+
+        /// <summary>
+        /// 是否收藏
+        /// </summary>
+        [NotMapped]
+        public bool IsFavorites { get; set; }
 
         /// <summary>
         /// 项目联系人

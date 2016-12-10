@@ -12,6 +12,19 @@ namespace Universal.BLL
     /// </summary>
     public class BLLProject
     {
+
+        public static Entity.Project GetModel(int id)
+        {
+            if (id <= 0)
+                return null;
+
+            var db = new DataCore.EFDBContext();
+            var entity = db.Projects.AsNoTracking().Include(p=>p.ProjectUsers.Select(s=>s.CusUser)).Include(p=>p.ProjectFiles).Include(p=>p.ApproveUser).Where(p => p.ID == id).FirstOrDefault();
+
+            db.Dispose();
+            return entity;
+        }
+
         /// <summary>
         /// 添加项目
         /// </summary>
@@ -144,21 +157,35 @@ namespace Universal.BLL
             if (user_id == 0)
                 return response_entity;
 
-            var db = new DataCore.EFDBContext();
-            string sql = "";
-            string sql_total = "";
             int begin_index = (page_index - 1) * page_size + 1;
             int end_index = page_index * page_size;
 
+            var db = new DataCore.EFDBContext();
+            string sql = "";
+            string sql_total = "";
+            int user_department_id = 0;
+            string user_department_str = "";
+            string user_id_str = "";
+            var entity_user = db.CusUsers.Find(user_id);
+
+            if (entity_user == null)
+                return response_entity;
+            else
+            {
+                user_department_id = entity_user.CusDepartmentID;
+                user_department_str = "," + user_department_id + ",";
+                user_id_str = "," + user_id + ",";
+            }
+
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project] where CHARINDEX(N'"+search_title+"', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM (select * from  [dbo].[Project] where CHARINDEX(N'"+search_title+"',Title) > 0 ) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end) + TOID)> 0";
+                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project] where CHARINDEX(N'"+search_title+"', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) FROM (select * from  [dbo].[Project] where CHARINDEX(N'"+search_title+"',Title) > 0 ) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end) + TOID)> 0";
             }
             else
             {
-                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM (select * from  [dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then @user_id_str when 1 then @user_department_str end),(case CusUserID when @user_id then(case See when 2 then @user_id_str when 1 then @user_department_str end) end) + TOID)> 0";
+                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql_total = "select count(1) FROM (select * from  [dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end) + TOID)> 0";
             }
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();

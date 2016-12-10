@@ -20,6 +20,88 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 分页数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword)
+        {
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+
+            int rowCount = 0;
+            var list = BLL.BLLProject.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, only_mine);
+            foreach (var item in list)
+            {
+                item.IsFavorites = bll_fav.Exists(p => p.CusUserID == WorkContext.UserInfo.ID && p.ProjectID == item.ID);
+            }
+            WebAjaxEntity<List<Entity.Project>> result = new WebAjaxEntity<List<Entity.Project>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Del(int id)
+        {
+            if (id <= 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (BLL.BLLProject.Del(id))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "删除成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "删除失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+        }
+
+        /// <summary>
+        ///  收藏
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult AddFavorites(int id)
+        {
+            if (id <= 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            bool isOK = BLL.BllCusUserFavorites.AddProjectFav(id, WorkContext.UserInfo.ID, out msg);
+            if (!isOK)
+            {
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
+
+        }
+
+
+        /// <summary>
         /// 项目基本信息
         /// </summary>
         /// <returns></returns>
@@ -69,18 +151,268 @@ namespace Universal.Web.Controllers
 
 
 
-        public ActionResult Modify()
+        public ActionResult Modify(int? id)
         {
-            return View();
+            LoadFlow();
+            int ids = TypeHelper.ObjectToInt(id);
+            Models.ViewModelProject model = new Models.ViewModelProject();
+            if (ids != 0)
+            {
+                var entity = BLL.BLLProject.GetModel(ids);
+                if (entity != null)
+                {
+                    model.title = entity.Title;
+                    model.id = ids;
+                    model.approve_user_id = entity.ApproveUserID;
+                    model.approve_user_name = entity.ApproveUser.NickName;
+                    model.flow_id = entity.FlowID;
+                    model.post_see = entity.See;
+                    model.area = entity.Area;
+                    model.GaiZaoXingZhi = entity.GaiZaoXingZhi;
+                    model.ZhongDiHao = entity.ZhongDiHao;
+                    model.ShenBaoZhuTi = entity.ShenBaoZhuTi;
+                    model.ZongMianJi = entity.ZongMianJi;
+                    model.ZongMianJiOther = entity.ZongMianJiOther;
+                    model.WuLeiQuanMianJi = entity.WuLeiQuanMianJi;
+                    model.LaoWuCunMianJi = entity.LaoWuCunMianJi;
+                    model.FeiNongMianJi = entity.FeiNongMianJi;
+                    model.KaiFaMianJi = entity.KaiFaMianJi;
+                    model.RongJiLv = entity.RongJiLv;
+                    model.TuDiShiYongQuan = entity.TuDiShiYongQuan;
+                    model.JianSheGuiHuaZheng = entity.JianSheGuiHuaZheng;
+                    model.ChaiQianYongDiMianJi = entity.ChaiQianYongDiMianJi;
+                    model.ChaiQianJianZhuMianJi = entity.ChaiQianJianZhuMianJi;
+                    model.LiXiangTime = entity.LiXiangTime;
+                    model.ZhuanXiangTime = entity.ZhuanXiangTime;
+                    model.ZhuTiTime = entity.ZhuTiTime;
+                    model.YongDiTime = entity.YongDiTime;
+                    model.KaiPanTime = entity.KaiPanTime;
+                    model.FenChengBiLi = entity.FenChengBiLi;
+                    model.JunJia = entity.JunJia;
+
+
+                    #region 权限展示
+                    System.Text.StringBuilder str_see_ids = new System.Text.StringBuilder();
+                    switch (entity.See)
+                    {
+                        case Entity.DocPostSee.everyone:
+                            break;
+                        case Entity.DocPostSee.department:
+                            foreach (var item in BLL.BLLDepartment.GetListByIds(entity.TOID))
+                            {
+                                str_see_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                            }
+                            break;
+                        case Entity.DocPostSee.user:
+                            foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
+                            {
+                                str_see_ids.Append(item.ID.ToString() + ",");
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    if (str_see_ids.Length > 0)
+                    {
+                        str_see_ids = str_see_ids.Remove(str_see_ids.Length - 1, 1);
+                    }
+                    model.see_ids = str_see_ids.ToString();
+                    #endregion
+
+                    model.BuildViewModelListFile(entity.ProjectFiles.ToList());
+
+                    #region 项目联系人
+                    System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                    foreach (var item in entity.ProjectUsers)
+                    {
+                        str_ids.Append(item.ID.ToString() + ",");
+                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                    }
+                    if (str_ids.Length > 0)
+                    {
+                        str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                    }
+                    model.user_ids = str_ids.ToString();
+                    #endregion
+                }
+                else
+                {
+                    model.Msg = 2;
+                    model.MsgBox = "数据不存在";
+                }
+
+            }
+            else
+            {
+                //默认
+                model.approve_user_id = WorkContext.UserInfo.ID;
+                model.approve_user_name = WorkContext.UserInfo.NickName;
+            }
+            return View(model);
         }
 
-        /// <summary>
-        /// 新增项目-临时
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Add()
+        [HttpPost]
+        [ValidateAntiForgeryToken, ValidateInput(false)]
+        public ActionResult Modify(Models.ViewModelProject entity)
         {
-            return View();
+            var isAdd = entity.id == 0 ? true : false;
+            LoadFlow();
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            if (!isAdd)
+            {
+                if (!bll.Exists(p => p.ID == entity.id))
+                {
+                    entity.Msg = 2;
+                    ModelState.AddModelError("title", "信息不存在");
+                }
+            }
+            
+
+            #region 处理联系人ID
+            System.Text.StringBuilder str_user_ids = new System.Text.StringBuilder();
+            entity.users_entity = new List<Models.ViewModelDocumentCategory>();
+            foreach (var item in BLL.BLLCusUser.GetListByIds(entity.user_ids))
+            {
+                str_user_ids.Append(item.ID.ToString() + ",");
+                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+            }
+            string final_user_ids = "";
+            if (str_user_ids.Length > 0)
+            {
+                final_user_ids = str_user_ids.Remove(str_user_ids.Length - 1, 1).ToString();
+            }
+            #endregion
+
+            #region 处理可见用户或部门的ID
+            System.Text.StringBuilder str_see_ids = new System.Text.StringBuilder();
+            entity.see_entity = new List<Models.ViewModelDocumentCategory>();
+            switch (entity.post_see)
+            {
+                case Entity.DocPostSee.everyone:
+                    break;
+                case Entity.DocPostSee.department:
+                    foreach (var item in BLL.BLLDepartment.GetListByIds(entity.see_ids))
+                    {
+                        str_see_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                    }
+                    break;
+                case Entity.DocPostSee.user:
+                    foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
+                    {
+                        str_see_ids.Append(item.ID.ToString() + ",");
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            string final_see_ids = "";
+            if (str_see_ids.Length > 0)
+            {
+                final_see_ids = "," + str_see_ids.ToString();
+            }
+            #endregion
+
+            if (ModelState.IsValid)
+            {
+                Entity.Project model = null;
+                if (isAdd)
+                {
+                    model = new Entity.Project();
+                    model.CusUserID = WorkContext.UserInfo.ID;
+                }
+                else
+                    model = bll.GetModel(p => p.ID == entity.id);
+
+                model.ApproveUserID = entity.approve_user_id;
+                model.FlowID = entity.flow_id;
+                model.See = entity.post_see;
+                model.Area = entity.area;
+                model.GaiZaoXingZhi = entity.GaiZaoXingZhi;
+                model.ZhongDiHao = entity.ZhongDiHao;
+                model.ShenBaoZhuTi = entity.ShenBaoZhuTi;
+                model.ZongMianJi = entity.ZongMianJi;
+                model.ZongMianJiOther = entity.ZongMianJiOther;
+                model.WuLeiQuanMianJi = entity.WuLeiQuanMianJi;
+                model.LaoWuCunMianJi = entity.LaoWuCunMianJi;
+                model.FeiNongMianJi = entity.FeiNongMianJi;
+                model.KaiFaMianJi = entity.KaiFaMianJi;
+                model.RongJiLv = entity.RongJiLv;
+                model.TuDiShiYongQuan = entity.TuDiShiYongQuan;
+                model.JianSheGuiHuaZheng = entity.JianSheGuiHuaZheng;
+                model.ChaiQianYongDiMianJi = entity.ChaiQianYongDiMianJi;
+                model.ChaiQianJianZhuMianJi = entity.ChaiQianJianZhuMianJi;
+                model.LiXiangTime = entity.LiXiangTime;
+                model.ZhuanXiangTime = entity.ZhuanXiangTime;
+                model.ZhuTiTime = entity.ZhuTiTime;
+                model.YongDiTime = entity.YongDiTime;
+                model.KaiPanTime = entity.KaiPanTime;
+                model.FenChengBiLi = entity.FenChengBiLi;
+                model.JunJia = entity.JunJia;
+
+                model.SetYear();
+                model.SetQuarter();
+                model.Title = entity.title;
+                model.TOID = final_see_ids;
+                model.See = entity.post_see;
+                model.ProjectFiles = entity.BuildFileList();
+                string msg = "";
+                if (isAdd)
+                    BLL.BLLProject.Add(model, final_user_ids, out msg);
+                else
+                    BLL.BLLProject.Modify(model, final_user_ids, out msg);
+
+                if (msg != "")
+                {
+                    entity.Msg = 2;
+                    entity.MsgBox = "保存失败";
+                }
+                else
+                {
+
+                    entity.Msg = 1;
+                }
+            }
+
+            return View(entity);
+        }
+
+
+        /// <summary>
+        /// 加载项目流程
+        /// </summary>
+        public void LoadFlow()
+        {
+            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
+            List<Entity.Flow> list = bll.GetListBy(0, p => p.FlowType == Entity.FlowType.basic, "ID ASC", true);
+
+            List<SelectListItem> userRoleList = new List<SelectListItem>();
+            userRoleList.Add(new SelectListItem() { Text = "请选择..", Value = "0" });
+            foreach (var item in list)
+            {
+                userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
+            }
+            ViewData["FlowList"] = userRoleList;
+
+            List<SelectListItem> typeList = new List<SelectListItem>();
+            typeList.Add(new SelectListItem() { Text = "请选择区域", Value = "0" });
+            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.ProjectArea)))
+            {
+                typeList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });
+            }
+            ViewData["AreaList"] = typeList;
+
+            List<SelectListItem> GZXZList = new List<SelectListItem>();
+            typeList.Add(new SelectListItem() { Text = "请选择性质", Value = "0" });
+            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.ProjectGaiZao)))
+            {
+                GZXZList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });
+            }
+            ViewData["GZXZList"] = GZXZList;
+
         }
 
     }
