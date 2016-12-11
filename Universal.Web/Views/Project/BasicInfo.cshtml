@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Universal.Entity.Project
+@{
     ViewBag.Title = "项目基本信息";
     ViewData["tabTop"] = "project";
 }
@@ -13,7 +14,7 @@
 <!--wrapper [[-->
 <div class="container">
     <div class="new-head mb-40 clearfix">
-        <a href="javascript:;" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
+        <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
         <b class="f20">项目祥情</b>
         <span class="fr">
             <a href="javascript:;" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
@@ -21,30 +22,39 @@
         </span>
     </div>
     <ul class="new-tab mb-40 clearfix">
-        <li><a href="javascript:;">流程节点</a></li>
-        <li><a href="javascript:;">项目信息</a></li>
-        <li class="current"><a href="javascript:;">基本信息</a></li>
-        <li><a href="javascript:;">拆迁概况</a></li>
+        <li><a href="/Project/FlowInfo?id=@Model.ID">流程节点</a></li>
+        <li><a href="/Project/Info?id=@Model.ID">项目信息</a></li>
+        <li class="current"><a href="/Project/BasicInfo?id=@Model.ID">基本信息</a></li>
+        <li><a href="/Project/StageInfo?id=@Model.ID">拆迁概况</a></li>
     </ul>
     <div class="demolition clearfix">
         <div class="fl">
             <ul>
-                <li><label for="" class="lab5">项目名称：</label><span>珠光村旧改项目</span></li>
-                <li><label for="" class="lab5">审批人：</label><span>Jacky</span></li>
-                <li><label for="" class="lab5">权利人：</label><span>王小军</span></li>
-                <li><label for="" class="lab5">权利人电话：</label><span>15898988985</span></li>
-                <li><label for="" class="lab5">项目流程：</label><span>珠光村旧改项目</span></li>
+                <li><label for="" class="lab5">项目名称：</label><span>@Model.Title</span></li>
+                <li><label for="" class="lab5">审批人：</label><span>@Model.ApproveUser.NickName</span></li>
+                <li><label for="" class="lab5">项目流程：</label><span>@ViewData["FlowName"]</span></li>
                 <li>
                     <label for="" class="lab5">项目联系人：</label>
                     <div class="scrollbox">
-                        <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
-                        <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
-                        <a href="javascript:;">18412435698 (张三)</a><a href="javascript:;">18412435698 (张三)</a>
+                        @foreach (var item in (List<Universal.Web.Models.ViewModelDocumentCategory>)ViewData["UserList"])
+                        {
+                            <a href="javascript:;">@item.title</a>
+                        }
                     </div>
                 </li>
-                <li><label for="" class="lab5">附件：</label><span><i class="i-word"></i>签约房屋位置平面图（标记）.doc</span></li>
+                <li>
+                    <label for="" class="lab5">附件：</label>
+                    <ul style="float:right">
+                        @foreach (var item in Model.ProjectFiles)
+                        {
+                            <li><a href="@item.FilePath" target="_blank" >@item.FileName  @item.FileSize</a></li>
+
+                        }
+                    </ul>
+                    
+                </li>
             </ul>
-            <div class="new-msg-submit"><a href="javascript:;" class="btn-major">编辑</a></div>
+            <div class="new-msg-submit"><a href="/Project/Modify?id=@Model.ID" class="btn-major">编辑</a></div>
         </div>
         <div class="fl slide-box">
             <img src="theme/images/slide.png" alt="" />

@@ -107,7 +107,7 @@ namespace Universal.Entity
         /// 引用的流程ID
         /// </summary>
         public int FlowID { get; set; }
-
+        
         /// <summary>
         /// 权限类别
         /// </summary>

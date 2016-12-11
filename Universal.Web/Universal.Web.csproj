@@ -653,7 +653,7 @@
     <Content Include="Views\AdminProject\Index.cshtml" />
     <Content Include="Views\Project\Info.cshtml" />
     <Content Include="Views\Project\FlowInfo.cshtml" />
-    <Content Include="Views\Project\FlowStage.cshtml" />
+    <Content Include="Views\Project\StageInfo.cshtml" />
     <Content Include="Views\Shool\Piece.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -187,6 +187,29 @@ namespace Universal.Web.Controllers
         #region  流程节点给前端的接口
 
         /// <summary>
+        /// 获取所有节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetAllNode()
+        {
+            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
+            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
+            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
+            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
+            {
+                Models.ViewModelJob model = new Models.ViewModelJob();
+                model.id = item.ID;
+                model.title = item.Title;
+                list.Add(model);
+            }
+            result.data = list;
+            result.msg = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
         /// 获取所有流程节点
         /// </summary>
         /// <returns></returns>

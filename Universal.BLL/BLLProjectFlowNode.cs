@@ -33,7 +33,7 @@ namespace Universal.BLL
                 model.icon = item.ICON;
                 model.piece = item.Piece;
                 model.process_to = item.ProcessTo;
-                model.node_id = item.ID;
+                model.node_id = item.NodeID;
                 model.node_title = item.Node.Title;
                 model.color = item.Color;
                 model.left = item.Left;
@@ -50,6 +50,36 @@ namespace Universal.BLL
             response_entity.total = response_list.Count;
             response_entity.project_id = project_id;
             response_entity.reference_pieces = entity_project.Pieces;
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 获取项目的单个流程信息
+        /// </summary>
+        /// <returns></returns>
+        public static Model.ProjectFlowNode GetProjectFlowNode(int project_flow_node_id)
+        {
+            Model.ProjectFlowNode response_entity = new Model.ProjectFlowNode();
+            if (project_flow_node_id <= 0)
+                return response_entity;
+            var db = new DataCore.EFDBContext();
+            var entity_flow_node = db.ProjectFlowNodes.Find(project_flow_node_id);
+            if (entity_flow_node == null)
+                return response_entity;
+            response_entity.icon = entity_flow_node.ICON;
+            response_entity.piece = entity_flow_node.Piece;
+            response_entity.process_to = entity_flow_node.ProcessTo;
+            response_entity.node_id = entity_flow_node.NodeID;
+            response_entity.node_title = entity_flow_node.Node.Title;
+            response_entity.color = entity_flow_node.Color;
+            response_entity.left = entity_flow_node.Left;
+            response_entity.top = entity_flow_node.Top;
+            response_entity.index = entity_flow_node.Index;
+            response_entity.status = entity_flow_node.Status;
+            response_entity.is_end = entity_flow_node.IsEnd;
+            response_entity.id = entity_flow_node.ID;
+            response_entity.is_start = entity_flow_node.IsStart;            
+            db.Dispose();
             return response_entity;
         }
 
@@ -90,63 +120,7 @@ namespace Universal.BLL
             db.Dispose();
             return true;
         }
-
-        /// <summary>
-        /// 修改某个节点
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public static bool SaveNode(DataCore.EFDBContext db, Model.ProjectFlowNode model, out string msg)
-        {
-            msg = "";
-            bool auto_save = db == null;
-            if (db == null)
-                db = new DataCore.EFDBContext();
-
-            var entity = db.ProjectFlowNodes.Find(model.id);
-            if (entity == null)
-            {
-                msg = "项目流程节点不存在";
-                return false;
-            }
-            if (model.status)
-            {
-                if (entity.IsStart != model.is_start)
-                {
-                    if (model.is_start)
-                        entity.BeginTime = DateTime.Now;
-                    else
-                        entity.BeginTime = null;
-                    entity.IsStart = model.is_start;
-                }
-
-                if (entity.IsEnd != model.is_end)
-                {
-                    if (model.is_end)
-                        entity.EndTime = DateTime.Now;
-                    else
-                        entity.EndTime = null;
-                    entity.IsEnd = model.is_end;
-                }
-            }
-            else
-                msg = "status为假时不能修改is_start、is_end";
-
-            entity.Status = model.status;
-            entity.Color = model.color;
-            entity.ICON = model.icon;
-            entity.Left = model.left;
-            entity.Top = model.top;
-            entity.Index = model.index;
-            entity.NodeID = model.node_id;
-            entity.Piece = model.piece;
-            entity.ProcessTo = model.process_to;
-            if (auto_save)
-                db.SaveChanges();
-            return true;
-        }
-
+        
         /// <summary>
         /// 修改某个节点
         /// </summary>
@@ -162,8 +136,17 @@ namespace Universal.BLL
             if (entity == null)
             {
                 msg = "项目流程节点不存在";
+                db.Dispose();
                 return false;
             }
+            var entity_node = db.Nodes.Find(model.node_id);
+            if (entity_node == null)
+            {
+                msg = "要修改的节点不存在";
+                db.Dispose();
+                return false;
+            }
+
             if (model.status)
             {
                 if (entity.IsStart != model.is_start)
@@ -220,7 +203,53 @@ namespace Universal.BLL
             }
             foreach (var item in model.list)
             {
-                SaveNode(db, item, out msg);
+                var entity_flow_node = db.ProjectFlowNodes.Find(item.id);
+                if (entity_flow_node == null)
+                {
+                    msg = "项目流程节点不存在";
+                    db.Dispose();
+                    return false;
+                }
+                var entity_node = db.Nodes.Find(item.node_id);
+                if(entity_node == null)
+                {
+                    msg = "要修改的节点不存在";
+                    db.Dispose();
+                    return false;
+                }
+
+                if (item.status)
+                {
+                    if (entity_flow_node.IsStart != item.is_start)
+                    {
+                        if (item.is_start)
+                            entity_flow_node.BeginTime = DateTime.Now;
+                        else
+                            entity_flow_node.BeginTime = null;
+                        entity_flow_node.IsStart = item.is_start;
+                    }
+
+                    if (entity_flow_node.IsEnd != item.is_end)
+                    {
+                        if (item.is_end)
+                            entity_flow_node.EndTime = DateTime.Now;
+                        else
+                            entity_flow_node.EndTime = null;
+                        entity_flow_node.IsEnd = item.is_end;
+                    }
+                }
+                else
+                    msg = "status为假时不能修改is_start、is_end";
+
+                entity_flow_node.Status = item.status;
+                entity_flow_node.Color = item.color;
+                entity_flow_node.ICON = item.icon;
+                entity_flow_node.Left = item.left;
+                entity_flow_node.Top = item.top;
+                entity_flow_node.Index = item.index;
+                entity_flow_node.NodeID = item.node_id;
+                entity_flow_node.Piece = item.piece;
+                entity_flow_node.ProcessTo = item.process_to;
             }
 
             entity_project.Pieces = model.reference_pieces;

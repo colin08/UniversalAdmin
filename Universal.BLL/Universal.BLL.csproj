@@ -72,6 +72,7 @@
     <Compile Include="BLLNode.cs" />
     <Compile Include="BLLProject.cs" />
     <Compile Include="BLLProjectFlowNode.cs" />
+    <Compile Include="BLLProjectStage.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="BLLWorkPlan.cs" />
     <Compile Include="Model\AdminUserRoute.cs" />
     <Compile Include="Model\ProjectFlowNode.cs" />
+    <Compile Include="Model\ProjectStage.cs" />
     <Compile Include="Model\WebFlow.cs" />
     <Compile Include="Model\WebSaveFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

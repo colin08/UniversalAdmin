@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Universal.Tools;
 using Universal.Web.Framework;
+using System.Data.Entity;
 
 namespace Universal.Web.Controllers
 {
@@ -109,14 +110,24 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult BasicInfo(int id)
         {
+            ViewData["FlowName"] = "";
             if (id <= 0)
                 return Content("项目不存在");
-            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
-            var entity = bll.GetModel(p => p.ID == id);
+            var entity = BLL.BLLProject.GetModel(id);
             if (entity == null)
                 return Content("项目不存在");
+            var entity_flow = new BLL.BaseBLL<Entity.Flow>().GetModel(p => p.ID == entity.FlowID);
+            if (entity_flow != null)
+                ViewData["FlowName"] = entity_flow.Title;
+            List<Models.ViewModelDocumentCategory> users_list = new List<Models.ViewModelDocumentCategory>();
+            foreach (var item in entity.ProjectUsers)
+            {
+                users_list.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+            }
+            ViewData["UserList"] = users_list;
 
-            return View();
+
+            return View(entity);
         }
 
         /// <summary>
@@ -132,7 +143,7 @@ namespace Universal.Web.Controllers
             if (entity == null)
                 return Content("项目不存在");
 
-            return View();
+            return View(entity);
         }
 
         /// <summary>
@@ -148,14 +159,14 @@ namespace Universal.Web.Controllers
             if (entity == null)
                 return Content("项目不存在");
             ViewData["project_id"] = id;
-            return View();
+            return View(entity);
         }
 
         /// <summary>
         /// 流拆迁信息
         /// </summary>
         /// <returns></returns>
-        public ActionResult FlowStage(int id)
+        public ActionResult StageInfo(int id)
         {
             if (id <= 0)
                 return Content("项目不存在");
@@ -163,10 +174,9 @@ namespace Universal.Web.Controllers
             var entity = bll.GetModel(p => p.ID == id);
             if (entity == null)
                 return Content("项目不存在");
-
-            return View();
+            ViewData["ProjectID"] = id;
+            return View(entity);
         }
-
 
 
         public ActionResult Modify(int? id)
@@ -440,7 +450,7 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult APIGetProjectFlowNode(int project_id)
+        public JsonResult APIGetProjectFlow(int project_id)
         {
             WebAjaxEntity<BLL.Model.ProjectFlow> result = new WebAjaxEntity<BLL.Model.ProjectFlow>();
             result.data = BLL.BLLProjectFlowNode.GetProjectFlow(project_id);
@@ -450,16 +460,32 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 获取所有项目的单个流程节点信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APIGetProjectFlowNode(int project_flow_node_id)
+        {
+            WebAjaxEntity<BLL.Model.ProjectFlowNode> result = new WebAjaxEntity<BLL.Model.ProjectFlowNode>();
+            result.data = BLL.BLLProjectFlowNode.GetProjectFlowNode(project_flow_node_id);
+            result.msg = 1;
+            result.msgbox = "ok";
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        /// <summary>
         /// 删除节点
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult APIDelProjectFlowNode(int id,string project_pieces)
+        public JsonResult APIDelProjectFlowNode(int id, string project_pieces)
         {
             string msg = "";
-            BLL.BLLProjectFlowNode.DelProjectFlowNode(id, project_pieces,out msg);
-            if(msg == "")
+            BLL.BLLProjectFlowNode.DelProjectFlowNode(id, project_pieces, out msg);
+            if (msg == "")
                 WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
@@ -534,7 +560,7 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult APIAddProjectFlowNode(int project_id,string project_pieces)
+        public JsonResult APIAddProjectFlowNode(int project_id, string project_pieces)
         {
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
@@ -564,6 +590,83 @@ namespace Universal.Web.Controllers
             }
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
+        }
+
+        #endregion
+
+        #region 给前端拆迁的接口
+
+        /// <summary>
+        /// 获取所有拆迁信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetAllStage(int project_id)
+        {
+            WebAjaxEntity<List<BLL.Model.ProjectStage>> response_entity = new WebAjaxEntity<List<BLL.Model.ProjectStage>>();
+            response_entity.data = BLL.BLLProjectStage.GetAllStage(project_id);
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.total = response_entity.data.Count;
+            return Json(response_entity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取某个拆迁的信息
+        /// </summary>
+        /// <param name="stage_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetStage(int stage_id)
+        {
+            WebAjaxEntity<BLL.Model.ProjectStage> response_entity = new WebAjaxEntity<BLL.Model.ProjectStage>();
+            response_entity.data = BLL.BLLProjectStage.GetStage(stage_id);
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            return Json(response_entity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 保存某个拆迁节点的信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveStage(int project_id)
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.ProjectStage data = null;
+            try
+            {
+                data = js.Deserialize<BLL.Model.ProjectStage>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "序列化后为空";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            if (data.stage_id <= 0)
+            {
+                int id = BLL.BLLProjectStage.Add(project_id, data, out msg);
+                WorkContext.AjaxStringEntity.msg = id > 0 ? 1 : 0;
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                WorkContext.AjaxStringEntity.data = id.ToString();
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            else
+            {
+                var isOK = BLL.BLLProjectStage.Modfify(data, out msg);
+                WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
         }
 
         #endregion

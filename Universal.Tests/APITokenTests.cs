@@ -14,15 +14,21 @@ namespace Universal.Tests
             //Tools.Crypto3DES des = new Tools.Crypto3DES(Tools.SiteKey.DES3KEY);
             //string val = des.DESEnCode(key);
 
+            //string msg = "";
+            //string json = " {\"project_id\":4,\"reference_pieces\":\"\",\"list\":[{\"id\":\"9\",\"node_id\":9,\"node_title\":\"这个时间\",\"left\":600,\"top\":408,\"index\":\"1\",\"status\":\"true\",\"icon\":\"fa-check\",\"process_to\":\"\"}]}";
+            //JavaScriptSerializer js = new JavaScriptSerializer();
+            //BLL.Model.ProjectFlow data = js.Deserialize<BLL.Model.ProjectFlow>(json);
+            //BLL.BLLProjectFlowNode.SaveAllNode(data, out msg);
+
+
+            //var s = BLL.BLLProjectFlowNode.GetProjectFlow(4);
+
             string msg = "";
-            string json = " {\"id\":0,\"node_id\":4,\"node_title\":\"哟呵呵呵\",\"index\":1,\"piece\":0,\"status\":true,\"is_start\":false,\"is_end\":false,\"top\":371,\"left\":486,\"color\":\"\",\"icon\":\"\",\"process_to\":\"\"}";
+            string json = "{\"stage_id\":4,\"title\":\"拆迁5\",\"begin_time\":\"2016-12-09\",\"ZongHuShu\":\"总户数\",\"YiQYHuShu\":\"已签约户数\",\"WeiQYHuShu\":\"未签约户数\",\"ZhanDiMianJi\":\"占地面积\",\"JiDiMianJi\":\"基底面积\",\"KongDiMianJi\":\"空地面积\",\"YiQYMianJi\":\"已签约面积\",\"WeiQYMianJi\":\"未签约面积\",\"ChaiZhanDiMianJi\":\"房屋拆除(占地面积)\",\"ChaiJianZhuMianJi\":\"房屋拆除(建筑面积)\",\"ChaiBuChangMianJi\":\"房屋拆除(补偿面积)\",\"ChaiBuChangjinE\":\"房屋拆除(补偿金额)\",\"file_list\":[{\"file_name\":\"a.doc\",\"file_path\":\"/uploads/avatar.jpg\",\"file_size\":\"60KB\"}]}";
             JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.ProjectFlowNode flow_info = js.Deserialize<BLL.Model.ProjectFlowNode>(json);
-            BLL.BLLProjectFlowNode.AddNode(4,"",flow_info, out msg);
-
-
-            var s = BLL.BLLProjectFlowNode.GetProjectFlow(4);
-
+            BLL.Model.ProjectStage data = js.Deserialize<BLL.Model.ProjectStage>(json);
+            int a = BLL.BLLProjectStage.Add(4,data, out msg);
+            //BLL.BLLProjectStage.Modfify(4, data, out id);
             Assert.AreEqual(1, 1);
         }
     }

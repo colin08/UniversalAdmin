@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Universal.Entity.Project
+@{
     ViewBag.Title = "项目信息";
     ViewData["tabTop"] = "project";
 }
@@ -7,7 +8,7 @@
 <!--wrapper [[-->
 <div class="container">
     <div class="new-head mb-40 clearfix">
-        <a href="javascript:;" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
+        <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
         <b class="f20">项目祥情</b>
         <span class="fr">
             <a href="javascript:;" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
@@ -15,10 +16,10 @@
         </span>
     </div>
     <ul class="new-tab clearfix mb-40">
-        <li><a href="javascript:;">流程节点</a></li>
-        <li class="current"><a href="javascript:;">项目信息</a></li>
-        <li><a href="javascript:;">基本信息</a></li>
-        <li><a href="javascript:;">拆迁概况</a></li>
+        <li><a href="/Project/FlowInfo?id=@Model.ID">流程节点</a></li>
+        <li class="current"><a href="/Project/Info?id=@Model.ID">项目信息</a></li>
+        <li><a href="/Project/BasicInfo?id=@Model.ID">基本信息</a></li>
+        <li><a href="/Project/StageInfo?id=@Model.ID">拆迁概况</a></li>
     </ul>
     <div class="new-box new-box-min">
         <div class="new-box-head clearfix">
@@ -26,19 +27,20 @@
         </div>
         <div class="demolition clearfix ">
             <ul>
-                <li><label for="" class="lab3">改造性质</label><span>拆除重建</span></li>
-                <li><label for="" class="lab3">用地位置、宗地号</label><span>沙井街道后亭村 A327-0620</span></li>
-                <li><label for="" class="lab3">申报主体</label><span>"深圳市沙井后亭股份合作公司深圳市恒祥基房地产开发建设有限公司"</span></li>
-                <li><label for="" class="lab3">总建筑面积</label><span>132882平方米（商业12000，住宅109700，幼儿园2600）</span></li>
-                <li><label for="" class="lab3">五类权属用地面积</label><span>210平方米</span></li>
-                <li><label for="" class="lab3">老屋村用地面积</label><span>12310平方米</span></li>
-                <li><label for="" class="lab3">非农建设用地面积</label><span>12310平方米</span></li>
-                <li><label for="" class="lab3">开发建设用地面积</label><span>21510.4平方米</span></li>
-                <li><label for="" class="lab3">容积率</label><span>5.78</span></li>
-                <li><label for="" class="lab3">土地使用权出让合作书</label><span>深地合字（2014）1032号</span></li>
-                <li><label for="" class="lab3">建设规划许可证</label><span>BA-2014-007</span></li>
-                <li><label for="" class="lab3">拆迁建设用地面积</label><span>41043平方米</span></li>
-                <li><label for="" class="lab3">拆迁建筑面积</label><span>49450平方米</span></li>
+                <li><label for="" class="lab3">项目区域</label><span>@Universal.Tools.EnumHelper.GetEnumShowName(typeof(Universal.Entity.ProjectArea), (int)Model.Area)</span></li>
+                <li><label for="" class="lab3">改造性质</label><span>@Universal.Tools.EnumHelper.GetEnumShowName(typeof(Universal.Entity.ProjectGaiZao),(int)Model.GaiZaoXingZhi)</span></li>
+                <li><label for="" class="lab3">用地位置、宗地号</label><span>@Model.ZhongDiHao</span></li>
+                <li><label for="" class="lab3">申报主体</label><span>@Model.ShenBaoZhuTi</span></li>
+                <li><label for="" class="lab3">总建筑面积</label><span>@Model.ZongMianJi 平方米（@Model.ZongMianJiOther）</span></li>
+                <li><label for="" class="lab3">五类权属用地面积</label><span>@Model.WuLeiQuanMianJi 平方米</span></li>
+                <li><label for="" class="lab3">老屋村用地面积</label><span>@Model.LaoWuCunMianJi 平方米</span></li>
+                <li><label for="" class="lab3">非农建设用地面积</label><span>@Model.FeiNongMianJi 平方米</span></li>
+                <li><label for="" class="lab3">开发建设用地面积</label><span>@Model.KaiFaMianJi 平方米</span></li>
+                <li><label for="" class="lab3">容积率</label><span>@Model.RongJiLv</span></li>
+                <li><label for="" class="lab3">土地使用权出让合作书</label><span>@Model.TuDiShiYongQuan</span></li>
+                <li><label for="" class="lab3">建设规划许可证</label><span>@Model.JianSheGuiHuaZheng</span></li>
+                <li><label for="" class="lab3">拆迁建设用地面积</label><span>@Model.ChaiQianYongDiMianJi 平方米</span></li>
+                <li><label for="" class="lab3">拆迁建筑面积</label><span>@Model.ChaiQianJianZhuMianJi 平方米</span></li>
             </ul>
         </div>
     </div>
@@ -48,11 +50,11 @@
         </div>
         <div class="demolition clearfix ">
             <ul>
-                <li><label for="" class="lab3">立项时间</label><span>2011.6</span></li>
-                <li><label for="" class="lab3">专项规划时间</label><span>2011.6</span></li>
-                <li><label for="" class="lab3">主体确认时间</label><span>2011.6</span></li>
-                <li><label for="" class="lab3">用地审批时间</label><span>2011.6</span></li>
-                <li><label for="" class="lab3">开盘时间</label><span>2011.6</span></li>
+                <li><label for="" class="lab3">立项时间</label><span>@Model.LiXiangTime.ToShortDateString()</span></li>
+                <li><label for="" class="lab3">专项规划时间</label><span>@Model.ZhuanXiangTime</span></li>
+                <li><label for="" class="lab3">主体确认时间</label><span>@Model.ZhuTiTime</span></li>
+                <li><label for="" class="lab3">用地审批时间</label><span>@Model.YongDiTime</span></li>
+                <li><label for="" class="lab3">开盘时间</label><span>@Model.KaiPanTime</span></li>
             </ul>
         </div>
     </div>
@@ -62,12 +64,12 @@
         </div>
         <div class="demolition clearfix ">
             <ul>
-                <li><label for="" class="lab3">分成比例</label><span>3/7</span></li>
-                <li><label for="" class="lab3">均价</label><span>4.2W</span></li>
+                <li><label for="" class="lab3">分成比例</label><span>@Model.FenChengBiLi</span></li>
+                <li><label for="" class="lab3">均价</label><span>@Model.JunJia (单位：千)</span></li>
             </ul>
         </div>
     </div>
-    <div class="new-box-submit"><a href="javascript:;" class="btn-major">编辑</a></div>
+    <div class="new-box-submit"><a href="/Project/Modify?id=@Model.ID" class="btn-major">编辑</a></div>
 </div>
 <!--wrapper ]]-->
 
