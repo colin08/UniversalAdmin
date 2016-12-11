@@ -15,15 +15,13 @@ namespace Universal.Tests
             //string val = des.DESEnCode(key);
 
             string msg = "";
-            //string json = "{\"flow_id\":13,\"flow_node_list\":[{\"top\":1,\"left\":1,\"process_to\":\"4\",\"flow_node_id\":2,\"color\":\"1\",\"icon\":\"1\"},{\"top\":2,\"left\":2,\"process_to\":\"2\",\"flow_node_id\":4,\"color\":\"2\",\"icon\":\"2\"}]}";
-            //JavaScriptSerializer js = new JavaScriptSerializer();
-            //BLL.Model.WebSaveFlow flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(json);
-            //flow_info.flow_node_list[0].left = 555;
-            //BLL.BLLFlow.WebSaveFlowData(flow_info, out msg);
-            //var ids = BLL.BLLFlow.AddFlowNode(1, 13, 2, 100, 100, "", "", "", out msg);
+            string json = " {\"id\":0,\"node_id\":4,\"node_title\":\"哟呵呵呵\",\"index\":1,\"piece\":0,\"status\":true,\"is_start\":false,\"is_end\":false,\"top\":371,\"left\":486,\"color\":\"\",\"icon\":\"\",\"process_to\":\"\"}";
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            BLL.Model.ProjectFlowNode flow_info = js.Deserialize<BLL.Model.ProjectFlowNode>(json);
+            BLL.BLLProjectFlowNode.AddNode(4,"",flow_info, out msg);
 
 
-            var s = BLL.BLLFlow.GetWebFlowData(13);
+            var s = BLL.BLLProjectFlowNode.GetProjectFlow(4);
 
             Assert.AreEqual(1, 1);
         }

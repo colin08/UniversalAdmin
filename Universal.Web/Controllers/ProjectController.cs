@@ -551,7 +551,7 @@ namespace Universal.Web.Controllers
             }
             if (data == null)
             {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                WorkContext.AjaxStringEntity.msgbox = "json序列化后为空";
                 return Json(WorkContext.AjaxStringEntity);
             }
 

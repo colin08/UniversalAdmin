@@ -46,6 +46,7 @@ namespace Universal.BLL
                 response_list.Add(model);
             }
             db.Dispose();
+            response_entity.list = response_list;
             response_entity.total = response_list.Count;
             response_entity.project_id = project_id;
             response_entity.reference_pieces = entity_project.Pieces;
