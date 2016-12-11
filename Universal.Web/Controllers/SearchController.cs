@@ -18,8 +18,9 @@ namespace Universal.Web.Controllers
         /// 项目
         /// </summary>
         /// <returns></returns>
-        public ActionResult Project()
+        public ActionResult Project(string word)
         {
+            ViewData["word"] = word;
             return View();
         }
 
@@ -27,8 +28,9 @@ namespace Universal.Web.Controllers
         /// 秘籍
         /// </summary>
         /// <returns></returns>
-        public ActionResult Document()
+        public ActionResult Document(string word)
         {
+            ViewData["word"] = word;
             return View();
         }
 
@@ -36,8 +38,9 @@ namespace Universal.Web.Controllers
         /// 节点
         /// </summary>
         /// <returns></returns>
-        public ActionResult Node()
+        public ActionResult Node(string word)
         {
+            ViewData["word"] = word;
             return View();
         }
 
@@ -45,8 +48,9 @@ namespace Universal.Web.Controllers
         /// 公告
         /// </summary>
         /// <returns></returns>
-        public ActionResult Notice()
+        public ActionResult Notice(string word)
         {
+            ViewData["word"] = word;
             return View();
         }
 

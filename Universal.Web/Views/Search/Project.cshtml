@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "搜索结果-项目";
     ViewData["tabTop"] = "null";
 }
@@ -13,91 +12,45 @@
 <div class="search-head mb_20">
     <div class="search-head-bd">
         <div class="search-page">
-            <input type="text" value="活动" /><a href="javascript:;" class="btn-search">搜索</a>
+            <input type="text" id="txt_search" value="@ViewData["word"]" /><a href="javascript:;" class="btn-search" onclick="pageData(1)">搜索</a>
         </div>
         <div class="clearfix">
             <ul class="new-tab clearfix">
-                <li class="current"><a href="/Search/Project">项目</a></li>
-                <li><a href="/Search/Document">秘籍</a></li>
-                <li><a href="/Search/Node">节点</a></li>
-                <li><a href="/Search/Notice">公告</a></li>
+                <li class="current"><a href="javascript:;" onclick="tab_click('Project')">项目</a></li>
+                <li><a href="javascript:;" onclick="tab_click('Document')">秘籍</a></li>
+                <li><a href="javascript:;" onclick="tab_click('Node')">节点</a></li>
+                <li><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
                 <li><a href="javascript:;">同事</a></li>
             </ul>
-            <span class="fr f14">搜索 和 <strong class="red">"活动"</strong> 相关的节点，共<strong class="red">12</strong>个结果</span>
+            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的节点，共<strong class="red" id="show_search_total">0</strong>个结果</span>
         </div>
     </div>
 </div>
 <div class="search-con clearfix">
     <table border="0" cellspacing="0" cellpadding="0" class="table1 search-border">
-        <tr>
-            <th width="15%">项目名称</th>
-            <th width="25%">当前节点</th>
-            <th width="30%">节点描述</th>
-            <th width="10%">责任人</th>
-            <th width="20%">更新时间</th>
-        </tr>
-        <tr>
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr>
-            <td><span class="red">蔡屋围</span>更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr>
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">范围划定、权属信息查询、更新意愿公示及审核材料</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr>
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>完成节点：“两规”建筑物消防验收备案</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr class="hover">
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr>
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
-        <tr>
-            <td>蔡屋围更新项目</td>
-            <td><span class="tfe">通知内容通知内容通知内容通知</span></td>
-            <td>营销部</td>
-            <td>Jacky</td>
-            <td>2016-08-22 18:05:24</td>
-        </tr>
+        <thead>
+            <tr>
+                <th width="15%">项目名称</th>
+                <th width="25%">当前节点</th>
+                <th width="30%">节点描述</th>
+                <th width="10%">责任人</th>
+                <th width="20%">更新时间</th>
+            </tr>
+        </thead>
+        <tbody id="listData"></tbody>
     </table>
     <div class="page mt_40 tr">
-        共有1条，每页显示
-        <select name="" class="selt">
-            <option value="">1</option>
-        </select>  条
-
-        <a href=""><i class="i-pgLbig"></i></a>
-        <a href=""><i class="i-pgLsm"></i></a>
-        <span>1/2</span>
-        <a href=""><i class="i-pgRsm"></i></a>
-        <a href=""><i class="i-pgRbig"></i></a>
-        <input name="" id="" value="" class="pginput" type=""><input id="" value="跳转" class="pgbtn" type="button">
+        <div class="listBtm">
+            <div class="page fr">
+                <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                <select class="sel" id="select_page_size">
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                </select>
+                <span>条</span>
+                <div id="pager"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -110,9 +63,118 @@
 <!--底部脚本-->
 @section foot
 {
+@Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
+        $(document).ready(function (e) {
+            pageData(1);
+        });
 
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index) {
+            $.ajax({
+                type: "post",
+                url: "/Project/PageData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": false, "keyword": $("#txt_search").val() },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
+                    $("#show_search_word").text("\""+$("#txt_search").val()+"\"");
+                    $("#listData").html("");
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        dataHtml += "<tr>";
+                        dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
+                        dataHtml += "<td>待定</td>";
+                        dataHtml += "<td>待定</td>";
+                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "</tr>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $("#show_search_total").text(data.total);
+                    $("#listData").html(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr, doc_id, clearbox);
+                            }
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("加载失败");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
+            }
+        }
+
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
     </script>
 
+    <script type="text/javascript">
+        function tab_click(action)
+        {
+            var search_word = $("#txt_search").val();
+            if (search_word.length == 0)
+            {
+                alert("请输入搜索内容");
+                return;
+            }
+            location.href = "/Search/" + action + "?word=" + search_word;
+        }
+    </script>
 }
 <!--底部脚本 end-->
