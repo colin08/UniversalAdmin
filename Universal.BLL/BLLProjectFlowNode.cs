@@ -33,11 +33,12 @@ namespace Universal.BLL
                 model.icon = item.ICON;
                 model.piece = item.Piece;
                 model.process_to = item.ProcessTo;
-                model.project_flow_node_id = item.ID;
-                model.project_flow_node_title = item.Node.Title;
+                model.node_id = item.ID;
+                model.node_title = item.Node.Title;
                 model.color = item.Color;
                 model.left = item.Left;
                 model.top = item.Top;
+                model.index = item.Index;
                 model.status = item.Status;
                 model.is_end = item.IsEnd;
                 model.id = item.ID;
@@ -136,7 +137,8 @@ namespace Universal.BLL
             entity.ICON = model.icon;
             entity.Left = model.left;
             entity.Top = model.top;
-            entity.NodeID = model.project_flow_node_id;
+            entity.Index = model.index;
+            entity.NodeID = model.node_id;
             entity.Piece = model.piece;
             entity.ProcessTo = model.process_to;
             if (auto_save)
@@ -188,8 +190,9 @@ namespace Universal.BLL
             entity.Color = model.color;
             entity.ICON = model.icon;
             entity.Left = model.left;
+            entity.Index = model.index;
             entity.Top = model.top;
-            entity.NodeID = model.project_flow_node_id;
+            entity.NodeID = model.node_id;
             entity.Piece = model.piece;
             entity.ProcessTo = model.process_to;
 
@@ -269,9 +272,10 @@ namespace Universal.BLL
             entity.Status = model.status;
             entity.Color = model.color;
             entity.ICON = model.icon;
+            entity.Index = model.index;
             entity.Left = model.left;
             entity.Top = model.top;
-            entity.NodeID = model.project_flow_node_id;
+            entity.NodeID = model.node_id;
             entity.Piece = model.piece;
             entity.ProcessTo = model.process_to;
             entity.ProjectID = project_id;

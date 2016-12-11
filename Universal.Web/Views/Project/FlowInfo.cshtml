@@ -55,15 +55,16 @@
         * 项目里的流程节点的数据是从/Flow/拷贝的，这里独立添加编辑，不影响/Flow页面里的数据，所以数据结构有改动
         * 这次所有保存、获取数据全部通过json格式传输，获取列表示例
         * {"total":2,"project_id":2,"reference_pieces":"引用到要的块ID,逗号分割，前后都加逗号，示例：,1,2,3,4,","list":[
-        * {"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
-        * {"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
+        * {"id":1,"node_id":1,"node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
+        * {"id":1,"node_id":1,"node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
         *  ]};
         * 字段解释：
         *	project_id 项目ID
         *	reference_pieces json里有解释
         *		id 当前流程节点在数据库保存的值，后面删除、修改功能用到的就是这个
-        *		project_flow_node_id  引用的节点的ID，是/Node/Index里面节点的值，
-        *		project_flow_node_title   引用的节点的标题，固定、不可修改
+        *		node_id  引用的节点的ID，是/Node/Index里面节点的值，
+        *		node_title   引用的节点的标题，固定、不可修改
+        *       索引，整型，用户自行输入
         *		piece  当前节点属于哪个块，如果是通过块添加的流程节点，这个就是块的id；如果是独立右键选择的节点，则传入0
         *		status  当前节点装，0 or 1 对应开启关闭。默认为true，注意为false的情况下，is_end、is_start 不可修改
         *		is_start 是否开始状态，只是个标识而已
@@ -92,7 +93,7 @@
         * 【保存修改的节点信息】
         * 接口地址：/Project/APISave
         * 请求方式：POST
-        * 请求数据示例：{"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
+        * 请求数据示例：{"id":1,"node_id":1,"node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
         * 返回数据格式：/
         */
 
@@ -108,7 +109,7 @@
         * 【添加项目流程节点】
         * 接口地址：/Project/APIAddProjectFlowNode?project_id=项目ID&project_pieces=项目目前引用到的块id，格式如json里的reference_pieces
         * 请求方式：POST
-        * 请求数据示例：{"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
+        * 请求数据示例：{"id":1,"node_id":1,"node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
         * 返回数据格式：result.data 为添加后的id,删除用到的这个
         */
 

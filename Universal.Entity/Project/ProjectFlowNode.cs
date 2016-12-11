@@ -24,6 +24,11 @@ namespace Universal.Entity
         public virtual Project Project { get; set; }
 
         /// <summary>
+        /// 索引，用户自行输入
+        /// </summary>
+        public int Index { get; set; }
+
+        /// <summary>
         /// 节点ID
         /// </summary>
         public int NodeID { get; set; }

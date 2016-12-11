@@ -38,12 +38,12 @@ namespace Universal.BLL.Model
         /// <summary>
         /// 流程节点ID(那几个定死的节点)
         /// </summary>
-        public int project_flow_node_id { get; set; }
+        public int node_id { get; set; }
 
         /// <summary>
         /// 流程节点标题
         /// </summary>
-        public string project_flow_node_title { get; set; }
+        public string node_title { get; set; }
 
         public string process_to { get; set; }
 
@@ -57,6 +57,8 @@ namespace Universal.BLL.Model
         public int top { get; set; }
         
         public string color { get; set; }
+
+        public int index { get; set; }
 
         public string icon { get; set; }
 
