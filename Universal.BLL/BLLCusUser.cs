@@ -102,8 +102,8 @@ namespace Universal.BLL
         public static int Modify(Entity.CusUser entity, string route)
         {
             var db = new DataCore.EFDBContext();
-            
-            if(entity.ID > 0)
+
+            if (entity.ID > 0)
             {
                 db.CusUserRoutes.Where(p => p.CusUserID == entity.ID).ToList().ForEach(p => db.CusUserRoutes.Remove(p));
                 DbEntityEntry entry = db.Entry<Entity.CusUser>(entity);
@@ -113,7 +113,7 @@ namespace Universal.BLL
             {
                 db.Set<Entity.CusUser>().Add(entity);
             }
-            
+
 
             foreach (var item in route.Split(','))
             {
@@ -140,7 +140,7 @@ namespace Universal.BLL
         public static Entity.CusUser GetModel(int user_id)
         {
             var db = new DataCore.EFDBContext();
-            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p=>p.CusDepartment).Include(p=>p.CusUserJob).Where(p=>p.ID == user_id).AsNoTracking().FirstOrDefault();
+            Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.ID == user_id).AsNoTracking().FirstOrDefault();
             db.Dispose();
             return entity;
         }
@@ -157,14 +157,14 @@ namespace Universal.BLL
                 return db.CusUsers.Where(p => p.Telphone == telphone).FirstOrDefault();
             }
         }
-     
+
         /// <summary>
         /// 根据邮箱和密码获取用户实体
         /// </summary>
         /// <param name="email"></param>
         /// <param name="pwd"></param>
         /// <returns></returns>
-        public static Entity.CusUser GetModel(string email,string pwd)
+        public static Entity.CusUser GetModel(string email, string pwd)
         {
             var db = new DataCore.EFDBContext();
             Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.Email == email && p.Password == pwd).AsNoTracking().FirstOrDefault();
@@ -208,16 +208,16 @@ namespace Universal.BLL
         /// <returns></returns>
         public static List<Entity.CusUser> GetListByIds(string ids)
         {
-            if(string.IsNullOrWhiteSpace(ids))
+            if (string.IsNullOrWhiteSpace(ids))
             {
                 return new List<Entity.CusUser>();
             }
             //开头有逗号
-            if(ids.StartsWith(","))
+            if (ids.StartsWith(","))
             {
                 ids = ids.Substring(1, ids.Length - 1);
             }
-            if(ids.EndsWith(","))
+            if (ids.EndsWith(","))
             {
                 ids = ids.Substring(0, ids.Length - 1);
             }
@@ -244,10 +244,10 @@ namespace Universal.BLL
                 return response_entity;
             int department_id = entity_user.CusDepartmentID;
             //如果用户是主管,则查找上级
-            if(db.CusDepartmentAdmins.Any(p=>p.CusUserID == user_id && p.CusDepartmentID == entity_user.CusDepartmentID))
+            if (db.CusDepartmentAdmins.Any(p => p.CusUserID == user_id && p.CusDepartmentID == entity_user.CusDepartmentID))
             {
                 var entity_department = db.CusDepartments.Where(p => p.ID == department_id).FirstOrDefault();
-                if(entity_department != null)
+                if (entity_department != null)
                 {
                     department_id = TypeHelper.ObjectToInt(entity_department.PID, department_id);
                 }
@@ -283,11 +283,49 @@ namespace Universal.BLL
         /// <returns></returns>
         public static bool Exists(string telphone)
         {
-            using (var db =new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 return db.CusUsers.Any(p => p.Telphone == telphone);
             }
         }
+
+        /// <summary>
+        /// 用户通讯录列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.CusUser> GetPageData(int page_index, int page_size, ref int rowCount, int department_id, string search_title)
+        {
+            rowCount = 0;
+            List<Entity.CusUser> response_entity = new List<Entity.CusUser>();
+            int begin_index = (page_index - 1) * page_size + 1;
+            int end_index = page_index * page_size;
+
+            var db = new DataCore.EFDBContext();
+            string sql = "";
+            string sql_total = "";
+
+            string strWhere = " Where ID>0 ";
+            if (department_id > 0)
+            {
+                strWhere += " and CusDepartmentID = " + department_id + " ";
+            }
+
+            if (!string.IsNullOrWhiteSpace(search_title))
+                strWhere += " and (Charindex(N'" + search_title + "',NickName)>0 or Charindex(N'" + search_title + "',Telphone)>0)";
+
+            if (department_id > 0 && !string.IsNullOrWhiteSpace(search_title))
+                strWhere += " and CusDepartmentID = " + department_id + " and (Charindex('" + search_title + "',NickName)>0 or Charindex('" + search_title + "',Telphone)>0)";
+            
+            sql = "select * from (select ROW_NUMBER() OVER(ORDER BY RegTime ASC) as row,* from (select * from CusUser " + strWhere + ") as Z) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1)  from CusUser " + strWhere;
+
+
+            rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
+            response_entity = db.Database.SqlQuery<Entity.CusUser>(sql).ToList();
+            db.Dispose();
+            return response_entity;
+        }
+
 
         /// <summary>
         /// 添加用户下载记录
@@ -295,7 +333,7 @@ namespace Universal.BLL
         /// <param name="user_id"></param>
         /// <param name="title"></param>
         /// <returns></returns>
-        public static bool AddDownLog(int user_id,string title)
+        public static bool AddDownLog(int user_id, string title)
         {
             BLL.BaseBLL<Entity.DownloadLog> bll = new BaseBLL<Entity.DownloadLog>();
             var entity = new Entity.DownloadLog();

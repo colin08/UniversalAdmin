@@ -1,0 +1,98 @@
+﻿@model Universal.Web.Models.ViewModelContactsUser
+@{
+    ViewBag.Title = "企业通讯录";
+    ViewData["tabTop"] = "sms";
+}
+
+<div class="clear"></div>
+<!--wapper-->
+<div class="container2">
+    <div class="tit1">
+        <b>深圳花伴里有限公司 >@Model.department_title</b>
+        <div class="search"><input type="text" id="txt_word" value="@Model.w" placeholder="请输入手机号/姓名" /><input type="button" onclick="WordSearch()" /></div>
+
+    </div>
+
+    <div class="mt_10">
+        <div class="memList">
+            @if (Model.DataList.Count > 0)
+            {
+                <ul class="memFL">
+                    @foreach (var item in Model.DataList)
+                    {
+                        <li>
+                            <a href="javascript:;"><img src="@item.Avatar" /></a>
+                            <div class="memInfo">
+                                <a href="#4">
+                                    <h4>@item.NickName</h4>
+                                    <p>短号：@item.ShorNum</p>
+                                    <p>手机：@item.Telphone</p>
+                                </a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }else
+            {
+                <span>没有相关用户</span>
+            }
+
+        </div>
+
+        <div class="listBtm">
+            <div class="page fr">
+                <div id="pager"></div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+
+
+
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/laypage")
+    <script type="text/javascript">
+        function WordSearch()
+        {
+            if($("#txt_word").val().length==0)
+            {
+                location.href = "/Contacts/Users?page=1&d=@Model.d&w=";
+            }
+            else
+            {
+                location.href = "/Contacts/Users?page=1&d=@Model.d&w="+encodeURIComponent($("#txt_word").val());
+            }
+
+        }
+
+        laypage({
+            cont: 'pager',
+            pages: @Model.total_page,
+            skin:"#0e90d2",
+            curr: function () {
+                var page = location.search.match(/page=(\d+)/);
+                return page ? page[1] : 1;
+                return page;
+            }(),
+            jump: function (e, first) { //触发分页后的回调
+                if (!first) { //一定要加此判断，否则初始时会无限刷新
+                    location.href =  '?page=' + e.curr+ '&d=@Model.d'+'&w='+encodeURIComponent($("#txt_word").val());
+                }
+            }
+        });
+    </script>
+
+}
+<!--底部脚本 end-->

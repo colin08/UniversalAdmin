@@ -490,7 +490,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ShoolController.cs" />
     <Compile Include="Controllers\TJController.cs" />
-    <Compile Include="Controllers\MsgController.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\NoticeController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\NodeController.cs" />
@@ -516,6 +516,7 @@
     <Compile Include="Models\Response\TreeData.cs" />
     <Compile Include="Models\ViewModelAdminUser.cs" />
     <Compile Include="Models\ViewModelAppVersion.cs" />
+    <Compile Include="Models\ViewModelContactsUser.cs" />
     <Compile Include="Models\ViewModelCustomFormBase.cs" />
     <Compile Include="Models\ViewModelDepartment.cs" />
     <Compile Include="Models\ViewModelDocument.cs" />
@@ -618,7 +619,7 @@
     <Content Include="Views\Notice\Modify.cshtml" />
     <Content Include="Views\AppVersion\Modify.cshtml" />
     <None Include="Properties\PublishProfiles\HBL_NEW.pubxml" />
-    <Content Include="Views\Msg\Index.cshtml" />
+    <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\TJ\Index.cshtml" />
     <Content Include="Views\User\DocFavorites.cshtml" />
     <Content Include="Views\User\DownloadLog.cshtml" />
@@ -655,6 +656,7 @@
     <Content Include="Views\Project\FlowInfo.cshtml" />
     <Content Include="Views\Project\StageInfo.cshtml" />
     <Content Include="Views\Shool\Piece.cshtml" />
+    <Content Include="Views\Contacts\Users.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
