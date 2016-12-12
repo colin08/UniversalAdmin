@@ -289,5 +289,21 @@ namespace Universal.BLL
             }
         }
 
+        /// <summary>
+        /// 添加用户下载记录
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        public static bool AddDownLog(int user_id,string title)
+        {
+            BLL.BaseBLL<Entity.DownloadLog> bll = new BaseBLL<Entity.DownloadLog>();
+            var entity = new Entity.DownloadLog();
+            entity.CusUserID = user_id;
+            entity.Title = title;
+            bll.Add(entity);
+            return true;
+        }
+
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="BLLWorkJob.cs" />
     <Compile Include="BLLWorkPlan.cs" />
     <Compile Include="Model\AdminUserRoute.cs" />
+    <Compile Include="Model\LayoutFavorites.cs" />
     <Compile Include="Model\ProjectFlowNode.cs" />
     <Compile Include="Model\ProjectStage.cs" />
     <Compile Include="Model\WebFlow.cs" />

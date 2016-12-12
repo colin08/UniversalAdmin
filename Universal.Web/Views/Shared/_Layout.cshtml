@@ -6,13 +6,13 @@
     <meta name="description" content="花伴里" />
     <meta name="keywords" content="花伴里" />
     <meta http-equiv="X-UA-Compatible" content="IE=10" />
-
+@RenderSection("head", required: false)
     <link href="/assets/theme/css/public.css" rel="stylesheet" type="text/css" />
     <link href="/assets/theme/css/home.css" rel="stylesheet" type="text/css" />
     <link href="/assets/theme/css/style.css" rel="stylesheet" type="text/css" />
     <link href="~/Assets/theme/css/style1.css" rel="stylesheet" />
     <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
-    @RenderSection("head", required: false)
+    
 
 </head>
 
@@ -20,7 +20,7 @@
 
     <!--header-->
     <div class="header">
-        <a href="#" title="花伴里" class="logosm"><img src="/assets/theme/ico/logoSm.png" /></a>
+        <a href="/" title="花伴里" class="logosm"><img src="/assets/theme/ico/logoSm.png" /></a>
 
         <div class="topRight">
             <div class="user">
@@ -50,9 +50,56 @@
                             <em>@WorkContext.MessageTotal</em>
                         }
                         </a></li>
-                    <li><a href="#" title="#"><i class="i-mbe"></i></a></li>
-                    <li><a href="#" title="#"><i class="i-fav"></i></a></li>
-                    <li class="search-hover"><input type="text" placeholder="请输入搜索内容" class="search-input" /><a href="/Search/Project" title="#"><i class="i-sch"></i></a></li>
+                    <li>
+                        <a href="#" title="#"><i class="i-mbe"></i></a>
+                        <div class="lipop mbePop">
+                            <i class="i-dltop"></i>
+                            <div class="mbdownLt">
+                                <img src="/Assets/theme/ico/erweima.png" />
+                                <span>扫码下载花伴里</span>
+                            </div>
+                            <div class="mbdownRt">
+                                <a href="javascript:;" title="Android下载" class="d-android">Android下载</a>
+                                <a href="javascript:;" title="App Store下载" class="d-ios">App Store下载</a>
+                            </div>
+
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="#" title="#"><i class="i-fav"></i></a>
+                        <div class="lipop favPop">
+                            <i class="i-dltop"></i>
+                            <div class="favList">
+                                @if (WorkContext.UserFavoritesList != null && WorkContext.UserFavoritesList.Count > 0)
+                                {
+                                    foreach (var item in WorkContext.UserFavoritesList)
+                                    {
+                                        <dl>
+                                            <dt><img src="@item.icon" /></dt>
+                                            <dd>
+                                                <a href="@item.link_url">
+                                                    <span>@item.title</span>
+                                                    <em>@item.er_title</em>
+                                                </a>
+                                            </dd>
+                                        </dl>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="nofav">您还没有收藏过项目和秘籍哦！</p>
+                                }
+                               
+                                
+                                
+                            </div>
+                            <a href="/User/ProjectFavorites" class="allfav">查看所有收藏</a>
+
+                        </div>
+                    </li>
+
+                    <li class="search-hover"><input type="text" id="txt_tab_search" placeholder="请输入搜索内容" class="search-input" /><a href="javascript:;" onclick="Search_Link()" title="搜索"><i class="i-sch"></i></a></li>
                 </ul>
                 <!-- 新增消息下拉 [[ -->
                 <div class="top-msg" style="display:none;">
@@ -121,6 +168,16 @@
                 $(".top-msg").hide();
             })
         });
+
+        function Search_Link()
+        {
+            var word = $("#txt_tab_search").val();
+            if(word.length>0)
+            {
+                location.href = '/Search/Project?word=' + word;
+            }
+        }
+
     </script>
 
 </body>

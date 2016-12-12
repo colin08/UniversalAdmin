@@ -284,6 +284,21 @@ namespace Universal.Entity
         public bool IsFavorites { get; set; }
 
         /// <summary>
+        /// 收藏状态icon
+        /// </summary>
+        [NotMapped]
+        public string FavIcon
+        {
+            get
+            {
+                if (this.IsFavorites)
+                    return "i-fav";
+                else
+                    return "i-favG";
+            }
+        }
+
+        /// <summary>
         /// 项目联系人
         /// </summary>
         public ICollection<ProjectUser> ProjectUsers { get; set; }

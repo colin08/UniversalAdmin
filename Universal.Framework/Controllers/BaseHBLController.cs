@@ -67,6 +67,8 @@ namespace Universal.Web.Framework
                 }
             }
             GetMessage();
+
+            GetFavorites();
         }
 
         /// <summary>
@@ -98,6 +100,48 @@ namespace Universal.Web.Framework
                 WorkContext.MessageTotal = bll.GetCount(p => p.CusUserID == WorkContext.UserInfo.ID && p.IsRead == false);
             }
         }
+        
+        /// <summary>
+        /// 获取收藏列表信息
+        /// </summary>
+        protected void GetFavorites()
+        {
+            if(WorkContext.UserInfo != null)
+            {
+                List<BLL.Model.LayoutFavorites> result = new List<BLL.Model.LayoutFavorites>();
+                BLL.BaseBLL<Entity.CusUserProjectFavorites> bll = new BaseBLL<Entity.CusUserProjectFavorites>();
+                var project_list = bll.GetListBy(3, p => p.CusUserID == WorkContext.UserInfo.ID, "AddTime DESC", p => p.Project);
+                foreach (var item in project_list)
+                {
+                    var model = new BLL.Model.LayoutFavorites();
+                    model.icon = "/Assets/theme/ico/ico_35.png";
+                    model.id = item.ID;
+                    model.link_url = "/Project/BasicInfo?id=" + item.ID.ToString();
+                    model.title = item.Project.Title;
+                    model.er_title = "预留";
+                    result.Add(model);
+                }
+
+                BLL.BaseBLL<Entity.CusUserDocFavorites> bll_doc = new BaseBLL<Entity.CusUserDocFavorites>();
+                var doc_list = bll_doc.GetListBy(3, p => p.CusUserID == WorkContext.UserInfo.ID, "AddTime DESC", p => p.DocPost);
+                foreach (var item in doc_list)
+                {
+                    var model = new BLL.Model.LayoutFavorites();
+                    model.icon = "/Assets/theme/ico/ico_36.png";
+                    model.id = item.ID;
+                    model.link_url = "/Shool/Modify?id=" + item.ID.ToString();
+                    model.title = item.DocPost.Title;
+                    if (!string.IsNullOrWhiteSpace(item.DocPost.FilePath))
+                        model.er_title = item.DocPost.FilePath.Substring(item.DocPost.FilePath.LastIndexOf("/") + 1);
+                    else
+                        model.er_title = "没有附件";
+                    result.Add(model);
+                }
+
+                WorkContext.UserFavoritesList = result;
+            }
+        }
+
 
         /// <summary>
         /// 在进行授权时调用

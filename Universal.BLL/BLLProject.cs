@@ -19,7 +19,7 @@ namespace Universal.BLL
                 return null;
 
             var db = new DataCore.EFDBContext();
-            var entity = db.Projects.AsNoTracking().Include(p=>p.ProjectUsers.Select(s=>s.CusUser)).Include(p=>p.ProjectFiles).Include(p=>p.ApproveUser).Where(p => p.ID == id).FirstOrDefault();
+            var entity = db.Projects.AsNoTracking().Include(p => p.ProjectUsers.Select(s => s.CusUser)).Include(p => p.ProjectFiles).Include(p => p.ApproveUser).Where(p => p.ID == id).FirstOrDefault();
 
             db.Dispose();
             return entity;
@@ -88,12 +88,12 @@ namespace Universal.BLL
         /// <returns></returns>
         public static int Modify(Entity.Project entity, string user_ids, out string msg)
         {
-            msg = "";            
+            msg = "";
             var db = new DataCore.EFDBContext();
 
             db.ProjectFiles.Where(p => p.ProjectID == entity.ID).ToList().ForEach(p => db.ProjectFiles.Remove(p));
             db.ProjectUsers.Where(p => p.ProjectID == entity.ID).ToList().ForEach(p => db.ProjectUsers.Remove(p));
-                        
+
             //处理项目联系人
             foreach (var item in user_ids.Split(','))
             {
@@ -149,7 +149,7 @@ namespace Universal.BLL
         /// <param name="search_title">搜索标题</param>
         /// <param name="only_mine">是否只获取我的</param>
         /// <returns></returns>
-        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title,bool only_mine)
+        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title, bool only_mine)
         {
             //TODO 项目列表
             rowCount = 0;
@@ -177,16 +177,16 @@ namespace Universal.BLL
                 user_id_str = "," + user_id + ",";
             }
 
+            string strWhere = " Where ID>0 ";
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project] where CHARINDEX(N'"+search_title+"', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM (select * from  [dbo].[Project] where CHARINDEX(N'"+search_title+"',Title) > 0 ) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end) + TOID)> 0";
+                strWhere += " and CHARINDEX(N'" + search_title + "', Title) > 0 ";
             }
-            else
-            {
-                sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM (select * from  [dbo].[Project]) as S where See = 0 or CHARINDEX((case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+user_id_str+"' when 1 then '"+user_department_str+"' end) end) + TOID)> 0";
-            }
+
+            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, *FROM(select * from[dbo].[Project] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end)+TOID)> 0) as T  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) FROM (select * from  [dbo].[Project] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
+
+
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();
             foreach (var item in response_entity)

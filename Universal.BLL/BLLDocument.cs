@@ -94,31 +94,20 @@ namespace Universal.BLL
                 user_department_str = "," + user_department_id + ",";
                 user_id_str = "," + user_id + ",";
             }
-            
-            if (!string.IsNullOrWhiteSpace(search_title))
-            {
-                sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] where  CHARINDEX(N'"+ search_title + "', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '"+ user_id_str + "' when 1 then '"+ user_department_str + "' end),(case CusUserID when "+user_id+" then(case See when 2 then '"+ user_id_str + "' when 1 then '"+ user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM(select * from[dbo].[DocPost] where  CHARINDEX(N'" + search_title + "', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
-            }
 
+            string strWhere = " Where ID>0 ";
             if (category_id > 0)
             {
-                sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] where  DocCategoryID ="+category_id.ToString()+") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM(select * from[dbo].[DocPost] where  DocCategoryID =" + category_id.ToString() + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
+                strWhere += " and DocCategoryID =" + category_id.ToString() + " ";
             }
-
-            if (!string.IsNullOrWhiteSpace(search_title) && category_id > 0)
+            if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] where  DocCategoryID =" + category_id.ToString() + " and CHARINDEX(N'" + search_title + "', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM(select * from[dbo].[DocPost] where  DocCategoryID =" + category_id.ToString() + " and CHARINDEX(N'" + search_title + "', Title) > 0) as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
+                strWhere += " and CHARINDEX(N'" + search_title + "', Title) > 0 ";
             }
 
-            if (string.IsNullOrWhiteSpace(search_title) && category_id <= 0)
-            {
-                sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost]) as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-                sql_total = "select count(1) FROM(select * from[dbo].[DocPost]) as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
-            }
-
+            sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) FROM(select * from[dbo].[DocPost] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
+            
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();
             foreach (var item in response_entity)

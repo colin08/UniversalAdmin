@@ -26,7 +26,7 @@ namespace Universal.Web.Controllers
         /// <param name="id">to id</param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult AppUpdate(int id,int msg)
+        public ActionResult AppUpdate(int id,int? msg)
         {
             BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
             var entity = bll.GetModel(p => p.ID == id);
@@ -45,7 +45,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Notice(int id,int msg)
+        public ActionResult Notice(int id,int? msg)
         {
             BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
             var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
@@ -63,7 +63,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult FileShare(int id,int msg)
+        public ActionResult FileShare(int id,int? msg)
         {
             //TODO 详情展示-文件分享
             return View();
@@ -75,7 +75,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Project(int id,int msg)
+        public ActionResult Project(int id,int? msg)
         {
             //TODO 详情展示-待审核项目
             return View();
@@ -87,7 +87,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Meeting(int id,int msg)
+        public ActionResult Meeting(int id,int? msg)
         {
             BLL.BaseBLL<Entity.WorkMeeting> bll = new BLL.BaseBLL<Entity.WorkMeeting>();
             var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
@@ -105,7 +105,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Job(int id, int msg)
+        public ActionResult Job(int id, int? msg)
         {
             BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
             var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
@@ -123,7 +123,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Plan(int id, int msg)
+        public ActionResult Plan(int id, int? msg)
         {
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
@@ -141,7 +141,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Flow(int id, int msg)
+        public ActionResult Flow(int id, int? msg)
         {
             return View();
         }
@@ -151,20 +151,24 @@ namespace Universal.Web.Controllers
         /// <summary>
         /// 设置消息已读
         /// </summary>
-        private void SetMsgRead(int msg_id)
+        private void SetMsgRead(int? msg_id)
         {
-            BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BLL.BaseBLL<Entity.CusUserMessage>();
-            var entity_msg = bll_msg.GetModel(p => p.ID == msg_id && p.CusUserID == WorkContext.UserInfo.ID);
-            if (entity_msg != null)
+            if(msg_id != null)
             {
-                if (!entity_msg.IsRead)
+                int id = TypeHelper.ObjectToInt(msg_id);
+                BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BLL.BaseBLL<Entity.CusUserMessage>();
+                var entity_msg = bll_msg.GetModel(p => p.ID == id && p.CusUserID == WorkContext.UserInfo.ID);
+                if (entity_msg != null)
                 {
-                    entity_msg.IsRead = true;
-                    bll_msg.Modify(entity_msg, "IsRead");
+                    if (!entity_msg.IsRead)
+                    {
+                        entity_msg.IsRead = true;
+                        bll_msg.Modify(entity_msg, "IsRead");
+                    }
                 }
-            }
 
-            GetMessage();
+                GetMessage();
+            }
         }
 
     }

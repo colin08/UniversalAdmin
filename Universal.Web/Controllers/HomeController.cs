@@ -15,8 +15,23 @@ namespace Universal.Web.Controllers
             Models.ViewModelIndex view_model = new Models.ViewModelIndex();
             int rowCount = 0;
             view_model.DocumentList = BLL.BLLDocument.GetPowerPageData(1, 5, ref rowCount, WorkContext.UserInfo.ID, "", 0);
+            
+            view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.See == Entity.DocPostSee.everyone, "AddTime DESC");
             return View(view_model);
         }
+
+        /// <summary>
+        /// 添加下载记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult AddDownLog(string title)
+        {
+            BLL.BLLCusUser.AddDownLog(WorkContext.UserInfo.ID, title);
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
     }
 
 }

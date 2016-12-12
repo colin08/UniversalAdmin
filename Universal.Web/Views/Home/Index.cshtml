@@ -12,30 +12,27 @@
 <!--头部脚本 end-->
 
 <div class="wrapper">
+    @if (Model.TopNotice != null)
+    {
+        <div class="public">
+            <i class="i-public"></i>
+            <div class="publicScroll">
 
-    <div class="public">
-        <i class="i-public"></i>
-        <div class="publicScroll">
-            <ul>
-                <li><a href="#" title="#">2016年国庆节放假通知 各部门：值国庆节来临之际，根据国务院办公厅公布的《2016年节假日安排的通知》的有关规定，结合我公司实际情况，经领导班子研究决定，现将2016年国庆节放假…</a></li>
-            </ul>
+                <ul>
+                    <li><a href="/Info/Notice?id=@Model.TopNotice.ID" title="公告"> @Universal.Tools.StringHelper.CutString(Model.TopNotice.Content, 85) </a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    }
     <div class="clear"></div>
     <div class="homeWrap">
         <div class="homeLt">
             <div class="homeBox">
-                <div class="titH"><i class="i-lm5"></i><span>项目动态</span><a href="#" title="#" class="btn25 red fr"><i class="i-wplus"></i><em>新增</em></a></div>
+                <div class="titH"><i class="i-lm5"></i><span>项目动态</span><a href="/Project/Modify" title="新增项目" class="btn25 red fr"><i class="i-wplus"></i><em>新增</em></a></div>
                 <div class="homelist">
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
-                        <tr>
-                            <td width="15%">蔡屋围更新项目</td>
-                            <td width="10%">规土委审查</td>
-                            <td width="30%">新增备注：绘制宗地图</td>
-                            <td width="10%">李明</td>
-                            <td width="20%">2016.04.19 18:05:24</td>
-                            <td width="15%" align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
+                        <!--
+
                         <tr>
                             <td>蔡屋围更新项目</td>
                             <td>规土委审查</td>
@@ -44,54 +41,8 @@
                             <td>2016.04.19 18:05:24</td>
                             <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
                         </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
+                            -->
+                        <tbody id="listData"></tbody>
                     </table>
                 </div>
             </div>
@@ -108,7 +59,7 @@
                                 <td width="10%">@item.FileExt</td>
                                 <td width="10%">@item.CusUser.NickName</td>
                                 <td width="20%">@item.LastUpdateTime</td>
-                                <td width="15%" align="center"><a href="javascript:;" onclick="down('@item.FilePath')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="@item.FavIcon"></i></a></td>
+                                <td width="15%" align="center"><a href="javascript:;" onclick="down('@item.FilePath','@item.Title')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="@item.FavIcon"></i></a></td>
                             </tr>
                         }
                     </table>
@@ -199,12 +150,113 @@
 {
     <script type="text/javascript">
 
-        function down(linkstr)
-        {
-            if(linkstr.length>0)
-            {
-                window.open(linkstr);
+        $(document).ready(function (e) {
+            pageData();
+        });
+
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData() {
+            $.ajax({
+                type: "post",
+                url: "/Project/PageData",
+                data: { "page_size": 8, "page_index": 1, "only_mine": false, "keyword": "" },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    $("#listData").html("<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>项目加载中。。。</p></td><tr>");
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        $("#listData").html("<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>项目加载失败:" + data.msgbox + "</p></td><tr>");
+                        return;
+                    }
+                    $("#listData").html("");
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        dataHtml += "<tr>";
+                        dataHtml += "<td width=\"20%\">" + CutString(item.Title + "你好你好你好你好好你好你好你好", 12) + "</td>";
+                        dataHtml += "<td width=\"10%\">待定</td>";
+                        dataHtml += "<td width=\"20%\">待定</td>";
+                        dataHtml += "<td width=\"10%\">" + item.CusUser.NickName + "</td>";
+                        dataHtml += "<td width=\"20%\">" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "<td  width=\"15%\" align=\"center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i class=\"" + item.FavIcon + "\"></i></a></td>";
+                        dataHtml += "</tr>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                    }
+                    $("#listData").html(dataHtml);
+
+                },
+                error: function () {
+                    $("#listData").html("<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>项目加载失败</p></td><tr>");
+                }
+            })
+        }
+        /*******************列表 end *************************/
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
             }
+        }
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        function down(linkstr, title) {
+            if (linkstr.length > 0) {
+                $.post('/Home/AddDownLog', { "title": title }, function (text, status) { window.open(linkstr) });
+            }
+        }
+
+        function fav_pro(id) {
+            $.ajax({
+                type: "post",
+                url: "/Project/AddFavorites",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
         }
 
         function fav(id) {

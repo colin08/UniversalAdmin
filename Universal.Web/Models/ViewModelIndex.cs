@@ -15,6 +15,8 @@ namespace Universal.Web.Models
             this.DocumentList = new List<Entity.DocPost>();
         }
 
+        public Entity.CusNotice TopNotice { get; set; }
+
         /// <summary>
         /// 最新秘籍
         /// </summary>

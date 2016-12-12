@@ -42,6 +42,14 @@ namespace Universal.Web.Controllers
 
             //List<Entity.DocPost> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc", p => p.CusUser);
             List<Entity.DocPost> list = BLL.BLLDocument.GetPowerPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
+            foreach (var item in list)
+            {
+                string er_txt = "";
+                string yi_txt = BLL.BLLDocCategory.GetYiErTxt(item.ID, out er_txt);
+
+                item.YiTxt = yi_txt;
+                item.ErTxt = er_txt;
+            }
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();

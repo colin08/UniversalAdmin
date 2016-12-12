@@ -118,7 +118,19 @@ namespace Universal.Entity
                 return Tools.IOHelper.GetFileExt(this.FilePath);
             }
         }
-        
+
+        /// <summary>
+        /// 一级分类名称
+        /// </summary>
+        [NotMapped]
+        public string YiTxt { get; set; }
+
+        /// <summary>
+        /// 二级分类名称
+        /// </summary>
+        [NotMapped]
+        public string ErTxt { get; set; }
+
         /// <summary>
         /// 所属分类名字
         /// </summary>

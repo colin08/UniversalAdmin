@@ -28,5 +28,10 @@ namespace Universal.Web.Framework
         /// </summary>
         public List<Entity.CusUserMessage> UnReadMessageTopList { get; set; }
 
+        /// <summary>
+        /// 用户收藏列表
+        /// </summary>
+        public List<BLL.Model.LayoutFavorites> UserFavoritesList { get; set; }
+        
     }
 }

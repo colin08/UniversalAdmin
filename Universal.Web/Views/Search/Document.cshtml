@@ -79,8 +79,8 @@
         function pageData(page_index) {
             $.ajax({
                 type: "post",
-                url: "/Document/DocData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": 4, "keyword": $("#txt_search").val() },
+                url: "/Shool/DocData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": 0, "keyword": $("#txt_search").val() },
                 async: false, //同步请求
                 datatype: "json",
                 success: function (data) {
@@ -99,12 +99,12 @@
                         }
                         dataHtml += "<tr>";
                         dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
-                        dataHtml += "<td>预留</td>";
-                        dataHtml += "<td>预留";
+                        dataHtml += "<td>" + item.YiTxt + "</td>";
+                        dataHtml += "<td>" + item.ErTxt + "</td>";
                         dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td>" + si + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"javascript:void(0);\" onclick=\"javascript:location.href='"+item.FilePath+"'\" target=\"_blank\" class=\"alook\"><i class=\"i-downR\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.FavIcon + "\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"javascript:void(0);\" onclick=\"down('" + item.FilePath + "','" + item.Title + "')\" target=\"_blank\" class=\"alook\"><i class=\"i-downR\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.FavIcon + "\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -166,6 +166,12 @@
             }
             catch (e) {
                 return "";
+            }
+        }
+
+        function down(linkstr, title) {
+            if (linkstr != null && linkstr.length > 0) {
+                $.post('/Home/AddDownLog', { "title": title }, function (text, status) { window.open(linkstr) });
             }
         }
 

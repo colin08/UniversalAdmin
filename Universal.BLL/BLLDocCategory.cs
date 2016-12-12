@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -94,6 +95,33 @@ namespace Universal.BLL
             list = db.DocCategorys.SqlQuery(proc_name, param).ToList();
             db.Dispose();
             return list;
+        }
+
+        /// <summary>
+        /// 获取一、二级分类名称
+        /// </summary>
+        /// <param name="doc_id"></param>
+        /// <param name="er_txt"></param>
+        /// <returns></returns>
+        public static string GetYiErTxt(int doc_id,out string er_txt)
+        {
+            er_txt = "";
+            string yi_txt = "";
+            var db = new DataCore.EFDBContext();
+            var doc_entity = db.DocPosts.AsNoTracking().Include(p => p.DocCategory).Where(p => p.ID == doc_id).FirstOrDefault();
+            if (doc_entity == null)
+                return yi_txt;
+            if(doc_entity.DocCategory.PID != null)
+            {
+                var yi_cate = db.DocCategorys.Find(doc_entity.DocCategory.PID);
+                if(yi_cate != null)
+                {
+                    yi_txt = yi_cate.Title;
+                }
+            }
+            er_txt = doc_entity.DocCategory.Title;
+            db.Dispose();
+            return yi_txt;
         }
 
         /// <summary>
