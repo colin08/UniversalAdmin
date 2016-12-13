@@ -279,7 +279,7 @@ namespace Universal.Web.Controllers
         {
             //List<Models.ViewModelDocumentCategory> result = new List<Models.ViewModelDocumentCategory>();
             BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
-            List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc", true);
+            List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc");
 
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "全部分类", Value = "0" });
