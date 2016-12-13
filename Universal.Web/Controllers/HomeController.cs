@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Universal.Tools;
 using Universal.Web.Framework;
+using System.Data.Entity;
 
 namespace Universal.Web.Controllers
 {
@@ -17,6 +18,9 @@ namespace Universal.Web.Controllers
             view_model.DocumentList = BLL.BLLDocument.GetPowerPageData(1, 5, ref rowCount, WorkContext.UserInfo.ID, "", 0);
             
             view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.See == Entity.DocPostSee.everyone, "AddTime DESC");
+
+            view_model.JobTask = new BLL.BaseBLL<Entity.CusUserMessage>().GetListBy(9, p => p.CusUserID == WorkContext.UserInfo.ID && p.IsDone == false && p.Type == Entity.CusUserMessageType.approveproject || p.Type == Entity.CusUserMessageType.waitmeeting || p.Type == Entity.CusUserMessageType.waitjobdone || p.Type == Entity.CusUserMessageType.waitapproveplan, "AddTime DESC");
+
             return View(view_model);
         }
 

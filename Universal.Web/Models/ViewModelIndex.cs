@@ -13,9 +13,15 @@ namespace Universal.Web.Models
         public ViewModelIndex()
         {
             this.DocumentList = new List<Entity.DocPost>();
+            JobTask = new List<Entity.CusUserMessage>();
         }
 
         public Entity.CusNotice TopNotice { get; set; }
+
+        /// <summary>
+        /// 消息待办
+        /// </summary>
+        public List<Entity.CusUserMessage> JobTask { get; set; }
 
         /// <summary>
         /// 最新秘籍

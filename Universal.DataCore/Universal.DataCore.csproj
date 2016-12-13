@@ -130,6 +130,10 @@
     <Compile Include="Migrations\201612101553234_add_project_node_index.Designer.cs">
       <DependentUpon>201612101553234_add_project_node_index.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612131003033_add_msg_down.cs" />
+    <Compile Include="Migrations\201612131003033_add_msg_down.Designer.cs">
+      <DependentUpon>201612131003033_add_msg_down.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -207,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612101553234_add_project_node_index.resx">
       <DependentUpon>201612101553234_add_project_node_index.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612131003033_add_msg_down.resx">
+      <DependentUpon>201612131003033_add_msg_down.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

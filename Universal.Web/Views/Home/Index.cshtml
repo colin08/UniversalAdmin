@@ -67,74 +67,28 @@
             </div>
         </div>
         <div class="homeRt">
-            <div class="titH"><i class="i-lm8"></i><span>我的消息</span> </div>
+            <div class="titH"><i class="i-lm8"></i><span>我的待办</span> </div>
             <div class="homeRlist">
-                <ul>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-shareB"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-yanshou"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-public2"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-shareB"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-yanshou"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-public2"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-shareB"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-yanshou"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" title="#">
-                            <em><i class="i-public2"></i></em>
-                            <h4>城市更新报建指引</h4>
-                            <p>项目审核-张嘉  16:30</p>
-                        </a>
-                    </li>
-                </ul>
-                <a href="#" title="#" class="loadMore"><i class="i-arrR"></i>查看更多</a>
+                @if (Model.JobTask.Count > 0)
+                {
+                    <ul>
+                        @foreach (var item in Model.JobTask)
+                        {
+                            <li>
+                                <a href="@item.LinkUrl" title="#">
+                                    <em><i class="i-shareB"></i></em>
+                                    <h4>@(Universal.Tools.StringHelper.CutString(item.Content, 14))</h4>
+                                    <p>@item.TypeName  @item.AddTime</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }else
+                {
+                    <p>没有待办</p>
+                }
+
+                <a href="/User/Message" title="#" class="loadMore"><i class="i-arrR"></i>查看更多</a>
             </div>
         </div>
     </div>

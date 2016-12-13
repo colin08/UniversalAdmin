@@ -157,6 +157,11 @@ namespace Universal.Entity
         public bool IsRead { get; set; }
 
         /// <summary>
+        /// 是否完成(针对代办)
+        /// </summary>
+        public bool IsDone { get; set; }
+
+        /// <summary>
         /// 消息是否读取文本显示
         /// </summary>
         [NotMapped]
