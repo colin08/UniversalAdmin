@@ -182,6 +182,27 @@ namespace Universal.BLL
                     entity = new Entity.CusUser();
                 }
                 item.CusUser = entity;
+
+                //获取当前进行的节点信息
+                //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
+                var entity_node = new Entity.Node();
+                if (!item.Status)
+                {
+                    entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    if (entity_node == null)
+                    {
+                        entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    }
+
+                }
+                if (entity_node == null)
+                {
+                    entity_node = new Entity.Node();
+                    entity_node.Title = "无节点";
+                    entity_node.Content = "无节点";
+                }
+
+                item.NowNode = entity_node;
             }
             db.Dispose();
             return response_entity;

@@ -160,7 +160,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/PageData",
-                data: { "page_size": 8, "page_index": 1, "only_mine": false, "keyword": "" },
+                data: { "page_size": 8, "page_index": 1, "only_mine": false, "keyword": "", "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null, "is_admin": false },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -175,9 +175,9 @@
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
                         dataHtml += "<tr>";
-                        dataHtml += "<td width=\"20%\">" + CutString(item.Title + "你好你好你好你好好你好你好你好", 12) + "</td>";
-                        dataHtml += "<td width=\"10%\">待定</td>";
-                        dataHtml += "<td width=\"20%\">待定</td>";
+                        dataHtml += "<td width=\"20%\">" + CutString(item.Title, 12) + "</td>";
+                        dataHtml += "<td width=\"10%\">" + item.NowNode.Title + "</td>";
+                        dataHtml += "<td width=\"20%\">" + item.NowNode.Content + "</td>";
                         dataHtml += "<td width=\"10%\">" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td width=\"20%\">" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td  width=\"15%\" align=\"center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i class=\"" + item.FavIcon + "\"></i></a></td>";

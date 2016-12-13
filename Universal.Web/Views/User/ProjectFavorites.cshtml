@@ -99,8 +99,8 @@
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>"+CutString(item.Title,10)+"</td>";
-                        dataHtml += "<td>待定</td>";
-                        dataHtml += "<td>待定</td>";
+                        dataHtml += "<td>" + item.NowNode.Title + "</td>";
+                        dataHtml += "<td>" + item.NowNode.Content + "</td>";
                         dataHtml += "<td>"+item.CusUser.NickName+"</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
