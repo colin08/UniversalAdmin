@@ -19,6 +19,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            LoadNodes();
             return View();
         }
 
@@ -30,13 +31,13 @@ namespace Universal.Web.Controllers
         /// <param name="keyword">搜索关键字</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword)
+        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword,int status, int node_id, int node_status,DateTime? begin_time,DateTime? end_time,bool is_admin)
         {
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
 
             int rowCount = 0;
-            var list = BLL.BLLProject.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, only_mine);
+            var list = BLL.BLLProject.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, only_mine, status, node_id, node_status, begin_time, end_time, is_admin);
             foreach (var item in list)
             {
                 item.IsFavorites = bll_fav.Exists(p => p.CusUserID == WorkContext.UserInfo.ID && p.ProjectID == item.ID);
@@ -408,6 +409,13 @@ namespace Universal.Web.Controllers
             return View(entity);
         }
 
+        public void LoadNodes()
+        {
+            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
+            List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
+
+            ViewData["NodeList"] = list;
+        }
 
         /// <summary>
         /// 加载项目流程

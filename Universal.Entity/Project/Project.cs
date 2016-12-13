@@ -98,10 +98,16 @@ namespace Universal.Entity
         public virtual CusUser ApproveUser { get; set; }
         
         /// <summary>
+        /// 项目是否完成
+        /// </summary>
+        [NotMapped]
+        public bool Status { get; set; }
+
+        /// <summary>
         /// 当前项目节点信息
         /// </summary>
         [NotMapped]
-        public virtual ProjectFlowNode NowNode { get; set; }
+        public virtual Node NowNode { get; set; }
 
         /// <summary>
         /// 引用的流程ID
@@ -282,7 +288,7 @@ namespace Universal.Entity
         /// </summary>
         [NotMapped]
         public bool IsFavorites { get; set; }
-
+        
         /// <summary>
         /// 收藏状态icon
         /// </summary>

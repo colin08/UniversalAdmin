@@ -13,40 +13,30 @@
 <div class="container">
     <div class="tit1">
         <b>项目列表</b>
-        <div class="search"><input type="text" id="txt_search" placeholder="请输入项目名称" /><input type="button" onclick="pageData(1)" /></div>
+        <div class="search"><input type="text" id="txt_search" placeholder="请输入项目名称/联系人" /><input type="button" onclick="pageData(1)" /></div>
 
     </div>
     <div class="itemOp">
         <div class="itemOpLt">
-            <a href="javascript:;" class="act">未完结</a>
-            <a href="javascript:;">已完结</a>
-            <a href="javascript:;">全部</a>
+            <a href="javascript:;" onclick="setAct(this)" class="act" did ="2">未完结</a>
+            <a href="javascript:;" onclick="setAct(this)" did="1">已完结</a>
+            <a href="javascript:;" onclick="setAct(this)" did="0">全部</a>
         </div>
         <div class="itemOpRt">
-            <span>所有块</span><i class="i-arr"></i>
-            <select>
-                <option>所有节点</option>
-                <option>所有节点</option>
-                <option>所有节点</option>
+            <select id="select_node"  onchange = "pageData(1)" class="select-input valid" style="width: 120px;">
+                <option value="0">所有节点</option>
+                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+                {
+                    <option value="@item.ID">@item.Title</option>
+                }
             </select>
-            <span>所有状态</span><i class="i-arr"></i>
-            <select>
-                <option>所有节点</option>
-                <option>所有节点</option>
-                <option>所有节点</option>
-            </select>
-            <span>所有状态</span><i class="i-arr"></i>
-            <select>
-                <option>所有节点</option>
-                <option>所有节点</option>
-                <option>所有节点</option>
-            </select>
+            <select id="select_node_status" onchange = "pageData(1)" class="select-input valid" style="width: 120px;">
+                <option value="0">所有状态</option>
+                <option value="1">未开始</option>
+                <option value="2">进行中</option>
+                <option value="3">已结束</option>
+            </select>            
             <span>全部时间</span><i class="i-arr"></i>
-            <select>
-                <option>所有节点</option>
-                <option>所有节点</option>
-                <option>所有节点</option>
-            </select>
             <a href="/Project/Modify" class="newplan">+ 新增项目</a>
         </div>
     </div>
@@ -115,7 +105,7 @@
                 $.ajax({
                     type: "post",
                     url: "/Project/PageData",
-                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val() },
+                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val(), "status": $(".itemOpLt").children("a[class='act']").attr("did"), "node_id": $("#select_node").val(), "node_status": $("#select_node_status").val(), "begin_time": null, "end_time": null ,"is_admin":false},
                     async: false, //同步请求
                     datatype: "json",
                     beforeSend: function () {
@@ -135,8 +125,8 @@
                         $.each(data.data, function (i, item) {
                             dataHtml += "<tr>";
                             dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
-                            dataHtml += "<td>待定</td>";
-                            dataHtml += "<td>待定</td>";
+                            dataHtml += "<td>"+item.NowNode.Title+"</td>";
+                            dataHtml += "<td>" + item.NowNode.Content + "</td>";
                             dataHtml += "<td>"+item.CusUser.NickName+"</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
                             dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
@@ -201,6 +191,13 @@
                 catch (e) {
                     return "";
                 }
+            }
+
+            function setAct(obj)
+            {
+                $(".itemOpLt").children("a").removeAttr("class");
+                $(obj).attr("class", "act");
+                pageData(1);
             }
 
             function del(id) {

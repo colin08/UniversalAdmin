@@ -16,7 +16,16 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            LoadNodes();
             return View();
+        }
+
+        public void LoadNodes()
+        {
+            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
+            List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
+
+            ViewData["NodeList"] = list;
         }
     }
 }
