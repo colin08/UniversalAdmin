@@ -206,6 +206,7 @@ namespace Universal.Web.Controllers
                     model.LaoWuCunMianJi = entity.LaoWuCunMianJi;
                     model.FeiNongMianJi = entity.FeiNongMianJi;
                     model.KaiFaMianJi = entity.KaiFaMianJi;
+                    model.GengXinDanYuanYongDiMianJi = entity.GengXinDanYuanYongDiMianJi;
                     model.RongJiLv = entity.RongJiLv;
                     model.TuDiShiYongQuan = entity.TuDiShiYongQuan;
                     model.JianSheGuiHuaZheng = entity.JianSheGuiHuaZheng;
@@ -364,6 +365,7 @@ namespace Universal.Web.Controllers
                 model.ZhongDiHao = entity.ZhongDiHao;
                 model.ShenBaoZhuTi = entity.ShenBaoZhuTi;
                 model.ZongMianJi = entity.ZongMianJi;
+                model.GengXinDanYuanYongDiMianJi = entity.GengXinDanYuanYongDiMianJi;
                 model.ZongMianJiOther = entity.ZongMianJiOther;
                 model.WuLeiQuanMianJi = entity.WuLeiQuanMianJi;
                 model.LaoWuCunMianJi = entity.LaoWuCunMianJi;

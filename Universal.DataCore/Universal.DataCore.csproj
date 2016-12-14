@@ -134,6 +134,10 @@
     <Compile Include="Migrations\201612131003033_add_msg_down.Designer.cs">
       <DependentUpon>201612131003033_add_msg_down.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612140808545_modify_project_gengxin.cs" />
+    <Compile Include="Migrations\201612140808545_modify_project_gengxin.Designer.cs">
+      <DependentUpon>201612140808545_modify_project_gengxin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -214,6 +218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612131003033_add_msg_down.resx">
       <DependentUpon>201612131003033_add_msg_down.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612140808545_modify_project_gengxin.resx">
+      <DependentUpon>201612140808545_modify_project_gengxin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

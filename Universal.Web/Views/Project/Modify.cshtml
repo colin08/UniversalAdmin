@@ -146,6 +146,11 @@
                             @Html.TextBoxFor(p => p.ShenBaoZhuTi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ShenBaoZhuTi)
                         </li>
+                        <li>
+                            <label for=""><span class="red">*</span>更新单元用地面积</label>
+                            @Html.TextBoxFor(p => p.GengXinDanYuanYongDiMianJi, new { @class = "add-input" })
+                            @Html.ValidationMessageFor(p => p.GengXinDanYuanYongDiMianJi)
+                        </li>
                         <li><label for=""><span class="red">*</span>总建筑面积</label>
                             @Html.TextBoxFor(p => p.ZongMianJi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ZongMianJi)

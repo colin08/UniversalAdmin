@@ -166,12 +166,17 @@ namespace Universal.Web.Models
         /// 总建筑面积
         /// </summary>  
         public decimal ZongMianJi { get; set; }
-
+        
         /// <summary>
         /// 总面积其他信息
         /// </summary>
         [MaxLength(200, ErrorMessage = "不能超过200个字符")]
         public string ZongMianJiOther { get; set; }
+
+        /// <summary>
+        /// 更新单元用地面积
+        /// </summary>
+        public decimal GengXinDanYuanYongDiMianJi { get; set; }
 
         /// <summary>
         /// 五类权属用地面积

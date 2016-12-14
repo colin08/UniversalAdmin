@@ -165,6 +165,11 @@ namespace Universal.Entity
         public string ZongMianJiOther { get; set; }
 
         /// <summary>
+        /// 更新单元用地面积
+        /// </summary>
+        public decimal GengXinDanYuanYongDiMianJi { get; set; }
+
+        /// <summary>
         /// 五类权属用地面积
         /// </summary>
         public decimal WuLeiQuanMianJi { get; set; }

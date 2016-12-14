@@ -614,6 +614,40 @@ namespace Universal.DataCore.Migrations
                         return @a
                         END";
             Sql(fn_GetWorkPlanApproveUserIdsStr);
+
+            string fn_SplitString = @"
+                        ---·Ö¸î×Ö·û´®
+                        Create function [dbo].[fn_SplitString]
+                        (@str nvarchar(max),@split varchar(10))
+                        returns @t Table (c1 varchar(100))
+                        as
+                        begin
+	                        if charindex(@split,@str) = 0
+	                        begin
+		                        insert @t(c1) values(@str)
+		                        return
+	                        end
+
+                            declare @i int
+                            declare @s int
+                            set @i=1
+                            set @s=1
+                            while(@i>0)
+                            begin    
+                                set @i=charindex(@split,@str,@s)
+                                if(@i>0)
+                                begin
+                                    insert @t(c1) values(substring(@str,@s,@i-@s))
+                                end   
+                                else begin
+                                    insert @t(c1) values(substring(@str,@s,len(@str)-@s+1))
+                                end
+                                set @s = @i + 1   
+                            end
+                            return
+                        end
+                        ";
+            Sql(fn_SplitString);
         }
 
         public override void Down()
