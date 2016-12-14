@@ -44,7 +44,7 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 添加秘籍,表单上传。参数：user_id(登录的用户ID),see_type(可见类别,0:所有人,1:某些部门,2:某些用户),toid(对应的部门或用户ID,逗号分割),title(秘籍标题)
+        /// 添加秘籍,表单上传。参数：user_id(登录的用户ID),see_type(可见类别,0:所有人,1:某些部门,2:某些用户),toid(对应的部门或用户ID,逗号分割),title(秘籍标题),category_id(分类ID)
         /// </summary>
         /// <returns></returns>
         [Route("api/v1/document/add")]

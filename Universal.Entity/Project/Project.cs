@@ -12,7 +12,7 @@ namespace Universal.Entity
     public enum ProjectArea
     {
         [Description("其他")]
-        QiTa,
+        QiTa =1,
         [Description("宝安区")]
         BaoAn,
         [Description("龙岗区")]
@@ -41,7 +41,7 @@ namespace Universal.Entity
     public enum ProjectGaiZao
     {
         [Description("其他")]
-        QiTa,
+        QiTa =1,
         [Description("工改工")]
         GongGaiGong,
         [Description("工改商")]

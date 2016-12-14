@@ -1,0 +1,46 @@
+﻿@model Universal.Web.Models.ViewModelStatics
+@{
+    Layout = null;
+}
+
+<div id="container" style="min-width: 310px; height: 350px; margin: 0 auto;margin-top:10px;">
+
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: [@Html.Raw(Model.x_data)]
+            },
+            yAxis: {
+                title: {
+                    text: '面积'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [@Html.Raw(Model.y_data)]
+        });
+    })
+</script>

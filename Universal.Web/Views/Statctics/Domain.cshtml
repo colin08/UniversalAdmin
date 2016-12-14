@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "平台统计";
+    ViewData["tabTop"] = "statistics";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+
+
+<div class="container">
+    <ul class="new-tab mb_20 clearfix">
+        <li><a href="javascript:;">数量统计</a></li>
+        <li class="current"><a href="javascript:;">面积统计</a></li>
+    </ul>
+    <ul class="filter-tab clearfix">
+        <li>
+            <select id="select_year" onchange="loadData()">
+                <option value="0">所有年度</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+                <option value="2013">2013</option>
+            </select>
+        </li>
+        <li>
+            <select id="select_jidu" onchange="loadData()">
+                <option value="0">所有季度</option>
+                <option value="1">第一季度</option>
+                <option value="2">第二季度</option>
+                <option value="3">第三季度</option>
+                <option value="4">第四季度</option>
+            </select>
+        </li>
+        <li>
+            <select id="select_area" onchange="loadData()">
+                <option value="0">全部区域</option>
+                @foreach (var item in Universal.Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectArea)))
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </li>
+        <li>
+            <select id="select_gz" onchange="loadData()">
+                <option value="0">全部改造性质</option>
+                @foreach (var item in Universal.Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectGaiZao)))
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </li>
+        <li>
+            <select id="select_node" onchange="loadData()">
+                <option value="0">全部节点</option>
+                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+                {
+                    <option value="@item.ID">@item.Title</option>
+                }
+            </select>
+        </li>
+        <li>
+            <select name="" id="select_project" onchange="redic()"></select>
+        </li>
+    </ul>
+    <div class="chart-box tc" id="charts_content">
+        @{Html.RenderAction("DomainCharts", "Statctics");}
+    </div>
+</div>
+<!--wrapper ]]-->
+
+
+<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+
+<!--底部脚本-->
+@section foot
+{
+    <script src="~/Assets/js/plugins/Highcharts-4.2.1/js/highcharts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            loadData();
+        });
+
+        function redic() {
+            var ids = "";
+            ids = $("#select_project").val();
+
+            $.get("/Statctics/DomainCharts?ids=" + ids, function (result) {
+                $("#charts_content").html(result);
+            });
+        }
+
+        function loadData() {
+            $.ajax({
+                type: "post",
+                url: "/Statctics/LoadProject",
+                data: { "year": $("#select_year").val(), "jidu": $("#select_jidu").val(), "area": $("#select_area").val(), "gz": $("#select_gz").val(), "node_id": $("#select_node").val() },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    $("#select_project").empty();
+                    if (data.msg == 1) {
+                        $("#select_project").append("<option value='0'>请选择</option>");
+                        $.each(data.data, function (i, item) {
+                            $("#select_project").append("<option value='" + item.id + "'>" + item.title + "</option>");
+                        });
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+
+}
+<!--底部脚本 end-->

@@ -298,5 +298,47 @@ namespace Universal.BLL
             db.Dispose();
             return response_entity;
         }
+
+        /// <summary>
+        /// 根据条件获取项目
+        /// </summary>
+        /// <returns></returns>
+        public static List<Model.AdminUserRoute> GetProjectTitle(int year,int jidu,int area,int gz,int node_id)
+        {
+            List<Model.AdminUserRoute> response_entity = new List<Model.AdminUserRoute>();
+            var db = new DataCore.EFDBContext();
+            var sql = "";
+            string strSelect = "";
+            string strWhere = " where ID>0 ";
+            if(year>0)
+            {
+                strWhere += " and TJYear = " + year.ToString() + " ";
+            }
+            if(jidu >0)
+            {
+                strWhere += " and TJQuarter = "+jidu.ToString() +" ";
+            }
+            if(gz>0)
+            {
+                strWhere += " and GaiZaoXingZhi = "+gz.ToString();
+            }
+            if(node_id>0)
+            {
+                strSelect = ",(select count(1) from ProjectFlowNode where ProjectID = P.ID and NodeID ="+node_id.ToString()+")as NodeTotal";
+                strWhere += " and  NodeTotal>0";
+            }
+            sql = "select * from (SELECT *" + strSelect + " FROM Project as P) as S " + strWhere;
+            var db_list = db.Database.SqlQuery<Entity.Project>(sql).ToList();
+            foreach (var item in db_list)
+            {
+                Model.AdminUserRoute model = new Model.AdminUserRoute();
+                model.id = item.ID;
+                model.title = item.Title;
+                response_entity.Add(model);
+            }
+            db.Dispose();
+            return response_entity;
+        }
+
     }
 }

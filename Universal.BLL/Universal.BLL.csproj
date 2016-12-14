@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="BLLStatctics.cs" />
     <Compile Include="BLLCusNotice.cs" />
     <Compile Include="BLLCusRoute.cs" />
     <Compile Include="BLLCusUser.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Model\LayoutFavorites.cs" />
     <Compile Include="Model\ProjectFlowNode.cs" />
     <Compile Include="Model\ProjectStage.cs" />
+    <Compile Include="Model\Statctics.cs" />
     <Compile Include="Model\WebFlow.cs" />
     <Compile Include="Model\WebSaveFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

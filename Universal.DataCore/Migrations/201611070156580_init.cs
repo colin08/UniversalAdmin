@@ -648,6 +648,143 @@ namespace Universal.DataCore.Migrations
                         end
                         ";
             Sql(fn_SplitString);
+
+            string sp_StatcticsDomain = @"
+                    ---面积统计
+                    ---exec sp_StatcticsDomain ''
+                    CREATE proc [dbo].[sp_StatcticsDomain]
+                    @project_id_str nvarchar(1000) --项目str
+                    as
+                    begin
+
+                    declare @y_data nvarchar(2000) ---x轴数据
+                    declare @x_data nvarchar(100) ----y轴数据
+                    declare @mianji DECIMAL --临时面积变量
+                    set @y_data = ''
+                    set @x_data = ''
+
+
+                    Declare @i_mianji int ---循环面积临时表需要用的变量
+                    Declare @count_mianji int  ---要循环面积分类的数量
+                    declare @title_mianji nvarchar(300)  ---循环面积的标题
+                    declare @field_mianji nvarchar(50) ---面积查询的字段
+                    declare @mianji_sql nvarchar(2000) ---面积查询的sql
+                    set @count_mianji =0
+                    set @title_mianji = ''
+
+
+                    ---面积分类
+                    if object_id(N'#tb_mianji',N'U') is not null
+                    begin
+	                    drop table #tb_mianji
+                    end
+                    ELSE
+                    BEGIN
+	                    create table #tb_mianji(
+		                    OID int identity(1,1),---自增ID
+		                    FieldName nvarchar(50), ---查询的字段名字
+		                    Title nvarchar(300)
+	                    )
+                    END
+
+                    insert into #tb_mianji VALUES('GengXinDanYuanYongDiMianJi','更新单元用地面积');
+                    insert into #tb_mianji VALUES('KaiFaMianJi','开发建设用地面积');
+                    insert into #tb_mianji VALUES('WuLeiQuanMianJi','五类权属用地面积');
+                    insert into #tb_mianji VALUES('LaoWuCunMianJi','老屋村用地面积');
+                    select @count_mianji = COUNT(1) from #tb_mianji
+
+                    declare @i_project int --循环项目用的临时变量
+                    declare @count_project int --循环项目的数量
+                    declare @id_project int ---循环项目的id
+                    declare @title_project nvarchar(300) --循环项目的标题
+
+                    --查询的项目
+                    if object_id(N'#tb_project',N'U') is not null
+                    begin
+	                    drop table #tb_project
+                    end
+                    ELSE
+                    BEGIN
+	                    create table #tb_project(
+		                    OID int identity(1,1),---自增ID
+		                    ID int, ---数据ID
+		                    Title nvarchar(300)
+	                    )
+                    END
+
+                    if len(@project_id_str) > 0
+                    BEGIN
+	                    insert into #tb_project select ID,Title from Project where ID in(select * from dbo.fn_SplitString(@project_id_str,','));
+                    END
+                    else
+                    begin
+	                    insert into #tb_project select ID,Title from Project;
+                    end
+
+                    select @count_project = COUNT(1) from #tb_project
+
+                    ----循环面积分类
+                    set @i_mianji = 0
+                    if @count_project >0
+                    begin
+                    while @i_mianji < @count_mianji
+                    begin
+	                    select @title_mianji = Title,@field_mianji=FieldName from #tb_mianji where OID = @i_mianji +1
+	                    set @y_data +='{ name: '''+@title_mianji+''', data: ['
+	
+	                    --循环项目
+	                    set @i_project =0
+	                    while @i_project < @count_project
+	                    BEGIN
+			                    select @id_project = ID,@title_project = Title from #tb_project where OID = @i_project +1	
+			                    set @mianji = 0;
+			                    set @mianji_sql ='select @mianji= '+@field_mianji+' from Project where ID = '+cast(@id_project as nvarchar(10));
+			                    exec sp_executesql @mianji_sql,N'@mianji DECIMAL OUTPUT',@mianji output 
+			                    set @y_data += CAST(ISNULL(@mianji, 0)as nvarchar(10)) +','
+			                    print @id_project
+			                    --生成x轴数据
+			                    if @i_mianji = 0
+			                    begin
+				                    set @x_data += ''''+@title_project+''''+','
+			                    end
+			
+			
+			                    set @i_project = @i_project+1
+	                    END
+	                    set @y_data = LEFT(@y_data,LEN(@y_data)-1)
+	                    set @y_data += ']},'	
+	                    set @i_mianji = @i_mianji +1
+                    end
+                    end
+                    if LEN(@y_data)>0
+                    begin
+	                    set @y_data = LEFT(@y_data,LEN(@y_data)-1)
+                    end
+                    if LEN(@x_data) > 0
+                    begin
+	                    set @x_data = LEFT(@x_data,LEN(@x_data)-1)
+                    end
+
+                    select @x_data as x_data,@y_data as y_data
+                    drop table #tb_mianji
+                    drop table 	#tb_project
+                    end";
+            Sql(sp_StatcticsDomain);
+
+            string fn_ProjectHaveNode = @"
+                ---判断项目是否有某个节点
+                CREATE function [dbo].[fn_ProjectHaveNode](@project_id int,@node_id int)
+                RETURNS int
+                as
+                begin
+	                declare @total INT
+	                set @total =0
+	                select  @total=count(1) from Project as P left JOIN ProjectFlowNode as N on P.ID = N.ProjectID where P.ID = @project_id and N.NodeID = @node_id
+	                return @total
+                end
+                ";
+            Sql(fn_ProjectHaveNode);
+
         }
 
         public override void Down()
