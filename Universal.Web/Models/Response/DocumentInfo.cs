@@ -36,6 +36,11 @@ namespace Universal.Web.Models.Response
         public bool is_favorites { get; set; }
 
         /// <summary>
+        /// 上传者
+        /// </summary>
+        public string add_user { get; set; }
+
+        /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime add_time { get; set; }

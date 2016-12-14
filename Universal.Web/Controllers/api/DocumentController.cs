@@ -187,6 +187,7 @@ namespace Universal.Web.Controllers.api
                 model.file_path = GetSiteUrl() + item.FilePath;
                 model.file_size = item.FileSize;
                 model.id = item.ID;
+                model.add_user = item.CusUser.NickName;
                 model.title = item.Title;
                 model.is_favorites = bll_fav.Exists(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 response_list.Add(model);
