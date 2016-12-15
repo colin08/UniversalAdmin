@@ -90,11 +90,6 @@ namespace Universal.Web.Controllers.api
 
             FileInfo fileinfo = new FileInfo(provider.FileData[0].LocalFileName);
             long size = fileinfo.Length;
-            string size_str = "0";
-            if (size >= 1024)
-                size_str = (size / 1024).ToString() + "MB";
-            else
-                size_str = size.ToString() + "KB";
             string io_path = fileinfo.FullName;  //保存的完整绝对路径
             string md5 = Tools.IOHelper.GetMD5HashFromFile(io_path);
             string new_path = dirTempPath + "/" + md5 + "." + file_type_list[1];
@@ -105,6 +100,21 @@ namespace Universal.Web.Controllers.api
                 System.IO.File.Move(io_path, dirTempPath + "/" + md5 + "." + file_type_list[1]); //给文件改名
             //用户ID
             int user_id = TypeHelper.ObjectToInt(provider.FormData["user_id"], 0);
+
+            if (user_id == 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有收到用户信息";
+                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                return response;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll_user = new BLL.BaseBLL<Entity.CusUser>();
+            if (!bll_user.Exists(p => p.ID == user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                return response;
+            }
+
             //可见类别
             Entity.DocPostSee see_type = (Entity.DocPostSee)TypeHelper.ObjectToInt(provider.FormData["see_type"], 0);
             //标题
@@ -115,7 +125,7 @@ namespace Universal.Web.Controllers.api
             //部门ID或用户ID，逗号分割
             string toid = "";
             if (provider.FormData["toid"] != null)
-                title = provider.FormData["toid"].ToString();
+                toid = provider.FormData["toid"].ToString();
 
             #region 处理用户或部门的ID
             StringBuilder str_ids = new StringBuilder();
@@ -124,10 +134,22 @@ namespace Universal.Web.Controllers.api
                 case Entity.DocPostSee.everyone:
                     break;
                 case Entity.DocPostSee.department:
+                    if(string.IsNullOrWhiteSpace(toid))
+                    {
+                        WorkContext.AjaxStringEntity.msgbox = "当是可见是部门时，必须传入部门数据";
+                        response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                        return response;
+                    }
                     foreach (var item in BLL.BLLDepartment.GetListByIds(toid))
                         str_ids.Append(item.ID.ToString() + ",");
                     break;
                 case Entity.DocPostSee.user:
+                    if (string.IsNullOrWhiteSpace(toid))
+                    {
+                        WorkContext.AjaxStringEntity.msgbox = "当是可见是用户时，必须传入用户数据";
+                        response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                        return response;
+                    }
                     foreach (var item in BLL.BLLCusUser.GetListByIds(toid))
                         str_ids.Append(item.ID.ToString() + ",");
                     break;
@@ -141,18 +163,27 @@ namespace Universal.Web.Controllers.api
             }
             #endregion
 
+            
+
             Entity.DocPost entity = new Entity.DocPost();
             entity.CusUserID = user_id;
             entity.DocCategoryID = category_id;
             entity.FilePath = server_path;
-            entity.FileSize = size_str;
+            entity.FileSize = IOHelper.GetFileSizeTxt(size);
             entity.Title = title;
             entity.TOID = final_ids;
             entity.See = see_type;
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             bll.Add(entity);
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "ok";
+            if (entity.ID > 0)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "ok";
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "秘籍添加失败";
+            }
             response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
             return response;
 
@@ -167,7 +198,7 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<List<Models.Response.DocumentInfo>> GetDocList([FromBody]Models.Request.DocumentList req)
         {
             WebAjaxEntity<List<Models.Response.DocumentInfo>> response_entity = new WebAjaxEntity<List<Models.Response.DocumentInfo>>();
-            if(req.page_index <=0 || req.page_size <=0)
+            if (req.page_index <= 0 || req.page_size <= 0)
             {
                 response_entity.msgbox = "非法参数";
                 return response_entity;
@@ -180,7 +211,7 @@ namespace Universal.Web.Controllers.api
             int rowCount = 0;
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
-            foreach (var item in BLL.BLLDocument.GetPowerPageData(req.page_index,req.page_size,ref rowCount,req.user_id,req.search_word,req.category_id))
+            foreach (var item in BLL.BLLDocument.GetPowerPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.search_word, req.category_id))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
                 model.add_time = item.AddTime;
@@ -208,7 +239,7 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/downloadlog/add")]
         public WebAjaxEntity<string> AddDownLog([FromBody]Models.Request.AddDownloadLog req)
         {
-            if(req.user_id <=0 || string.IsNullOrWhiteSpace(req.doc_ids))
+            if (req.user_id <= 0 || string.IsNullOrWhiteSpace(req.doc_ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return WorkContext.AjaxStringEntity;
@@ -217,8 +248,8 @@ namespace Universal.Web.Controllers.api
             BLL.BaseBLL<Entity.DownloadLog> bll_down = new BLL.BaseBLL<Entity.DownloadLog>();
             foreach (var item in req.doc_ids.Split(','))
             {
-                int id = TypeHelper.ObjectToInt(item,0);
-                if(id<=0)
+                int id = TypeHelper.ObjectToInt(item, 0);
+                if (id <= 0)
                     continue;
                 var entity_doc = bll_doc.GetModel(p => p.ID == id);
                 if (entity_doc == null)
@@ -299,7 +330,7 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
-                
+
         /// <summary>
         /// 移除秘籍收藏
         /// </summary>
@@ -309,7 +340,7 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/favorites/remove")]
         public WebAjaxEntity<string> RemoveFavorites([FromBody]Models.Request.RemoveFav req)
         {
-            if(string.IsNullOrWhiteSpace(req.ids))
+            if (string.IsNullOrWhiteSpace(req.ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return WorkContext.AjaxStringEntity;
@@ -321,6 +352,6 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
-                
+
     }
 }

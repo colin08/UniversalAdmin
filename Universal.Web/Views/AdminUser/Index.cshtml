@@ -129,6 +129,11 @@
                             {
                                 email = item.Email;
                             }
+                            var is_manager = "";
+                            if(item.IsManager)
+                            {
+                                is_manager ="<em class=\"leader\">主管</em>";
+                            }
 
                             dataHtml += "<tr>";
                             if(item.ID == 1)
@@ -138,7 +143,7 @@
                             {
                                 dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                             }
-                            dataHtml += "<td>"+item.NickName+"</td>";
+                            dataHtml += "<td>"+item.NickName+ is_manager +"</td>";
                             dataHtml += "<td>"+item.Telphone+" </td>";
                             dataHtml += "<td>" + admin_str + "</td>";
                             dataHtml += "<td>" + item.CusUserJob.Title + "</td>";

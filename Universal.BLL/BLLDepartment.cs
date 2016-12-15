@@ -245,6 +245,20 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 判读用户是否是部门主管
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckUserIsManager(int user_id,int department_id)
+        {
+            bool isOK = false;
+            var db = new DataCore.EFDBContext();
+            if(db.CusDepartmentAdmins.Any(p=>p.CusDepartmentID == department_id && p.CusUserID == user_id))
+                isOK = true;
+            db.Dispose();
+            return isOK;
+        }
+
+        /// <summary>
         /// 构造部门树数据
         /// </summary>
         /// <param name="default_id">返回默认第一个供加载数据的分类ID</param>

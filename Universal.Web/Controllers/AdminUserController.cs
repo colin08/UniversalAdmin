@@ -37,20 +37,20 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             int rowCount = 0;
-            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            filter.Add(new BLL.FilterSearch("CusDepartmentID", department_id.ToString(), BLL.FilterSearchContract.等于));
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                filter.Add(new BLL.FilterSearch("NickName", keyword, BLL.FilterSearchContract.like));
-                filter.Add(new BLL.FilterSearch("Telphone", keyword, BLL.FilterSearchContract.like));
-            }
-            List<Entity.CusUser> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "RegTime desc", p => p.CusUserJob);
+            List<Entity.CusUser> list = new List<Entity.CusUser>();//
+            if(!string.IsNullOrWhiteSpace(keyword))
+               list = bll.GetPagedList(page_index, page_size, ref rowCount, p=>p.CusDepartmentID == department_id && p.NickName.Contains(keyword) || p.Telphone.Contains(keyword), "RegTime desc", p => p.CusUserJob);
+            else
+                list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.CusDepartmentID == department_id, "RegTime desc", p => p.CusUserJob);
             WebAjaxEntity<List<Entity.CusUser>> result = new WebAjaxEntity<List<Entity.CusUser>>();
+            foreach (var item in list)
+            {
+                item.IsManager = BLL.BLLDepartment.CheckUserIsManager(item.ID, department_id);
+            }
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
             result.data = list;
             result.total = rowCount;
-
             return Json(result);
         }
 

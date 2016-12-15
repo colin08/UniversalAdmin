@@ -57,6 +57,12 @@ namespace Universal.Entity
         public int CusUserJobID { get; set; }
 
         /// <summary>
+        /// 该用户是否是所属部门的主管
+        /// </summary>
+        [NotMapped]
+        public bool IsManager { get; set; }
+
+        /// <summary>
         /// 职位信息
         /// </summary>
         public virtual CusUserJob CusUserJob { get; set; }

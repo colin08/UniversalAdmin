@@ -202,12 +202,7 @@ namespace Universal.Web.Controllers.api
                 return response_entity;
             }
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
-            filters.Add(new BLL.FilterSearch("NickName", search_word, BLL.FilterSearchContract.like));
-            filters.Add(new BLL.FilterSearch("Telphone", search_word, BLL.FilterSearchContract.like));
-            filters.Add(new BLL.FilterSearch("ShorNum", search_word, BLL.FilterSearchContract.like));
-            filters.Add(new BLL.FilterSearch("Email", search_word, BLL.FilterSearchContract.like));
-            foreach (var item in bll.GetListBy(0,filters, "RegTime Asc"))
+            foreach (var item in bll.GetListBy(0,p=>p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.ShorNum.Contains(search_word) || p.Email.Contains(search_word), "RegTime Asc"))
                 response_list.Add(BuilderAPPUser(item));
             response_entity.msg = 1;
             response_entity.msgbox = "ok";

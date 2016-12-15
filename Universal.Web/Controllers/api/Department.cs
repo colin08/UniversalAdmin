@@ -20,7 +20,7 @@ namespace Universal.Web.Controllers.api
     public class Department: BaseAPIController
     {
         /// <summary>
-        /// 获取所有部门分类
+        /// 获取所有部门
         /// </summary>
         /// <returns></returns>
         [HttpGet]
