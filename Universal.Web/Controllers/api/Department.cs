@@ -36,7 +36,8 @@ namespace Universal.Web.Controllers.api
                 model.id = item.ID;
                 model.pid = TypeHelper.ObjectToInt(item.PID, 0);
                 model.title = item.Title;
-                model.data_total = BLL.BLLDepartment.GetDepartChildDataTotal(item.ID);
+                model.user_total = BLL.BLLDepartment.GetDepartChildDataTotal(item.ID);
+                response_list.Add(model);
             }
             response_entity.data = response_list;
             response_entity.msg = 1;

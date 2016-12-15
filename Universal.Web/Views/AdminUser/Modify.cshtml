@@ -73,9 +73,9 @@
                                 <div class="litip">&nbsp;</div>
                             </li>
                             <li>
-                                <div class="lilt"><em class="col_red">*</em>登录邮箱</div>
+                                <div class="lilt">登录邮箱</div>
                                 <div class="limd">
-                                    @Html.TextBoxFor(p => p.email, new { @class = "usInput", placeholder = "必填" })
+                                    @Html.TextBoxFor(p => p.email, new { @class = "usInput" })
                                 </div>
                                 <div class="litip">@Html.ValidationMessageFor(p => p.email)</div>
                             </li>

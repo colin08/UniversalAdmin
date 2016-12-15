@@ -25,7 +25,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 部门里对应的人数
         /// </summary>
-        public int data_total { get; set; }
+        public int user_total { get; set; }
 
     }
 }

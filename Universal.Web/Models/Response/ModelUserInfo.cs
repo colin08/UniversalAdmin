@@ -41,6 +41,11 @@ namespace Universal.Web.Models.Response
         public string department_name { get; set; }
 
         /// <summary>
+        /// 该用户是否是所属部门的主管
+        /// </summary>
+        public bool is_department_manager { get; set; }
+
+        /// <summary>
         /// 所属职位id
         /// </summary>
         public int job_id { get; set; }

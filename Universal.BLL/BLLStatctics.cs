@@ -33,5 +33,31 @@ namespace Universal.BLL
             db.Dispose();
             return chart_data;
         }
+
+        /// <summary>
+        /// 数量统计
+        /// </summary>
+        /// <param name="project_id_str"></param>
+        /// <returns></returns>
+        public static Model.Statctics ProjectTotal(int jidu,int area,int gz,int node_id)
+        {
+
+            var db = new DataCore.EFDBContext();
+            SqlParameter[] param = {
+                                               new SqlParameter("@jidu",jidu),
+                                               new SqlParameter("@area",area),
+                                               new SqlParameter("@gz",gz),
+                                               new SqlParameter("@node_id",node_id)
+
+                                    };
+            var chart_data = db.Database.SqlQuery<Model.Statctics>("dbo.sp_StatcticsProjectTotal @jidu,@area,@gz,@node_id", param).FirstOrDefault();
+            if (chart_data == null)
+                chart_data = new Model.Statctics();
+
+            db.Dispose();
+            return chart_data;
+        }
+
+
     }
 }

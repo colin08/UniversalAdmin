@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "数量统计";
+    ViewData["tabTop"] = "statistics";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+
+
+<div class="container">
+    <ul class="new-tab mb_20 clearfix">
+        <li class="current"><a href="/Statctics/ProjectTotal">数量统计</a></li>
+        <li><a href="/Statctics/Domain">面积统计</a></li>
+    </ul>
+    <ul class="filter-tab clearfix">
+        <li>
+            <select id="select_jidu" onchange="loadData()">
+                <option value="0">所有季度</option>
+                <option value="1">第一季度</option>
+                <option value="2">第二季度</option>
+                <option value="3">第三季度</option>
+                <option value="4">第四季度</option>
+            </select>
+        </li>
+        <li>
+            <select id="select_area" onchange="loadData()">
+                <option value="0">全部区域</option>
+                @foreach (var item in Universal.Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectArea)))
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </li>
+        <li>
+            <select id="select_gz" onchange="loadData()">
+                <option value="0">全部改造性质</option>
+                @foreach (var item in Universal.Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectGaiZao)))
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </li>
+        <li>
+            <select id="select_node" onchange="loadData()">
+                <option value="0">全部节点</option>
+                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+                {
+                    <option value="@item.ID">@item.Title</option>
+                }
+            </select>
+        </li>
+    </ul>
+    <div class="chart-box tc" id="charts_content">
+        
+    </div>
+</div>
+<!--wrapper ]]-->
+
+
+<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+
+<!--底部脚本-->
+@section foot
+{
+    <script src="~/Assets/js/plugins/Highcharts-4.2.1/js/highcharts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            loadData();
+        });
+
+        function loadData() {
+            var url = "/Statctics/ProjectTotalCharts?jidu=" + $("#select_jidu").val() + "&area=" + $("#select_area").val() + "&gz=" + $("#select_gz").val() + "&node_id=" + $("#select_node").val();
+            $.get(url, function (result) {
+                $("#charts_content").html(result);
+            });
+        }
+    </script>
+
+}
+<!--底部脚本 end-->

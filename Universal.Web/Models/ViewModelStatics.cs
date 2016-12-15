@@ -10,5 +10,7 @@ namespace Universal.Web.Models
         public string x_data { get; set; }
 
         public string y_data { get; set; }
+
+        public string y_title { get; set; }
     }
 }

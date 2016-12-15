@@ -721,6 +721,7 @@
     <Content Include="Views\Shool\Piece.cshtml" />
     <Content Include="Views\Contacts\Users.cshtml" />
     <Content Include="Views\Shared\_StaticsDomain.cshtml" />
+    <Content Include="Views\Statctics\ProjectTotal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

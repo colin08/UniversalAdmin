@@ -22,6 +22,13 @@ namespace Universal.Web.Controllers
             return View();
         }
 
+        //面积统计
+        public ActionResult ProjectTotal()
+        {
+            LoadSelect();
+            return View();
+        }
+
         /// <summary>
         /// 加载项目
         /// </summary>
@@ -45,6 +52,23 @@ namespace Universal.Web.Controllers
             BLL.Model.Statctics model = BLL.BLLStatctics.Domain(ids);
             result.x_data = model.x_data;
             result.y_data = model.y_data;
+            result.y_title = "面积";
+            return PartialView("_StaticsDomain", result);
+
+        }
+
+        /// <summary>
+        /// 数量统计图
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<ActionResult> ProjectTotalCharts(int jidu,int area,int gz,int node_id)
+        {
+            Models.ViewModelStatics result = new Models.ViewModelStatics();
+            BLL.Model.Statctics model = BLL.BLLStatctics.ProjectTotal(jidu, area, gz, node_id);
+            result.x_data = model.x_data;
+            result.y_data = model.y_data;
+            result.y_title = "数量";
             return PartialView("_StaticsDomain", result);
 
         }
@@ -53,7 +77,6 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
             List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
-
             ViewData["NodeList"] = list;
         }
     }

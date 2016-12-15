@@ -63,7 +63,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 邮箱
         /// </summary>
-        [Display(Name = "邮箱"),Required(ErrorMessage ="邮箱不能为空"), RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", ErrorMessage = "邮箱格式不正确")]
+        [Display(Name = "邮箱"),RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", ErrorMessage = "邮箱格式不正确")]
         public string email { get; set; }
 
         /// <summary>

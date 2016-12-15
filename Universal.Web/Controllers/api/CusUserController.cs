@@ -190,19 +190,22 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/user/search")]
-        public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(string search_word)
+        public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(int department_id,string search_word)
         {
             WebAjaxEntity<List<Models.Response.ModelUserInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ModelUserInfo>>();
             List<Models.Response.ModelUserInfo> response_list = new List<Models.Response.ModelUserInfo>();
-            if (string.IsNullOrWhiteSpace(search_word))
-            {
-                response_entity.msg = 1;
-                response_entity.msgbox = "关键字不能为空";
-                response_entity.data = response_list;
-                return response_entity;
-            }
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            foreach (var item in bll.GetListBy(0,p=>p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.ShorNum.Contains(search_word) || p.Email.Contains(search_word), "RegTime Asc"))
+            var db_list = new List<Entity.CusUser>();
+            if (department_id > 0)
+                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id, "RegTime ASC");
+            if(!string.IsNullOrWhiteSpace(search_word))
+                db_list = bll.GetListBy(0, p => p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.ShorNum.Contains(search_word) || p.Email.Contains(search_word), "RegTime Asc");
+            if (department_id > 0 && !string.IsNullOrWhiteSpace(search_word))
+                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id && p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.Email.Contains(search_word), "RegTime ASC");
+            else
+                db_list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "RegTime ASC");
+
+            foreach (var item in db_list)
                 response_list.Add(BuilderAPPUser(item));
             response_entity.msg = 1;
             response_entity.msgbox = "ok";
@@ -258,6 +261,7 @@ namespace Universal.Web.Controllers.api
             entity.nick_name = model.NickName;
             entity.shor_num = model.ShorNum;
             entity.telphone = model.Telphone;
+            entity.is_department_manager = BLL.BLLDepartment.CheckUserIsManager(entity.id, entity.department_id);
             return entity;
         }
 

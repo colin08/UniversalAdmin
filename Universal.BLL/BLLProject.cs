@@ -324,7 +324,7 @@ namespace Universal.BLL
             }
             if(node_id>0)
             {
-                strSelect = ",(select count(1) from ProjectFlowNode where ProjectID = P.ID and NodeID ="+node_id.ToString()+")as NodeTotal";
+                strSelect = ",(select [dbo].[fn_ProjectHaveNode](P.ID,"+node_id.ToString()+"))as NodeTotal";
                 strWhere += " and  NodeTotal>0";
             }
             sql = "select * from (SELECT *" + strSelect + " FROM Project as P) as S " + strWhere;
@@ -338,6 +338,21 @@ namespace Universal.BLL
             }
             db.Dispose();
             return response_entity;
+        }
+
+        /// <summary>
+        /// 分组获取已存在项目的年份
+        /// </summary>
+        /// <returns></returns>
+        public static List<Model.Statctics> GetYearGroup()
+        {
+            var db = new DataCore.EFDBContext();
+            string strSql = "select cast(TJYear as varchar(10)) as x_data,'1' as y_data from Project Group BY TJYear ORDER BY TJYear DESC";
+            var db_data = db.Database.SqlQuery<Model.Statctics>(strSql).ToList();
+            if (db_data == null)
+                db_data = new List<Model.Statctics>();
+            db.Dispose();
+            return db_data;
         }
 
     }

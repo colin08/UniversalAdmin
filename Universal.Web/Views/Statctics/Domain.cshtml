@@ -1,13 +1,12 @@
 ﻿
 @{
-    ViewBag.Title = "平台统计";
+    ViewBag.Title = "面积统计";
     ViewData["tabTop"] = "statistics";
 }
 
 <!--头部脚本-->
 @section head
 {
-
 }
 <!--头部脚本 end-->
 
@@ -15,18 +14,17 @@
 
 <div class="container">
     <ul class="new-tab mb_20 clearfix">
-        <li><a href="javascript:;">数量统计</a></li>
-        <li class="current"><a href="javascript:;">面积统计</a></li>
+        <li><a href="/Statctics/ProjectTotal">数量统计</a></li>
+        <li class="current"><a href="/Statctics/Domain">面积统计</a></li>
     </ul>
     <ul class="filter-tab clearfix">
         <li>
             <select id="select_year" onchange="loadData()">
                 <option value="0">所有年度</option>
-                <option value="2017">2017</option>
-                <option value="2016">2016</option>
-                <option value="2015">2015</option>
-                <option value="2014">2014</option>
-                <option value="2013">2013</option>
+                @foreach (var item in Universal.BLL.BLLProject.GetYearGroup())
+                {
+                    <option value="@item.x_data">@item.x_data</option>
+                }
             </select>
         </li>
         <li>
@@ -70,7 +68,7 @@
         </li>
     </ul>
     <div class="chart-box tc" id="charts_content">
-        @{Html.RenderAction("DomainCharts", "Statctics");}
+        
     </div>
 </div>
 <!--wrapper ]]-->
@@ -91,7 +89,23 @@
         function redic() {
             var ids = "";
             ids = $("#select_project").val();
-
+            if(ids == null || ids ==0)
+            {
+                ids = "";
+                $("#select_project option").each(function(){ //遍历全部option
+                    var val = $(this).val(); //获取option的值
+                    if (val != 0) //如果不是“全部”
+                        ids += val + ",";
+                });
+                if (ids.length > 0)
+                {
+                    ids = ids.substring(0, ids.length - 1);
+                }else
+                {
+                    ids = "-1";
+                }
+            }
+            console.log(ids);
             $.get("/Statctics/DomainCharts?ids=" + ids, function (result) {
                 $("#charts_content").html(result);
             });
@@ -116,6 +130,7 @@
                         $.each(data.data, function (i, item) {
                             $("#select_project").append("<option value='" + item.id + "'>" + item.title + "</option>");
                         });
+                        redic();
                     }
                     else {
                         alert(data.msgbox);

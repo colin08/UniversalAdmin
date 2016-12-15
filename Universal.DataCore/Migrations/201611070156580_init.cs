@@ -779,12 +779,116 @@ namespace Universal.DataCore.Migrations
                 begin
 	                declare @total INT
 	                set @total =0
-	                select  @total=count(1) from Project as P left JOIN ProjectFlowNode as N on P.ID = N.ProjectID where P.ID = @project_id and N.NodeID = @node_id
+	                select  @total=count(1) from Project as P left JOIN ProjectFlowNode as N on P.ID = N.ProjectID where P.ID = @project_id and N.NodeID = @node_id and N.IsEnd=1
 	                return @total
                 end
+
                 ";
             Sql(fn_ProjectHaveNode);
 
+            string sp_StatcticsProjectTotal = @"
+                        ---项目数量统计
+                        ---exec sp_StatcticsProjectTotal 1,2,0,0
+                        CREATE proc [dbo].[sp_StatcticsProjectTotal]
+                        @jidu int,---季度参数
+                        @area int,---区域参数
+                        @gz int, ----改造性质
+                        @node_id int ---项目节点
+                        as
+                        begin
+
+                        declare @y_data nvarchar(2000) ---x轴数据
+                        declare @x_data nvarchar(100) ----y轴数据
+                        declare @total int --临时数量变量
+                        set @y_data = ''
+                        set @x_data = ''
+
+
+                        Declare @i_year int ---循环年度需要用的变量
+                        Declare @count_year int  ---要年度的数量
+                        DECLARE @sqls nvarchar(2000) ---查询的sql
+                        declare @sqlWhere nvarchar(500) ---查询的where
+                        declare @sqlfild nvarchar(200)
+                        declare @title_year int  ---年份名称
+                        declare @total_year int
+                        set @count_year =0
+                        set @sqls =''
+                        set @sqlWhere=''
+
+                        ---面积分类
+                        if object_id(N'#tb_year',N'U') is not null
+                        begin
+	                        drop table #tb_year
+                        end
+                        ELSE
+                        BEGIN
+	                        create table #tb_year(
+		                        OID int identity(1,1),---自增ID
+		                        tjyear int ---年份
+	                        )
+                        END
+                        insert into #tb_year select TJYear from Project Group BY TJYear ORDER BY TJYear ASC
+                        select @count_year = COUNT(1) from #tb_year
+                        print '数量：'+cast(@count_year as varchar(10))
+                        set @y_data +='{ name: ''数量'', data: ['
+
+                        ----循环面积分类
+                        set @i_year = 0
+                        if @count_year >0
+                        begin
+                        while @i_year < @count_year
+                        begin
+	                        select @title_year = tjyear from #tb_year where OID = @i_year +1
+	                        set @sqlfild =''
+	                        set @sqlWhere =' where TJYear='+cast(@title_year as varchar(20))
+	                        if @jidu>0
+	                        BEGIN
+		                        set @sqlWhere += ' and  TJQuarter = '+ CAST(@jidu as varchar(10))
+	                        end
+	                        if @area > 0
+	                        BEGIN
+		                        set @sqlWhere += ' and  Area = '+ CAST(@area as varchar(10))
+	                        END
+	                        if @gz > 0
+	                        BEGIN
+		                        set @sqlWhere += ' and  GaiZaoXingZhi = '+ CAST(@gz as varchar(10))
+	                        END
+	                        if @node_id>0
+	                        BEGIN
+		                        set @sqlfild = ',(select dbo.fn_ProjectHaveNode(ID,'+cast(@node_id as varchar(10))+')) as NodeTotal'
+		                        set @sqlWhere += ' and  NodeTotal >0 '
+	                        END
+		
+
+	                        set @sqls='select @total_year = count(1) from (select * from (select *'+@sqlfild+' from Project) as S '+@sqlWhere+') as T'
+	                        print @sqls
+	                        exec sp_executesql @sqls,N'@total_year INT OUTPUT',@total_year output;
+
+	                        set @y_data += Cast(@total_year as varchar(5)) + ','
+	                        --生成x轴数据
+	                        set @x_data += ''''+Cast(@title_year as varchar(10))+''''+','
+	                        set @i_year = @i_year +1
+	
+                        end
+	                        set @y_data = LEFT(@y_data,LEN(@y_data)-1)
+                        end
+
+                        set @y_data += ']},'	
+                        if LEN(@y_data)>0
+                        begin
+	                        set @y_data = LEFT(@y_data,LEN(@y_data)-1)
+                        end
+                        if LEN(@x_data) > 0
+                        begin
+	                        set @x_data = LEFT(@x_data,LEN(@x_data)-1)
+                        end
+
+                        select @x_data as x_data,@y_data as y_data
+                        drop table #tb_year
+
+                        end
+                        ";
+            Sql(sp_StatcticsProjectTotal);
         }
 
         public override void Down()
