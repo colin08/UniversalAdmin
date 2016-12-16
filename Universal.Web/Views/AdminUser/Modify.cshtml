@@ -60,7 +60,7 @@
                                 <div class="lilt"><em class="col_red">*</em>部门</div>
                                 <div class="limd pr">
                                     @Html.HiddenFor(p => p.department_id)
-                                    <input type="text" value="@Model.department_title" class="usInput" placeholder="" /><a href="#" class="addBtn">选择部门</a>
+                                    <input type="text" value="@Model.department_title" id="department_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selDepartment(this)" class="addBtn">选择部门</a>
                                 </div>
                                 <div class="litip">&nbsp;</div>
                             </li>
@@ -68,7 +68,7 @@
                                 <div class="lilt"><em class="col_red">*</em>职位</div>
                                 <div class="limd pr">
                                     @Html.HiddenFor(p => p.job_id)
-                                    <input type="text" value="@Model.job_title" class="usInput" placeholder="" /><a href="#" class="addBtn">选择职位</a>
+                                    <input type="text" value="@Model.job_title" id="job_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selPosition(this)" class="addBtn">选择职位</a>
                                 </div>
                                 <div class="litip">&nbsp;</div>
                             </li>
@@ -384,7 +384,68 @@
             function optionsClear(e) {
                 e.options.length = 1;
             }
-
+			function selPosition(obj){
+				$.ajax(
+						{
+							url:'/Tools/GetJobList',
+							success:function(data){
+								var items=[];
+								$(data.data).each(function(){
+									items.push({value:this.id,name:this.title});
+								})
+								showSelectBox({
+									title:'选择职位',
+									head_title:'职位列表',
+									items:items,
+									onOk:function(data){
+										$('#job_id').val(data.value);
+										$('#job_name').val(data.name);
+									}
+								});
+							}
+						}
+						);
+				
+			}
+			function selDepartment(obj){
+				$.ajax({
+						url:'/Department/GetDeparment?pid=-1',
+						success:function(data){
+							var items={};
+							$(data.data).each(function(){
+								if(typeof items[this.parent_id]=='undefined'){
+									items[this.parent_id]=[];
+								}
+								items[this.parent_id].push({
+										value:this.department_id,
+										name:this.title
+								});
+							});
+							console.log(JSON.stringify(items));
+							var getData=function(pid){
+								if (typeof items[pid] =='undefined'){
+									return [];
+								}
+								var item=[];
+								$(items[pid]).each(function(){
+									this.children=getData(this.value);
+									item.push(this);
+								})
+								return item;
+							}
+							var data=getData(0);
+							showSelectBox({
+								title:'选择部门',
+								head_title:'部门列表',
+								items:data,
+								onOk:function(data){
+									$('#department_name').val(data.name);
+									$('#department_id').val(data.value);
+								}
+							});
+						}
+				});
+			}
         </script>
 
     }

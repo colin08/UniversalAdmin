@@ -63,7 +63,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 邮箱
         /// </summary>
-        [Display(Name = "邮箱"),RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", ErrorMessage = "邮箱格式不正确")]
+        [Display(Name = "邮箱"),MaxLength(150,ErrorMessage ="不能超过150个字符")]
         public string email { get; set; }
 
         /// <summary>
