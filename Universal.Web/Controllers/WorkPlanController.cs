@@ -255,6 +255,10 @@ namespace Universal.Web.Controllers
 
                 entity.Msg = 1;
             }
+            else
+            {
+                entity.Msg = 3;
+            }
 
             return View(entity);
         }

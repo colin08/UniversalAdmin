@@ -135,14 +135,15 @@
             @if(Model.Msg == 1)
             {
                 @:alert("操作成功");
-                                                        @:location.href = "/Document/index";
-                                                        @:getWindow();
-
+                @:location.href = "/Document/index";
             }
             else if(Model.Msg == 2)
             {
                 @:alert("数据不存在");
-                                                    }
+            }else if(Model.Msg == 3)
+            {
+                @:alert("数据验证失败");
+            }
         });
     </script>
 

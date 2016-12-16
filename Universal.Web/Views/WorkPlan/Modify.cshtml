@@ -87,6 +87,12 @@
                @if(Model.Msg == 1)
                {
                    @: location.href = "/WorkPlan/Index";
+               }else if(Model.Msg == 2)
+               {
+                   @:alert("数据不存在");
+               }else if(Model.Msg == 3)
+               {
+                   @:alert("数据验证失败");
                }else if(Model.Msg == 4)
                {
                    @:alert("已经审批的不可再编辑");

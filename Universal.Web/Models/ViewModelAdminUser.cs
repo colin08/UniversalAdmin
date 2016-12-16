@@ -43,6 +43,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 部门ID
         /// </summary>
+        [Required(ErrorMessage ="部门必须选择")]
         public int department_id { get; set; }
 
         /// <summary>
@@ -53,6 +54,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 职位
         /// </summary>
+        [Required(ErrorMessage ="职位必须选择")]
         public int job_id { get; set; }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 邮箱
         /// </summary>
-        [Display(Name = "邮箱"),MaxLength(150,ErrorMessage ="不能超过150个字符")]
+        [Display(Name = "邮箱"),RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?", ErrorMessage = "邮箱格式不正确")]
         public string email { get; set; }
 
         /// <summary>

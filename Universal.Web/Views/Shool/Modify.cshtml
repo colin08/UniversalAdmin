@@ -127,17 +127,17 @@
 
 
             $(document).ready(function (e) {
-            @if(Model.Msg == 1)
-            {
-                @:alert("操作成功");
-                @:location.href = "/Shool/index";
-                @:getWindow();
+                @if(Model.Msg == 1)
+                {
+                    @:location.href = "/Shool/index";
 
-            }
-            else if(Model.Msg == 2)
-            {
-                @:alert("数据不存在");
-            }
+                }else if(Model.Msg == 2)
+                {
+                    @:alert("数据不存在");
+                }else if(Model.Msg == 3)
+                {
+                    @:alert("数据验证失败");
+                }
             });
     </script>
 

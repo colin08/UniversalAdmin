@@ -166,6 +166,9 @@ namespace Universal.Web.Controllers
                     bll.Modify(model);
 
                 entity.Msg = 1;
+            }else
+            {
+                entity.Msg = 3;
             }
 
             return View(entity);

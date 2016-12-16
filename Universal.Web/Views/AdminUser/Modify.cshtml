@@ -62,7 +62,7 @@
                                     @Html.HiddenFor(p => p.department_id)
                                     <input type="text" value="@Model.department_title" id="department_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selDepartment(this)" class="addBtn">选择部门</a>
                                 </div>
-                                <div class="litip">&nbsp;</div>
+                                <div class="litip">@Html.ValidationMessageFor(p=>p.department_id)</div>
                             </li>
                             <li>
                                 <div class="lilt"><em class="col_red">*</em>职位</div>
@@ -70,7 +70,7 @@
                                     @Html.HiddenFor(p => p.job_id)
                                     <input type="text" value="@Model.job_title" id="job_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selPosition(this)" class="addBtn">选择职位</a>
                                 </div>
-                                <div class="litip">&nbsp;</div>
+                                <div class="litip">@Html.ValidationMessageFor(p => p.job_id)</div>
                             </li>
                             <li>
                                 <div class="lilt">登录邮箱</div>
@@ -266,23 +266,25 @@
 
             $(document).ready(function (e) {
                 @if(Model.id>0)
-            {
-                @:rad_check();
-                                                                            }
+                {
+                    @:rad_check();
+                }
                 @if(Model.Msg == 1)
                 {
                     @:show_div(3);
-
                 }
-            else if(Model.Msg == 2)
-            {
-                @:alert("数据不存在");
-                                              }
+                else if(Model.Msg == 2)
+                {
+                    @:alert("数据不存在");
+                }else if(Model.Msg == 3)
+                {
+                    @:alert("数据验证失败");
+                }
 
             });
 
             function next_2() {
-                if ($("#nick_name").val() == "" || $("#telphone").val() == "" || $("#email").val() == "" || $("#password").val() == "") {
+                if ($("#nick_name").val() == "" || $("#telphone").val() == "" || $("#password").val() == "") {
                     alert("请填写完整");
                     return;
                 }

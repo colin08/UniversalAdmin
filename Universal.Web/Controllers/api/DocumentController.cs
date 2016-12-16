@@ -220,7 +220,9 @@ namespace Universal.Web.Controllers.api
                 model.id = item.ID;
                 model.add_user = item.CusUser.NickName;
                 model.title = item.Title;
-                model.is_favorites = bll_fav.Exists(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
+                if (fav_entity != null)
+                    model.favorites_id = fav_entity.ID;
                 response_list.Add(model);
             }
             if (rowCount > 0)
@@ -280,6 +282,7 @@ namespace Universal.Web.Controllers.api
             }
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             int rowCount = 0;
+            BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
             foreach (var item in BLL.BllCusUserFavorites.GetDocPageData(req.page_index, req.page_size, ref rowCount, req.user_id, "", 0))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
@@ -288,7 +291,9 @@ namespace Universal.Web.Controllers.api
                 model.file_size = item.FileSize;
                 model.id = item.ID;
                 model.title = item.Title;
-                model.is_favorites = true;
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
+                if (fav_entity != null)
+                    model.favorites_id = fav_entity.ID;
                 response_list.Add(model);
             }
             if (rowCount > 0)
@@ -314,6 +319,7 @@ namespace Universal.Web.Controllers.api
             }
             BLL.BaseBLL<Entity.DocPost> bll_doc = new BLL.BaseBLL<Entity.DocPost>();
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
+            StringBuilder str_ids = new StringBuilder();
             foreach (var item in req.doc_ids.Split(','))
             {
                 int id = TypeHelper.ObjectToInt(item, 0);
@@ -325,9 +331,13 @@ namespace Universal.Web.Controllers.api
                 entity_fav.CusUserID = req.user_id;
                 entity_fav.DocPostID = id;
                 bll_fav.Add(entity_fav);
+                str_ids.Append(entity_fav.ID.ToString() + ",");
             }
+            if (str_ids.Length > 0)
+                str_ids.Remove(str_ids.Length - 1, 1);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
+            WorkContext.AjaxStringEntity.data = str_ids.ToString();
             return WorkContext.AjaxStringEntity;
         }
 

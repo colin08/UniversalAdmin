@@ -102,7 +102,8 @@ namespace Universal.BLL
         public static int Modify(Entity.CusUser entity, string route)
         {
             var db = new DataCore.EFDBContext();
-
+            if (string.IsNullOrWhiteSpace(route))
+                route = "";
             if (entity.ID > 0)
             {
                 db.CusUserRoutes.Where(p => p.CusUserID == entity.ID).ToList().ForEach(p => db.CusUserRoutes.Remove(p));

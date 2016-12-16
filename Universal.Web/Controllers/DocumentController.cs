@@ -47,7 +47,7 @@ namespace Universal.Web.Controllers
 
             foreach (var item in list)
             {
-                item.IsFavorites = bll_fav.Exists(p=>p.CusUserID == WorkContext.UserInfo.ID && p.DocPostID == item.ID);// db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == item.ID);
+                item.IsFavorites = bll_fav.Exists(p => p.CusUserID == WorkContext.UserInfo.ID && p.DocPostID == item.ID);// db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == item.ID);
             }
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
@@ -71,7 +71,7 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if(BLL.BLLDocument.Del(ids))
+            if (BLL.BLLDocument.Del(ids))
             {
                 WorkContext.AjaxStringEntity.msg = 1;
                 WorkContext.AjaxStringEntity.msgbox = "删除成功";
@@ -125,7 +125,7 @@ namespace Universal.Web.Controllers
                         default:
                             break;
                     }
-                    if(str_ids.Length>0)
+                    if (str_ids.Length > 0)
                     {
                         str_ids = str_ids.Remove(str_ids.Length - 1, 1);
                     }
@@ -169,16 +169,16 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DocFavorites(int id)
         {
-            if(id <=0)
+            if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
             string msg = "";
-            bool isOK = BLL.BllCusUserFavorites.AddDocFav(id, WorkContext.UserInfo.ID,out msg);
-            if(!isOK)
+            bool isOK = BLL.BllCusUserFavorites.AddDocFav(id, WorkContext.UserInfo.ID, out msg);
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            if (!isOK)
             {
-                WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);
             }
 
@@ -195,7 +195,7 @@ namespace Universal.Web.Controllers
             var isAdd = entity.id == 0 ? true : false;
 
             LoadCategory();
-            
+
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             if (!isAdd)
             {
@@ -234,7 +234,7 @@ namespace Universal.Web.Controllers
             if (str_ids.Length > 0)
             {
                 final_ids = "," + str_ids.ToString();
-            } 
+            }
             #endregion
 
             if (ModelState.IsValid)
@@ -247,7 +247,7 @@ namespace Universal.Web.Controllers
                 }
                 else
                     model = bll.GetModel(p => p.ID == entity.id);
-                
+
                 model.DocCategoryID = entity.category_id;
                 model.FilePath = entity.filepath;
                 model.FileSize = entity.filesize;
@@ -261,7 +261,11 @@ namespace Universal.Web.Controllers
 
                 entity.Msg = 1;
             }
-            
+            else
+            {
+                entity.Msg = 3;
+            }
+
             return View(entity);
         }
 

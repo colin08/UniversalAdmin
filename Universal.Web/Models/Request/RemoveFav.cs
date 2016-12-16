@@ -11,7 +11,7 @@ namespace Universal.Web.Models.Request
     public class RemoveFav
     {
         /// <summary>
-        /// 收藏的ID
+        /// 收藏的ID,多个id英文逗号分割
         /// </summary>
         public string ids { get; set; }
     }

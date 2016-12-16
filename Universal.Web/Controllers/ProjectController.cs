@@ -31,7 +31,7 @@ namespace Universal.Web.Controllers
         /// <param name="keyword">搜索关键字</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword,int status, int node_id, int node_status,DateTime? begin_time,DateTime? end_time,bool is_admin)
+        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword, int status, int node_id, int node_status, DateTime? begin_time, DateTime? end_time, bool is_admin)
         {
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
@@ -93,9 +93,9 @@ namespace Universal.Web.Controllers
             }
             string msg = "";
             bool isOK = BLL.BllCusUserFavorites.AddProjectFav(id, WorkContext.UserInfo.ID, out msg);
+            WorkContext.AjaxStringEntity.msgbox = msg;
             if (!isOK)
             {
-                WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);
             }
 
@@ -406,6 +406,10 @@ namespace Universal.Web.Controllers
 
                     entity.Msg = 1;
                 }
+            }
+            else
+            {
+                entity.Msg = 3;
             }
 
             return View(entity);

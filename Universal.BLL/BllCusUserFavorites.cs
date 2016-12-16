@@ -31,20 +31,25 @@ namespace Universal.BLL
                     msg = "用户不存在";
                     return false;
                 }
-                if (db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == id))
+                var entity_fav = db.CusUserDocFavorites.Where(p => p.CusUserID == user_id && p.DocPostID == id).FirstOrDefault();
+                if(entity_fav == null)
                 {
-                    msg = "已经收藏过了";
-                    return false;
+                    //添加
+                    msg = "收藏成功";
+                    var entity = new Entity.CusUserDocFavorites();
+                    entity.CusUserID = user_id;
+                    entity.DocPostID = id;
+                    db.CusUserDocFavorites.Add(entity);
                 }
-
-                var entity = new Entity.CusUserDocFavorites();
-                entity.CusUserID = user_id;
-                entity.DocPostID = id;
-                db.CusUserDocFavorites.Add(entity);
+                else
+                {
+                    //删除
+                    msg = "取消收藏成功";
+                    db.CusUserDocFavorites.Remove(entity_fav);
+                }                
                 db.SaveChanges();
 
             };
-            msg = "收藏成功";
             return true;
         }
 
@@ -68,20 +73,23 @@ namespace Universal.BLL
                     msg = "用户不存在";
                     return false;
                 }
-                if (db.CusUserProjectFavorites.Any(p => p.CusUserID == user_id && p.ProjectID == id))
+                var entity_fav = db.CusUserProjectFavorites.Where(p => p.CusUserID == user_id && p.ProjectID == id).FirstOrDefault();
+                if (entity_fav == null)
                 {
-                    msg = "已经收藏过了";
-                    return false;
-                }
-
-                var entity = new Entity.CusUserProjectFavorites();
-                entity.CusUserID = user_id;
-                entity.ProjectID = id;
-                db.CusUserProjectFavorites.Add(entity);
+                    //添加
+                    msg = "收藏成功";
+                    var entity = new Entity.CusUserProjectFavorites();
+                    entity.CusUserID = user_id;
+                    entity.ProjectID = id;
+                    db.CusUserProjectFavorites.Add(entity);
+                }else
+                {
+                    msg = "取消收藏成功";
+                    db.CusUserProjectFavorites.Remove(entity_fav);
+                }                
                 db.SaveChanges();
 
             };
-            msg = "收藏成功";
             return true;
         }
 

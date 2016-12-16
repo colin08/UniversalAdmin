@@ -31,9 +31,9 @@ namespace Universal.Web.Models.Response
         public string file_size { get; set; }
 
         /// <summary>
-        /// 该用户是否收藏
+        /// 收藏的ID，如果没有收藏，则为0
         /// </summary>
-        public bool is_favorites { get; set; }
+        public int favorites_id { get; set; }
 
         /// <summary>
         /// 上传者

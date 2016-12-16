@@ -184,10 +184,21 @@ namespace Universal.Web.Controllers
                     ModelState.AddModelError("Telphone", "该手机号已存在");
                 }
 
-                if (bll.Exists(p => p.Email == entity.email))
+                if(!string.IsNullOrWhiteSpace(entity.email))
                 {
-                    ModelState.AddModelError("email", "该邮箱已存在");
+                    if (bll.Exists(p => p.Email == entity.email))
+                    {
+                        ModelState.AddModelError("email", "该邮箱已存在");
+                    }
                 }
+            }
+            if(entity.department_id ==0)
+            {
+                ModelState.AddModelError("department_id", "请选择部门");
+            }
+            if(entity.job_id == 0)
+            {
+                ModelState.AddModelError("job_id", "请选择职位");
             }
 
             string pwd = "";
@@ -218,17 +229,8 @@ namespace Universal.Web.Controllers
 
                 model.AboutMe = entity.about_me;
                 model.Avatar = entity.avatar;
-                //TOOD 部门职位定死值
-                if (entity.department_id == 0 || entity.job_id == 0)
-                {
-                    model.CusDepartmentID = 5;
-                    model.CusUserJobID = 1;
-
-                }else
-                {
-                    model.CusDepartmentID = entity.department_id;
-                    model.CusUserJobID = entity.job_id;
-                }
+                model.CusDepartmentID = entity.department_id;
+                model.CusUserJobID = entity.job_id;
                 model.Email = entity.email;
                 model.Gender = entity.gender;
                 model.IsAdmin = string.IsNullOrWhiteSpace(entity.user_route_str) ? false : true;
@@ -246,8 +248,13 @@ namespace Universal.Web.Controllers
                 else
                     BLL.BLLCusUser.Modify(model, entity.user_route_str);
 
+                entity.Msg = 1;
             }
-            entity.Msg = 1;
+            else
+            {
+                entity.Msg = 3;
+            }
+            
             return View(entity);
         }
 
