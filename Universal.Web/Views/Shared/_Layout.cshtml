@@ -24,7 +24,7 @@
 
         <div class="topRight">
             <div class="user">
-                <a href="javascript:;"><em><img class="avatar_tab" src="@WorkContext.UserInfo.Avatar" style="width:32px;height:32px;" /></em><span>@WorkContext.UserInfo.NickName  </span></a><i class="i-userArr"></i>
+                <a href="/User/Basic" title="个人中心"><em><img class="avatar_tab" src="@WorkContext.UserInfo.Avatar" style="width:32px;height:32px;" /></em><span>@WorkContext.UserInfo.NickName  </span></a><i class="i-userArr"></i>
                 <div id="userPop" class="userPop">
                     <div class="userPopTop">
                         <dl>
@@ -99,7 +99,9 @@
                         </div>
                     </li>
 
-                    <li class="search-hover"><input type="text" id="txt_tab_search" placeholder="请输入搜索内容" class="search-input" /><a href="javascript:;" onclick="Search_Link()" title="搜索"><i class="i-sch"></i></a></li>
+                    <li class="search-hover">
+                    	<input type="text" id="txt_tab_search" placeholder="请输入搜索内容" class="search-input" onkeypress="if(event.keyCode==13) {Search_Link();return false;}" />
+                    	<a href="javascript:;" onclick="Search_Link()" title="搜索"><i class="i-sch"></i></a></li>
                 </ul>
                 <!-- 新增消息下拉 [[ -->
                 <div class="top-msg" style="display:none;">
