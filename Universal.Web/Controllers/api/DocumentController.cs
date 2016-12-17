@@ -134,7 +134,7 @@ namespace Universal.Web.Controllers.api
                 case Entity.DocPostSee.everyone:
                     break;
                 case Entity.DocPostSee.department:
-                    if(string.IsNullOrWhiteSpace(toid))
+                    if (string.IsNullOrWhiteSpace(toid))
                     {
                         WorkContext.AjaxStringEntity.msgbox = "当是可见是部门时，必须传入部门数据";
                         response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
@@ -163,7 +163,7 @@ namespace Universal.Web.Controllers.api
             }
             #endregion
 
-            
+
 
             Entity.DocPost entity = new Entity.DocPost();
             entity.CusUserID = user_id;
@@ -190,7 +190,7 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 获取可见秘籍分类
+        /// 获取可见秘籍列表
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -203,7 +203,7 @@ namespace Universal.Web.Controllers.api
                 response_entity.msgbox = "非法参数";
                 return response_entity;
             }
-            if (req.user_id <= 0 || req.category_id <= 0)
+            if (req.user_id <= 0)
             {
                 response_entity.msgbox = "非法参数";
                 return response_entity;
@@ -283,6 +283,7 @@ namespace Universal.Web.Controllers.api
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             int rowCount = 0;
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
+            BLL.BaseBLL<Entity.DocCategory> bll_doccate = new BLL.BaseBLL<Entity.DocCategory>();
             foreach (var item in BLL.BllCusUserFavorites.GetDocPageData(req.page_index, req.page_size, ref rowCount, req.user_id, "", 0))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
@@ -294,6 +295,12 @@ namespace Universal.Web.Controllers.api
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
                     model.favorites_id = fav_entity.ID;
+                var category_entity = bll_doccate.GetModel(p => p.ID == item.DocCategoryID);
+                if (category_entity != null)
+                {
+                    model.category_name = category_entity.Title;
+                }
+                model.category_id = item.DocCategoryID;
                 response_list.Add(model);
             }
             if (rowCount > 0)

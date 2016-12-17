@@ -41,6 +41,16 @@ namespace Universal.Web.Models.Response
         public string add_user { get; set; }
 
         /// <summary>
+        /// 所属分类ID
+        /// </summary>
+        public int category_id { get; set; }
+
+        /// <summary>
+        /// 所属分类名称
+        /// </summary>
+        public string category_name { get; set; }
+
+        /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime add_time { get; set; }
