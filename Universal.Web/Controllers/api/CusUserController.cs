@@ -33,7 +33,7 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "非法手机号";
                 return WorkContext.AjaxStringEntity;
             }
-            if(!BLL.BLLCusUser.Exists(tel))
+            if (!BLL.BLLCusUser.Exists(tel))
             {
                 WorkContext.AjaxStringEntity.msgbox = "手机号不存在";
                 return WorkContext.AjaxStringEntity;
@@ -64,7 +64,7 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/code/check")]
-        public WebAjaxEntity<string> CheckCode(string guid, string code,string tel)
+        public WebAjaxEntity<string> CheckCode(string guid, string code, string tel)
         {
             if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(code))
             {
@@ -89,10 +89,10 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "非法guid";
                 return WorkContext.AjaxStringEntity;
             }
-            
+
 
             if (BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
-            {                
+            {
                 model.Password = SecureHelper.MD5(WebSite.ResetPwd);
                 bll.Modify(model, "Password");
                 WorkContext.AjaxStringEntity.msg = 1;
@@ -116,7 +116,7 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<Models.Response.ModelUserInfo> UserLogin([FromBody]Models.Request.ModelUserLogin req)
         {
             WebAjaxEntity<Models.Response.ModelUserInfo> response_entity = new WebAjaxEntity<Models.Response.ModelUserInfo>();
-            if(string.IsNullOrWhiteSpace(req.phone_email) || string.IsNullOrWhiteSpace(req.pwd))
+            if (string.IsNullOrWhiteSpace(req.phone_email) || string.IsNullOrWhiteSpace(req.pwd))
             {
                 response_entity.msgbox = "参数不能有空";
                 return response_entity;
@@ -140,7 +140,7 @@ namespace Universal.Web.Controllers.api
                 response_entity.msgbox = "账户已被禁用";
                 return response_entity;
             }
-            
+
             response_entity.data = BuilderAPPUser(model);
             response_entity.msg = 1;
             response_entity.msgbox = "登录成功";
@@ -157,14 +157,14 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<Models.Response.ModelUserInfo> GetUserInfo(int user_id)
         {
             WebAjaxEntity<Models.Response.ModelUserInfo> response_entity = new WebAjaxEntity<Models.Response.ModelUserInfo>();
-            if (user_id<=0)
+            if (user_id <= 0)
             {
                 response_entity.msgbox = "非法参数";
                 return response_entity;
             }
 
             var model = BLL.BLLCusUser.GetModel(user_id);
-            if(model == null)
+            if (model == null)
             {
                 response_entity.msgbox = "用户不存在";
                 return response_entity;
@@ -190,20 +190,22 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/user/search")]
-        public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(int department_id,string search_word)
+        public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(int department_id, string search_word)
         {
             WebAjaxEntity<List<Models.Response.ModelUserInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ModelUserInfo>>();
+            if(department_id <=0)
+            {
+                response_entity.msg = 0;
+                response_entity.msgbox = "搜索需指定部门";
+                return response_entity;
+            }
             List<Models.Response.ModelUserInfo> response_list = new List<Models.Response.ModelUserInfo>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             var db_list = new List<Entity.CusUser>();
-            if (department_id > 0)
-                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id, "RegTime ASC");
-            if(!string.IsNullOrWhiteSpace(search_word))
-                db_list = bll.GetListBy(0, p => p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.ShorNum.Contains(search_word) || p.Email.Contains(search_word), "RegTime Asc");
-            if (department_id > 0 && !string.IsNullOrWhiteSpace(search_word))
-                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id && p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.Email.Contains(search_word), "RegTime ASC");
+            if (string.IsNullOrWhiteSpace(search_word))
+                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id, "RegTime ASC", p => p.CusDepartment);
             else
-                db_list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "RegTime ASC");
+                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id && p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.Email.Contains(search_word), "RegTime ASC", p => p.CusDepartment);
 
             foreach (var item in db_list)
                 response_list.Add(BuilderAPPUser(item));
@@ -248,18 +250,32 @@ namespace Universal.Web.Controllers.api
             if (model == null)
                 return null;
             Models.Response.ModelUserInfo entity = new Models.Response.ModelUserInfo();
-            entity.about_me = model.AboutMe;
+            entity.about_me = model.AboutMe == null ? "" : model.AboutMe;
             entity.avatar = GetSiteUrl() + model.Avatar;
             entity.brithday = model.Brithday;
             entity.department_id = model.CusDepartmentID;
-            entity.department_name = model.CusDepartment.Title;
+            if (model.CusDepartment == null)
+            {
+                Entity.CusDepartment depart = new BLL.BaseBLL<Entity.CusDepartment>().GetModel(p => p.ID == model.CusDepartmentID);
+                if (depart != null)
+                    entity.department_name = depart.Title;
+            }
+            else
+                entity.department_name = model.CusDepartment.Title;
             entity.email = model.Email;
             entity.gender = model.Gender;
             entity.id = model.ID;
             entity.job_id = model.CusUserJobID;
-            entity.job_name = model.CusUserJob.Title;
+            if (model.CusUserJob == null)
+            {
+                Entity.CusUserJob job = new BLL.BaseBLL<Entity.CusUserJob>().GetModel(p => p.ID == model.CusUserJobID);
+                if (job != null)
+                    entity.job_name = job.Title;
+            }
+            else
+                entity.job_name = model.CusUserJob.Title;
             entity.nick_name = model.NickName;
-            entity.shor_num = model.ShorNum;
+            entity.shor_num = model.ShorNum == null? "":model.ShorNum;
             entity.telphone = model.Telphone;
             entity.is_department_manager = BLL.BLLDepartment.CheckUserIsManager(entity.id, entity.department_id);
             return entity;

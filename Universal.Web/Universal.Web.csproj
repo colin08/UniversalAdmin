@@ -541,7 +541,7 @@
     <Compile Include="Controllers\AdminUserController.cs" />
     <Compile Include="Controllers\api\APIController.cs" />
     <Compile Include="Controllers\api\CusUserController.cs" />
-    <Compile Include="Controllers\api\Department.cs" />
+    <Compile Include="Controllers\api\DepartmentController.cs" />
     <Compile Include="Controllers\api\DocumentController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />

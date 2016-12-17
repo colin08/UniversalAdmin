@@ -10,6 +10,14 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class ModelUserInfo
     {
+        public ModelUserInfo()
+        {
+            this.job_name = "";
+            this.department_name = "";
+            this.shor_num = "";
+            this.about_me = "";
+        }
+
         /// <summary>
         /// 用户ID
         /// </summary>

@@ -17,7 +17,7 @@ namespace Universal.Web.Controllers.api
     /// <summary>
     /// 部门接口
     /// </summary>
-    public class Department: BaseAPIController
+    public class DepartmentController: BaseAPIController
     {
         /// <summary>
         /// 获取所有部门
