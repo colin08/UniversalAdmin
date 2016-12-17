@@ -193,20 +193,11 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(int department_id, string search_word)
         {
             WebAjaxEntity<List<Models.Response.ModelUserInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ModelUserInfo>>();
-            if(department_id <=0)
-            {
-                response_entity.msg = 0;
-                response_entity.msgbox = "搜索需指定部门";
-                return response_entity;
-            }
+   
             List<Models.Response.ModelUserInfo> response_list = new List<Models.Response.ModelUserInfo>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
-            var db_list = new List<Entity.CusUser>();
-            if (string.IsNullOrWhiteSpace(search_word))
-                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id, "RegTime ASC", p => p.CusDepartment);
-            else
-                db_list = bll.GetListBy(0, p => p.CusDepartmentID == department_id && p.NickName.Contains(search_word) || p.Telphone.Contains(search_word) || p.Email.Contains(search_word), "RegTime ASC", p => p.CusDepartment);
-
+            int to = 0;
+            var db_list = BLL.BLLCusUser.GetPageData(1, 1000, ref to, department_id, search_word);
             foreach (var item in db_list)
                 response_list.Add(BuilderAPPUser(item));
             response_entity.msg = 1;
