@@ -71,7 +71,7 @@ namespace Universal.Web.Controllers
             LoadPlatform();
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelAppVersion entity = new Models.ViewModelAppVersion();
-            
+
             if (num != 0)
             {
                 BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
@@ -79,7 +79,8 @@ namespace Universal.Web.Controllers
                 if (entity == null)
                 {
                     entity.Msg = 2;
-                }else
+                }
+                else
                 {
                     entity.APPType = model.APPType;
                     entity.Content = model.Content;
@@ -106,10 +107,6 @@ namespace Universal.Web.Controllers
             LoadPlatform();
             var isAdd = entity.ID == 0 ? true : false;
 
-            if(((int)entity.APPType) == 0)
-            {
-                ModelState.AddModelError("APPType", "请选择版本类别");
-            }
             if (((int)entity.Platforms) == 0)
             {
                 ModelState.AddModelError("APPType", "请选择平台");
@@ -122,7 +119,7 @@ namespace Universal.Web.Controllers
             {
                 ModelState.AddModelError("LinkUrl", "IOS系统必须填写");
             }
-            if(entity.Platforms == Entity.APPVersionPlatforms.Android && string.IsNullOrWhiteSpace(entity.DownUrl))
+            if (entity.Platforms == Entity.APPVersionPlatforms.Android && string.IsNullOrWhiteSpace(entity.DownUrl))
             {
                 ModelState.AddModelError("DownUrl", "必须上传APK文件");
             }
@@ -150,23 +147,40 @@ namespace Universal.Web.Controllers
                     model = bll.GetModel(p => p.ID == entity.ID);
 
                 model.Content = entity.Content;
-                model.APPType = entity.APPType;
+                model.APPType = Entity.APPVersionType.Standard;
                 model.Content = entity.Content;
-                model.DownUrl = entity.DownUrl;
                 model.LinkUrl = entity.LinkUrl;
-                model.LogoImg = entity.LogoImg;
-                model.MD5 = entity.MD5;
-                model.Platforms = entity.Platforms;
-                model.Size = entity.Size;
                 model.Version = entity.Version;
                 model.VersionCode = entity.VersionCode;
+                if (model.Platforms == Entity.APPVersionPlatforms.Android)
+                {
+                    model.LogoImg = entity.LogoImg;
+                    model.DownUrl = entity.DownUrl;
+                    model.MD5 = entity.MD5;
+                }else
+                {
+                    model.LogoImg = "1";
+                    model.MD5 = "1";
+                    model.DownUrl = "1";
+                    if (isAdd)
+                    {
+                        var top_entiy= bll.GetModel(p => p.Platforms == Entity.APPVersionPlatforms.IOS && p.APPType == Entity.APPVersionType.Standard, "VersionCode DESC");
+                        if (top_entiy == null)
+                            model.VersionCode = 1;
+                        else
+                            model.VersionCode = top_entiy.VersionCode + 1;
+                    }
+                }                
+                model.Platforms = entity.Platforms;
+                model.Size = entity.Size;                
                 if (isAdd)
                     bll.Add(model);
                 else
                     bll.Modify(model);
 
                 entity.Msg = 1;
-            }else
+            }
+            else
             {
                 entity.Msg = 3;
             }
@@ -188,14 +202,6 @@ namespace Universal.Web.Controllers
             }
             ViewData["PlatformsList"] = platformList;
 
-            List<SelectListItem> typeList = new List<SelectListItem>();
-            typeList.Add(new SelectListItem() { Text = "所有类别", Value = "0" });
-            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.APPVersionType)))
-            {
-                string text = EnumHelper.GetDescription<Entity.APPVersionType>((Entity.APPVersionType)item.Key);
-                typeList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
-            }
-            ViewData["TypeList"] = typeList;
         }
 
     }

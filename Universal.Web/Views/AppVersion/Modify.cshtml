@@ -18,7 +18,7 @@
             </div>
 
             <div class="userInfo sysIn">
-                <form method="post" class="form-horizontal" id="form">
+                <form method="post" class="form-horizontal" onsubmit="toValid()" id="form">
                     @Html.AntiForgeryToken()
 
                     @Html.HiddenFor(p => p.MD5)
@@ -31,25 +31,18 @@
                         <li>
                             <div class="lilt"><em class="col_red">*</em>所属系统</div>
                             <div class="limd">
-                                @Html.DropDownListFor(p => p.Platforms, ViewData["PlatformsList"] as List<SelectListItem>, new { @class = "tb_select",@style= "width: 94%;" })
+                                @Html.DropDownListFor(p => p.Platforms, ViewData["PlatformsList"] as List<SelectListItem>, new { @class = "tb_select",@style= "width: 94%;",onchange= "SetShow()" })
                             </div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.APPType)</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.Platforms)</div>
                         </li>
-                        <li>
-                            <div class="lilt"><em class="col_red">*</em>版本类型</div>
-                            <div class="limd">
-                                @Html.DropDownListFor(p => p.APPType, ViewData["TypeList"] as List<SelectListItem>, new { @class = "tb_select", @style = "width: 94%;" })
-                            </div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.APPType)</div>
-                        </li>
-                        <li>
+                        <li class="li_ios">
                             <div class="lilt"><em class="col_red">*</em>版本号</div>
                             <div class="limd">
                                 @Html.TextBoxFor(p => p.Version, new { placeholder = "版本号", @class = "usInput" })
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.Version)</div>
                         </li>
-                        <li>
+                        <li class="li_ios">
                             <div class="lilt"><em class="col_red">*</em>App Store 连接地址</div>
                             <div class="limd">
                                 @Html.TextBoxFor(p => p.LinkUrl, new { placeholder = "App Store连接地址", @class = "usInput" })
@@ -58,10 +51,10 @@
                         </li>
 
 
-                        <li>
+                        <li class="li_android">
                             <div class="lilt"><em class="col_red">*</em>上传apk文件</div>
                             <div class="limd big">
-                                <label class="lab_a" for="upload_apk"><i></i>添加文件<input type="file" id="upload_apk" /></label>
+                                <a href="javascript:;" class="Btn2 uploadBtnBox">添加文件 <input type="file" id="upload_apk" class="uploadBtn" /> </a>
                                 <span id="span_filename">@Model.DownUrl</span> &nbsp; <span id="span_upload_status"></span>
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.DownUrl)</div>
@@ -71,7 +64,7 @@
                             <div class="limd big">
                                 @Html.TextAreaFor(p => p.Content, new { @style = "margin: 0px; width: 530px; height: 150px;" })
                             </div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.LinkUrl)</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.Content)</div>
                         </li>
 
                         <li>
@@ -97,17 +90,48 @@
     @section foot
 {
         <script type="text/javascript">
-
             $(document).ready(function (e) {
                 @if(Model.Msg == 1)
                 {
                     @: location.href = "/APPVersion/Index";
-                }else if(Model.Msg == 3)
-                {
-                    @:alert("数据验证失败");
                 }
-
+                SetShow();
             });
+
+            function SetShow()
+            {
+                var plat = $("#Platforms").val();
+                if(plat==1)
+                {
+                    //安卓
+                    $(".li_ios").hide();
+                    $(".li_android").show();
+                }else if(plat == 2)
+                {
+                    //IOS
+                    $(".li_ios").show();
+                    $(".li_android").hide();
+                }else
+                {
+                    //全部
+                    $(".li_ios").hide();
+                    $(".li_android").hide();
+                }
+                @if(Model.ID !=0)
+                {
+                    @:$("#Platforms").attr("disabled", "disabled");
+                }
+            }
+
+            function toValid()
+            {
+                @if(Model.ID !=0)
+                {
+                    <text>
+                $("#Platforms").removeAttr("disabled");
+                    </text>
+                }
+            }
 
 
             $(function () {
