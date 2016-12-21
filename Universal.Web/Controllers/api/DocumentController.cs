@@ -44,7 +44,7 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 添加秘籍,表单上传。参数：user_id(登录的用户ID),see_type(可见类别,0:所有人,1:某些部门,2:某些用户),toid(对应的部门或用户ID,逗号分割),title(秘籍标题),category_id(分类ID)
+        /// 添加秘籍,表单上传。参数：user_id(登录的用户ID),see_type(可见类别,0:所有人,1:某些部门,2:某些用户),toid(对应的部门或用户ID,逗号分割),title(秘籍标题),category_id(分类ID),content(内容，经过URL编码)
         /// </summary>
         /// <returns></returns>
         [Route("api/v1/document/add")]
@@ -135,6 +135,11 @@ namespace Universal.Web.Controllers.api
             string title = "";
             if (provider.FormData["title"] != null)
                 title = provider.FormData["title"].ToString();
+            string content = "";
+            if (provider.FormData["content"] != null)
+                title = provider.FormData["content"].ToString();
+            content = Tools.WebHelper.UrlDecode(content);
+
             int category_id = TypeHelper.ObjectToInt(provider.FormData["category_id"], 0);
             //部门ID或用户ID，逗号分割
             string toid = "";
@@ -186,6 +191,7 @@ namespace Universal.Web.Controllers.api
             entity.FileSize = IOHelper.GetFileSizeTxt(size);
             entity.Title = title;
             entity.TOID = final_ids;
+            entity.Content = content;
             entity.See = see_type;
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             bll.Add(entity);
@@ -239,6 +245,7 @@ namespace Universal.Web.Controllers.api
                 if (cat_entity != null)
                     model.category_name = cat_entity.Title;
                 model.title = item.Title;
+                model.content = item.Content;
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
                     model.favorites_id = fav_entity.ID;
@@ -311,6 +318,7 @@ namespace Universal.Web.Controllers.api
                 model.file_size = item.FileSize;
                 model.id = item.ID;
                 model.title = item.Title;
+                model.content = item.Content;
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
                     model.favorites_id = fav_entity.ID;

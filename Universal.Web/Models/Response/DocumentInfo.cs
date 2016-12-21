@@ -21,6 +21,12 @@ namespace Universal.Web.Models.Response
         public string title { get; set; }
 
         /// <summary>
+        /// 内容，html格式
+        /// </summary>
+        public string content { get; set; }
+
+
+        /// <summary>
         /// 文件路径
         /// </summary>
         public string file_path { get; set; }
