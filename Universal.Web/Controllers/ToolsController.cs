@@ -99,6 +99,56 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 附件上传
+        /// </summary>
+        /// <param name="fileData"></param>
+        /// <returns></returns>
+        public JsonResult UploadTextArea(HttpPostedFileBase fileData)
+        {
+            if (fileData == null)
+            {
+                fileData = HttpContext.Request.Files["imgFile"];
+            }
+
+            string file_name = fileData.FileName;
+            string file_ext = "";
+            if (!string.IsNullOrWhiteSpace(file_name))
+                file_ext = IOHelper.GetFileExt(file_name).ToLower();
+
+            //上传文件夹
+            string operation = WebHelper.GetFormString("operation", "");
+            if (string.IsNullOrWhiteSpace(operation))
+                operation = WebHelper.GetQueryString("operation");
+
+            if (string.IsNullOrWhiteSpace(operation))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "保存位置不明确";
+                return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+            }
+            
+
+            //保存的目录
+            string filePath = "/uploads/" + operation + "/";
+
+            UploadHelper up_helper = new UploadHelper();
+
+            WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
+            Hashtable ht2 = new Hashtable();
+            if (WorkContext.AjaxStringEntity.msg == 1)
+            {
+                ht2["error"] = 0;
+                ht2["url"] = WorkContext.AjaxStringEntity.data;
+            }
+            else
+            {
+                ht2["error"] = 0;
+                ht2["message"] = WorkContext.AjaxStringEntity.msgbox;
+            }
+            return Json(ht2, JsonRequestBehavior.AllowGet);
+
+        }
+
+        /// <summary>
         /// 上传APK
         /// </summary>
         /// <returns></returns>
@@ -183,6 +233,7 @@ namespace Universal.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        
 
         #region  流程节点给前端的接口
 
@@ -370,4 +421,5 @@ namespace Universal.Web.Controllers
         #endregion
         
     }
+    
 }

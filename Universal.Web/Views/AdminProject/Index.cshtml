@@ -7,305 +7,309 @@
 <!--头部脚本-->
 @section head
 {
-<link href="/assets/pickmeup/pickmeup.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/pickmeup/pickmeup.css" rel="stylesheet" type="text/css" />
 }
 <!--头部脚本 end-->
+<div class="wapper">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
 
-<div class="container">
-    <div class="tit1">
-        <b>项目列表</b>
-        <div class="search"><input type="text" id="txt_search" placeholder="请输入项目名称/联系人" /><input type="button" onclick="pageData(1)" /></div>
+    <div class="rightBox">
 
-    </div>
-    <div class="itemOp">
-        <div class="itemOpLt">
-            <a href="javascript:;" onclick="setAct(this)" class="act" did="2">未完结</a>
-            <a href="javascript:;" onclick="setAct(this)" did="1">已完结</a>
-            <a href="javascript:;" onclick="setAct(this)" did="0">全部</a>
-        </div>
-        <div class="itemOpRt">
-            <select id="select_node" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
-                <option value="0">所有节点</option>
-                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+        <div class="container">
+            <div class="tit1">
+                <b>项目列表</b>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入项目名称/联系人" /><input type="button" onclick="pageData(1)" /></div>
+
+            </div>
+            <div class="itemOp">
+                <div class="itemOpLt">
+                    <a href="javascript:;" onclick="setAct(this)" class="act" did="2">未完结</a>
+                    <a href="javascript:;" onclick="setAct(this)" did="1">已完结</a>
+                    <a href="javascript:;" onclick="setAct(this)" did="0">全部</a>
+                </div>
+                <div class="itemOpRt">
+                    <select id="select_node" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
+                        <option value="0">所有节点</option>
+                        @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
                 {
-                    <option value="@item.ID">@item.Title</option>
+                        <option value="@item.ID">@item.Title</option>
                 }
-            </select>
-            <select id="select_node_status" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
-                <option value="0">所有状态</option>
-                <option value="1">未开始</option>
-                <option value="2">进行中</option>
-                <option value="3">已结束</option>
-            </select>
-            &nbsp;
-            <input type="hidden" name="time_range" id="time_range" />
-            <input type="hidden" id="hid_begin" />
-            <input type="hidden" id="hid_end" />
-            <span><a href="javascript:" onclick="selTime(this)" class="sel_time">全部时间</a></span><i class="i-arr"></i>
-            &nbsp;&nbsp;&nbsp;
-            <a href="/Project/Modify" class="newplan">+ 新增项目</a>
-        </div>
-    </div>
-    <div class="projectColl mt_10">
-        <table border="0" cellspacing="0" cellpadding="0" class="table1">
-            <thead>
-                <tr>
-                    <th width="20%">项目名称</th>
-                    <th width="20%">当前节点</th>
-                    <th width="20%">节点描述</th>
-                    <th width="10%">责任人</th>
-                    <th width="20%">更新时间</th>
-                    <th width="10%">操作</th>
-                </tr>
-            </thead>
-            <tbody id="listData"></tbody>
-            <!--
+                    </select>
+                    <select id="select_node_status" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
+                        <option value="0">所有状态</option>
+                        <option value="1">未开始</option>
+                        <option value="2">进行中</option>
+                        <option value="3">已结束</option>
+                    </select>
+                    &nbsp;
+                    <input type="hidden" name="time_range" id="time_range" />
+                    <input type="hidden" id="hid_begin" />
+                    <input type="hidden" id="hid_end" />
+                    <span><a href="javascript:" onclick="selTime(this)" class="sel_time">全部时间</a></span><i class="i-arr"></i>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="/Project/Modify" class="newplan">+ 新增项目</a>
+                </div>
+            </div>
+            <div class="projectColl mt_10">
+                <table border="0" cellspacing="0" cellpadding="0" class="table1">
+                    <thead>
+                        <tr>
+                            <th width="20%">项目名称</th>
+                            <th width="20%">当前节点</th>
+                            <th width="20%">节点描述</th>
+                            <th width="10%">责任人</th>
+                            <th width="20%">更新时间</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listData"></tbody>
+                    <!--
 
-            <tr class="">
-                <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
-                <td><span class="tfe">规土委审查</span></td>
-                <td>新增备注：绘制宗地图</td>
-                <td>李明</td>
-                <td>2016-08-22 18:05:24</td>
-                <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-fav"></i></a></div></td>
-            </tr>
-                -->
-        </table>
-        <div class="listBtm">
-            <div class="page fr">
-                <span>共有<span id="span_data_total"></span>条，每页显示</span>
-                <select class="sel" id="select_page_size">
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                </select>
-                <span>条</span>
-                <div id="pager"></div>
+                    <tr class="">
+                        <td><span class="tfe"><a href="#">蔡屋围更新项目</a></span></td>
+                        <td><span class="tfe">规土委审查</span></td>
+                        <td>新增备注：绘制宗地图</td>
+                        <td>李明</td>
+                        <td>2016-08-22 18:05:24</td>
+                        <td><div class="tbOpare"><a href="" class="aEdt"><i class="i-edt"></i></a><a href="" class="aDel"><i class="i-fav"></i></a></div></td>
+                    </tr>
+                        -->
+                </table>
+                <div class="listBtm">
+                    <div class="page fr">
+                        <span>共有<span id="span_data_total"></span>条，每页显示</span>
+                        <select class="sel" id="select_page_size">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                        </select>
+                        <span>条</span>
+                        <div id="pager"></div>
+                    </div>
+
+                    <b><input type="checkbox" class="dik mr_10" id="ck_onle_mine" /><label for="ck_onle_mine">只显示我的项目</label></b>
+
+                    @*<a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>*@
+                </div>
+
             </div>
 
-            <b><input type="checkbox" class="dik mr_10" id="ck_onle_mine" /><label for="ck_onle_mine">只显示我的项目</label></b>
-
-            @*<a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>*@
         </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
 
     </div>
 
 </div>
-
-
-
-<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
-
-
 <!--底部脚本-->
 @section foot
 {
     @Scripts.Render("~/bundles/laypage")
-<script type="text/javascript" src="/assets/pickmeup/pickmeup.min.js"></script>
+    <script type="text/javascript" src="/assets/pickmeup/pickmeup.min.js"></script>
     <script type="text/javascript">
-            $(document).ready(function (e) {
-                pageData(1);
-            });
+        $(document).ready(function (e) {
+            pageData(1);
+        });
 
-            /*******************列表 end *************************/
-            //分页方法
-            function pageData(page_index) {
-                var begin_time = null;
-                var end_time = null;
-                if ($("#hid_begin").val().length > 0) {
-                    begin_time = $("#hid_begin").val();
-                    if ($("#hid_end").val().length > 0) {
-                        end_time = $("#hid_end").val();
-                    }
+        /*******************列表 end *************************/
+        //分页方法
+        function pageData(page_index) {
+            var begin_time = null;
+            var end_time = null;
+            if ($("#hid_begin").val().length > 0) {
+                begin_time = $("#hid_begin").val();
+                if ($("#hid_end").val().length > 0) {
+                    end_time = $("#hid_end").val();
                 }
-                $.ajax({
-                    type: "post",
-                    url: "/Project/PageData",
-                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val(), "status": $(".itemOpLt").children("a[class='act']").attr("did"), "node_id": $("#select_node").val(), "node_status": $("#select_node_status").val(), "begin_time": null, "end_time": null,"is_admin":true },
-                    async: false, //同步请求
-                    datatype: "json",
-                    beforeSend: function () {
-                        //Loading....
-                    },
-                    complete: function () {
-                        //Loading Complete
-                    },
-                    success: function (data) {
-                        if (data.msg == 0) {
-                            alert(data.msgbox);
-                            return;
-                        }
+            }
+            $.ajax({
+                type: "post",
+                url: "/Project/PageData",
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val(), "status": $(".itemOpLt").children("a[class='act']").attr("did"), "node_id": $("#select_node").val(), "node_status": $("#select_node_status").val(), "begin_time": null, "end_time": null, "is_admin": true },
+                async: false, //同步请求
+                datatype: "json",
+                beforeSend: function () {
+                    //Loading....
+                },
+                complete: function () {
+                    //Loading Complete
+                },
+                success: function (data) {
+                    if (data.msg == 0) {
+                        alert(data.msgbox);
+                        return;
+                    }
 
-                        $("#listData").html("");
-                        var dataHtml = "";
-                        $.each(data.data, function (i, item) {
-                            dataHtml += "<tr>";
-                            dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
-                            dataHtml += "<td>"+item.NowNode.Title+"</td>";
-                            dataHtml += "<td>" + item.NowNode.Content + "</td>";
-                            dataHtml += "<td>"+item.CusUser.NickName+"</td>";
-                            dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
-                            dataHtml += "</tr>";
-                        });
-                        if (data.data.length == 0) {
-                            dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
-                        }
-                        $("#span_data_total").text(data.total);
-                        $("#listData").html(dataHtml);
-                        //$("#pager").show();
-                        //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
-                        //显示分页
-                        laypage({
-                            cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-                            pages: data.msgbox, //通过后台拿到的总页数
-                            curr: page_index || 1, //当前页
-                            groups: 7, //连续显示分页数
-                            skip: true, //是否开启跳页
-                            jump: function (obj, first) { //触发分页后的回调
-                                if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
-                                    pageData(obj.curr,doc_id, clearbox);
-                                }
+                    $("#listData").html("");
+                    var dataHtml = "";
+                    $.each(data.data, function (i, item) {
+                        dataHtml += "<tr>";
+                        dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
+                        dataHtml += "<td>" + item.NowNode.Title + "</td>";
+                        dataHtml += "<td>" + item.NowNode.Content + "</td>";
+                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id=" + item.ID + "\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "</tr>";
+                    });
+                    if (data.data.length == 0) {
+                        dataHtml += "<tr><td colspan=\"10\"><p style='text-align:center;font-size:16px;'>没有相关数据</p></td><tr>";
+                    }
+                    $("#span_data_total").text(data.total);
+                    $("#listData").html(dataHtml);
+                    //$("#pager").show();
+                    //$("#pager").pager({ pagenumber: page_index, pagecount: data.data.PageTotal, totalcount: data.data.DataTotal, buttonClickCallback: PageClick });
+                    //显示分页
+                    laypage({
+                        cont: 'pager', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
+                        pages: data.msgbox, //通过后台拿到的总页数
+                        curr: page_index || 1, //当前页
+                        groups: 7, //连续显示分页数
+                        skip: true, //是否开启跳页
+                        jump: function (obj, first) { //触发分页后的回调
+                            if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
+                                pageData(obj.curr, doc_id, clearbox);
                             }
-                        });
-
-                    },
-                    error: function () {
-                        alert("加载失败");
-                    }
-                })
-            }
-            /*******************列表 end *************************/
-
-            //截取字符串
-            function CutString(str, len) {
-                if (str.length > len) {
-                    return str.substring(0, len) + "...";
-                } else {
-                    return str;
-                }
-            }
-
-            //格式化时间
-            function ChangeDateFormat(cellval, format) {
-                try {
-                    var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                    var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                    var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                    var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                    var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                    var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                    switch (format) {
-                        case "yyyy-MM-dd":
-                            return date.getFullYear() + "-" + month + "-" + currentDate;
-                        case "yyyy-MM-dd HH:mm:ss":
-                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                        default:
-                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    }
-                }
-                catch (e) {
-                    return "";
-                }
-            }
-
-            function setAct(obj)
-            {
-                $(".itemOpLt").children("a").removeAttr("class");
-                $(obj).attr("class", "act");
-                pageData(1);
-            }
-
-            function del(id) {
-                $.ajax({
-                    type: "post",
-                    url: "/Project/Del",
-                    data: { "id": id },
-                    async: false,
-                    beforeSend: function () {
-
-                    },
-                    complete: function () {
-
-                    },
-                    success: function (data) {
-                        if (data.msg == 1) {
-                            pageData(1);
                         }
-                        else {
-                            alert(data.msgbox);
-                        }
-                    },
-                    error: function () {
-                        alert("操作失败，请检查网络");
-                    }
-                })
-            }
+                    });
 
-            function fav(id) {
-
-                $.ajax({
-                    type: "post",
-                    url: "/Project/AddFavorites",
-                    data: { "id": id },
-                    async: false,
-                    beforeSend: function () {
-
-                    },
-                    complete: function () {
-
-                    },
-                    success: function (data) {
-                        if (data.msg == 1) {
-                            pageData(1);
-                        }
-                        else {
-                            alert(data.msgbox);
-                        }
-                    },
-                    error: function () {
-                        alert("操作失败，请检查网络");
-                    }
-                })
-            }
-
-            pickmeup('.sel_time', {
-                position: 'left',
-                mode: 'range',
-                hide_on_select: true,
-                locale: 'zh',
-                format: 'Y-m-d',
-                locales: {
-                    zh: {
-                        daysMin: ['日', '一', '二', '三', '四', '五', '六'],
-                        months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十', '十一月', '十二月'],
-                        monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十', '十一月', '十二月']
-                    }
+                },
+                error: function () {
+                    alert("加载失败");
                 }
             })
-            var sel_date = false;
-            function selTime(obj) {
-                sel_date = false;
+        }
+        /*******************列表 end *************************/
+
+        //截取字符串
+        function CutString(str, len) {
+            if (str.length > len) {
+                return str.substring(0, len) + "...";
+            } else {
+                return str;
             }
-            $('.sel_time').on('pickmeup-change', function (e) {
-                sel_date = e.originalEvent.detail.formatted_date;
-            }).on('pickmeup-hide', function (e) {
-                if (sel_date != false) {
-                    //console.log("这里触发更变日期后的请求");
-                    //console.log(sel_date);
-                    if (sel_date[0] == sel_date[1]) {
-                        $(this).html(sel_date[0]);
-                        $("#hid_begin").val(sel_date[0]);
-                        pageData(1);
-                    } else {
-                        $(this).html(sel_date[0] + '到' + sel_date[1]);
-                        $("#hid_begin").val(sel_date[0]);
-                        $("#hid_end").val(sel_date[1]);
+        }
+
+        //格式化时间
+        function ChangeDateFormat(cellval, format) {
+            try {
+                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+                switch (format) {
+                    case "yyyy-MM-dd":
+                        return date.getFullYear() + "-" + month + "-" + currentDate;
+                    case "yyyy-MM-dd HH:mm:ss":
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                    default:
+                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+                }
+            }
+            catch (e) {
+                return "";
+            }
+        }
+
+        function setAct(obj) {
+            $(".itemOpLt").children("a").removeAttr("class");
+            $(obj).attr("class", "act");
+            pageData(1);
+        }
+
+        function del(id) {
+            $.ajax({
+                type: "post",
+                url: "/Project/Del",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
                         pageData(1);
                     }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
                 }
-            });
+            })
+        }
+
+        function fav(id) {
+
+            $.ajax({
+                type: "post",
+                url: "/Project/AddFavorites",
+                data: { "id": id },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        pageData(1);
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+
+        pickmeup('.sel_time', {
+            position: 'left',
+            mode: 'range',
+            hide_on_select: true,
+            locale: 'zh',
+            format: 'Y-m-d',
+            locales: {
+                zh: {
+                    daysMin: ['日', '一', '二', '三', '四', '五', '六'],
+                    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十', '十一月', '十二月'],
+                    monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十', '十一月', '十二月']
+                }
+            }
+        })
+        var sel_date = false;
+        function selTime(obj) {
+            sel_date = false;
+        }
+        $('.sel_time').on('pickmeup-change', function (e) {
+            sel_date = e.originalEvent.detail.formatted_date;
+        }).on('pickmeup-hide', function (e) {
+            if (sel_date != false) {
+                //console.log("这里触发更变日期后的请求");
+                //console.log(sel_date);
+                if (sel_date[0] == sel_date[1]) {
+                    $(this).html(sel_date[0]);
+                    $("#hid_begin").val(sel_date[0]);
+                    pageData(1);
+                } else {
+                    $(this).html(sel_date[0] + '到' + sel_date[1]);
+                    $("#hid_begin").val(sel_date[0]);
+                    $("#hid_end").val(sel_date[1]);
+                    pageData(1);
+                }
+            }
+        });
     </script>
 
 }
 <!--底部脚本 end-->
-

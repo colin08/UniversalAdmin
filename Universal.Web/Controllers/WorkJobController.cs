@@ -33,6 +33,7 @@ namespace Universal.Web.Controllers
             BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
             int rowCount = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
             List<Entity.WorkJob> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc");

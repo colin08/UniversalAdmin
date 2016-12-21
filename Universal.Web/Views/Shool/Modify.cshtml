@@ -69,6 +69,13 @@
                                 </ul>
                             </div>
                         </li>
+                        <li>
+                            <div class="lilt">内容:</div>
+                            <div class="limd big">
+                                @Html.TextAreaFor(p => p.content)
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
+                        </li>
                     </ul>
                     <div class="creater-box-submit creater-box1-submit">
                         <input type="submit" class="btn-major btn-submit" value="确定" />
@@ -88,8 +95,22 @@
 @section foot
 {
     @Scripts.Render("~/bundles/jqueryval")
-
+    @Scripts.Render("~/bundles/kindeditor")
     <script type="text/javascript">
+        /**************富文本编辑器 begin *********************/
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('textarea[name="content"]', {
+                items: ["undo", "redo", "preview", "print", "plainpaste", "wordpaste", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "formatblock", "fontname", "fontsize", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "image", "table", "hr", "link", "unlink", "source"],
+                width: '98%',
+                height: '350px',
+                resizeType: 1,
+                uploadJson: '/Tools/UploadTextArea?operation=TextArea',
+                allowFileManager: true
+            });
+        })
+        /**************富文本编辑器 end *********************/
+
             $(function () {
                 $("#but_upload").on("change", function () {
                     var filePath = $(this).val().toLowerCase();

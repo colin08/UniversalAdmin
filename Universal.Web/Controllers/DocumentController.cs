@@ -101,6 +101,7 @@ namespace Universal.Web.Controllers
                     model.filepath = entity.FilePath;
                     model.filesize = entity.FileSize;
                     model.title = entity.Title;
+                    model.content = entity.Content;
                     model.id = entity.ID;
                     model.post_see = entity.See;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
@@ -195,6 +196,8 @@ namespace Universal.Web.Controllers
             var isAdd = entity.id == 0 ? true : false;
 
             LoadCategory();
+            if(entity.category_id <=0)
+                ModelState.AddModelError("category_id", "请选择所属分类");
 
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             if (!isAdd)
@@ -253,6 +256,7 @@ namespace Universal.Web.Controllers
                 model.FileSize = entity.filesize;
                 model.Title = entity.title;
                 model.TOID = final_ids;
+                model.Content = entity.content;
                 model.See = entity.post_see;
                 if (isAdd)
                     bll.Add(model);
@@ -286,7 +290,7 @@ namespace Universal.Web.Controllers
             List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc");
 
             List<SelectListItem> userRoleList = new List<SelectListItem>();
-            userRoleList.Add(new SelectListItem() { Text = "全部分类", Value = "0" });
+            userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
             foreach (var item in list)
             {
                 userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });

@@ -59,6 +59,7 @@ namespace Universal.BLL
                 db.Dispose();
                 return false;
             }
+            db.Database.ExecuteSqlCommand("update Flow set IsDefault = 0 where IsDefault = 1");
             entity.IsDefault = true;
             db.SaveChanges();
             db.Dispose();

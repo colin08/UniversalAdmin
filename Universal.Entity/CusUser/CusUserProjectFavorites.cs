@@ -10,6 +10,10 @@ namespace Universal.Entity
     /// </summary>
     public class CusUserProjectFavorites
     {
+        public CusUserProjectFavorites()
+        {
+            this.AddTime = DateTime.Now;
+        }
         public int ID { get; set; }
 
         public int CusUserID { get; set; }

@@ -65,18 +65,20 @@ namespace Universal.Web.Controllers
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult DelDoc(string ids)
+        public JsonResult DelDoc(int id)
         {
-            if (string.IsNullOrWhiteSpace(ids))
+            if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
-            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            string msg = "";
+
+            if (BLL.BLLDocument.DelOnlyMe(id, WorkContext.UserInfo.ID, out msg))
+                WorkContext.AjaxStringEntity.msg = 1;
+
+
+            WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
 
         }
@@ -97,6 +99,7 @@ namespace Universal.Web.Controllers
                     model.filesize = entity.FileSize;
                     model.title = entity.Title;
                     model.id = entity.ID;
+                    model.content = entity.Content;
                     model.post_see = entity.See;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
                     switch (entity.See)
@@ -143,7 +146,8 @@ namespace Universal.Web.Controllers
             var isAdd = entity.id == 0 ? true : false;
 
             LoadCategory();
-
+            if (entity.category_id <= 0)
+                ModelState.AddModelError("category_id", "请选择所属分类");
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             if (!isAdd)
             {
@@ -202,6 +206,7 @@ namespace Universal.Web.Controllers
                 model.FilePath = entity.filepath;
                 model.FileSize = entity.filesize;
                 model.Title = entity.title;
+                model.Content = entity.content;
                 model.TOID = final_ids;
                 model.See = entity.post_see;
                 if (isAdd)
@@ -229,7 +234,7 @@ namespace Universal.Web.Controllers
             List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc", true);
 
             List<SelectListItem> userRoleList = new List<SelectListItem>();
-            userRoleList.Add(new SelectListItem() { Text = "全部分类", Value = "0" });
+            userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
             foreach (var item in list)
             {
                 userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
@@ -253,7 +258,7 @@ namespace Universal.Web.Controllers
             }
             ViewData["flow_id"] = entity.ID;
             ViewData["TabTitle"] = entity.Title;
-            ViewData["Tag"] ="piece" + entity.ID.ToString();
+            ViewData["Tag"] = "piece" + entity.ID.ToString();
             return View();
         }
     }

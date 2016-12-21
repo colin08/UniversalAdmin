@@ -64,17 +64,12 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            if (BLL.BLLProject.Del(id))
-            {
+            string msg = "";
+            if (BLL.BLLProject.Del(id,WorkContext.UserInfo.ID,out msg))
                 WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "删除成功";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            else
-            {
-                WorkContext.AjaxStringEntity.msgbox = "删除失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
+
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
 
         }
 
@@ -289,6 +284,7 @@ namespace Universal.Web.Controllers
         {
             var isAdd = entity.id == 0 ? true : false;
             LoadFlow();
+
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             if (!isAdd)
             {
@@ -440,7 +436,6 @@ namespace Universal.Web.Controllers
             ViewData["FlowList"] = userRoleList;
 
             List<SelectListItem> typeList = new List<SelectListItem>();
-            typeList.Add(new SelectListItem() { Text = "请选择区域", Value = "0" });
             foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.ProjectArea)))
             {
                 typeList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });
@@ -448,7 +443,6 @@ namespace Universal.Web.Controllers
             ViewData["AreaList"] = typeList;
 
             List<SelectListItem> GZXZList = new List<SelectListItem>();
-            typeList.Add(new SelectListItem() { Text = "请选择性质", Value = "0" });
             foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.ProjectGaiZao)))
             {
                 GZXZList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });

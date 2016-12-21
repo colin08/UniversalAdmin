@@ -24,6 +24,11 @@ namespace Universal.Web
                         "~/Assets/js/plugins/validate/jquery.validate.min.js",
                         "~/Assets/js/plugins/validate/jquery.validate.unobtrusive.min.js",
                         "~/Assets/js/plugins/validate/messages_zh.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/kindeditor").Include(
+                        "~/Assets/js/plugins/kindeditor-4.1.10/kindeditor-min.js",
+                        "~/Assets/js/plugins/kindeditor-4.1.10/lang/zh_CN.js"));
+
             
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                         "~/Assets/js/bootstrap.min.js"));

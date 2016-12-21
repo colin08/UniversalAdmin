@@ -138,6 +138,10 @@
     <Compile Include="Migrations\201612140808545_modify_project_gengxin.Designer.cs">
       <DependentUpon>201612140808545_modify_project_gengxin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612210644304_add_docpost_clomn.cs" />
+    <Compile Include="Migrations\201612210644304_add_docpost_clomn.Designer.cs">
+      <DependentUpon>201612210644304_add_docpost_clomn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -221,6 +225,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612140808545_modify_project_gengxin.resx">
       <DependentUpon>201612140808545_modify_project_gengxin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612210644304_add_docpost_clomn.resx">
+      <DependentUpon>201612210644304_add_docpost_clomn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

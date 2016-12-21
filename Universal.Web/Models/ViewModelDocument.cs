@@ -28,6 +28,10 @@ namespace Universal.Web.Models
         [Required(ErrorMessage ="请选择所属分类")]
         public int category_id { get; set; }
 
+        /// <summary>
+        /// 内容
+        /// </summary>
+        public string content { get; set; }
         
         /// <summary>
         /// 秘籍权限

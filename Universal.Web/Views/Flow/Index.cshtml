@@ -25,7 +25,6 @@
                     <thead>
                         <tr>
                             <th width="20%">流程名称</th>
-                            <th width="30%">流程名称</th>
                             <th width="20%">更新时间</th>
                             <th width="15%">操作</th>
                             <th width="15%">&nbsp;</th>
@@ -56,7 +55,6 @@
                         <span>条</span>
                         <div id="pager"></div>
                     </div>
-                    <a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>
                 </div>
             </div>
 
@@ -105,15 +103,14 @@
                         var def_txt = "默认流程";
                         var def_class = "lc_default";
                         var def_click = "";
-                        if (item.IsDefault)
+                        if (!item.IsDefault)
                         {
                             def_txt = "设置默认";
                             def_class = "lc_";
                             def_click = "onclick=\"setDef(" + item.ID + ")\"";
                         }
                         dataHtml += "<tr>";
-                        dataHtml += "<td>" + item.FlowName + "</td>";
-                        dataHtml += "<td></td>";
+                        dataHtml += "<td>" + item.Title + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Flow/Modify?id=" + item.ID + "\">详情</a>|<a href=\"/Flow/Modify?id=" + item.ID + "\">编辑</a>|<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\">删除</a></div></td>";
                         dataHtml += "<td><a href=\"javascript:;\" " + def_click + " class=\"" + def_class + "\">" + def_txt + "</a></td>";

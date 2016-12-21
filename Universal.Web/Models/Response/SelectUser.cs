@@ -25,5 +25,15 @@ namespace Universal.Web.Models.Response
         /// </summary>
         public string nickname { get; set; }
 
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string avatar { get; set; }
+
+        /// <summary>
+        /// 短号
+        /// </summary>
+        public string short_num { get; set; }
+
     }
 }

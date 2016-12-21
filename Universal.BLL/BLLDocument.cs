@@ -34,6 +34,37 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 只能删除我上传的秘籍
+        /// </summary>
+        /// <returns></returns>
+        public static bool DelOnlyMe(int id,int user_id,out string msg)
+        {
+            if(id<=0 || user_id<=0)
+            {
+                msg = "非法参数";
+                return false;
+            }
+            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if(entity == null)
+            {
+                msg = "要删除的秘籍不存在";
+                return false;
+            }
+            if(entity.CusUserID != user_id)
+            {
+                msg = "只能删除自己上传的秘籍";
+                return false;
+            }
+            BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BaseBLL<Entity.CusUserDocFavorites>();
+            bll_fav.DelBy(p => p.DocPostID == id);
+            bll.DelBy(p => p.ID == id);
+            msg = "删除成功";
+            return true;
+        }
+
+
+        /// <summary>
         /// 获取登录用户可见的秘籍
         /// </summary>
         /// <param name="page_index"></param>

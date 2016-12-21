@@ -18,6 +18,7 @@ namespace Universal.Web.Models
             this.users_entity = new List<ViewModelDocumentCategory>();
             this.see_entity = new List<ViewModelDocumentCategory>();
             this.file_list = new List<ViewModelListFile>();
+            this.LiXiangTime = DateTime.Now;
         }
 
         public int id { get; set; }

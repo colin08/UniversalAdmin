@@ -71,7 +71,7 @@ namespace Universal.Entity
         /// </summary>
         [MaxLength(500)]
         public string FilePath { get; set; }
-
+        
         /// <summary>
         /// 附件大小,KB或MB显示
         /// </summary>
@@ -83,6 +83,12 @@ namespace Universal.Entity
         /// </summary>
         [MaxLength(1000)]
         public string TOID { get; set; }
+
+        /// <summary>
+        /// 内容
+        /// </summary>
+        [Column(TypeName ="text")]
+        public string Content { get; set; }
 
         /// <summary>
         /// 用户是否收藏

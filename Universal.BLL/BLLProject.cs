@@ -129,13 +129,27 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static bool Del(int id)
+        public static bool Del(int id,int user_id,out string msg)
         {
+            msg = "非法参数";
             if (id <= 0)
                 return false;
             var db = new DataCore.EFDBContext();
-            db.Projects.Remove(db.Projects.Find(id));
+            var entity = db.Projects.Find(id);
+            if(entity == null)
+            {
+                msg = "项目不存在";
+                return false;
+            }
+            if(entity.CusUserID != user_id)
+            {
+                msg = "只能删除自己添加的项目";
+                return false;
+            }
+            db.Projects.Remove(entity);
+            db.SaveChanges();
             db.Dispose();
+            msg = "删除成功";
             return true;
         }
 
@@ -267,12 +281,15 @@ namespace Universal.BLL
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();
             foreach (var item in response_entity)
             {
-                var entity = db.CusUsers.Find(item.CusUserID);
+                var entity = db.CusUsers.AsNoTracking().Where(p => p.ID == item.CusUserID).FirstOrDefault();
                 if (entity == null)
                 {
                     entity = new Entity.CusUser();
                 }
                 item.CusUser = entity;
+
+                item.ProjectFiles = db.ProjectFiles.AsNoTracking().Where(p => p.ProjectID == item.ID).ToList();
+
                 //获取当前进行的节点信息
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.Node();

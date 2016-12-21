@@ -59,7 +59,7 @@
                                 <td width="5%">@item.FileExt</td>
                                 <td width="10%">@item.CusUser.NickName</td>
                                 <td width="13%">@item.LastUpdateTime</td>
-                                <td width="10%" align="center"><a href="javascript:;" onclick="down('@item.FilePath','@item.Title')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;"><i class="@item.FavIcon"></i></a></td>
+                                <td width="10%" align="center"><a href="javascript:;" onclick="down('@item.FilePath','@item.Title')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;" onclick="fav(@item.ID)"><i id="i_fav_@item.ID" class="@item.FavIcon"></i></a></td>
                             </tr>
                         }
                     </table>
@@ -134,7 +134,7 @@
                         dataHtml += "<td width=\"20%\">" + item.NowNode.Content + "</td>";
                         dataHtml += "<td width=\"10%\">" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td width=\"20%\">" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
-                        dataHtml += "<td  width=\"15%\" align=\"center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i class=\"" + item.FavIcon + "\"></i></a></td>";
+                        dataHtml += "<td  width=\"15%\" align=\"center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -201,7 +201,12 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
-                        pageData(1);
+                        if (data.msgbox == "取消收藏成功") {
+                            $("#i_project_" + id).attr("class", "i-favG");
+                        } else {
+                            //已收藏
+                            $("#i_project_" + id).attr("class", "i-fav");
+                        }
                     }
                     else {
                         alert(data.msgbox);
@@ -227,12 +232,18 @@
 
                 },
                 success: function (data) {
-                    if (data.msg == 1) {
-                        data_search();
+                    if(data.msg ==1)
+                    {
+                        if(data.msgbox=="取消收藏成功")
+                        {
+                            $("#i_fav_"+id).attr("class","i-favG");
+                        }else
+                        {
+                            //已收藏
+                            $("#i_fav_"+id).attr("class","i-fav");
+                        }
                     }
-                    else {
-                        alert(data.msgbox);
-                    }
+
                 },
                 error: function () {
                     alert("操作失败，请检查网络");

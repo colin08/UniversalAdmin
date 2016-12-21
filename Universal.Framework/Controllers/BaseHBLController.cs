@@ -132,7 +132,7 @@ namespace Universal.Web.Framework
                     model.link_url = "/Shool/Modify?id=" + item.ID.ToString();
                     model.title = item.DocPost.Title;
                     if (!string.IsNullOrWhiteSpace(item.DocPost.FilePath))
-                        model.er_title = item.DocPost.FilePath.Substring(item.DocPost.FilePath.LastIndexOf("/") + 1);
+                        model.er_title = "有附件";//item.DocPost.FilePath.Substring(item.DocPost.FilePath.LastIndexOf("/") + 1);
                     else
                         model.er_title = "没有附件";
                     result.Add(model);

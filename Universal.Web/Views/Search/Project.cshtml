@@ -22,7 +22,7 @@
                 <li><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
                 <li><a href="javascript:;">同事</a></li>
             </ul>
-            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的节点，共<strong class="red" id="show_search_total">0</strong>个结果</span>
+            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的项目，共<strong class="red" id="show_search_total">0</strong>个结果</span>
         </div>
     </div>
 </div>
@@ -75,7 +75,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/PageData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": false, "keyword": $("#txt_search").val() },
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": false, "keyword": $("#txt_search").val(), "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null ,"is_admin":false },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {

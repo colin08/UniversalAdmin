@@ -20,8 +20,8 @@
         <b class="f20">编辑项目</b>
     </div>
     <div class="step step_1">
-        <span class="sp_1" id="tab_one">1 填写资料</span>
-        <span class="sp_2" id="tab_two">2 设置权限</span>
+        <span class="sp_1" id="tab_one">1 基本信息</span>
+        <span class="sp_2" id="tab_two">2 项目信息</span>
         <span class="sp_3" id="tab_three">3 完成编辑</span>
     </div>
 
@@ -49,7 +49,16 @@
                         </li>
                         <li>
                             <label for="" class="lab1"><span class="red">*</span>项目流程</label>
-                            @Html.DropDownListFor(p => p.flow_id, ViewData["FlowList"] as List<SelectListItem>, new { @class = "select-input" })
+                            @Html.DropDownListFor(p => p.flow_id, ViewData["FlowList"] as List<SelectListItem>, Model.id > 0 ?  (object)new { @class = "select-input", disabled = "disabled" } : (object)new { @class="select-input"})
+                            @if(Model.id>0)
+                            {
+                                <lable style="font-size: 12px;margin-left: 10px;">修改项目时不可修改项目流程</lable>
+                            }
+                            else
+                            {
+                                <lable style="font-size: 12px;margin-left: 10px;">添加后不可修改</lable>
+                            }
+
                             @Html.ValidationMessageFor(p => p.flow_id)
                         </li>
                         <li>

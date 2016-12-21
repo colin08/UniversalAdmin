@@ -79,25 +79,39 @@ namespace Universal.Web.Controllers.api
                 return response;
             }
 
-            string file_type = provider.FileData[0].Headers.ContentType.MediaType.ToString(); //image/png
-            string[] file_type_list = file_type.Split('/');
-            //if (file_type_list[0].ToLower() != "image")
-            //{
-            //    WorkContext.AjaxStringEntity.msgbox = "只能上传图片";
-            //    response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-            //    return response;
-            //}
-
+            string source_file_name = "";
+            string source_file_ext = "";
+            List<System.Net.Http.Headers.NameValueHeaderValue> temp_list = provider.FileData[0].Headers.ContentDisposition.Parameters.ToList();
+            if (temp_list.Count != 2)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "数据错误";
+                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                return response;
+            }
+            else
+            {
+                if (temp_list[1].Name.ToLower().Equals("filename"))
+                {
+                    source_file_name = temp_list[1].Value;
+                    source_file_ext = source_file_name.Substring(source_file_name.LastIndexOf('.') + 1).ToLower().Replace("\"", "");
+                }
+            }
+            if (string.IsNullOrWhiteSpace(source_file_name) || string.IsNullOrWhiteSpace(source_file_ext))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "未取得文件名";
+                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
+                return response;
+            }
             FileInfo fileinfo = new FileInfo(provider.FileData[0].LocalFileName);
             long size = fileinfo.Length;
             string io_path = fileinfo.FullName;  //保存的完整绝对路径
             string md5 = Tools.IOHelper.GetMD5HashFromFile(io_path);
-            string new_path = dirTempPath + "/" + md5 + "." + file_type_list[1];
-            string server_path = (SaveTempPath + "/" + md5 + "." + file_type_list[1]).Replace(" ", "");
+            string new_path = dirTempPath + "\\" + md5 + "." + source_file_ext;
+            string server_path = (SaveTempPath + "\\" + md5 + "." + source_file_ext).Replace(" ", "");
             if (System.IO.File.Exists(new_path))
                 System.IO.File.Delete(io_path); //把刚刚上传的给删掉，只用原有的文件
             else //不存在，改名为md5值保存
-                System.IO.File.Move(io_path, dirTempPath + "/" + md5 + "." + file_type_list[1]); //给文件改名
+                System.IO.File.Move(io_path, new_path); //给文件改名
             //用户ID
             int user_id = TypeHelper.ObjectToInt(provider.FormData["user_id"], 0);
 
@@ -211,6 +225,7 @@ namespace Universal.Web.Controllers.api
             int rowCount = 0;
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
+            BLL.BaseBLL<Entity.DocCategory> bll_docc = new BLL.BaseBLL<Entity.DocCategory>();
             foreach (var item in BLL.BLLDocument.GetPowerPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.search_word, req.category_id))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
@@ -219,6 +234,10 @@ namespace Universal.Web.Controllers.api
                 model.file_size = item.FileSize;
                 model.id = item.ID;
                 model.add_user = item.CusUser.NickName;
+                model.category_id = item.DocCategoryID;
+                var cat_entity = bll_docc.GetModel(p => p.ID == item.DocCategoryID);
+                if (cat_entity != null)
+                    model.category_name = cat_entity.Title;
                 model.title = item.Title;
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
@@ -271,7 +290,7 @@ namespace Universal.Web.Controllers.api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/favorites/list")]
+        [Route("api/v1/favorites/document/list")]
         public WebAjaxEntity<List<Models.Response.DocumentInfo>> GetFavList([FromBody]Models.Request.BasePage req)
         {
             WebAjaxEntity<List<Models.Response.DocumentInfo>> response_entity = new WebAjaxEntity<List<Models.Response.DocumentInfo>>();
@@ -310,7 +329,7 @@ namespace Universal.Web.Controllers.api
             response_entity.msgbox = "ok";
             return response_entity;
         }
-
+        
         /// <summary>
         /// 添加秘籍收藏
         /// </summary>
