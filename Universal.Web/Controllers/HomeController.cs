@@ -15,7 +15,13 @@ namespace Universal.Web.Controllers
         {
             Models.ViewModelIndex view_model = new Models.ViewModelIndex();
             int rowCount = 0;
-            view_model.DocumentList = BLL.BLLDocument.GetPowerPageData(1, 5, ref rowCount, WorkContext.UserInfo.ID, "", 0);
+            var doc_list = BLL.BLLDocument.GetPowerPageData(1, 5, ref rowCount, WorkContext.UserInfo.ID, "", 0);
+            BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
+            foreach (var item in doc_list)
+            {
+                item.FileList = bll_file.GetListBy(0, p => p.DocPostID == item.ID, "ID ASC").ToList();
+            }
+            view_model.DocumentList = doc_list;
             
             view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.See == Entity.DocPostSee.everyone, "AddTime DESC");
 

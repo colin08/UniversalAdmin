@@ -109,6 +109,12 @@ namespace Universal.DataCore
         public DbSet<Entity.DocPost> DocPosts { get; set; }
 
         /// <summary>
+        /// 秘籍附件
+        /// </summary>
+        public DbSet<Entity.DocFile> DocFiles { get; set; }
+
+
+        /// <summary>
         /// 用户秘籍收藏
         /// </summary>
         public DbSet<Entity.CusUserDocFavorites> CusUserDocFavorites { get; set; }

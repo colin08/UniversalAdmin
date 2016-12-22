@@ -10,6 +10,11 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class DocumentInfo
     {
+        public DocumentInfo()
+        {
+            this.file_list = new List<ProjectFile>();
+        }
+
         /// <summary>
         /// 秘籍ID
         /// </summary>
@@ -24,18 +29,7 @@ namespace Universal.Web.Models.Response
         /// 内容，html格式
         /// </summary>
         public string content { get; set; }
-
-
-        /// <summary>
-        /// 文件路径
-        /// </summary>
-        public string file_path { get; set; }
-
-        /// <summary>
-        /// 文件大小,KB或MB显示
-        /// </summary>
-        public string file_size { get; set; }
-
+                
         /// <summary>
         /// 收藏的ID，如果没有收藏，则为0
         /// </summary>
@@ -60,6 +54,10 @@ namespace Universal.Web.Models.Response
         /// 添加时间
         /// </summary>
         public DateTime add_time { get; set; }
-
+        
+        /// <summary>
+        /// 秘籍附件
+        /// </summary>
+        public List<ProjectFile> file_list { get; set; }
     }
 }

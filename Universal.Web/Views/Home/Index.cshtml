@@ -56,10 +56,18 @@
                             <tr>
                                 <td width="30%">@Universal.Tools.StringHelper.CutString(item.Title,26)</td>
                                 <td width="10%">@item.CategoryName</td>
-                                <td width="5%">@item.FileExt</td>
+                                <td width="5%"> @item.FileList.Count</td>
                                 <td width="10%">@item.CusUser.NickName</td>
                                 <td width="13%">@item.LastUpdateTime</td>
-                                <td width="10%" align="center"><a href="javascript:;" onclick="down('@item.FilePath','@item.Title')"><i class="i-downL"></i></a><a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;" onclick="fav(@item.ID)"><i id="i_fav_@item.ID" class="@item.FavIcon"></i></a></td>
+                                <td width="10%" align="center">
+                                @*@foreach (var file in item.FileList.ToList())
+                                {
+                                    //附件大小：@file.FileSize
+                                    //附件名：@file.FileName
+                                    //下载地址：@file.FilePath
+                                    <a href="javascript:;" onclick="down('@file.FilePath','@item.Title @file.FileName')"><i class="i-downL"></i></a>
+                                }*@
+                                <a href="javascript:;"><i class="i-share"></i></a><a href="javascript:;" onclick="fav(@item.ID)"><i id="i_fav_@item.ID" class="@item.FavIcon"></i></a></td>
                             </tr>
                         }
                     </table>

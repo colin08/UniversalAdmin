@@ -91,12 +91,10 @@ namespace Universal.Web.Controllers
             if (ids != 0)
             {
                 BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
-                Entity.DocPost entity = bll.GetModel(p => p.ID == id);
+                Entity.DocPost entity = bll.GetModel(p => p.ID == id, p => p.FileList);
                 if (entity != null)
                 {
                     model.category_id = entity.DocCategoryID;
-                    model.filepath = entity.FilePath;
-                    model.filesize = entity.FileSize;
                     model.title = entity.Title;
                     model.id = entity.ID;
                     model.content = entity.Content;
@@ -128,6 +126,7 @@ namespace Universal.Web.Controllers
                         str_ids = str_ids.Remove(str_ids.Length - 1, 1);
                     }
                     model.see_ids = str_ids.ToString();
+                    model.BuildViewModelListFile(entity.FileList.ToList());
                 }
                 else
                 {
@@ -203,16 +202,16 @@ namespace Universal.Web.Controllers
                     model = bll.GetModel(p => p.ID == entity.id);
 
                 model.DocCategoryID = entity.category_id;
-                model.FilePath = entity.filepath;
-                model.FileSize = entity.filesize;
                 model.Title = entity.title;
                 model.Content = entity.content;
                 model.TOID = final_ids;
                 model.See = entity.post_see;
+                model.FileList = entity.BuildFileList();
+
                 if (isAdd)
                     bll.Add(model);
                 else
-                    bll.Modify(model);
+                    BLL.BLLDocument.Modify(model);
 
                 entity.Msg = 1;
             }

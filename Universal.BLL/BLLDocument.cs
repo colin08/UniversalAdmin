@@ -27,6 +27,9 @@ namespace Universal.BLL
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BaseBLL<Entity.CusUserDocFavorites>();
             bll_fav.DelBy(p => id_list.Contains(p.DocPostID));
 
+            BaseBLL<Entity.DocFile> bll_file = new BaseBLL<Entity.DocFile>();
+            bll_file.DelBy(p => id_list.Contains(p.DocPostID));
+
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             bll.DelBy(p => id_list.Contains(p.ID));
 
@@ -58,12 +61,15 @@ namespace Universal.BLL
             }
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BaseBLL<Entity.CusUserDocFavorites>();
             bll_fav.DelBy(p => p.DocPostID == id);
+
+            BaseBLL<Entity.DocFile> bll_file = new BaseBLL<Entity.DocFile>();
+            bll_file.DelBy(p => p.DocPostID == id);
+
             bll.DelBy(p => p.ID == id);
             msg = "删除成功";
             return true;
         }
-
-
+        
         /// <summary>
         /// 获取登录用户可见的秘籍
         /// </summary>
@@ -159,6 +165,31 @@ namespace Universal.BLL
             db.Dispose();
             return response_entity;
 
+        }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static bool Modify(Entity.DocPost entity)
+        {
+            var db = new DataCore.EFDBContext();
+            db.DocFiles.Where(p => p.DocPostID == entity.ID).ToList().ForEach(p => db.DocFiles.Remove(p));
+
+            List<Entity.DocFile> file_list = entity.FileList.ToList();
+            foreach (var item in file_list)
+            {
+                item.DocPostID = entity.ID;
+                db.DocFiles.Add(item);
+            }
+            entity.FileList.Clear();
+
+            var db_entity = db.Entry<Entity.DocPost>(entity);
+            db_entity.State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            db.Dispose();
+            return true;
         }
 
     }

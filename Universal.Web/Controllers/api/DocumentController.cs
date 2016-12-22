@@ -44,132 +44,46 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 添加秘籍,表单上传。参数：user_id(登录的用户ID),see_type(可见类别,0:所有人,1:某些部门,2:某些用户),toid(对应的部门或用户ID,逗号分割),title(秘籍标题),category_id(分类ID),content(内容，经过URL编码)
+        /// 添加秘籍
         /// </summary>
         /// <returns></returns>
         [Route("api/v1/document/add")]
-        public async Task<HttpResponseMessage> AddFavorites()
+        public WebAjaxEntity<string> AddDocument([FromBody]Models.Request.AddDocument req)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
-            response = Request.CreateResponse(HttpStatusCode.OK);
-            // 检查是否是 multipart/form-data 
-            if (!Request.Content.IsMimeMultipartContent("form-data"))
-            {
-                WorkContext.AjaxStringEntity.msgbox = "缺少 enctype='multipart/form-data";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
-            }
-            //文件保存目录路径 
-            string SaveTempPath = "/uploads/doc";
-            String dirTempPath = Tools.IOHelper.GetMapPath(SaveTempPath);
-            if (!Directory.Exists(dirTempPath))
-            {
-                Directory.CreateDirectory(dirTempPath);
-            }
-            // 设置上传目录 
-            var provider = new MultipartFormDataStreamProvider(dirTempPath);
-
-            // Read the form data.  这一步文件已经保存了
-            await Request.Content.ReadAsMultipartAsync(provider);
-
-            if (provider.FileData.Count != 1)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "一次只能上传一个文件";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
-            }
-
-            string source_file_name = "";
-            string source_file_ext = "";
-            List<System.Net.Http.Headers.NameValueHeaderValue> temp_list = provider.FileData[0].Headers.ContentDisposition.Parameters.ToList();
-            if (temp_list.Count != 2)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "数据错误";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
-            }
-            else
-            {
-                if (temp_list[1].Name.ToLower().Equals("filename"))
-                {
-                    source_file_name = temp_list[1].Value;
-                    source_file_ext = source_file_name.Substring(source_file_name.LastIndexOf('.') + 1).ToLower().Replace("\"", "");
-                }
-            }
-            if (string.IsNullOrWhiteSpace(source_file_name) || string.IsNullOrWhiteSpace(source_file_ext))
-            {
-                WorkContext.AjaxStringEntity.msgbox = "未取得文件名";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
-            }
-            FileInfo fileinfo = new FileInfo(provider.FileData[0].LocalFileName);
-            long size = fileinfo.Length;
-            string io_path = fileinfo.FullName;  //保存的完整绝对路径
-            string md5 = Tools.IOHelper.GetMD5HashFromFile(io_path);
-            string new_path = dirTempPath + "\\" + md5 + "." + source_file_ext;
-            string server_path = (SaveTempPath + "\\" + md5 + "." + source_file_ext).Replace(" ", "");
-            if (System.IO.File.Exists(new_path))
-                System.IO.File.Delete(io_path); //把刚刚上传的给删掉，只用原有的文件
-            else //不存在，改名为md5值保存
-                System.IO.File.Move(io_path, new_path); //给文件改名
-            //用户ID
-            int user_id = TypeHelper.ObjectToInt(provider.FormData["user_id"], 0);
-
-            if (user_id == 0)
+            if (req.user_id == 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "没有收到用户信息";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
+                return WorkContext.AjaxStringEntity;
             }
             BLL.BaseBLL<Entity.CusUser> bll_user = new BLL.BaseBLL<Entity.CusUser>();
-            if (!bll_user.Exists(p => p.ID == user_id))
+            if (!bll_user.Exists(p => p.ID == req.user_id))
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
+                return WorkContext.AjaxStringEntity;
             }
-
-            //可见类别
-            Entity.DocPostSee see_type = (Entity.DocPostSee)TypeHelper.ObjectToInt(provider.FormData["see_type"], 0);
-            //标题
-            string title = "";
-            if (provider.FormData["title"] != null)
-                title = provider.FormData["title"].ToString();
-            string content = "";
-            if (provider.FormData["content"] != null)
-                title = provider.FormData["content"].ToString();
-            content = Tools.WebHelper.UrlDecode(content);
-
-            int category_id = TypeHelper.ObjectToInt(provider.FormData["category_id"], 0);
-            //部门ID或用户ID，逗号分割
-            string toid = "";
-            if (provider.FormData["toid"] != null)
-                toid = provider.FormData["toid"].ToString();
 
             #region 处理用户或部门的ID
             StringBuilder str_ids = new StringBuilder();
-            switch (see_type)
+            switch (req.see_type)
             {
                 case Entity.DocPostSee.everyone:
                     break;
                 case Entity.DocPostSee.department:
-                    if (string.IsNullOrWhiteSpace(toid))
+                    if (string.IsNullOrWhiteSpace(req.toid))
                     {
                         WorkContext.AjaxStringEntity.msgbox = "当是可见是部门时，必须传入部门数据";
-                        response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                        return response;
+                        return WorkContext.AjaxStringEntity;
                     }
-                    foreach (var item in BLL.BLLDepartment.GetListByIds(toid))
+                    foreach (var item in BLL.BLLDepartment.GetListByIds(req.toid))
                         str_ids.Append(item.ID.ToString() + ",");
                     break;
                 case Entity.DocPostSee.user:
-                    if (string.IsNullOrWhiteSpace(toid))
+                    if (string.IsNullOrWhiteSpace(req.toid))
                     {
                         WorkContext.AjaxStringEntity.msgbox = "当是可见是用户时，必须传入用户数据";
-                        response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                        return response;
+                        return WorkContext.AjaxStringEntity;
                     }
-                    foreach (var item in BLL.BLLCusUser.GetListByIds(toid))
+                    foreach (var item in BLL.BLLCusUser.GetListByIds(req.toid))
                         str_ids.Append(item.ID.ToString() + ",");
                     break;
                 default:
@@ -181,18 +95,26 @@ namespace Universal.Web.Controllers.api
                 final_ids = "," + str_ids.ToString();
             }
             #endregion
-
-
-
+            
             Entity.DocPost entity = new Entity.DocPost();
-            entity.CusUserID = user_id;
-            entity.DocCategoryID = category_id;
-            entity.FilePath = server_path;
-            entity.FileSize = IOHelper.GetFileSizeTxt(size);
-            entity.Title = title;
+            entity.CusUserID = req.user_id;
+            entity.DocCategoryID = req.category_id;
+            entity.Title = req.title;
             entity.TOID = final_ids;
-            entity.Content = content;
-            entity.See = see_type;
+            entity.Content = req.content;
+            entity.See = req.see_type;
+            if (req.file_list != null)
+            {
+                foreach (var item in req.file_list)
+                {
+                    Entity.DocFile entity_file = new Entity.DocFile();
+                    entity_file.FileName = item.file_name;
+                    entity_file.FilePath = item.file_path;
+                    entity_file.FileSize = item.file_size;
+                    entity.FileList.Add(entity_file);
+                }
+            }
+
             BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
             bll.Add(entity);
             if (entity.ID > 0)
@@ -204,10 +126,11 @@ namespace Universal.Web.Controllers.api
             {
                 WorkContext.AjaxStringEntity.msgbox = "秘籍添加失败";
             }
-            response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-            return response;
+            return WorkContext.AjaxStringEntity;
 
         }
+
+
 
         /// <summary>
         /// 获取可见秘籍列表
@@ -232,12 +155,11 @@ namespace Universal.Web.Controllers.api
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
             BLL.BaseBLL<Entity.DocCategory> bll_docc = new BLL.BaseBLL<Entity.DocCategory>();
+            BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
             foreach (var item in BLL.BLLDocument.GetPowerPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.search_word, req.category_id))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
                 model.add_time = item.AddTime;
-                model.file_path = GetSiteUrl() + item.FilePath;
-                model.file_size = item.FileSize;
                 model.id = item.ID;
                 model.add_user = item.CusUser.NickName;
                 model.category_id = item.DocCategoryID;
@@ -245,10 +167,23 @@ namespace Universal.Web.Controllers.api
                 if (cat_entity != null)
                     model.category_name = cat_entity.Title;
                 model.title = item.Title;
-                model.content = item.Content;
+                model.content = ReplaceTextAreaImg(item.Content);
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
                     model.favorites_id = fav_entity.ID;
+                List<Entity.DocFile> file_list = bll_file.GetListBy(0, p => p.DocPostID == item.ID, "ID ASC");
+                if (file_list != null)
+                {
+                    foreach (var file in file_list)
+                    {
+                        Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                        model_file.file_name = file.FileName;
+                        model_file.file_path = GetSiteUrl() + file.FilePath;
+                        model_file.file_size = file.FileSize;
+                        model_file.type = Entity.ProjectFileType.file;
+                        model.file_list.Add(model_file);
+                    }
+                }
                 response_list.Add(model);
             }
             if (rowCount > 0)
@@ -310,15 +245,14 @@ namespace Universal.Web.Controllers.api
             int rowCount = 0;
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
             BLL.BaseBLL<Entity.DocCategory> bll_doccate = new BLL.BaseBLL<Entity.DocCategory>();
+            BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
             foreach (var item in BLL.BllCusUserFavorites.GetDocPageData(req.page_index, req.page_size, ref rowCount, req.user_id, "", 0))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
                 model.add_time = item.AddTime;
-                model.file_path = GetSiteUrl() + item.FilePath;
-                model.file_size = item.FileSize;
                 model.id = item.ID;
                 model.title = item.Title;
-                model.content = item.Content;
+                model.content = ReplaceTextAreaImg(item.Content);
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
                 if (fav_entity != null)
                     model.favorites_id = fav_entity.ID;
@@ -328,6 +262,20 @@ namespace Universal.Web.Controllers.api
                     model.category_name = category_entity.Title;
                 }
                 model.category_id = item.DocCategoryID;
+
+                List<Entity.DocFile> file_list = bll_file.GetListBy(0, p => p.DocPostID == item.ID, "ID ASC");
+                if (file_list != null)
+                {
+                    foreach (var file in file_list)
+                    {
+                        Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                        model_file.file_name = file.FileName;
+                        model_file.file_path = GetSiteUrl() + file.FilePath;
+                        model_file.file_size = file.FileSize;
+                        model_file.type = Entity.ProjectFileType.file;
+                        model.file_list.Add(model_file);
+                    }
+                }
                 response_list.Add(model);
             }
             if (rowCount > 0)
@@ -395,6 +343,14 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
+        }
+
+
+        private string ReplaceTextAreaImg(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                return "";
+            return content.Replace("/uploads/TextArea/", GetSiteUrl() + "/uploads/TextArea/");
         }
 
     }

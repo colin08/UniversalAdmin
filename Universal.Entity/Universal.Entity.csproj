@@ -69,6 +69,7 @@
     <Compile Include="CusUser\CusVerification.cs" />
     <Compile Include="Doc\DocCategory.cs" />
     <Compile Include="Doc\DocPost.cs" />
+    <Compile Include="Doc\DocFile.cs" />
     <Compile Include="DownloadLog.cs" />
     <Compile Include="Feedback.cs" />
     <Compile Include="Flow\FlowNode.cs" />

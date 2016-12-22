@@ -13,15 +13,15 @@ namespace Universal.Entity
         /// <summary>
         /// 所有人
         /// </summary>
-        everyone =0,
+        everyone = 0,
         /// <summary>
         /// 某些部门下
         /// </summary>
-        department =1,
+        department = 1,
         /// <summary>
         /// 特定用户
         /// </summary>
-        user=2
+        user = 2
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ namespace Universal.Entity
         {
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
-            this.FileSize = "0";
+            this.FileList = new List<DocFile>();
         }
 
         public int ID { get; set; }
@@ -45,7 +45,7 @@ namespace Universal.Entity
         /// 权限类别
         /// </summary>
         public DocPostSee See { get; set; }
-        
+
         /// <summary>
         /// 所属分类
         /// </summary>
@@ -67,18 +67,6 @@ namespace Universal.Entity
         public virtual CusUser CusUser { get; set; }
 
         /// <summary>
-        /// 附件
-        /// </summary>
-        [MaxLength(500)]
-        public string FilePath { get; set; }
-        
-        /// <summary>
-        /// 附件大小,KB或MB显示
-        /// </summary>
-        [MaxLength(30)]
-        public string FileSize { get; set; }
-
-        /// <summary>
         /// 部门ID或用户ID，逗号分割，前后要加逗号:,1,2,3,4,
         /// </summary>
         [MaxLength(1000)]
@@ -87,7 +75,7 @@ namespace Universal.Entity
         /// <summary>
         /// 内容
         /// </summary>
-        [Column(TypeName ="text")]
+        [Column(TypeName = "text")]
         public string Content { get; set; }
 
         /// <summary>
@@ -110,21 +98,7 @@ namespace Universal.Entity
                     return "i-favG";
             }
         }
-
-        /// <summary>
-        /// 文件后缀名
-        /// </summary>
-        [NotMapped]
-        public string FileExt
-        {
-            get
-            {
-                if(string.IsNullOrWhiteSpace(this.FilePath))
-                    return "";
-                return Tools.IOHelper.GetFileExt(this.FilePath);
-            }
-        }
-
+        
         /// <summary>
         /// 一级分类名称
         /// </summary>
@@ -152,6 +126,11 @@ namespace Universal.Entity
         /// 最后更新时间
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
-        
+
+        /// <summary>
+        /// 项目附件
+        /// </summary>
+        public virtual ICollection<DocFile> FileList { get; set; }
+
     }
 }
