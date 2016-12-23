@@ -440,7 +440,7 @@ namespace Universal.Web.Controllers.api
                 {
                     if (temp_list[1].Name.ToLower().Equals("filename"))
                     {
-                        source_file_name = temp_list[1].Value;
+                        source_file_name = temp_list[1].Value.Replace("\"", "");
                         source_file_ext = source_file_name.Substring(source_file_name.LastIndexOf('.') + 1).ToLower().Replace("\"", "");
                     }
                 }
@@ -453,14 +453,14 @@ namespace Universal.Web.Controllers.api
 
                 FileInfo fileinfo = new FileInfo(provider.FileData[i].LocalFileName);
                 string io_path = fileinfo.FullName;  //保存的完整绝对路径
-                string size_txt = IOHelper.GetFileSizeTxt(IOHelper.GetFileSize(io_path));
                 string md5 = Tools.IOHelper.GetMD5HashFromFile(io_path);
                 string new_path = dirTempPath + "\\" + md5 + "." + source_file_ext;
-                string server_path = (SaveTempPath + "\\" + md5 + "." + source_file_ext).Replace(" ", "");
+                string server_path = (SaveTempPath + "/" + md5 + "." + source_file_ext).Replace(" ", "");
                 if (System.IO.File.Exists(new_path))
                     System.IO.File.Delete(io_path); //把刚刚上传的给删掉，只用原有的文件
                 else //不存在，改名为md5值保存
                     System.IO.File.Move(io_path, new_path); //给文件改名
+                string size_txt = IOHelper.ConvertLongSizeToTxt(IOHelper.GetFileSize(server_path));
                 Models.Response.ProjectFile model = new Models.Response.ProjectFile();
                 model.file_name = source_file_name;
                 model.file_path = server_path;

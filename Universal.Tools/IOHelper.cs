@@ -513,11 +513,11 @@ namespace Universal.Tools
         }
 
         /// <summary>
-        /// 返回文件大小KB
+        /// 返回文件大小字节
         /// </summary>
         /// <param name="_filepath">文件相对路径</param>
         /// <returns>int</returns>
-        public static int GetFileSize(string _filepath)
+        public static long GetFileSize(string _filepath)
         {
             if (string.IsNullOrEmpty(_filepath))
             {
@@ -527,7 +527,7 @@ namespace Universal.Tools
             if (File.Exists(fullpath))
             {
                 FileInfo fileInfo = new FileInfo(fullpath);
-                return ((int)fileInfo.Length) / 1024;
+                return fileInfo.Length;
             }
             return 0;
         }
@@ -539,7 +539,7 @@ namespace Universal.Tools
         /// <returns></returns>
         public static string GetFileSizeTxt(string _filePath)
         {
-            int kb = GetFileSize(_filePath);
+            long kb = GetFileSize(_filePath) /1024;
             if (kb > 1024)
                 return (kb / 1024).ToString() + "MB";
             else
@@ -551,7 +551,7 @@ namespace Universal.Tools
         /// </summary>
         /// <param name="_filePath"></param>
         /// <returns></returns>
-        public static string GetFileSizeTxt(long size)
+        public static string ConvertLongSizeToTxt(long size)
         {
             long kb = size / 1024;
             if (kb > 1024)
