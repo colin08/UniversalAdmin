@@ -329,6 +329,8 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class ProjectFile
     {
+        public int id { get; set; }
+
         /// <summary>
         /// 类别,1:附件；2：相册
         /// </summary>

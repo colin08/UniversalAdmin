@@ -99,6 +99,7 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
+                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.album;
                         model.file_list.Add(model_file);
                     }
@@ -210,6 +211,7 @@ namespace Universal.Web.Controllers.api
                     file.file_name = item.FileName;
                     file.file_path = GetSiteUrl() + item.FilePath;
                     file.file_size = item.FileSize;
+                    file.id = item.ID;
                     file.type = item.Type;
                     response_model.file_list.Add(file);
                 }
@@ -523,6 +525,7 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
+                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.album;
                         model.file_list.Add(model_file);
                     }
