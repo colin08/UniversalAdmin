@@ -103,6 +103,21 @@ namespace Universal.Web.Models.Response
         public string flow_name { get; set; }
 
         /// <summary>
+        /// 查看权限
+        /// </summary>
+        public Entity.DocPostSee post_see { get; set; }
+
+        /// <summary>
+        /// 拥有权限的部门id或用户id
+        /// </summary>
+        public string see_ids { get; set; }
+
+        /// <summary>
+        /// 联系人ID
+        /// </summary>
+        public string user_ids { get; set; }
+
+        /// <summary>
         /// 项目联系人
         /// </summary>
         public List<SelectUser> contact_users { get; set; }
@@ -329,8 +344,6 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class ProjectFile
     {
-        public int id { get; set; }
-
         /// <summary>
         /// 类别,1:附件；2：相册
         /// </summary>

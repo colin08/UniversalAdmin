@@ -36,7 +36,7 @@ namespace Universal.Web.Models.Request
 
 
         /// <summary>
-        /// 项目联系人
+        /// 项目联系人id，逗号分割
         /// </summary>
         public string user_ids { get; set; }
 

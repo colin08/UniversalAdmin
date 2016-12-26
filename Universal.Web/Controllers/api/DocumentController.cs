@@ -180,7 +180,6 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
-                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.file;
                         model.file_list.Add(model_file);
                     }
@@ -273,7 +272,6 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
-                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.file;
                         model.file_list.Add(model_file);
                     }

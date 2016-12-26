@@ -99,7 +99,6 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
-                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.album;
                         model.file_list.Add(model_file);
                     }
@@ -207,16 +206,23 @@ namespace Universal.Web.Controllers.api
                 response_model.user_telphone = entity.CusUser.Telphone;
                 response_model.approve_name = entity.ApproveUser.NickName;
                 response_model.is_fav = bll_fav.Exists(p => p.CusUserID == user_id && p.ProjectID == project_id);
-
+                response_model.see_ids = entity.TOID;
+                response_model.post_see = entity.See;                
+                StringBuilder contact_users = new StringBuilder();
                 foreach (var item in entity.ProjectUsers)
+                {
+                    contact_users.Append(item.CusUserID + ",");
                     response_model.contact_users.Add(BuilderSelectUser(item.CusUser));
+                }
+                if (contact_users.Length > 0)
+                    contact_users = contact_users.Remove(contact_users.Length - 1, 1);
+                response_model.user_ids = contact_users.ToString();
                 foreach (var item in entity.ProjectFiles)
                 {
                     Models.Response.ProjectFile file = new Models.Response.ProjectFile();
                     file.file_name = item.FileName;
                     file.file_path = GetSiteUrl() + item.FilePath;
                     file.file_size = item.FileSize;
-                    file.id = item.ID;
                     file.type = item.Type;
                     response_model.file_list.Add(file);
                 }
@@ -402,7 +408,7 @@ namespace Universal.Web.Controllers.api
             entity.KaiPanTime = req.KaiPanTime;
             entity.FenChengBiLi = req.FenChengBiLi;
             entity.JunJia = req.JunJia;
-            bll.Modify(entity, "Area,GaiZaoXingZhi,ZhongDiHao,ShenBaoZhuTi,ZongMianJi,GengXinDanYuanYongDiMianJi,ZongMianJiOther,WuLeiQuanMianJi,LaoWuCunMianJi,FeiNongMianJi,KaiFaMianJi,RongJiLv,TuDiShiYongQuan,JianSheGuiHuaZheng,ChaiQianYongDiMianJi,ChaiQianJianZhuMianJi,ZhuanXiangTime,ZhuTiTime,YongDiTime,KaiPanTime,FenChengBiLi,JunJia");
+            bll.Modify(entity);
 
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
@@ -620,7 +626,6 @@ namespace Universal.Web.Controllers.api
                         model_file.file_name = file.FileName;
                         model_file.file_path = GetSiteUrl() + file.FilePath;
                         model_file.file_size = file.FileSize;
-                        model_file.id = file.ID;
                         model_file.type = Entity.ProjectFileType.album;
                         model.file_list.Add(model_file);
                     }
