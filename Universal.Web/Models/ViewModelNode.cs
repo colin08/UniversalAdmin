@@ -29,13 +29,13 @@ namespace Universal.Web.Models
         /// <summary>
         /// 办事地址
         /// </summary>
-        [Required(ErrorMessage = "不能为空"), MaxLength(500, ErrorMessage = "不能超过500个字符")]
+        [MaxLength(500, ErrorMessage = "不能超过500个字符")]
         public string location { get; set; }
 
         /// <summary>
         /// 办事流程说明
         /// </summary>
-        [Required(ErrorMessage = "不能为空"), MaxLength(2000, ErrorMessage = "不能超过2000个字符")]
+        [MaxLength(2000, ErrorMessage = "不能超过2000个字符")]
         public string content { get; set; }
 
         /// <summary>
@@ -65,6 +65,8 @@ namespace Universal.Web.Models
         public List<Entity.NodeFile> BuildFileList(int user_id)
         {
             List<Entity.NodeFile> db_list = new List<Entity.NodeFile>();
+            if (this.files == null)
+                return db_list;
             if (this.files.Length == 0)
                 return db_list;
             if (this.files.EndsWith("|"))

@@ -774,6 +774,7 @@
     <Compile Include="Models\Request\AddProject.cs" />
     <Compile Include="Models\Request\BasePage.cs" />
     <Compile Include="Models\Request\DocumentList.cs" />
+    <Compile Include="Models\Request\EditProject.cs" />
     <Compile Include="Models\Request\MessageList.cs" />
     <Compile Include="Models\Request\ModelUserLogin.cs" />
     <Compile Include="Models\Request\ProjectFav.cs" />

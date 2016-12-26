@@ -125,6 +125,11 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/project/add")]
         public WebAjaxEntity<string> AddProject([FromBody]Models.Request.AddProject req)
         {
+            if (req.flow_id <= 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "缺少流程ID";
+                return WorkContext.AjaxStringEntity;
+            }
             Entity.Project entity = new Entity.Project();
             entity.CusUserID = req.user_id;
             entity.ApproveUserID = req.approve_user_id;
@@ -197,7 +202,7 @@ namespace Universal.Web.Controllers.api
                 response_model.flow_name = entity_flow == null ? "" : entity_flow.Title;
                 response_model.project_id = project_id;
                 response_model.title = entity.Title;
-                response_model.user_id = entity_flow.CusUserID;
+                response_model.user_id = entity.CusUserID;
                 response_model.user_name = entity.CusUser.NickName;
                 response_model.user_telphone = entity.CusUser.Telphone;
                 response_model.approve_name = entity.ApproveUser.NickName;
@@ -269,6 +274,96 @@ namespace Universal.Web.Controllers.api
             response_entity.msgbox = "ok";
             return response_entity;
         }
+
+        /// <summary>
+        /// 修改项目的基本信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/project/modify/basic")]
+        public WebAjaxEntity<string> ModifyProjectInfoBasic([FromBody]Models.Request.EditProject req)
+        {
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == req.project_id);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "项目不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            var entity_app = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.approve_user_id);
+            if (entity_app == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "审核人员不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            #region 处理联系人ID
+            System.Text.StringBuilder str_user_ids = new System.Text.StringBuilder();
+            foreach (var item in BLL.BLLCusUser.GetListByIds(req.user_ids))
+            {
+                str_user_ids.Append(item.ID.ToString() + ",");
+            }
+            string final_user_ids = "";
+            if (str_user_ids.Length > 0)
+            {
+                final_user_ids = str_user_ids.Remove(str_user_ids.Length - 1, 1).ToString();
+            }
+            #endregion
+
+            #region 处理可见用户或部门的ID
+            System.Text.StringBuilder str_see_ids = new System.Text.StringBuilder();
+            switch (entity.See)
+            {
+                case Entity.DocPostSee.everyone:
+                    break;
+                case Entity.DocPostSee.department:
+                    foreach (var item in BLL.BLLDepartment.GetListByIds(req.see_ids))
+                    {
+                        str_see_ids.Append(item.ID.ToString() + ",");
+                    }
+                    break;
+                case Entity.DocPostSee.user:
+                    foreach (var item in BLL.BLLCusUser.GetListByIds(req.see_ids))
+                    {
+                        str_see_ids.Append(item.ID.ToString() + ",");
+                    }
+                    break;
+                default:
+                    break;
+            }
+            string final_see_ids = "";
+            if (str_see_ids.Length > 0)
+            {
+                final_see_ids = "," + str_see_ids.ToString();
+            }
+            #endregion
+
+            entity.Title = req.title;
+            entity.ApproveUserID = req.approve_user_id;
+            entity.See = req.post_see;
+            entity.TOID = final_see_ids;
+            List<Entity.ProjectFile> file_list_entity = new List<Entity.ProjectFile>();
+            if (req.file_list != null)
+            {
+                foreach (var item in req.file_list)
+                {
+                    Entity.ProjectFile model = new Entity.ProjectFile();
+                    model.FileName = item.file_name;
+                    model.FilePath = item.file_path;
+                    model.FileSize = item.file_size;
+                    model.Type = item.type;
+                    file_list_entity.Add(model);
+                }
+            }
+            entity.ProjectFiles = file_list_entity;
+            string msg = "";
+            BLL.BLLProject.Modify(entity, final_user_ids, out msg);
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return WorkContext.AjaxStringEntity;
+        }
+
 
         /// <summary>
         /// 修改项目的项目信息

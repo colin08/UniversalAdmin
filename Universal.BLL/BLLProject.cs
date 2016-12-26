@@ -19,7 +19,7 @@ namespace Universal.BLL
                 return null;
 
             var db = new DataCore.EFDBContext();
-            var entity = db.Projects.AsNoTracking().Include(p => p.ProjectUsers.Select(s => s.CusUser)).Include(p => p.ProjectFiles).Include(p => p.ApproveUser).Where(p => p.ID == id).FirstOrDefault();
+            var entity = db.Projects.AsNoTracking().Include(p=>p.CusUser).Include(p => p.ProjectUsers.Select(s => s.CusUser)).Include(p => p.ProjectFiles).Include(p => p.ApproveUser).Where(p => p.ID == id).FirstOrDefault();
 
             db.Dispose();
             return entity;
