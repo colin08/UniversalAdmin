@@ -791,6 +791,7 @@
     <Compile Include="Models\Response\NodeInfo.cs" />
     <Compile Include="Models\Response\NoticeBasic.cs" />
     <Compile Include="Models\Response\ProjectBasicInfo.cs" />
+    <Compile Include="Models\Response\SeeModel.cs" />
     <Compile Include="Models\Response\SelectUser.cs" />
     <Compile Include="Models\Response\StatcticsCondition.cs" />
     <Compile Include="Models\Response\TreeData.cs" />

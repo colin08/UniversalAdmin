@@ -17,6 +17,9 @@ namespace Universal.Web.Models.Response
         /// 是否收藏
         /// </summary>
         public bool is_fav { get; set; }
+
+        public int create_user_id { get; set; }
+
     }
 
     /// <summary>
@@ -68,6 +71,7 @@ namespace Universal.Web.Models.Response
     {
         public ProjectInfo()
         {
+            this.see_model = new List<SeeModel>();
             this.file_list = new List<ProjectFile>();
             this.contact_users = new List<SelectUser>();
         }
@@ -86,6 +90,11 @@ namespace Universal.Web.Models.Response
         /// 项目责任人电话
         /// </summary>
         public string user_telphone { get; set; }
+
+        /// <summary>
+        /// 审批人id
+        /// </summary>
+        public int approve_id { get; set; }
 
         /// <summary>
         /// 审批人
@@ -111,6 +120,11 @@ namespace Universal.Web.Models.Response
         /// 拥有权限的部门id或用户id
         /// </summary>
         public string see_ids { get; set; }
+
+        /// <summary>
+        /// 拥有权限的部门或用户
+        /// </summary>
+        public List<SeeModel> see_model { get; set; }
 
         /// <summary>
         /// 联系人ID

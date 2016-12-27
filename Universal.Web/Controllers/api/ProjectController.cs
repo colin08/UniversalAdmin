@@ -79,13 +79,13 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<List<Models.Response.ProjectListInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ProjectListInfo>>();
             List<Models.Response.ProjectListInfo> response_list = new List<Models.Response.ProjectListInfo>();
-            //BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
             int rowCount = 0;
             var db_list = BLL.BLLProject.GetPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.keyword, req.only_mine, req.status, req.node_id, req.node_status, req.begin_time, req.end_time, false);
             foreach (var item in db_list)
             {
                 Models.Response.ProjectListInfo model = new Models.Response.ProjectListInfo();
-                //model.is_fav = bll_fav.Exists(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
+                model.is_fav = bll_fav.Exists(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
                 model.last_update_time = item.LastUpdateTime;
                 model.project_id = item.ID;
                 model.title = item.Title;
@@ -204,10 +204,40 @@ namespace Universal.Web.Controllers.api
                 response_model.user_id = entity.CusUserID;
                 response_model.user_name = entity.CusUser.NickName;
                 response_model.user_telphone = entity.CusUser.Telphone;
+                response_model.approve_id = entity.ApproveUserID;
                 response_model.approve_name = entity.ApproveUser.NickName;
                 response_model.is_fav = bll_fav.Exists(p => p.CusUserID == user_id && p.ProjectID == project_id);
-                response_model.see_ids = entity.TOID;
-                response_model.post_see = entity.See;                
+                response_model.post_see = entity.See;
+
+                System.Text.StringBuilder str_see_ids = new System.Text.StringBuilder();
+                switch (entity.See)
+                {
+                    case Entity.DocPostSee.everyone:
+                        break;
+                    case Entity.DocPostSee.department:
+                        foreach (var item in BLL.BLLDepartment.GetListByIds(entity.TOID))
+                        {
+                            str_see_ids.Append(item.ID.ToString() + ",");
+                            response_model.see_model.Add(new Models.Response.SeeModel(item.ID, item.Title));
+                        }
+                        break;
+                    case Entity.DocPostSee.user:
+                        foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
+                        {
+                            str_see_ids.Append(item.ID.ToString() + ",");
+                            response_model.see_model.Add(new Models.Response.SeeModel(item.ID, item.NickName));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (str_see_ids.Length > 0)
+                {
+                    str_see_ids = str_see_ids.Remove(str_see_ids.Length - 1, 1);
+                }
+
+                response_model.see_ids = str_see_ids.ToString();
+
                 StringBuilder contact_users = new StringBuilder();
                 foreach (var item in entity.ProjectUsers)
                 {
@@ -424,6 +454,13 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<List<Models.Response.ProjectInfoStage>> response_entity = new WebAjaxEntity<List<Models.Response.ProjectInfoStage>>();
             List<Models.Response.ProjectInfoStage> response_list = new List<Models.Response.ProjectInfoStage>();
+            Entity.Project entity_project = new BLL.BaseBLL<Entity.Project>().GetModel(p => p.ID == project_id);
+            if(entity_project == null)
+            {
+                response_entity.msgbox = "项目不存在";
+                return response_entity;
+            } 
+
             var db_list = new BLL.BaseBLL<Entity.ProjectStage>().GetListBy(0, p => p.ProjectID == project_id, "ID ASC", p => p.FileList);
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
             foreach (var item in db_list)
@@ -431,6 +468,7 @@ namespace Universal.Web.Controllers.api
                 Models.Response.ProjectInfoStage model = BuildProjectStage(item);
                 model.is_fav = bll_fav.Exists(p => p.CusUserID == user_id && p.ProjectID == project_id);
                 model.project_id = project_id;
+                model.create_user_id = entity_project.CusUserID;
                 response_list.Add(model);
             }
 
