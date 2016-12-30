@@ -29,11 +29,7 @@
                     <thead>
                         <tr>
                             <th width="5%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
-                            <th width="15%">周次/周期</th>
-                            <th width="20%">本周工作记录</th>
-                            <th width="20%">下周工作计划</th>
-                            <th width="10%">计划完成时间</th>
-                            <th width="15%">审批人</th>
+                            <th width="30%">计划名称</th>
                             <th width="8%">审批状态</th>
                             <th width="12%">操作</th>
                         </tr>
@@ -114,10 +110,6 @@
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>" + item.WeekText + "</td>";
-                        dataHtml += "<td>" + CutString(item.NowJob,20) + "</td>";
-                        dataHtml += "<td>" + CutString(item.NextPlan,20) + "</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd") + "</td>";
-                        dataHtml += "<td>" + CutString(item.ApproveNickName, 20) + "</td>";
                         dataHtml += "<td>" + app_text + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkPlan/Modify?id="+item.ID+"\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";

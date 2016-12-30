@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -11,6 +12,14 @@ namespace Universal.BLL
     /// </summary>
     public class BLLWorkPlan
     {
+        public static Entity.WorkPlan GetModel(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.WorkPlans.AsNoTracking().Include(p => p.ApproveUser).Include(p=>p.CusUser).Include(p => p.WorkPlanItemList).Where(p => p.ID == id).FirstOrDefault();
+            }
+        }
+
         /// <summary>
         /// 获取主管待审批的计划
         /// </summary>
@@ -82,5 +91,31 @@ namespace Universal.BLL
 
         }
 
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static bool Modify(Entity.WorkPlan entity)
+        {
+            var db = new DataCore.EFDBContext();
+            db.WorkPlanItems.Where(p => p.WorkPlanID == entity.ID).ToList().ForEach(p => db.WorkPlanItems.Remove(p));
+
+            if(entity.WorkPlanItemList != null)
+            {
+                foreach (var item in entity.WorkPlanItemList)
+                {
+                    item.WorkPlanID = entity.ID;
+                    db.WorkPlanItems.Add(item);
+                }
+            }
+            entity.WorkPlanItemList.Clear();
+            var ss = db.Entry<Entity.WorkPlan>(entity);
+            ss.State = System.Data.Entity.EntityState.Modified;
+            int row = db.SaveChanges();
+            db.Dispose();
+            return row > 0;
+        }
+        
     }
 }

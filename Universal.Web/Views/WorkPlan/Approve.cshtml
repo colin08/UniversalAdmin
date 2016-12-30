@@ -23,10 +23,7 @@
                 <table border="0" cellspacing="0" cellpadding="0" class="table1">
                     <thead>
                         <tr>
-                            <th width="15%">周次/周期</th>
-                            <th width="20%">本周工作记录</th>
-                            <th width="20%">下周工作计划</th>
-                            <th width="10%">计划完成时间</th>
+                            <th width="30%">计划名称</th>
                             <th width="10%">计划人</th>
                             <th width="10%">审批状态</th>
                             <th width="10%">操作</th>
@@ -108,12 +105,9 @@
                         }
                         dataHtml += "<tr>";
                         dataHtml += "<td>" + item.WeekText + "</td>";
-                        dataHtml += "<td>" + CutString(item.NowJob, 20) + "</td>";
-                        dataHtml += "<td>" + CutString(item.NextPlan, 20) + "</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd") + "</td>";
                         dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td>" + app_text + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkPlan/Info?id="+item.ID+"\" class=\"aEdt\"><i class=\"i-edt\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Info/Plan?id=" + item.ID + "\" class=\"aEdt\"><i class=\"i-look\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -145,37 +139,6 @@
         }
         /*******************列表 end *************************/
 
-        //列表的选中
-        function CheckAll(obj) {
-            if ($(obj).is(':checked')) {
-                $(".all_checked_but").prop("checked", true);
-            } else {
-                $(".all_checked_but").prop("checked", false);
-            }
-        }
-
-        //格式化时间
-        function ChangeDateFormat(cellval, format) {
-            try {
-                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                switch (format) {
-                    case "yyyy-MM-dd":
-                        return date.getFullYear() + "-" + month + "-" + currentDate;
-                    case "yyyy-MM-dd HH:mm:ss":
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    default:
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                }
-            }
-            catch (e) {
-                return "";
-            }
-        }
     </script>
 
 }

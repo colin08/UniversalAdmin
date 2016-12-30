@@ -125,6 +125,20 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取顶级父类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GetTopParent(int id)
+        {
+            string sql = "select dbo.fn_DocCateTopPTitle(" + id + ")";
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.Database.SqlQuery<string>(sql).ToList()[0];
+            }
+        }
+
+        /// <summary>
         /// 删除分类，同时删除其子数据
         /// </summary>
         /// <param name="id"></param>

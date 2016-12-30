@@ -39,6 +39,12 @@ namespace Universal.Entity
         public virtual Node Node { get; set; }
 
         /// <summary>
+        /// 当前节点备注信息
+        /// </summary>
+        [MaxLength(500)]
+        public string Remark { get; set; }
+
+        /// <summary>
         /// 开启/关闭节点
         /// </summary>
         public bool Status { get; set; }

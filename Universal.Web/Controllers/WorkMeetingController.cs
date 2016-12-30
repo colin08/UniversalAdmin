@@ -75,18 +75,14 @@ namespace Universal.Web.Controllers
             Models.ViewModelWorkMeeting model = new Models.ViewModelWorkMeeting();
             if (ids != 0)
             {
-                BLL.BaseBLL<Entity.WorkMeeting> bll = new BLL.BaseBLL<Entity.WorkMeeting>();
-                Entity.WorkMeeting entity = bll.GetModel(p => p.ID == id,p=>p.WorkMeetingUsers.Select(s=>s.CusUser));
+                Entity.WorkMeeting entity = BLL.BLLWorkMeeting.GetModel(ids);
                 if (entity != null)
                 {
                     model.content = entity.Content;
                     model.title = entity.Title;
-                    DateTime dt = TypeHelper.ObjectToDateTime(entity.BeginTime);
-                    model.year = dt.Year.ToString();
-                    model.month = dt.Month.ToString();
+                    model.begin_time = entity.BeginTime;
                     model.location = entity.Location;
-                    model.day = dt.Day.ToString();
-                    model.status = entity.Status;
+                    model.end_time = entity.EndTime;
                     model.id = ids;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
                     foreach (var item in entity.WorkMeetingUsers)
@@ -99,6 +95,9 @@ namespace Universal.Web.Controllers
                         str_ids = str_ids.Remove(str_ids.Length - 1, 1);
                     }
                     model.user_ids = str_ids.ToString();
+
+                    model.BuildViewModelListFile(entity.FileList.ToList());
+
                 }
                 else
                 {
@@ -144,6 +143,8 @@ namespace Universal.Web.Controllers
             }
             #endregion
 
+
+
             if (ModelState.IsValid)
             {
 
@@ -157,14 +158,13 @@ namespace Universal.Web.Controllers
                 else
                 {
                     model = bll.GetModel(p => p.ID == entity.id);
-                    model.Status = entity.status;
                 }
                 model.Location = entity.location;
                 model.Content = entity.content;
                 model.Title = entity.title;
-                if (!string.IsNullOrWhiteSpace(entity.year) && !string.IsNullOrWhiteSpace(entity.month) && !string.IsNullOrWhiteSpace(entity.day))
-                    model.BeginTime = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
-
+                model.EndTime = entity.end_time;
+                model.BeginTime = entity.begin_time;
+                model.FileList = entity.BuildFileList();
                 if (isAdd)
                     BLL.BLLWorkMeeting.Add(model,final_ids);
                 else

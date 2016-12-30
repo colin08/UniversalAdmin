@@ -28,38 +28,45 @@
     <div class="homeWrap">
         <div class="homeLt">
             <div class="homeBox">
-                <div class="titH"><i class="i-lm5"></i><span>项目动态</span><a href="/Project/Modify" title="新增项目" class="btn25 red fr"><i class="i-wplus"></i><em>新增</em></a></div>
+                <div class="titH"><i class="i-lm5"></i><span>项目动态</span><a href="/Project/Index" title="更多" class="btn25 red fr"><i class="i-wplus"></i><em>更多</em></a></div>
                 <div class="homelist">
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
-                        <!--
-
-                        <tr>
-                            <td>蔡屋围更新项目</td>
-                            <td>规土委审查</td>
-                            <td>新增备注：绘制宗地图</td>
-                            <td>李明</td>
-                            <td>2016.04.19 18:05:24</td>
-                            <td align="center"><a href="javascript:;"><i class="i-favG"></i></a></td>
-                        </tr>
-                            -->
+                        <thead>
+                            <tr>
+                                <td width="18%">项目名称</td>
+                                <td width="25%">当前节点</td>
+                                <td width="27%">节点备注</td>
+                                <td width="10%">最新修改</td>
+                                <td width="15%">修改时间</td>
+                                <td width="5%" align="center">操作</td>
+                            </tr>
+                        </thead>
                         <tbody id="listData"></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="homeBox mt_20">
-                <div class="titH"><i class="i-lm6"></i><span>最新秘籍</span><a href="/Shool/Modify" title="上传秘籍" class="btn25 red fr"><i class="i-puload"></i><em>上传</em></a></div>
+                <div class="titH"><i class="i-lm6"></i><span>最新秘籍</span><a href="/Shool/Index" title="更多" class="btn25 red fr"><i class="i-puload"></i><em>更多</em></a></div>
                 <div class="homelist">
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
+                        <thead>
+                            <tr>
+                                <td width="40%">秘籍标题</td>
+                                <td>分类</td>
+                                <td width="10%">上传者</td>
+                                <td width="15%">上传时间</td>
+                                <td width="15%" align="center">操作</td>
+                            </tr>
+                        </thead>
                         @foreach (var item in Model.DocumentList)
                         {
                             <tr>
-                                <td width="30%">@Universal.Tools.StringHelper.CutString(item.Title,26)</td>
-                                <td width="10%">@item.CategoryName</td>
-                                <td width="5%"> @item.FileList.Count</td>
-                                <td width="10%">@item.CusUser.NickName</td>
-                                <td width="13%">@item.LastUpdateTime</td>
-                                <td width="10%" align="center">
+                                <td>@Universal.Tools.StringHelper.CutString(item.Title,25)</td>
+                                <td>@Universal.Tools.StringHelper.CutString(item.CategoryName, 6)</td>
+                                <td>@item.CusUser.NickName</td>
+                                <td>@item.LastUpdateTime.ToString("yy-MM-dd HH:mm")</td>
+                                <td align="center">
                                 @*@foreach (var file in item.FileList.ToList())
                                 {
                                     //附件大小：@file.FileSize
@@ -122,7 +129,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/PageData",
-                data: { "page_size": 8, "page_index": 1, "only_mine": false, "keyword": "", "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null, "is_admin": false },
+                data: { "page_size": 6, "page_index": 1, "only_mine": false, "keyword": "", "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null, "is_admin": false },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -136,13 +143,23 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
+                        var node_link = "javascript:;";
+                        if (item.ProjectFlowNodeDoing.flow_node_id != -1)
+                        {
+                            node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
+                        }
+                        var user_name = "暂无";
+                        if (item.LastUpdateUserName != null)
+                        {
+                            user_name = item.LastUpdateUserName;
+                        }
                         dataHtml += "<tr>";
-                        dataHtml += "<td width=\"20%\">" + CutString(item.Title, 12) + "</td>";
-                        dataHtml += "<td width=\"10%\">" + item.NowNode.Title + "</td>";
-                        dataHtml += "<td width=\"20%\">" + item.NowNode.Content + "</td>";
-                        dataHtml += "<td width=\"10%\">" + item.CusUser.NickName + "</td>";
-                        dataHtml += "<td width=\"20%\">" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
-                        dataHtml += "<td  width=\"15%\" align=\"center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
+                        dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "\">" + CutString(item.Title, 10) + "</a></td>";
+                        dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
+                        dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
+                        dataHtml += "<td>" + user_name + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
+                        dataHtml += "<td><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -157,41 +174,7 @@
             })
         }
         /*******************列表 end *************************/
-
-        //截取字符串
-        function CutString(str, len) {
-            if (str == null || str == undefined) {
-                return "";
-            }
-            if (str.length > len) {
-                return str.substring(0, len) + "...";
-            } else {
-                return str;
-            }
-        }
-        //格式化时间
-        function ChangeDateFormat(cellval, format) {
-            try {
-                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                switch (format) {
-                    case "yyyy-MM-dd":
-                        return date.getFullYear() + "-" + month + "-" + currentDate;
-                    case "yyyy-MM-dd HH:mm:ss":
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    default:
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                }
-            }
-            catch (e) {
-                return "";
-            }
-        }
-
+        
         function down(linkstr, title) {
             if (linkstr.length > 0) {
                 $.post('/Home/AddDownLog', { "title": title }, function (text, status) { window.open(linkstr) });

@@ -76,8 +76,9 @@ namespace Universal.BLL
         /// <param name="icon"></param>
         /// <param name="color"></param>
         /// <param name="process_to"></param>
+        /// <param name="title">流程标题</param>
         /// <returns></returns>
-        public static int[] AddFlowNode(int user_id, int flow_id, int node_id, int top, int left, string icon, string color, string process_to, out string msg)
+        public static int[] AddFlowNode(int user_id, int flow_id, int node_id, int top, int left, string icon, string color, string process_to,string title, out string msg)
         {
             int[] result = new int[2];
             result[0] = -1;
@@ -86,6 +87,11 @@ namespace Universal.BLL
             if (flow_id < -1 || flow_id == 0 || node_id <= 0 || user_id <= 0)
             {
                 msg = "非法参数";
+                return result;
+            }
+            if(flow_id == -1 && string.IsNullOrWhiteSpace(title))
+            {
+                msg = "添加流程时必须传入标题";
                 return result;
             }
 
@@ -110,11 +116,15 @@ namespace Universal.BLL
                     msg = "流程不存在";
                     return result;
                 }
+                if(entity_flow.Title != title && !string.IsNullOrWhiteSpace(title))
+                {
+                    entity_flow.Title = title;
+                }
             }
             else
             {
                 entity_flow.CusUserID = user_id;
-                entity_flow.Title = entity_node.Title;
+                entity_flow.Title = title;
                 entity_flow.FlowType = Entity.FlowType.basic;
                 db.Flows.Add(entity_flow);
             }

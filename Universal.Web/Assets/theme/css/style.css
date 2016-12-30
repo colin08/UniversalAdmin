@@ -6,7 +6,7 @@
 .userInfo .limd{ width: 400px; float: left;}
 .userInfo .limd span{ padding: 10px 0; display: inline-block;}
 .userInfo .litip{ width: 320px; float: left;}
-.userInfo .litip span{ background: #f7f9fd; padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;;}
+.userInfo .litip span{ padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;;}
 
 .sysIn{ width: 860px; float: none; margin: 40px auto;}
 .sysIn .limd{ width: 560px;;}

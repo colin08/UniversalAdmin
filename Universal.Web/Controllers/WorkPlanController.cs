@@ -33,8 +33,6 @@ namespace Universal.Web.Controllers
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             int rowCount = 0;
             List<Entity.WorkPlan> list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.CusUserID == WorkContext.UserInfo.ID, "AddTime desc");
-            foreach (var item in list)
-                item.ApproveNickName = BLL.BLLCusUser.GetUserDepartmentAdminText(item.CusUserID);
             WebAjaxEntity<List<Entity.WorkPlan>> result = new WebAjaxEntity<List<Entity.WorkPlan>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
@@ -99,24 +97,6 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 工作计划详情
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Info(int id)
-        {
-            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
-            Entity.WorkPlan entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
-            if (entity == null)
-                return View("Error");
-            ViewData["ApproveUser"] = BLL.BLLCusUser.GetUserDepartmentAdminText(entity.CusUserID);
-
-            BLL.BaseBLL<Entity.CusDepartmentAdmin> bll_admin = new BLL.BaseBLL<Entity.CusDepartmentAdmin>();
-            bool isAdmin = bll_admin.Exists(p => p.CusUserID == WorkContext.UserInfo.ID);
-            ViewData["IsDepartmentAdmin"] = isAdmin;
-            return View(entity);
-        }
-
-        /// <summary>
         /// 计划审批
         /// </summary>
         /// <param name="id"></param>
@@ -132,7 +112,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            if(entity.IsApprove)
+            if (entity.IsApprove)
             {
                 WorkContext.AjaxStringEntity.msgbox = "已审批";
                 return Json(WorkContext.AjaxStringEntity);
@@ -140,12 +120,13 @@ namespace Universal.Web.Controllers
 
             entity.IsApprove = true;
             entity.ApproveTime = DateTime.Now;
-            if(bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
+            if (bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
             {
                 WorkContext.AjaxStringEntity.msg = 1;
                 WorkContext.AjaxStringEntity.msgbox = "审批成功";
                 return Json(WorkContext.AjaxStringEntity);
-            }else
+            }
+            else
             {
                 WorkContext.AjaxStringEntity.msgbox = "审批失败";
                 return Json(WorkContext.AjaxStringEntity);
@@ -156,14 +137,12 @@ namespace Universal.Web.Controllers
 
         public ActionResult Modify(int? id)
         {
-            LoadPlatform();
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelWorkPlan entity = new Models.ViewModelWorkPlan();
-
+            LoadStatus();
             if (num != 0)
             {
-                BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
-                Entity.WorkPlan model = bll.GetModel(p => p.ID == num);
+                Entity.WorkPlan model = BLL.BLLWorkPlan.GetModel(num);
                 if (entity == null)
                 {
                     entity.Msg = 2;
@@ -177,15 +156,29 @@ namespace Universal.Web.Controllers
                     }
                     else
                     {
-                        LoadPlatform(model.WeekText);
-                        entity.next_plan = model.NextPlan;
+                        entity.approve_status = model.IsApprove;
+                        //LoadPlatform(model.WeekText);
                         entity.id = model.ID;
-                        entity.now_job = model.NowJob;
                         entity.week_text = model.WeekText;
-                        DateTime dt = TypeHelper.ObjectToDateTime(model.DoneTime);
+                        DateTime dt = TypeHelper.ObjectToDateTime(model.BeginTime);
                         entity.year = dt.Year.ToString();
                         entity.month = dt.Month.ToString();
                         entity.day = dt.Day.ToString();
+
+                        DateTime dt2 = TypeHelper.ObjectToDateTime(model.EndTime);
+                        entity.year2 = dt2.Year.ToString();
+                        entity.month2 = dt2.Month.ToString();
+                        entity.day2 = dt2.Day.ToString();
+
+                        entity.approve_user_id = model.ApproveUserID;
+                        entity.approve_user_name = model.ApproveUser.NickName;
+                        var item_list = model.WorkPlanItemList.ToList();
+                        if (item_list.Count > 0)
+                        {
+                            entity.plan_item.Clear();
+                            entity.plan_item = item_list;
+                        }
+
                     }
                 }
 
@@ -198,9 +191,8 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelWorkPlan entity)
         {
-            LoadPlatform();
             var isAdd = entity.id == 0 ? true : false;
-
+            LoadStatus();
 
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             if (!isAdd)
@@ -217,10 +209,15 @@ namespace Universal.Web.Controllers
                 }
             }
 
-            DateTime DoneTime = DateTime.Now;
+            DateTime BeginTime = DateTime.Now;
 
             if (!string.IsNullOrWhiteSpace(entity.year) && !string.IsNullOrWhiteSpace(entity.month) && !string.IsNullOrWhiteSpace(entity.day))
-                DoneTime = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
+                BeginTime = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
+
+            DateTime EndTime = DateTime.Now;
+
+            if (!string.IsNullOrWhiteSpace(entity.year2) && !string.IsNullOrWhiteSpace(entity.month2) && !string.IsNullOrWhiteSpace(entity.day2))
+                EndTime = TypeHelper.ObjectToDateTime(entity.year2 + "/" + entity.month2 + "/" + entity.day2);
             else
             {
                 entity.Msg = 2;
@@ -243,15 +240,15 @@ namespace Universal.Web.Controllers
                 else
                     model = bll.GetModel(p => p.ID == entity.id);
 
-                model.DoneTime = DoneTime;
-                model.NextPlan = entity.next_plan;
-                model.NowJob = entity.now_job;
+                model.ApproveUserID = entity.approve_user_id;
+                model.BeginTime = BeginTime;
+                model.EndTime = EndTime;
                 model.WeekText = entity.week_text;
-
+                model.WorkPlanItemList = entity.plan_item;
                 if (isAdd)
                     bll.Add(model);
                 else
-                    bll.Modify(model);
+                    BLL.BLLWorkPlan.Modify(model);
 
                 entity.Msg = 1;
             }
@@ -306,6 +303,17 @@ namespace Universal.Web.Controllers
             WeekList.Add(new SelectListItem() { Text = next_2_str, Value = next_2_str });
 
             ViewData["WeekText"] = WeekList;
+        }
+
+        private void LoadStatus()
+        {
+            List<SelectListItem> StatusList = new List<SelectListItem>();
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.WorkStatus)))
+            {
+                string text = EnumHelper.GetDescription<Entity.WorkStatus>((Entity.WorkStatus)item.Key);
+                StatusList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
+            }
+            ViewData["StatusList"] = StatusList;
         }
 
         #region 私有方法

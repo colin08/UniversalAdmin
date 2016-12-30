@@ -138,3 +138,46 @@ function setIndexImgH(){
 
 }
 
+
+//截取字符串
+function CutString(str, len) {
+    if (str == null || str == undefined) {
+        return "";
+    }
+    if (str.length > len) {
+        return str.substring(0, len) + "...";
+    } else {
+        return str;
+    }
+}
+//格式化时间
+function ChangeDateFormat(cellval, format) {
+    try {
+        var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        switch (format) {
+            case "yyyy-MM-dd":
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            case "yyyy-MM-dd HH:mm:ss":
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
+            default:
+                return date.getFullYear().toString().substring(2) + "-" + month + "-" + currentDate + " " + hour + ":" + Minute;
+        }
+    }
+    catch (e) {
+        return "";
+    }
+}
+
+//列表的选中
+function CheckAll(obj) {
+    if ($(obj).is(':checked')) {
+        $(".all_checked_but").prop("checked", true);
+    } else {
+        $(".all_checked_but").prop("checked", false);
+    }
+}

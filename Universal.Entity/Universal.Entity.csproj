@@ -73,6 +73,7 @@
     <Compile Include="DownloadLog.cs" />
     <Compile Include="Feedback.cs" />
     <Compile Include="Flow\FlowNode.cs" />
+    <Compile Include="ProjectFlowNodeDoing.cs" />
     <Compile Include="Project\ProjectFlowNode.cs" />
     <Compile Include="Project\ProjectStageFile.cs" />
     <Compile Include="Project\ProjectStage.cs" />
@@ -92,10 +93,13 @@
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
     <Compile Include="WorkJob.cs" />
+    <Compile Include="WorkJobFile.cs" />
     <Compile Include="WorkMeeting.cs" />
     <Compile Include="WorkJobUser.cs" />
+    <Compile Include="WorkMeetingFile.cs" />
     <Compile Include="WorkMeetingUser.cs" />
     <Compile Include="WorkPlan.cs" />
+    <Compile Include="WorkPlanItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

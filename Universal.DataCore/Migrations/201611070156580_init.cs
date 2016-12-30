@@ -889,6 +889,31 @@ namespace Universal.DataCore.Migrations
                         end
                         ";
             Sql(sp_StatcticsProjectTotal);
+
+            //获取顶级分类名称
+            string fn_DocCateTopPTitle = @"
+                        CREATE FUNCTION [dbo].[fn_DocCateTopPTitle](@id int)
+                        returns varchar(30) AS
+                        BEGIN
+                        declare @ptitle varchar(30);
+                        set @ptitle='';
+                        with cte
+                        AS
+                        (
+	                        select ID,PId,Title from DocCategory where ID=@id
+                        union ALL
+	                        select b.ID,b.PId,b.Title from DocCategory as b INNER JOIN cte as c on c.PId=b.ID
+                        )
+
+                        select @ptitle=Title from cte where Pid is null;
+
+                        return (@ptitle)
+                        END
+
+                        ";
+            Sql(fn_DocCateTopPTitle);
+
+
         }
 
         public override void Down()

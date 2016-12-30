@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -11,6 +12,14 @@ namespace Universal.BLL
     /// </summary>
     public class BLLWorkMeeting
     {
+        public static Entity.WorkMeeting GetModel(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.WorkMeetings.AsNoTracking().Include(p => p.FileList).Include(p => p.WorkMeetingUsers.Select(s => s.CusUser)).Include(p=>p.CusUser).Where(p => p.ID == id).FirstOrDefault();
+            }
+        }
+
         /// <summary>
         /// 添加
         /// </summary>
@@ -53,6 +62,7 @@ namespace Universal.BLL
         {
             var db = new DataCore.EFDBContext();
             db.WorkMeetingUsers.Where(p => p.WorkMeetingID == entity.ID).ToList().ForEach(p => db.WorkMeetingUsers.Remove(p));
+            db.WorkMeetingFiles.Where(p => p.WorkMeetingID == entity.ID).ToList().ForEach(p => db.WorkMeetingFiles.Remove(p));
             if (!string.IsNullOrWhiteSpace(ids))
             {
                 foreach (var item in ids.Split(','))
@@ -69,6 +79,15 @@ namespace Universal.BLL
                     }
                 }
             }
+
+            List<Entity.WorkMeetingFile> file_list = entity.FileList.ToList();
+            foreach (var item in file_list)
+            {
+                item.WorkMeetingID = entity.ID;
+                db.WorkMeetingFiles.Add(item);
+            }
+            entity.FileList.Clear();
+
             var ss = db.Entry<Entity.WorkMeeting>(entity);
             ss.State = System.Data.Entity.EntityState.Modified;
             int row = db.SaveChanges();

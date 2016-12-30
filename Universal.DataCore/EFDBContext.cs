@@ -130,11 +130,18 @@ namespace Universal.DataCore
         public DbSet<Entity.WorkPlan> WorkPlans { get; set; }
 
         /// <summary>
+        /// 工作计划项
+        /// </summary>
+        public DbSet<Entity.WorkPlanItem> WorkPlanItems { get; set; }
+
+        /// <summary>
         /// 任务指派
         /// </summary>
         public DbSet<Entity.WorkJob> WorkJobs { get; set; }
 
         public DbSet<Entity.WorkJobUser> WorkJobUsers { get; set; }
+
+        public DbSet<Entity.WorkJobFile> WorkJobFiles { get; set; }
 
         /// <summary>
         /// 任务召集
@@ -142,6 +149,11 @@ namespace Universal.DataCore
         public DbSet<Entity.WorkMeeting> WorkMeetings { get; set; }
 
         public DbSet<Entity.WorkMeetingUser> WorkMeetingUsers { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DbSet<Entity.WorkMeetingFile> WorkMeetingFiles { get; set; }
 
         /// <summary>
         /// 下载记录

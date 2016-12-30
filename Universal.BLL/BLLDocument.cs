@@ -14,6 +14,19 @@ namespace Universal.BLL
     public class BLLDocument
     {
         /// <summary>
+        /// 获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Entity.DocPost GetModel(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.DocPosts.AsNoTracking().Include(p=>p.DocCategory).Include(p=>p.FileList).Include(p=>p.CusUser).Where(p => p.ID == id).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// 删除秘籍
         /// </summary>
         /// <returns></returns>
@@ -142,7 +155,7 @@ namespace Universal.BLL
                 strWhere += " and CHARINDEX(N'" + search_title + "', Title) > 0 ";
             }
 
-            sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql = "select * from(SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * FROM(select * from[dbo].[DocPost] " + strWhere + ") as S  where See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
             sql_total = "select count(1) FROM(select * from[dbo].[DocPost] " + strWhere + ") as S where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
             
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
@@ -156,9 +169,7 @@ namespace Universal.BLL
                 }
                 item.CusUser = entity;
 
-                var entity_category = db.DocCategorys.Find(item.DocCategoryID);
-                if (entity_category != null)
-                    item.CategoryName = entity_category.Title;
+                item.CategoryName = BLL.BLLDocCategory.GetTopParent(item.DocCategoryID);
 
                 item.IsFavorites = db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == item.ID);
             }

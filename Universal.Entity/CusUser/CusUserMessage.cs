@@ -223,13 +223,13 @@ namespace Universal.Entity
                     case CusUserMessageType.appproveok:
                         return "";
                     case CusUserMessageType.waitmeeting:
-                        return "/Info/Meeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.confrimjoinmeeting:
-                        return "/Info/Meeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.meetingcancel:
-                        return "/Info/Meeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.meetingchangedate:
-                        return "/Info/Meeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.waitjobdone:
                         return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.jobtimeout:

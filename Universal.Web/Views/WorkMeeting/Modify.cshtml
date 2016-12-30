@@ -21,22 +21,8 @@
                 <form method="post" class="form-horizontal" id="form" name="form1">
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(p => p.user_ids)
-                    @Html.HiddenFor(p => p.year)
-                    @Html.HiddenFor(p => p.month)
-                    @Html.HiddenFor(p => p.day)
+                    @Html.HiddenFor(p => p.files)
                     <ul>
-
-                        @if (Model.id > 0)
-                        {
-                            <li>
-                                <div class="lilt">会议状态</div>
-                                <div class="limd">
-                                    @Html.DropDownListFor(p => p.status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select", @style = "width: 94%;" })
-                                </div>
-                                <div class="litip">@Html.ValidationMessageFor(p => p.status)</div>
-                            </li>
-                         }
-
                         <li>
                             <div class="lilt">主题</div>
                             <div class="limd">
@@ -52,13 +38,18 @@
 
 
                         <li>
-                            <div class="lilt">时间</div>
+                            <div class="lilt">开会时间</div>
                             <div class="limd">
-                                <select name="YYYY" onChange="YYYYDD(this.value)" class="tb_select"></select>
-                                <select name="MM" onChange="MMDD(this.value)" class="tb_select"></select>
-                                <select name="DD" onchange="DDChan(this.value)" class="tb_select"></select>
+                                @Html.TextBoxFor(p => p.begin_time, new { @class = "usInput", style = "font-size: 14px;" })
                             </div>
-                            <div class="litip">&nbsp;</div>
+                            <div class="litip">@Html.ValidationMessageFor(p=>p.begin_time)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">结束时间</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.end_time, new { @class = "usInput",style= "font-size: 14px;" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.end_time)</div>
                         </li>
 
                         <li>
@@ -83,9 +74,27 @@
                                     </ul>
                                 </div>
                             </div>
-
                         </li>
-
+                        <li>
+                            <div class="lilt">附件</div>
+                            <div class="limd big">
+                                <ul id="file_list">
+                                    @foreach (var item in Model.file_list)
+                                    {
+                                        <li>
+                                            <a href="javascript:;" onclick="RemoveUp(this)" class="btn-add uploadBtnBox"><i class="i-barrel"></i></a>
+                                            <a href="javascript:;" class="btn-add uploadBtnBox"><i class="i-redbb"></i>上传文件<input type="file" class="uploadBtn" onchange="Upload(this)" /></a>
+                                            <span spath="@item.file_path">@item.file_name</span> &nbsp;
+                                            <span></span>
+                                            <span>@item.file_size</span>
+                                        </li>
+                                    }
+                                    <li class="guding">
+                                        <a href="javascript:;" class="btn-add uploadBtnBox" onclick="AddFile()"><i class="i-attach"></i>新增</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                         <li>
                             <div class="lilt">&nbsp;</div>
                             <div class="limd"><button type="submit" class="btn1">发布</button> <button type="button" onclick="location.href = '/WorkMeeting/Index';" class="btn1 grey">取消</button></div>
@@ -106,7 +115,34 @@
 <!--底部脚本-->
 @section foot
 {
+<script src="~/Assets/laydate/laydate.js"></script>
     <script type="text/javascript">
+        var start = {
+            elem: '#begin_time',
+            format: 'YYYY/MM/DD hh:mm:ss',
+            min: laydate.now(), //设定最小日期为当前日期
+            max: '2099-06-16 23:59:59', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            elem: '#end_time',
+            format: 'YYYY/MM/DD hh:mm:ss',
+            min: laydate.now(),
+            max: '2099-06-16 23:59:59',
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                start.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+
         $(document).ready(function (e) {
             @if(Model.Msg == 1)
             {
@@ -122,67 +158,101 @@
 
         });
     </script>
+
 <script type="text/javascript">
-            function YYYYMMDDstart() {
-                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        function RemoveUp(obj)
+        {
+            $(obj).parent("li").remove();
+            CreateUploadData();
+        }
 
-                //先给年下拉框赋内容
-                var y = new Date().getFullYear();
-                for (var i = y ; i < (y + 10) ; i++) //以今年为准，前30年，后30年
-                    document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
-                //赋月份的下拉框
-                for (var i = 1; i < 13; i++)
-                    document.form1.MM.options.add(new Option(" " + i + " 月", i));
+        function AddFile()
+        {
+            var li_html = "<li>";
+            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"  onclick=\"RemoveUp(this)\"><i class=\"i-barrel\"></i></a>";
+            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"><i class=\"i-redbb\"></i>上传文件<input type=\"file\" class=\"uploadBtn\" onchange=\"Upload(this)\" /></a>";
+            li_html += "    <span spath=\"\"></span> &nbsp;<span></span><span></span>";
+            li_html += "</li>";
+            $(".guding").before(li_html);
+        }
 
-                document.form1.YYYY.value = $("#year").val();
+        function Upload(obj)
+        {
+            //alert($(obj).parent("a").parent("li").attr("data_id"));
+            //显示的文件名
+            var span_file_name = $(obj).parent("a").next();
 
-                //document.form1.MM.value = new Date().getMonth() + 1;
-                document.form1.MM.value = $("#month").val();
-                var n = MonHead[new Date().getMonth()];
-                if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n); //赋日期下拉框Author:meizz
-                //document.form1.DD.value = new Date().getDate();
-                document.form1.DD.value = $("#day").val();
-            }
-            if (document.attachEvent)
-                window.attachEvent("onload", YYYYMMDDstart);
-            else
-                window.addEventListener('load', YYYYMMDDstart, false);
+            //上传状态
+            var span_file_status = $(obj).parent("a").next().next();
 
-            function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
+            //文件大小
+            var span_file_size = $(obj).parent("a").next().next().next();
+
+            //原始文件名
+            var file_name = getFileName($(obj).val());
+            if (CheckIsUpload(file_name))
             {
-                var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
-                $("#year").val(str);
-                if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[MMvalue - 1];
-                if (MMvalue == 2 && IsPinYear(str)) n++;
-                writeDay(n)
+                alert("该文件已上传");
+                return;
             }
-            function MMDD(str)   //月发生变化时日期联动
-            {
-                var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
-                $("#month").val(str);
-                if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[str - 1];
-                if (str == 2 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n)
-            }
-            function DDChan(str) {
-                $("#day").val(str);
-            }
-            function writeDay(n)   //据条件写日期的下拉框
-            {
-                var e = document.form1.DD; optionsClear(e);
-                for (var i = 1; i < (n + 1) ; i++)
-                    e.options.add(new Option(" " + i + " 日", i));
-            }
-            function IsPinYear(year)//判断是否闰平年
-            {
-                return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
-            }
-            function optionsClear(e) {
-                e.options.length = 1;
-            }
+            var fd = new FormData();
+            fd.append("FileData", $(obj)[0].files[0]);
+            $(span_file_status).html("上传中...");
+            $(span_file_name).html(file_name);
+            $.ajax({
+                url: '/Tools/UploadFile',
+                type: 'POST',
+                cache: false,
+                contentType: "multipart/form-data",
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                $(span_file_status).html("");
+                if (res.msg == 1) {
+                    $(span_file_name).attr("spath", res.data);
+                    $(span_file_size).html(res.msgbox);
+                    CreateUploadData();
+                } else {
+                    alert(res.msgbox);
+                }
+            }).fail(function (res) { });
+
+        }
+
+        //创建服务数据
+        function CreateUploadData()
+        {
+            var filestr = "";
+            $.each($("#file_list").find("li"), function () {
+                if ($(this).attr("class") == undefined)
+                {
+                    var server_path = $(this).find("span:eq(0)").attr("spath");
+                    var file_name = $(this).find("span:eq(0)").text();
+                    var file_size = $(this).find("span:eq(2)").text();
+                    if(server_path.length != 0&& file_name.length != 0 && file_size.length != 0)
+                        filestr += server_path + "," + file_name + "," + file_size + "|";
+                }
+            })
+            $("#files").val(filestr);
+        }
+
+        function CheckIsUpload(file_name)
+        {
+            var is_ext = false;
+            $.each($("#file_list").find("li"), function () {
+                if ($(this).attr("class") == undefined) {
+                    if ($(this).find("span:eq(0)").text() == file_name)
+                        is_ext = true;
+                }
+            })
+            return is_ext;
+        }
+
+        function getFileName(o) {
+            var pos = o.lastIndexOf("\\");
+            return o.substring(pos + 1);
+        }
 
 </script>
 }

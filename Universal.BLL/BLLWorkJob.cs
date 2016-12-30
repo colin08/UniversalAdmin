@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -11,6 +12,14 @@ namespace Universal.BLL
     /// </summary>
     public class BLLWorkJob
     {
+        public static Entity.WorkJob GetModel(int id)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.WorkJobs.AsNoTracking().Include(p => p.WorkJobUsers.Select(s => s.CusUser)).Include(p => p.FileList).Include(p => p.CusUser).Where(p => p.ID == id).FirstOrDefault();
+            }
+        }
+
         /// <summary>
         /// 添加
         /// </summary>
@@ -53,6 +62,7 @@ namespace Universal.BLL
         {
             var db = new DataCore.EFDBContext();
             db.WorkJobUsers.Where(p => p.WorkJobID == entity.ID).ToList().ForEach(p => db.WorkJobUsers.Remove(p));
+            db.WorkJobFiles.Where(p => p.WorkJobID == entity.ID).ToList().ForEach(p => db.WorkJobFiles.Remove(p));
             if (!string.IsNullOrWhiteSpace(ids))
             {
                 foreach (var item in ids.Split(','))
@@ -69,6 +79,13 @@ namespace Universal.BLL
                     }
                 }
             }
+            List<Entity.WorkJobFile> file_list = entity.FileList.ToList();
+            foreach (var item in file_list)
+            {
+                item.WorkJobID = entity.ID;
+                db.WorkJobFiles.Add(item);
+            }
+            entity.FileList.Clear();
             var ss = db.Entry<Entity.WorkJob>(entity);
             ss.State = System.Data.Entity.EntityState.Modified;
             int row = db.SaveChanges();

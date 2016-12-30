@@ -1,16 +1,20 @@
 ﻿@model Universal.Entity.WorkPlan
 @{
     ViewBag.Title = "计划详情";
-    ViewData["tabLeft"] = "msg";
     ViewData["tabTop"] = "manager";
 }
 
 <!--头部脚本-->
 @section head
 {
+<style>
+    .limd table { margin-top: 5px; }
+    .limd td { padding: 5px; }
+        .limd td input[type='text'] { width: 100px; }
+    .addMember { float: left; font-size: 10px; line-height: 26px; padding: 0 10px; display: inline-block; background: #e22d3e; color: #fff; font-weight: normal; border-radius: 4px; }
+</style>
 }
 <!--头部脚本 end-->
-
 <div class="wapper">
     @Html.Partial("_MenuLeft", this.ViewData)
 
@@ -18,44 +22,78 @@
         <div class="container">
             <div class="tit1">
                 <div class="inner">
-                    <a href="/User/Message" class="fl f16"><i class="i-back"></i>消息列表</a>
+                    <a href="@ViewData["BackUrl"]" class="fl f16"><i class="i-back"></i>@ViewData["BackTitle"]</a>
                 </div>
             </div>
 
             <div class="userInfo sysIn">
                 <ul>
                     <li>
-                        <div class="lilt">周期</div>
+                        <div class="lilt">计划名称</div>
                         <div class="limd">
                             <span>@Model.WeekText</span>
                         </div>
                         <div class="litip"></div>
                     </li>
                     <li>
-                        <div class="lilt">本周工作记录</div>
+                        <div class="lilt">计划者</div>
                         <div class="limd">
-                            <span>@Model.NowJob</span>
+                            <span>@Model.CusUser.NickName</span>
                         </div>
                         <div class="litip"></div>
                     </li>
                     <li>
-                        <div class="lilt">下周工作计划</div>
-                        <div class="limd">
-                            <span>@Model.NextPlan</span>
-                        </div>
+                        <div class="lilt">审批人</div>
+                        <div class="limd"><span>@ViewData["ApproveUser"]</span></div>
                         <div class="litip"></div>
                     </li>
                     <li>
-                        <div class="lilt">计划完成时间</div>
+                        <div class="lilt">计划项</div>
                         <div class="limd">
-                            <span>@Model.DoneTime</span>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>工作分项名称</td>
+                                        <td>工作内容</td>
+                                        <td>预期达成目标</td>
+                                        <td>完成最后时限</td>
+                                        <td>完成情况</td>
+                                        <td>备注</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="workitem">
+                                    @foreach (var item in Model.WorkPlanItemList)
+                                    {
+                                        <tr>
+                                            <td><span>@item.Title</span></td>
+                                            <td><span>@item.Content</span></td>
+                                            <td><span>@item.WantTaget</span></td>
+                                            <td><span>@item.DoneTime</span></td>
+                                            <td><span>@item.StatusText</span></td>
+                                            <td><span>@item.Remark</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                         <div class="litip"></div>
                     </li>
                     <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
-                            <button type="button" onclick="location.href = '/User/Message';" class="btn1 grey">返回消息列表</button>
+                            @if ((bool)ViewData["IsDepartmentAdmin"])
+                            {
+                                if (Model.IsApprove)
+                                {
+                                    <button type="button" class="btn1" style="background:#ccc">已审批</button>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="approve()" class="btn1" id="btn_s">审批</button>
+
+                                }
+                            }
+                            <button type="button" onclick="location.href = '@ViewData["BackUrl"]';" class="btn1 grey">返回 @ViewData["BackTitle"]</button>
                         </div>
                     </li>
                 </ul>
@@ -71,7 +109,34 @@
 @section foot
 {
     <script type="text/javascript">
+        function approve() {
+            $.ajax({
+                type: "post",
+                url: "/WorkPlan/DoApprove",
+                data: { "id": @Model.ID },
+                async: false,
+                beforeSend: function () {
 
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("审批成功");
+                        $("#btn_s").attr({"disabled":"disabled"});
+                        $("#btn_s").attr({"style":"background:#ccc"});
+                        $("#btn_s").text("已审批");
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
     </script>
 }
 <!--底部脚本 end-->

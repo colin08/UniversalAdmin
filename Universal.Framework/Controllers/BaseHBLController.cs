@@ -116,7 +116,7 @@ namespace Universal.Web.Framework
                     var model = new BLL.Model.LayoutFavorites();
                     model.icon = "/Assets/theme/ico/ico_35.png";
                     model.id = item.ID;
-                    model.link_url = "/Project/BasicInfo?id=" + item.ID.ToString();
+                    model.link_url = "/Project/BasicInfo?id=" + item.ProjectID.ToString();
                     model.title = item.Project.Title;
                     model.er_title = "预留";
                     result.Add(model);
@@ -129,7 +129,7 @@ namespace Universal.Web.Framework
                     var model = new BLL.Model.LayoutFavorites();
                     model.icon = "/Assets/theme/ico/ico_36.png";
                     model.id = item.ID;
-                    model.link_url = "/Shool/Modify?id=" + item.ID.ToString();
+                    model.link_url = "/Info/Document?id=" + item.DocPostID.ToString();
                     model.title = item.DocPost.Title;
                     model.er_title = "";
                     result.Add(model);

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Universal.Entity
 {
@@ -28,23 +29,10 @@ namespace Universal.Entity
         public virtual CusUser CusUser { get; set; }
 
         /// <summary>
-        /// 周期
+        /// 计划名称
         /// </summary>
         [MaxLength(200)]
         public string WeekText { get; set; }
-
-        /// <summary>
-        /// 本周工作记录
-        /// </summary>
-        [MaxLength(1000)]
-        public string NowJob { get; set; }
-        
-
-        /// <summary>
-        /// 下周工作计划
-        /// </summary>
-        [MaxLength(1000)]
-        public string NextPlan { get; set; }
         
         /// <summary>
         /// 是否审批
@@ -57,20 +45,36 @@ namespace Universal.Entity
         public DateTime? ApproveTime { get; set; }
 
         /// <summary>
-        /// 审批人，昵称逗号分割
+        /// 审核人员ID
         /// </summary>
-        [NotMapped]
-        public string ApproveNickName { get; set; }
+        public int ApproveUserID { get; set; }
 
         /// <summary>
-        /// 计划完成时间
+        /// 审核人员信息
         /// </summary>
-        public DateTime DoneTime { get; set; }
+        [ForeignKey("ApproveUserID")]
+        public virtual CusUser ApproveUser { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime BeginTime { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime EndTime { get; set; }
+
         
         /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime AddTime { get; set; }
+
+        /// <summary>
+        /// 计划条目
+        /// </summary>
+        public virtual ICollection<WorkPlanItem> WorkPlanItemList { get; set; }
 
     }
 }

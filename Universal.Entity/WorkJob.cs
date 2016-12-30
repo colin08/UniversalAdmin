@@ -30,6 +30,7 @@ namespace Universal.Entity
             this.DoneTime = DateTime.Now;
             this.Status = WorkStatus.ing;
             this.WorkJobUsers = new List<WorkJobUser>();
+            this.FileList = new List<WorkJobFile>();
         }
 
         public int ID { get; set; }
@@ -97,5 +98,10 @@ namespace Universal.Entity
         /// 执行人
         /// </summary>
         public virtual ICollection<WorkJobUser> WorkJobUsers { get; set; }
+
+        /// <summary>
+        /// 附件
+        /// </summary>
+        public virtual ICollection<WorkJobFile> FileList { get; set; }
     }
 }

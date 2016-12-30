@@ -96,14 +96,18 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
+                        var node_link = "javascript:;";
+                        if (item.ProjectFlowNodeDoing.flow_node_id != -1) {
+                            node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
+                        }
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
-                        dataHtml += "<td>"+CutString(item.Title,10)+"</td>";
-                        dataHtml += "<td>" + item.NowNode.Title + "</td>";
-                        dataHtml += "<td>" + item.NowNode.Content + "</td>";
-                        dataHtml += "<td>"+item.CusUser.NickName+"</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
+                        dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
+                        dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
+                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
+                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -135,47 +139,7 @@
         }
         /*******************列表 end *************************/
 
-        //列表的选中
-        function CheckAll(obj) {
-            if ($(obj).is(':checked')) {
-                $(".all_checked_but").prop("checked", true);
-            } else {
-                $(".all_checked_but").prop("checked", false);
-            }
-        }
-
-        //截取字符串
-        function CutString(str, len) {
-            if (str.length > len) {
-                return str.substring(0, len) + "...";
-            } else {
-                return str;
-            }
-        }
-
-        //格式化时间
-        function ChangeDateFormat(cellval, format) {
-            try {
-                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                switch (format) {
-                    case "yyyy-MM-dd":
-                        return date.getFullYear() + "-" + month + "-" + currentDate;
-                    case "yyyy-MM-dd HH:mm:ss":
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    default:
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                }
-            }
-            catch (e) {
-                return "";
-            }
-        }
-
+        
         function del(id) {
             var ids = "";
             if(id==0)

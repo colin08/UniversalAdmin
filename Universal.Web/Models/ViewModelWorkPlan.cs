@@ -17,28 +17,28 @@ namespace Universal.Web.Models
             this.year = DateTime.Now.Year.ToString();
             this.month = DateTime.Now.Month.ToString();
             this.day = DateTime.Now.Day.ToString();
+            this.year2 = DateTime.Now.Year.ToString();
+            this.month2 = DateTime.Now.Month.ToString();
+            this.day2 = DateTime.Now.Day.ToString();
+            this.plan_item = new List<Entity.WorkPlanItem>();
+            var entity = new Entity.WorkPlanItem();
+            entity.Status = Entity.WorkStatus.ing;
+            this.plan_item.Add(entity);
         }
 
         public int id { get; set; }
 
         /// <summary>
-        /// 周期
+        /// 计划名称
         /// </summary>
-        [Required(ErrorMessage ="请选择周期")]
+        [Required(ErrorMessage ="计划名称不能为空")]
         public string week_text { get; set; }
 
         /// <summary>
-        /// 本周工作记录
+        /// 审核状态
         /// </summary>
-        [Required(ErrorMessage ="请输入本周工作记录"),MaxLength(1000,ErrorMessage ="本周工作记录不能超过1000个字符")]
-        public string now_job { get; set; }
-
-        /// <summary>
-        /// 下周工作计划
-        /// </summary>
-        [Required(ErrorMessage = "请输入下周工作计划"), MaxLength(1000, ErrorMessage = "下周工作计划不能超过1000个字符")]
-        public string next_plan { get; set; }
-
+        public bool approve_status { get; set; }
+        
         /// <summary>
         /// 年
         /// </summary>
@@ -53,6 +53,27 @@ namespace Universal.Web.Models
         /// 日
         /// </summary>
         public string day { get; set; }
+
+        /// <summary>
+        /// 年
+        /// </summary>
+        public string year2 { get; set; }
+
+        /// <summary>
+        /// 月
+        /// </summary>
+        public string month2 { get; set; }
+
+        /// <summary>
+        /// 日
+        /// </summary>
+        public string day2 { get; set; }
+
+        public int approve_user_id { get; set; }
+
+        public string approve_user_name { get; set; }
+
+        public List<Entity.WorkPlanItem> plan_item { get; set; }
 
     }
 }

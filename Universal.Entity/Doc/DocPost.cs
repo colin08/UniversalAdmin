@@ -112,7 +112,7 @@ namespace Universal.Entity
         public string ErTxt { get; set; }
 
         /// <summary>
-        /// 所属分类名字
+        /// 所属顶级父类名字
         /// </summary>
         [NotMapped]
         public string CategoryName { get; set; }

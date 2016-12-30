@@ -296,6 +296,7 @@ namespace Universal.BLL
             var db = new DataCore.EFDBContext();
             foreach (var one in list.Where(p => p.Depth == 1).OrderByDescending(p => p.Priority))
             {
+                default_id = one.ID;
                 //构建第一层
                 data.Append("<li><span class=\"tree2\" onclick='pageData(1," + one.ID + ",true)'><b class=\"Off\">" + one.Title + " (" + GetDepartChildDataTotal(db, one.ID).ToString() + "人)</b></span>");
                 data.Append("<ul style=\"display: none; \">");
@@ -305,9 +306,6 @@ namespace Universal.BLL
                     data.Append("<ul style=\"display: none;\">");
                     foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID).OrderByDescending(p => p.Priority))
                     {
-                        if (default_id == 0)
-                            default_id = three.ID;
-
                         data.Append("<li><span class=\"tree4\" onclick='pageData(1," + three.ID + ",true)'><b>" + three.Title + "(" + GetDepartChildDataTotal(db, three.ID).ToString() + "人)</b></span></li>");
 
                     }

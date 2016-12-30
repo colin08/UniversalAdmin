@@ -310,10 +310,10 @@ namespace Universal.Web.Controllers
         /// <param name="node_id"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult AddNode(int flow_id, int node_id, int top, int left, string icon, string color, string process_to)
+        public JsonResult AddNode(int flow_id, int node_id, int top, int left, string icon, string color, string process_to,string title)
         {
             string msg = "";
-            var ids = BLL.BLLFlow.AddFlowNode(WorkContext.UserInfo.ID, flow_id, node_id, top, left, icon, color, process_to, out msg);
+            var ids = BLL.BLLFlow.AddFlowNode(WorkContext.UserInfo.ID, flow_id, node_id, top, left, icon, color, process_to,title, out msg);
             if (TypeHelper.ObjectToInt(ids[0]) != -1)
             {
                 WorkContext.AjaxStringEntity.msg = 1;
@@ -321,6 +321,29 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.total = TypeHelper.ObjectToInt(ids[0]);
             }
             WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 修改流程标题
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <param name="new_title"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ModifyFlowTitle(int flow_id,string new_title)
+        {
+            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
+            Entity.Flow entity = bll.GetModel(p => p.ID == flow_id);
+            if(entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "流程不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            entity.Title = new_title;
+            bll.Modify(entity, "Title");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);
         }
 

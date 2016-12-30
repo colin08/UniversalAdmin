@@ -1,0 +1,126 @@
+﻿@model Universal.Web.Models.ViewModelProjectFlowNode
+@{
+    ViewBag.Title = "流程节点详情";
+    ViewData["tabTop"] = "project";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="clear"></div>
+<!--wrapper [[-->
+<div class="container">
+    <div class="new-head mb-40 clearfix">
+        <a href="/Project/FlowInfo?id=@Model.flow_info.ProjectID" class="fl f16 go-prev"><i class="i-back"></i><span>流程节点</span></a>
+        <b class="f20">节点祥情</b>
+    </div>
+    
+    <div class="userInfo sysIn">
+        <ul>
+            <li>
+                <div class="lilt">节点名称</div>
+                <div class="limd">
+                    <span>@Model.node_info.Title</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">办事地址</div>
+                <div class="limd">
+                    <span>@Model.node_info.Location</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">办事流程说明</div>
+                <div class="limd">
+                    <span>@Model.node_info.Content</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">联系人</div>
+                <div class="limd">
+                    <ul>
+                        @foreach (var item in Model.users_entity)
+                        {
+                            <li><span>@item.title</span></li>
+                        }
+                    </ul>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">节点附件</div>
+                <div class="limd">
+                    <ul>
+                        @foreach (var item in Model.node_info.NodeFiles)
+                        {
+                            <li><span>@item.FileName &nbsp; @item.FileSize</span>&nbsp;&nbsp;&nbsp;<a href="@item.FilePath" target="_blank">下载</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">备注说明</div>
+                <div class="limd pr">
+                    <textarea id="remark" class = "usTextarea" >@Html.Raw(Model.flow_info.Remark)</textarea>
+                </div>
+                <div class="litip"></div>
+            </li>
+
+            <li>
+                <div class="lilt">&nbsp;</div>
+                <div class="limd">
+                    <button type="button" onclick="save()" class="btn1">保存备注说明</button> 
+                    <button type="button" onclick="location.href = '/Project/FlowInfo?id=@Model.flow_info.ProjectID;" class="btn1 grey">返回项目流程</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--wrapper ]]-->
+
+
+<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+
+
+
+
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+        function save() {
+            $.ajax({
+                type: "post",
+                url: "/Project/SaveFlowNodeRemark",
+                data: { "id": @Model.flow_info.ID, "remark": $("#remark").val() },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    alert(data.msgbox);
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+
+}
+<!--底部脚本 end-->

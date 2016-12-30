@@ -66,6 +66,7 @@ namespace Universal.Entity
             this.See = DocPostSee.everyone;
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
+            this.LastUpdateUserName = "";
         }
 
         public int ID { get; set; }
@@ -92,6 +93,12 @@ namespace Universal.Entity
         public int ApproveUserID { get; set; }
 
         /// <summary>
+        /// 最后修改人名称
+        /// </summary>
+        [MaxLength(30)]
+        public string LastUpdateUserName { get; set; }
+
+        /// <summary>
         /// 审核人员信息
         /// </summary>
         [ForeignKey("ApproveUserID")]
@@ -107,7 +114,7 @@ namespace Universal.Entity
         /// 当前项目节点信息
         /// </summary>
         [NotMapped]
-        public virtual Node NowNode { get; set; }
+        public virtual ProjectFlowNodeDoing ProjectFlowNodeDoing { get; set; }
 
         /// <summary>
         /// 引用的流程ID

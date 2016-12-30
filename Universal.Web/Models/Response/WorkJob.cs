@@ -10,10 +10,16 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class WorkJob
     {
+        public WorkJob()
+        {
+            this.users_list = new List<SelectUser>();
+            this.file_list = new List<ProjectFile>();
+        }
+
         public int id { get; set; }
 
         /// <summary>
-        /// 状态
+        /// 状态 0:进行中；1：已完成；2：取消
         /// </summary>
         public Entity.WorkStatus status { get; set; }
 
@@ -49,6 +55,11 @@ namespace Universal.Web.Models.Response
         /// 执行人
         /// </summary>
         public List<SelectUser> users_list { get; set; }
+
+        /// <summary>
+        /// 附件
+        /// </summary>
+        public List<ProjectFile> file_list { get; set; }
 
     }
 }

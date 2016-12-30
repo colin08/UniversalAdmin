@@ -111,28 +111,29 @@ namespace Universal.BLL
                 return response_entity;
 
             var db = new DataCore.EFDBContext();
-            string sql = "";
-            string sql_total = "";
             int begin_index = (page_index - 1) * page_size + 1;
             int end_index = page_index * page_size;
+            string sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID,Content from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T) AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            string sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T";
 
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID,Content from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.Title like '%" + search_title + "%'";
             }
 
             if (category_id > 0)
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + ") AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID,Content from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + ") AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + "";
             }
 
             if (!string.IsNullOrWhiteSpace(search_title) && category_id > 0)
             {
-                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+                sql = "select ID,Title,See,DocCategoryID,CusUserID,AddTime,LastUpdateTime,TOID,Content from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select doc.*,fav.AddTime as FavTime from CusUserDocFavorites as fav left join DocPost as doc on fav.DocPostID = doc.ID where fav.CusUserID =" + user_id.ToString() + ") as T where T.DocCategoryID = " + category_id + " and T.Title like '%" + search_title + "%'";
             }
+
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();
             foreach (var item in response_entity)
@@ -193,24 +194,25 @@ namespace Universal.BLL
                 item.ProjectFiles = db.ProjectFiles.AsNoTracking().Where(p => p.ProjectID == item.ID).ToList();
                 //获取当前进行的节点信息
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
-                var entity_node = new Entity.Node();
+                var entity_node = new Entity.ProjectFlowNodeDoing();
                 if (!item.Status)
                 {
-                    entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     if (entity_node == null)
                     {
-                        entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     }
 
                 }
                 if (entity_node == null)
                 {
-                    entity_node = new Entity.Node();
-                    entity_node.Title = "无节点";
-                    entity_node.Content = "无节点";
+                    entity_node = new Entity.ProjectFlowNodeDoing();
+                    entity_node.flow_node_id = -1;
+                    entity_node.node_title = "无节点";
+                    entity_node.flow_node_remark = "无备注";
                 }
 
-                item.NowNode = entity_node;
+                item.ProjectFlowNodeDoing = entity_node;
             }
             db.Dispose();
             return response_entity;

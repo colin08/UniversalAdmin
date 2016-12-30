@@ -15,7 +15,9 @@ namespace Universal.Entity
         {
             this.AddTime = DateTime.Now;
             this.BeginTime = DateTime.Now;
+            this.Status = WorkStatus.cancel;
             this.WorkMeetingUsers = new List<WorkMeetingUser>();
+            this.FileList = new List<WorkMeetingFile>();
         }
 
         public int ID { get; set; }
@@ -43,17 +45,14 @@ namespace Universal.Entity
         {
             get
             {
-                switch (this.Status)
-                {
-                    case WorkStatus.ing:
-                        return "进行中";
-                    case WorkStatus.done:
-                        return "已完成";
-                    case WorkStatus.cancel:
-                        return "已取消";
-                    default:
-                        return "";
-                }
+                if (DateTime.Now < BeginTime)
+                    return "未开始";
+                else if (DateTime.Now >= BeginTime && DateTime.Now <= EndTime)
+                    return "进行中";
+                else if (DateTime.Now > EndTime)
+                    return "已结束";
+                else
+                    return "未知";
             }
         }
 
@@ -73,12 +72,38 @@ namespace Universal.Entity
         /// 开会时间
         /// </summary>
         public DateTime BeginTime { get; set; }
-        
+
+        /// <summary>
+        /// 结会时间
+        /// </summary>
+        public DateTime EndTime { get; set; }
+
         /// <summary>
         /// 会议地点
         /// </summary>
         [MaxLength(100)]
         public string Location { get; set; }
+
+        /// <summary>
+        /// 时间显示
+        /// </summary>
+        [NotMapped]
+        public string TimeTxt
+        {
+            get
+            {
+                double day_cha = Tools.WebHelper.DateTimeDiff(BeginTime, EndTime, "ad");
+                if (day_cha < 1)
+                {
+                    //当天
+                    return BeginTime.ToString("yyyy-MM-dd HH:mm") + " ~ " + EndTime.ToString("HH:mm");
+                }
+                else
+                {
+                    return BeginTime.ToString("yyyy-MM-dd HH:mm") + " ~ " + EndTime.ToString("yyyy-MM-dd HH:mm");
+                }
+            }
+        }
 
         /// <summary>
         /// 添加时间
@@ -89,5 +114,10 @@ namespace Universal.Entity
         /// 与会人员
         /// </summary>
         public virtual ICollection<WorkMeetingUser> WorkMeetingUsers { get; set; }
+
+        /// <summary>
+        /// 附件
+        /// </summary>
+        public virtual ICollection<WorkMeetingFile> FileList { get; set; }
     }
 }

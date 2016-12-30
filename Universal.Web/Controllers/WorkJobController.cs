@@ -75,8 +75,7 @@ namespace Universal.Web.Controllers
             Models.ViewModelWorkJob model = new Models.ViewModelWorkJob();
             if (ids != 0)
             {
-                BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
-                Entity.WorkJob entity = bll.GetModel(p => p.ID == id,p=>p.WorkJobUsers.Select(s=>s.CusUser));
+                Entity.WorkJob entity = BLL.BLLWorkJob.GetModel(ids);
                 if (entity != null)
                 {
                     model.content = entity.Content;
@@ -98,6 +97,7 @@ namespace Universal.Web.Controllers
                         str_ids = str_ids.Remove(str_ids.Length - 1, 1);
                     }
                     model.user_ids = str_ids.ToString();
+                    model.BuildViewModelListFile(entity.FileList.ToList());
                 }
                 else
                 {
@@ -164,6 +164,7 @@ namespace Universal.Web.Controllers
                 if (!string.IsNullOrWhiteSpace(entity.year) && !string.IsNullOrWhiteSpace(entity.month) && !string.IsNullOrWhiteSpace(entity.day))
                     model.DoneTime = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
 
+                model.FileList = entity.BuildFileList();
                 if (isAdd)
                     BLL.BLLWorkJob.Add(model,final_ids);
                 else

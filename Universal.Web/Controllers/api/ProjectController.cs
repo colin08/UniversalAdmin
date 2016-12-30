@@ -90,7 +90,7 @@ namespace Universal.Web.Controllers.api
                 model.project_id = item.ID;
                 model.title = item.Title;
                 model.user_name = item.CusUser.NickName;
-
+                model.create_user_id = item.CusUserID;
                 if (item.ProjectFiles != null)
                 {
                     foreach (var file in item.ProjectFiles.Where(p => p.Type == Entity.ProjectFileType.album).ToList())
@@ -104,8 +104,8 @@ namespace Universal.Web.Controllers.api
                     }
                 }
                 //获取当前节点信息
-                model.node_title = item.NowNode.Title;
-                model.node_content = item.NowNode.Content;
+                model.node_title = item.ProjectFlowNodeDoing.node_title;
+                model.node_content = item.ProjectFlowNodeDoing.flow_node_remark;
                 response_list.Add(model);
             }
 
@@ -129,7 +129,16 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "缺少流程ID";
                 return WorkContext.AjaxStringEntity;
             }
+
+            var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
+            if(entity_user == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
             Entity.Project entity = new Entity.Project();
+            entity.LastUpdateUserName = entity_user.NickName;
             entity.CusUserID = req.user_id;
             entity.ApproveUserID = req.approve_user_id;
             entity.FlowID = req.flow_id;
@@ -319,6 +328,13 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/project/modify/basic")]
         public WebAjaxEntity<string> ModifyProjectInfoBasic([FromBody]Models.Request.EditProject req)
         {
+            var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
+            if(entity_user == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             var entity = bll.GetModel(p => p.ID == req.project_id);
             if (entity == null)
@@ -378,6 +394,7 @@ namespace Universal.Web.Controllers.api
             entity.ApproveUserID = req.approve_user_id;
             entity.See = req.post_see;
             entity.TOID = final_see_ids;
+            entity.LastUpdateUserName = "";
             List<Entity.ProjectFile> file_list_entity = new List<Entity.ProjectFile>();
             if (req.file_list != null)
             {
@@ -392,7 +409,7 @@ namespace Universal.Web.Controllers.api
                 }
             }
             entity.ProjectFiles = file_list_entity;
-            string msg = "";
+            string msg = entity_user.NickName;
             BLL.BLLProject.Modify(entity, final_user_ids, out msg);
 
             WorkContext.AjaxStringEntity.msg = 1;
@@ -669,8 +686,8 @@ namespace Universal.Web.Controllers.api
                     }
                 }
                 //获取当前节点信息
-                model.node_title = item.NowNode.Title;
-                model.node_content = item.NowNode.Content;
+                model.node_title = item.ProjectFlowNodeDoing.node_title;
+                model.node_content = item.ProjectFlowNodeDoing.flow_node_remark;
                 response_list.Add(model);
             }
 

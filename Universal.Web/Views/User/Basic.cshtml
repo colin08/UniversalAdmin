@@ -29,8 +29,7 @@
                         </li>
                         <li>
                             <div class="lilt">姓名</div>
-                            <div class="limd">@Html.TextBoxFor(p => p.nick_name, new { placeholder = "必填", @class = "usInput" })</div>
-                            <div class="litip"><span>请填写 真实姓名，方便他人识别</span>@Html.ValidationMessageFor(p => p.nick_name)</div>
+                            <div class="limd"><span>@Model.nick_name </span></div>
                         </li>
                         <li>
                             <div class="lilt">性别</div>

@@ -150,6 +150,10 @@
     <Compile Include="Migrations\201612220813198_remove_doc_file.Designer.cs">
       <DependentUpon>201612220813198_remove_doc_file.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612290401019_edit_tt.cs" />
+    <Compile Include="Migrations\201612290401019_edit_tt.Designer.cs">
+      <DependentUpon>201612290401019_edit_tt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -242,6 +246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612220813198_remove_doc_file.resx">
       <DependentUpon>201612220813198_remove_doc_file.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612290401019_edit_tt.resx">
+      <DependentUpon>201612290401019_edit_tt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

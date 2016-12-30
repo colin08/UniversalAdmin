@@ -43,6 +43,7 @@ namespace Universal.BLL
                 msg = "所选流程不存在";
                 return 0;
             }
+
             entity.Pieces = flow_entity.Pieces;
             //处理项目联系人
             foreach (var item in user_ids.Split(','))
@@ -205,7 +206,7 @@ namespace Universal.BLL
             else
             {
                 if(!is_admin)
-                    user_where = " where See = 0 or CHARINDEX((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),(case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + TOID)> 0";
+                    user_where = " where See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0";
             }
             if(!string.IsNullOrWhiteSpace(search_title))
             {
@@ -292,24 +293,25 @@ namespace Universal.BLL
 
                 //获取当前进行的节点信息
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
-                var entity_node = new Entity.Node();
+                var entity_node = new Entity.ProjectFlowNodeDoing();
                 if(!item.Status)
                 {
-                    entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = "+item.ID.ToString()+" and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     if (entity_node == null)
                     {
-                        entity_node = db.Nodes.SqlQuery("select N.* from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     }
                     
                 }
                 if (entity_node == null)
                 {
-                    entity_node = new Entity.Node();
-                    entity_node.Title = "无节点";
-                    entity_node.Content = "无节点";
+                    entity_node = new Entity.ProjectFlowNodeDoing();
+                    entity_node.flow_node_id = -1;
+                    entity_node.node_title = "无节点";
+                    entity_node.flow_node_remark = "无备注";
                 }
 
-                item.NowNode = entity_node;
+                item.ProjectFlowNodeDoing = entity_node;
 
             }
             db.Dispose();

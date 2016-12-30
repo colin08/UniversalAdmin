@@ -80,25 +80,7 @@ namespace Universal.Web.Controllers
             //TODO 详情展示-待审核项目
             return View();
         }
-
-        /// <summary>
-        /// 会议
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="msg">消息ID</param>
-        /// <returns></returns>
-        public ActionResult Meeting(int id,int? msg)
-        {
-            BLL.BaseBLL<Entity.WorkMeeting> bll = new BLL.BaseBLL<Entity.WorkMeeting>();
-            var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
-            if (entity == null)
-            {
-                return View("NotFound");
-            }
-            SetMsgRead(msg);
-            return View();
-        }
-
+        
         /// <summary>
         /// 任务
         /// </summary>
@@ -125,14 +107,28 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Plan(int id, int? msg)
         {
-            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
-            var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
+            ViewData["tabLeft"] = "msg";
+            ViewData["BackUrl"] = "/User/Message";
+            ViewData["BackTitle"] = "消息列表";
+
+            Entity.WorkPlan entity = BLL.BLLWorkPlan.GetModel(id);
             if (entity == null)
-            {
                 return View("NotFound");
-            }
+            ViewData["ApproveUser"] = BLL.BLLCusUser.GetUserDepartmentAdminText(entity.CusUserID);
+
+            BLL.BaseBLL<Entity.CusDepartmentAdmin> bll_admin = new BLL.BaseBLL<Entity.CusDepartmentAdmin>();
+            bool isAdmin = bll_admin.Exists(p => p.CusUserID == WorkContext.UserInfo.ID);
+            ViewData["IsDepartmentAdmin"] = isAdmin;
+
             SetMsgRead(msg);
-            return View();
+
+            if (msg == null)
+            {
+                ViewData["BackTitle"] = "待计划列表";
+                ViewData["tabLeft"] = "gzjh";
+                ViewData["BackUrl"] = "/WorkPlan/Index";
+            }
+            return View(entity);
         }
 
         /// <summary>
@@ -146,6 +142,57 @@ namespace Universal.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 秘籍
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg">消息ID</param>
+        /// <returns></returns>
+        public ActionResult Document(int id, int? msg)
+        {
+            ViewData["tabLeft"] = "msg";
+            ViewData["BackUrl"] = "/User/Message";
+            ViewData["BackTitle"] = "消息列表";
+            var entity = BLL.BLLDocument.GetModel(id);
+            if (entity == null)
+            {
+                return View("NotFound");
+            }
+            SetMsgRead(msg);
+            if(msg ==null)
+            {
+                ViewData["BackTitle"] = "秘籍收藏列表";
+                ViewData["tabLeft"] = "file";
+                ViewData["BackUrl"] = "/User/DocFavorites";
+            }
+            return View(entity);
+        }
+
+        /// <summary>
+        /// 会议召集
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg">消息ID</param>
+        /// <returns></returns>
+        public ActionResult Meeting(int id, int? msg)
+        {
+            ViewData["tabLeft"] = "msg";
+            ViewData["BackUrl"] = "/User/Message";
+            ViewData["BackTitle"] = "消息列表";
+            var entity = BLL.BLLWorkMeeting.GetModel(id);
+            if (entity == null)
+            {
+                return View("NotFound");
+            }
+            SetMsgRead(msg);
+            if (msg == null)
+            {
+                ViewData["BackTitle"] = "会议列表";
+                ViewData["tabLeft"] = "workmeeting";
+                ViewData["BackUrl"] = "/WorkMeeting/Index";
+            }
+            return View(entity);
+        }
 
 
         /// <summary>

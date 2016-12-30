@@ -159,6 +159,55 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 流程节点信息
+        /// </summary>
+        /// <param name="id">流程节点的id，不是项目id，也不是节点id</param>
+        /// <returns></returns>
+        public ActionResult FlowNodeInfo(int id)
+        {
+            Entity.ProjectFlowNode model_flow = new BLL.BaseBLL<Entity.ProjectFlowNode>().GetModel(p => p.ID == id, p => p.Node);
+            if (model_flow == null)
+                return Content("流程节点不存在");
+            Entity.Node node_info = BLL.BLLNode.GetMode(model_flow.NodeID);
+            if (node_info == null)
+                return Content("节点不存在");
+
+            Models.ViewModelProjectFlowNode entity = new Models.ViewModelProjectFlowNode();
+            entity.flow_info = model_flow;
+            entity.node_info = node_info;
+
+            foreach (var item in node_info.NodeUsers)
+                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+
+            entity.BuildViewModelListFile(node_info.NodeFiles.ToList());
+            
+            return View(entity);
+        }
+
+        /// <summary>
+        /// 保存流程节点备注信息
+        /// </summary>
+        /// <param name="id">流程节点的id，不是项目id，也不是节点id</param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveFlowNodeRemark(int id,string remark)
+        {
+            BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if(entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "流程节点不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            entity.Remark = remark;
+            bll.Modify(entity, "Remark");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "保存成功";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
         /// 流拆迁信息
         /// </summary>
         /// <returns></returns>
@@ -385,7 +434,9 @@ namespace Universal.Web.Controllers
                 model.Title = entity.title;
                 model.TOID = final_see_ids;
                 model.See = entity.post_see;
+                model.LastUpdateUserName = WorkContext.UserInfo.NickName;
                 model.ProjectFiles = entity.BuildFileList();
+                model.LastUpdateUserName = WorkContext.UserInfo.NickName;
                 string msg = "";
                 if (isAdd)
                     BLL.BLLProject.Add(model, final_user_ids, out msg);

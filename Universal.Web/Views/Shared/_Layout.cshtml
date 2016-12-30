@@ -141,12 +141,12 @@
 
         <div class="nav">
             <ul>
-                <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")=)><a href="/" title="首页">首页</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")=)><a href="/Project/Index" title="项目管理">项目管理</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")=)><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=act" : "")=)><a href="/Contacts/index" title="企业通讯">企业通讯</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=act" : "")=)><a href="/Statctics/ProjectTotal" title="平台统计">平台统计</a></li>
-                <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=act" : "")=)><a href="@WorkContext.ManagerHome">系统管理</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")><a href="/" title="首页">首页</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")><a href="/Project/Index" title="项目管理">项目管理</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("sms") ? "class=act" : "")><a href="/Contacts/index" title="企业通讯">企业通讯</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("statistics") ? "class=act" : "")><a href="/Statctics/ProjectTotal" title="平台统计">平台统计</a></li>
+                <li @(ViewData["tabTop"].ToString().Equals("manager") ? "class=act" : "")><a href="@WorkContext.ManagerHome">系统管理</a></li>
             </ul>
         </div>
     </div>

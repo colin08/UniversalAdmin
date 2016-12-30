@@ -10,13 +10,13 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class WorkMeeting
     {
+        public WorkMeeting()
+        {
+            this.file_list = new List<ProjectFile>();
+        }
+
         public int id { get; set; }
-
-        /// <summary>
-        /// 状态
-        /// </summary>
-        public Entity.WorkStatus status { get; set; }
-
+        
         /// <summary>
         /// 状态文本
         /// </summary>
@@ -38,6 +38,11 @@ namespace Universal.Web.Models.Response
         public DateTime begin_time { get; set; }
 
         /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime end_time { get; set; }
+
+        /// <summary>
         /// 会议地点
         /// </summary>
         public string location { get; set; }
@@ -51,6 +56,11 @@ namespace Universal.Web.Models.Response
         /// 参会人员
         /// </summary>
         public List<SelectUser> meeting_users { get; set; }
+
+        /// <summary>
+        /// 附件
+        /// </summary>
+        public List<ProjectFile> file_list { get; set; }
 
     }
 }

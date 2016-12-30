@@ -247,11 +247,8 @@ namespace Universal.Web.Controllers.api
                 Models.Response.WorkPlan model = new Models.Response.WorkPlan();
                 model.add_time = item.AddTime;
                 model.approve_time = item.ApproveTime;
-                model.done_time = item.DoneTime;
                 model.id = item.ID;
                 model.is_approve = item.IsApprove;
-                model.next_plan = item.NextPlan;
-                model.now_job = item.NowJob;
                 model.week_text = item.WeekText;
                 response_list.Add(model);
             }
@@ -281,9 +278,6 @@ namespace Universal.Web.Controllers.api
             entity.IsApprove = false;
             entity.ApproveTime = null;
             entity.CusUserID = req.user_id;
-            entity.DoneTime = req.done_time;
-            entity.NextPlan = req.next_plan;
-            entity.NowJob = req.now_job;
             entity.WeekText = req.week_text;
             int id = new BLL.BaseBLL<Entity.WorkPlan>().Add(entity);
             if(id>0)
@@ -309,15 +303,16 @@ namespace Universal.Web.Controllers.api
             BLL.BaseBLL<Entity.WorkMeeting> bll = new BLL.BaseBLL<Entity.WorkMeeting>();
             int rowCount = 0;
             var db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc", p => p.WorkMeetingUsers.Select(s=>s.CusUser));
+            BLL.BaseBLL<Entity.WorkMeetingFile> bll_file = new BLL.BaseBLL<Entity.WorkMeetingFile>();
             foreach (var item in db_list)
             {
                 Models.Response.WorkMeeting model = new Models.Response.WorkMeeting();
                 model.add_time = item.AddTime;
                 model.begin_time = item.BeginTime;
+                model.end_time = item.EndTime;
                 model.content = item.Content;
                 model.id = item.ID;
                 model.location = item.Location;
-                model.status = item.Status;
                 model.status_text = item.StatusText;
                 model.title = item.Title;
                 List<Models.Response.SelectUser> users_list = new List<Models.Response.SelectUser>();
@@ -326,8 +321,23 @@ namespace Universal.Web.Controllers.api
                     foreach (var user in item.WorkMeetingUsers)
                         users_list.Add(BuilderSelectUser(user.CusUser));
                 }
-
                 model.meeting_users = users_list;
+
+                List<Entity.WorkMeetingFile> file_list = bll_file.GetListBy(0, p => p.WorkMeetingID == item.ID, "ID ASC");
+                if (file_list != null)
+                {
+                    foreach (var file in file_list)
+                    {
+                        Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                        model_file.file_name = file.FileName;
+                        model_file.file_path = GetSiteUrl() + file.FilePath;
+                        model_file.file_size = file.FileSize;
+                        model_file.type = Entity.ProjectFileType.file;
+                        model.file_list.Add(model_file);
+                    }
+                }
+
+                response_list.Add(model);
 
             }
 
@@ -352,6 +362,18 @@ namespace Universal.Web.Controllers.api
             entity.Content = req.content;
             entity.Title = req.title;
             entity.BeginTime = req.begin_time;
+            entity.EndTime = req.end_time;
+            if (req.file_list != null)
+            {
+                foreach (var item in req.file_list)
+                {
+                    Entity.WorkMeetingFile entity_file = new Entity.WorkMeetingFile();
+                    entity_file.FileName = item.file_name;
+                    entity_file.FilePath = item.file_path;
+                    entity_file.FileSize = item.file_size;
+                    entity.FileList.Add(entity_file);
+                }
+            }
             BLL.BLLWorkMeeting.Add(entity, req.user_ids);
             if (entity.ID > 0)
             {
@@ -374,6 +396,7 @@ namespace Universal.Web.Controllers.api
             WebAjaxEntity<List<Models.Response.WorkJob>> response_entity = new WebAjaxEntity<List<Models.Response.WorkJob>>();
             List<Models.Response.WorkJob> response_list = new List<Models.Response.WorkJob>();
             BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
+            BLL.BaseBLL<Entity.WorkJobFile> bll_file = new BLL.BaseBLL<Entity.WorkJobFile>();
             int rowCount = 0;
             var db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc", p => p.WorkJobUsers.Select(s => s.CusUser));
             foreach (var item in db_list)
@@ -394,6 +417,21 @@ namespace Universal.Web.Controllers.api
                 }
 
                 model.users_list = users_list;
+
+                List<Entity.WorkJobFile> file_list = bll_file.GetListBy(0, p => p.WorkJobID == item.ID, "ID ASC");
+                if (file_list != null)
+                {
+                    foreach (var file in file_list)
+                    {
+                        Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                        model_file.file_name = file.FileName;
+                        model_file.file_path = GetSiteUrl() + file.FilePath;
+                        model_file.file_size = file.FileSize;
+                        model_file.type = Entity.ProjectFileType.file;
+                        model.file_list.Add(model_file);
+                    }
+                }
+                response_list.Add(model);
 
             }
 
@@ -416,6 +454,21 @@ namespace Universal.Web.Controllers.api
             entity.Content = req.content;
             entity.Title = req.title;
             entity.DoneTime = req.done_time;
+            entity.CusUserID = req.user_id;
+            entity.Status = req.status;
+
+            if (req.file_list != null)
+            {
+                foreach (var item in req.file_list)
+                {
+                    Entity.WorkJobFile entity_file = new Entity.WorkJobFile();
+                    entity_file.FileName = item.file_name;
+                    entity_file.FilePath = item.file_path;
+                    entity_file.FileSize = item.file_size;
+                    entity.FileList.Add(entity_file);
+                }
+            }
+
             BLL.BLLWorkJob.Add(entity, req.user_ids);
             if (entity.ID > 0)
             {
