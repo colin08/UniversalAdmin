@@ -200,28 +200,18 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpPost]
         [Route("api/v1/downloadlog/add")]
-        public WebAjaxEntity<string> AddDownLog([FromBody]Models.Request.AddDownloadLog req)
+        public WebAjaxEntity<string> AddDownLog([FromBody]Models.Request.AddDownLog req)
         {
-            if (req.user_id <= 0 || string.IsNullOrWhiteSpace(req.doc_ids))
+            if (req.user_id <= 0 || string.IsNullOrWhiteSpace(req.file_name))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return WorkContext.AjaxStringEntity;
             }
-            BLL.BaseBLL<Entity.DocPost> bll_doc = new BLL.BaseBLL<Entity.DocPost>();
             BLL.BaseBLL<Entity.DownloadLog> bll_down = new BLL.BaseBLL<Entity.DownloadLog>();
-            foreach (var item in req.doc_ids.Split(','))
-            {
-                int id = TypeHelper.ObjectToInt(item, 0);
-                if (id <= 0)
-                    continue;
-                var entity_doc = bll_doc.GetModel(p => p.ID == id);
-                if (entity_doc == null)
-                    continue;
-                var entity_down = new Entity.DownloadLog();
-                entity_down.CusUserID = req.user_id;
-                entity_down.Title = entity_doc.Title;
-                bll_down.Add(entity_down);
-            }
+            var entity_down = new Entity.DownloadLog();
+            entity_down.CusUserID = req.user_id;
+            entity_down.Title = req.file_name;
+            bll_down.Add(entity_down);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
@@ -291,8 +281,8 @@ namespace Universal.Web.Controllers.api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/favorites/add")]
-        public WebAjaxEntity<string> AddFavorites([FromBody]Models.Request.AddDownloadLog req)
+        [Route("api/v1/favorites/add/doc")]
+        public WebAjaxEntity<string> AddFavorites([FromBody]Models.Request.AddFavorites req)
         {
             if (req.user_id <= 0 || string.IsNullOrWhiteSpace(req.doc_ids))
             {
@@ -329,7 +319,7 @@ namespace Universal.Web.Controllers.api
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/favorites/remove")]
+        [Route("api/v1/favorites/remove/doc")]
         public WebAjaxEntity<string> RemoveFavorites([FromBody]Models.Request.RemoveFav req)
         {
             if (string.IsNullOrWhiteSpace(req.ids))

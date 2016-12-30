@@ -633,21 +633,61 @@ namespace Universal.Web.Controllers.api
 
 
         /// <summary>
-        /// 收藏项目(同时也是取消收藏)
+        /// 移除秘籍收藏
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/favorites/remove/project")]
+        public WebAjaxEntity<string> RemoveFavorites([FromBody]Models.Request.RemoveFav req)
+        {
+            if (string.IsNullOrWhiteSpace(req.ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+            var id_list = Array.ConvertAll<string, int>(req.ids.Split(','), int.Parse);
+            bll.DelBy(p => id_list.Contains(p.ID));
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
+        /// 批量收藏项目
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("api/v1/project/fav/change")]
-        public WebAjaxEntity<string> AddFav(int user_id, int project_id)
+        [HttpPost]
+        [Route("api/v1/favorites/add/project")]
+        public WebAjaxEntity<string> AddFavMany([FromBody]Models.Request.AddFavorites req)
         {
-            string msg = "";
-            bool isOK = BLL.BllCusUserFavorites.AddProjectFav(project_id, user_id, out msg);
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            if (isOK)
+            if (req.user_id <= 0 || string.IsNullOrWhiteSpace(req.doc_ids))
             {
-                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
             }
-            WorkContext.AjaxStringEntity.msgbox = msg;
+            BLL.BaseBLL<Entity.Project> bll_doc = new BLL.BaseBLL<Entity.Project>();
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+            StringBuilder str_ids = new StringBuilder();
+            foreach (var item in req.doc_ids.Split(','))
+            {
+                int id = TypeHelper.ObjectToInt(item, 0);
+                if (id <= 0)
+                    continue;
+                if (!bll_doc.Exists(p => p.ID == id))
+                    continue;
+                var entity_fav = new Entity.CusUserProjectFavorites();
+                entity_fav.CusUserID = req.user_id;
+                entity_fav.ProjectID = id;
+                bll_fav.Add(entity_fav);
+                str_ids.Append(entity_fav.ID.ToString() + ",");
+            }
+            if (str_ids.Length > 0)
+                str_ids.Remove(str_ids.Length - 1, 1);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            WorkContext.AjaxStringEntity.data = str_ids.ToString();
             return WorkContext.AjaxStringEntity;
         }
 
@@ -661,13 +701,15 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<List<Models.Response.ProjectListInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ProjectListInfo>>();
             List<Models.Response.ProjectListInfo> response_list = new List<Models.Response.ProjectListInfo>();
-            //BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+            BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
             int rowCount = 0;
             var db_list = BLL.BllCusUserFavorites.GetProjectPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.search_word);
             foreach (var item in db_list)
             {
                 Models.Response.ProjectListInfo model = new Models.Response.ProjectListInfo();
-                //model.is_fav = bll_fav.Exists(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
+                if (fav_entity != null)
+                    model.favorites_id = fav_entity.ID;
                 model.last_update_time = item.LastUpdateTime;
                 model.project_id = item.ID;
                 model.title = item.Title;

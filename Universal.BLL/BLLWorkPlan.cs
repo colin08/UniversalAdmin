@@ -92,6 +92,24 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// app获取计划列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="rowCount"></param>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static List<Entity.WorkPlan> GetPagedList(int pageIndex, int pageSize, ref int rowCount,int user_id)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                rowCount = db.WorkPlans.Where(p=>p.CusUserID == user_id).Count();
+                return db.WorkPlans.OrderByDescending(p=>p.AddTime).Where(p => p.CusUserID == user_id).Include(p => p.ApproveUser).Include(p => p.WorkPlanItemList).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            }
+
+        }
+
+        /// <summary>
         /// 修改
         /// </summary>
         /// <param name="entity"></param>

@@ -15,6 +15,8 @@ namespace Universal.Web.Models.Request
             this.file_list = new List<Response.ProjectFile>();
         }
 
+        public int id { get; set; }
+
         public int user_id { get; set; }
 
         /// <summary>

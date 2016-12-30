@@ -10,23 +10,27 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class WorkPlan
     {
+        public WorkPlan()
+        {
+            this.plan_item = new List<WorkPlanItem>();
+        }
+
         public int id { get; set; }
 
         /// <summary>
-        /// 周期
+        /// 计划名称
         /// </summary>
         public string week_text { get; set; }
+        
+        /// <summary>
+        /// 审批人用户id
+        /// </summary>
+        public int approve_user_id { get; set; }
 
         /// <summary>
-        /// 本周工作记录
+        /// 审批人用户昵称
         /// </summary>
-        public string now_job { get; set; }
-
-
-        /// <summary>
-        /// 下周工作计划
-        /// </summary>
-        public string next_plan { get; set; }
+        public string approve_user_name { get; set; }
 
         /// <summary>
         /// 是否审批
@@ -39,13 +43,62 @@ namespace Universal.Web.Models.Response
         public DateTime? approve_time { get; set; }
 
         /// <summary>
-        /// 计划完成时间
+        /// 开始时间
         /// </summary>
-        public DateTime done_time { get; set; }
+        public DateTime begin_time { get; set; }
 
         /// <summary>
-        /// 添加时间
+        /// 结束时间
         /// </summary>
-        public DateTime add_time { get; set; }
+        public DateTime end_time { get; set; }
+
+        /// <summary>
+        /// 计划条目
+        /// </summary>
+        public List<WorkPlanItem> plan_item { get; set; }
+
     }
+
+    /// <summary>
+    /// 计划条米
+    /// </summary>
+    public class WorkPlanItem
+    {
+        
+        /// <summary>
+        ///  标题
+        /// </summary>
+        public string title { get; set; }
+
+        /// <summary>
+        /// 工作内容
+        /// </summary>
+        public string content { get; set; }
+
+        /// <summary>
+        /// 预期目标 选填
+        /// </summary>
+        public string want_taget { get; set; }
+
+        /// <summary>
+        /// 完成时限 选填
+        /// </summary>
+        public string done_time { get; set; }
+
+        /// <summary>
+        /// 完成情况 0:进行中；1：已完成；2：取消，未审核通过时不展示/修改
+        /// </summary>
+        public Entity.WorkStatus status { get; set; }
+
+        /// <summary>
+        /// 状态文本，修改时传入空字符串
+        /// </summary>
+        public string status_text{get;set;}
+
+        /// <summary>
+        /// 备注，未审核通过时不展示/修改
+        /// </summary>
+        public string remark { get; set; }
+    }
+
 }

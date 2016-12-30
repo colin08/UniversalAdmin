@@ -64,8 +64,7 @@ namespace Universal.Entity
         /// 结束时间
         /// </summary>
         public DateTime EndTime { get; set; }
-
-        
+                
         /// <summary>
         /// 添加时间
         /// </summary>

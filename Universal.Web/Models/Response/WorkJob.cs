@@ -32,6 +32,11 @@ namespace Universal.Web.Models.Response
         }
 
         /// <summary>
+        /// 创建者用户id
+        /// </summary>
+        public int create_user_id { get; set; }
+
+        /// <summary>
         /// 主题
         /// </summary>
         public string title { get; set; }

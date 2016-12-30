@@ -193,7 +193,7 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<List<Models.Response.ModelUserInfo>> SearchUser(int department_id, string search_word)
         {
             WebAjaxEntity<List<Models.Response.ModelUserInfo>> response_entity = new WebAjaxEntity<List<Models.Response.ModelUserInfo>>();
-   
+
             List<Models.Response.ModelUserInfo> response_list = new List<Models.Response.ModelUserInfo>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             int to = 0;
@@ -228,7 +228,7 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 获取我的工作计划，注意，添加里的审批人在此接口返回字段的msgbox里面，此接口判断是否请求成功只要判断msg=1就可以了
+        /// 获取我的工作计划
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -237,24 +237,39 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<List<Models.Response.WorkPlan>> response_entity = new WebAjaxEntity<List<Models.Response.WorkPlan>>();
             List<Models.Response.WorkPlan> response_list = new List<Models.Response.WorkPlan>();
-            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             int rowCount = 0;
-            List<Entity.WorkPlan> db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc");
-            //foreach (var item in list)
-            //    item.ApproveNickName = BLL.BLLCusUser.GetUserDepartmentAdminText(item.CusUserID);
+            List<Entity.WorkPlan> db_list = BLL.BLLWorkPlan.GetPagedList(req.page_index, req.page_size, ref rowCount, req.user_id);
             foreach (var item in db_list)
             {
                 Models.Response.WorkPlan model = new Models.Response.WorkPlan();
-                model.add_time = item.AddTime;
                 model.approve_time = item.ApproveTime;
+                model.approve_user_id = item.ApproveUserID;
+                model.approve_user_name = item.ApproveUser.NickName;
+                model.begin_time = item.BeginTime;
+                model.end_time = item.EndTime;
                 model.id = item.ID;
                 model.is_approve = item.IsApprove;
                 model.week_text = item.WeekText;
+                if(item.WorkPlanItemList != null)
+                {
+                    foreach (var plan_item in item.WorkPlanItemList)
+                    {
+                        Models.Response.WorkPlanItem model_item = new Models.Response.WorkPlanItem();
+                        model_item.content = plan_item.Content;
+                        model_item.done_time = plan_item.DoneTime;
+                        model_item.remark = plan_item.Remark;
+                        model_item.status = plan_item.Status;
+                        model_item.status_text = plan_item.StatusText;
+                        model_item.title = plan_item.Title;
+                        model_item.want_taget = plan_item.WantTaget;
+                        model.plan_item.Add(model_item);
+                    }
+                }
                 response_list.Add(model);
             }
 
             response_entity.msg = 1;
-            response_entity.msgbox = BLL.BLLCusUser.GetUserDepartmentAdminText(req.user_id);
+            response_entity.msgbox = "ok";
             response_entity.data = response_list;
             response_entity.total = rowCount;
             return response_entity;
@@ -265,28 +280,41 @@ namespace Universal.Web.Controllers.api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/user/workplan/add")]
+        [Route("api/v1/user/workplan/modify")]
         public WebAjaxEntity<string> AddJobPlan([FromBody]Models.Request.WorkPlan req)
         {
-            if(string.IsNullOrWhiteSpace(req.next_plan) || string.IsNullOrWhiteSpace(req.now_job)|| string.IsNullOrWhiteSpace(req.week_text))
-            {
-                WorkContext.AjaxStringEntity.msgbox = "非法参数";
-                return WorkContext.AjaxStringEntity;
-            }
-
-            Entity.WorkPlan entity = new Entity.WorkPlan();
-            entity.IsApprove = false;
-            entity.ApproveTime = null;
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            var entity = new Entity.WorkPlan();
+            if (req.id > 0)
+                entity = bll.GetModel(p => p.ID == req.id);
+            entity.BeginTime = req.begin_time;
             entity.CusUserID = req.user_id;
+            entity.EndTime = req.end_time;
             entity.WeekText = req.week_text;
-            int id = new BLL.BaseBLL<Entity.WorkPlan>().Add(entity);
-            if(id>0)
+
+            if(req.plan_item != null)
             {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "ok";
-                return WorkContext.AjaxStringEntity;
+                if (entity.WorkPlanItemList == null)
+                    entity.WorkPlanItemList = new List<Entity.WorkPlanItem>();
+
+                foreach (var item in req.plan_item)
+                {
+                    Entity.WorkPlanItem model = new Entity.WorkPlanItem();
+                    model.Content = item.content;
+                    model.DoneTime = item.done_time;
+                    model.Remark = item.remark;
+                    model.Status = item.status;
+                    model.Title = item.title;
+                    model.WantTaget = item.want_taget;
+                    entity.WorkPlanItemList.Add(model);
+                }
             }
-            WorkContext.AjaxStringEntity.msgbox = "添加失败";
+            if (req.id > 0)
+                BLL.BLLWorkPlan.Modify(entity);
+            else
+                bll.Add(entity);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
 
@@ -302,7 +330,7 @@ namespace Universal.Web.Controllers.api
             List<Models.Response.WorkMeeting> response_list = new List<Models.Response.WorkMeeting>();
             BLL.BaseBLL<Entity.WorkMeeting> bll = new BLL.BaseBLL<Entity.WorkMeeting>();
             int rowCount = 0;
-            var db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc", p => p.WorkMeetingUsers.Select(s=>s.CusUser));
+            var db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc", p => p.WorkMeetingUsers.Select(s => s.CusUser));
             BLL.BaseBLL<Entity.WorkMeetingFile> bll_file = new BLL.BaseBLL<Entity.WorkMeetingFile>();
             foreach (var item in db_list)
             {
@@ -316,7 +344,7 @@ namespace Universal.Web.Controllers.api
                 model.status_text = item.StatusText;
                 model.title = item.Title;
                 List<Models.Response.SelectUser> users_list = new List<Models.Response.SelectUser>();
-                if(item.WorkMeetingUsers != null)
+                if (item.WorkMeetingUsers != null)
                 {
                     foreach (var user in item.WorkMeetingUsers)
                         users_list.Add(BuilderSelectUser(user.CusUser));
@@ -349,14 +377,17 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 添加我的会议召集
+        /// 添加/修改我的会议召集
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/user/workmeeting/add")]
-        public WebAjaxEntity<string> AddMeeting([FromBody]Models.Request.WorkMeeting req)
+        [Route("api/v1/user/workmeeting/modify")]
+        public WebAjaxEntity<string> ModifyMeeting([FromBody]Models.Request.WorkMeeting req)
         {
             Entity.WorkMeeting entity = new Entity.WorkMeeting();
+            if (req.id > 0)
+                entity = new BLL.BaseBLL<Entity.WorkMeeting>().GetModel(p => p.ID == req.id);
+
             entity.CusUserID = req.user_id;
             entity.Location = req.location;
             entity.Content = req.content;
@@ -374,14 +405,13 @@ namespace Universal.Web.Controllers.api
                     entity.FileList.Add(entity_file);
                 }
             }
-            BLL.BLLWorkMeeting.Add(entity, req.user_ids);
-            if (entity.ID > 0)
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "ok";
-                return WorkContext.AjaxStringEntity;
-            }
-            WorkContext.AjaxStringEntity.msgbox = "添加失败";
+            if (req.id > 0)
+                BLL.BLLWorkMeeting.Modify(entity, req.user_ids);
+            else
+                BLL.BLLWorkMeeting.Add(entity, req.user_ids);
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
 
@@ -403,10 +433,11 @@ namespace Universal.Web.Controllers.api
             {
                 Models.Response.WorkJob model = new Models.Response.WorkJob();
                 model.add_time = item.AddTime;
-                model.content  = item.Content;
+                model.content = item.Content;
                 model.id = item.ID;
                 model.done_time = item.DoneTime;
                 model.status = item.Status;
+                model.create_user_id = item.CusUserID;
                 model.status_text = item.StatusText;
                 model.title = item.Title;
                 List<Models.Response.SelectUser> users_list = new List<Models.Response.SelectUser>();
@@ -443,20 +474,23 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
-        /// 添加我的任务指派
+        /// 添加/修改我的任务指派
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/v1/user/workjob/add")]
-        public WebAjaxEntity<string> AddWorkJob([FromBody]Models.Request.WorkJob req)
+        [Route("api/v1/user/workjob/modify")]
+        public WebAjaxEntity<string> ModifyWorkJob([FromBody]Models.Request.WorkJob req)
         {
             Entity.WorkJob entity = new Entity.WorkJob();
+            if (req.id > 0)
+                entity = new BLL.BaseBLL<Entity.WorkJob>().GetModel(p => p.ID == req.id);
+
             entity.Content = req.content;
             entity.Title = req.title;
             entity.DoneTime = req.done_time;
             entity.CusUserID = req.user_id;
             entity.Status = req.status;
-
+            entity.ID = req.id;
             if (req.file_list != null)
             {
                 foreach (var item in req.file_list)
@@ -469,14 +503,12 @@ namespace Universal.Web.Controllers.api
                 }
             }
 
-            BLL.BLLWorkJob.Add(entity, req.user_ids);
-            if (entity.ID > 0)
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "ok";
-                return WorkContext.AjaxStringEntity;
-            }
-            WorkContext.AjaxStringEntity.msgbox = "添加失败";
+            if (req.id > 0)
+                BLL.BLLWorkJob.Modify(entity, req.user_ids);
+            else
+                BLL.BLLWorkJob.Add(entity, req.user_ids);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
 
@@ -517,9 +549,9 @@ namespace Universal.Web.Controllers.api
                 model.link_id = item.LinkID;
                 model.type = item.Type;
                 var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
-                if(entity_user != null)
+                if (entity_user != null)
                 {
-                    model.add_user_name = entity_user.CusDepartment.Title +" - "+ entity_user.NickName;
+                    model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
                 }
                 model.add_user_id = item.CusUserID;
                 model.type_name = item.TypeName;
@@ -581,7 +613,7 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
-        
+
 
         /// <summary>
         /// 构造用户信息
@@ -618,7 +650,7 @@ namespace Universal.Web.Controllers.api
             else
                 entity.job_name = model.CusUserJob.Title;
             entity.nick_name = model.NickName;
-            entity.shor_num = model.ShorNum == null? "":model.ShorNum;
+            entity.shor_num = model.ShorNum == null ? "" : model.ShorNum;
             entity.telphone = model.Telphone;
             entity.is_department_manager = BLL.BLLDepartment.CheckUserIsManager(entity.id, entity.department_id);
             return entity;

@@ -20,6 +20,11 @@ namespace Universal.Web.Models.Response
 
         public int create_user_id { get; set; }
 
+        /// <summary>
+        /// 项目收藏id
+        /// </summary>
+        public int favorites_id { get; set; }
+
     }
 
     /// <summary>
@@ -41,6 +46,7 @@ namespace Universal.Web.Models.Response
         /// 项目责任人名称
         /// </summary>
         public string user_name { get; set; }
+        
 
         /// <summary>
         /// 当前节点
