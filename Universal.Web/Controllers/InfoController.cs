@@ -77,8 +77,32 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Project(int id,int? msg)
         {
-            //TODO 详情展示-待审核项目
-            return View();
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == id, p => p.ApproveUser);
+            if (entity == null)
+            {
+                return View("NotFound");
+            }
+            SetMsgRead(msg);
+
+
+            ViewData["ShowApprove"] = 0;
+            //如果是项目添加者，则只显示项目审批状态
+            if(entity.CusUserID == WorkContext.UserInfo.ID)
+            {
+                ViewData["ShowApprove"] = 1;
+            }
+            else if(entity.ApproveUserID == WorkContext.UserInfo.ID)
+            {
+                //如果是审批人，则显示审批按钮和文本框
+                ViewData["ShowApprove"] = 2;
+            }
+            else
+            {
+                
+            }
+
+            return View(entity);
         }
         
         /// <summary>
@@ -190,6 +214,13 @@ namespace Universal.Web.Controllers
                 ViewData["BackTitle"] = "会议列表";
                 ViewData["tabLeft"] = "workmeeting";
                 ViewData["BackUrl"] = "/WorkMeeting/Index";
+            }
+            //是否显示点击参会的按钮
+            ViewData["CanJoin"] = 0;
+            foreach (var item in entity.WorkMeetingUsers.ToList())
+            {
+                if (item.CusUserID == WorkContext.UserInfo.ID && item.IsConfirm)
+                    ViewData["CanJoin"] = 1;
             }
             return View(entity);
         }

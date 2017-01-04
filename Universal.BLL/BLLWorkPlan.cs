@@ -110,6 +110,54 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 计划审批
+        /// </summary>
+        /// <returns></returns>
+        public static bool Approve(int user_id,int plan_id,out string msg)
+        {
+            msg = "";
+            var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == user_id);
+            if(entity_user == null)
+            {
+                msg = "审核的用户不存在";
+                return false;
+            }
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            var entity = bll.GetModel(p => p.ID == plan_id);
+            if (entity == null)
+            {
+                msg = "要审批的计划不存在";
+                return false;
+            }
+
+            if(entity.ApproveUserID != user_id)
+            {
+                msg = "该计划不是由您来审核";
+                return false;
+            }
+
+            if (entity.IsApprove)
+            {
+                msg = "已审批";
+                return false;
+            }
+
+            entity.IsApprove = true;
+            entity.ApproveTime = DateTime.Now;
+            if (bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
+            {
+                msg = "审批成功";
+                BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity_user.NickName), entity.ID);
+                return true;
+            }
+            else
+            {
+                msg = "审批失败";
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 修改
         /// </summary>
         /// <param name="entity"></param>

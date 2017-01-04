@@ -104,34 +104,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DoApprove(int id)
         {
-            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
-            var entity = bll.GetModel(p => p.ID == id);
-            if (entity == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "要审批的计划不存在";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-
-            if (entity.IsApprove)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "已审批";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-
-            entity.IsApprove = true;
-            entity.ApproveTime = DateTime.Now;
-            if (bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "审批成功";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            else
-            {
-                WorkContext.AjaxStringEntity.msgbox = "审批失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-
+            string msg = "";
+            bool isOK = BLL.BLLWorkPlan.Approve(WorkContext.UserInfo.ID, id, out msg);
+            WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
         }
 
 
@@ -246,7 +223,10 @@ namespace Universal.Web.Controllers
                 model.WeekText = entity.week_text;
                 model.WorkPlanItemList = entity.plan_item;
                 if (isAdd)
+                {
                     bll.Add(model);
+                    BLL.BLLMsg.PushMsg(model.ApproveUserID, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName), model.ID);
+                }
                 else
                     BLL.BLLWorkPlan.Modify(model);
 

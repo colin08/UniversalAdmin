@@ -174,7 +174,11 @@ namespace Universal.Web.Controllers
                 model.Platforms = entity.Platforms;
                 model.Size = entity.Size;                
                 if (isAdd)
+                {
                     bll.Add(model);
+                    string app_name = Tools.EnumHelper.GetBEnumShowName(typeof(Entity.APPVersionPlatforms), (byte)entity.Platforms);
+                    BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.appupdate, string.Format(BLL.BLLMsgTemplate.AppUpdate, app_name), model.ID);
+                }
                 else
                     bll.Modify(model);
 

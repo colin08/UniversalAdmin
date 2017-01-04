@@ -614,6 +614,28 @@ namespace Universal.Web.Controllers.api
             return WorkContext.AjaxStringEntity;
         }
 
+        /// <summary>
+        /// 获取我的下载记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/downlog/list")]
+        public WebAjaxEntity<List<Models.Response.SeeModel>> GetDownLog([FromBody]Models.Request.BasePage req)
+        {
+            WebAjaxEntity<List<Models.Response.SeeModel>> response_entity = new WebAjaxEntity<List<Models.Response.SeeModel>>();
+            List<Models.Response.SeeModel> response_list = new List<Models.Response.SeeModel>();
+            int total = 0;
+            BLL.BaseBLL<Entity.DownloadLog> bll = new BLL.BaseBLL<Entity.DownloadLog>();
+            var db_list = bll.GetPagedList(req.page_index, req.page_size, ref total, p => p.CusUserID == req.user_id, "AddTime DESC");
+            foreach (var item in db_list)
+                response_list.Add(new Models.Response.SeeModel(item.ID, item.Title));
+
+            response_entity.data = response_list;
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.total = total;
+            return response_entity;
+        }
 
         /// <summary>
         /// 构造用户信息

@@ -12,7 +12,7 @@ namespace Universal.Entity
     public enum ProjectArea
     {
         [Description("其他")]
-        QiTa =1,
+        QiTa = 1,
         [Description("宝安区")]
         BaoAn,
         [Description("龙岗区")]
@@ -41,7 +41,7 @@ namespace Universal.Entity
     public enum ProjectGaiZao
     {
         [Description("其他")]
-        QiTa =1,
+        QiTa = 1,
         [Description("工改工")]
         GongGaiGong,
         [Description("工改商")]
@@ -55,12 +55,26 @@ namespace Universal.Entity
     }
 
     /// <summary>
+    /// 审核状态
+    /// </summary>
+    public enum ApproveStatusType : byte
+    {
+        [Description("未审核")]
+        nodo,
+        [Description("审核通过")]
+        yes,
+        [Description("审核未通过")]
+        no
+    }
+
+    /// <summary>
     /// 项目信息
     /// </summary>
     public class Project
     {
         public Project()
         {
+            this.ApproveStatus = ApproveStatusType.nodo;
             this.ProjectUsers = new List<ProjectUser>();
             this.ProjectFiles = new List<ProjectFile>();
             this.See = DocPostSee.everyone;
@@ -99,11 +113,34 @@ namespace Universal.Entity
         public string LastUpdateUserName { get; set; }
 
         /// <summary>
+        /// 审核状态
+        /// </summary>
+        public ApproveStatusType ApproveStatus { get; set; }
+
+        /// <summary>
+        /// 审核状态文本
+        /// </summary>
+        [NotMapped]
+        public string ApproveStatusTxt
+        {
+            get
+            {
+                return Tools.EnumHelper.GetBEnumShowName(typeof(ApproveStatusType), (byte)this.ApproveStatus);
+            }
+        }
+
+        /// <summary>
+        /// 审核状态备注
+        /// </summary>
+        [MaxLength(500)]
+        public string ApproveRemark { get; set; }
+
+        /// <summary>
         /// 审核人员信息
         /// </summary>
         [ForeignKey("ApproveUserID")]
         public virtual CusUser ApproveUser { get; set; }
-        
+
         /// <summary>
         /// 项目是否完成
         /// </summary>
@@ -120,7 +157,7 @@ namespace Universal.Entity
         /// 引用的流程ID
         /// </summary>
         public int FlowID { get; set; }
-        
+
         /// <summary>
         /// 权限类别
         /// </summary>
@@ -185,7 +222,7 @@ namespace Universal.Entity
         /// 老屋村用地面积
         /// </summary>
         public decimal LaoWuCunMianJi { get; set; }
-        
+
         /// <summary>
         /// 非农建设用地面积
         /// </summary>
@@ -258,7 +295,7 @@ namespace Universal.Entity
             }
             TJQuarter = Convert.ToInt32(f);
         }
-        
+
         /// <summary>
         /// 专项规划时间
         /// </summary>
@@ -300,7 +337,7 @@ namespace Universal.Entity
         /// </summary>
         [NotMapped]
         public bool IsFavorites { get; set; }
-        
+
         /// <summary>
         /// 收藏状态icon
         /// </summary>
@@ -320,7 +357,7 @@ namespace Universal.Entity
         /// 项目联系人
         /// </summary>
         public ICollection<ProjectUser> ProjectUsers { get; set; }
-        
+
         /// <summary>
         /// 项目附件
         /// </summary>

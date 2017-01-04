@@ -149,7 +149,7 @@ namespace Universal.DataCore
         public DbSet<Entity.WorkMeeting> WorkMeetings { get; set; }
 
         public DbSet<Entity.WorkMeetingUser> WorkMeetingUsers { get; set; }
-
+        
         /// <summary>
         /// 
         /// </summary>

@@ -71,6 +71,33 @@
                         </div>
                         <div class="litip"></div>
                     </li>
+                    @if(Model.CusUserID == WorkContext.UserInfo.ID)
+                    {
+                        <li>
+                        <div class="lilt">已确认参会人员</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.WorkMeetingUsers.Where(p=>p.IsConfirm==true).ToList())
+                                {
+                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">未确认参会人员</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.WorkMeetingUsers.Where(p=>p.IsConfirm==false).ToList())
+                                {
+                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    }
                     <li>
                         <div class="lilt">附件</div>
                         <div class="limd">
@@ -86,6 +113,10 @@
                     <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
+                            @if ((int)ViewData["CanJoin"] == 1)
+                            {
+                                <button type="button" class="btn1" onclick="joinme()">确认参会</button>
+                            }
                             <button type="button" onclick="location.href = '@ViewData["BackUrl"]';" class="btn1 grey">返回 @ViewData["BackTitle"]</button>
                         </div>
                     </li>
@@ -102,7 +133,32 @@
 @section foot
 {
     <script type="text/javascript">
+        function approve() {
+            $.ajax({
+                type: "post",
+                url: "/WorkMeeting/Join",
+                data: { "id":@Model.ID },
+                async: false,
+                beforeSend: function () {
 
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("参会成功");
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
     </script>
 }
 <!--底部脚本 end-->

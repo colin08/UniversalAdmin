@@ -127,6 +127,28 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 项目审批
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <param name="status"></param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        public JsonResult DoApprove(int project_id,string status,string remark)
+        {
+            string msg = "";
+            int sta = TypeHelper.ObjectToInt(status);
+            if(sta != 1 && sta != 2)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "审核状态不正确";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            bool isOK = BLL.BLLProject.Approve(WorkContext.UserInfo.ID, project_id, (Entity.ApproveStatusType)sta, remark, out msg);
+            WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
         /// 项目信息
         /// </summary>
         /// <returns></returns>

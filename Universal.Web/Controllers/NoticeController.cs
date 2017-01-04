@@ -186,7 +186,22 @@ namespace Universal.Web.Controllers
                 model.TOID = final_ids;
 
                 if (isAdd)
+                {
                     bll.Add(model);
+                    switch (model.See)
+                    {
+                        case Entity.DocPostSee.everyone:
+                            BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, WorkContext.UserInfo.NickName), model.ID);
+                            break;
+                        case Entity.DocPostSee.department:
+                            break;
+                        case Entity.DocPostSee.user:
+                            BLL.BLLMsg.PushSomeUser(final_ids, Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, WorkContext.UserInfo.NickName), model.ID);
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 else
                     bll.Modify(model);
 

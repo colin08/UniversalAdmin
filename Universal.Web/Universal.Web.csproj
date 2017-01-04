@@ -956,6 +956,7 @@
     <Content Include="Views\Info\Document.cshtml" />
     <Content Include="Views\Project\FlowNodeInfo.cshtml" />
     <Content Include="Views\Info\Meeting.cshtml" />
+    <Content Include="Views\Info\Project.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

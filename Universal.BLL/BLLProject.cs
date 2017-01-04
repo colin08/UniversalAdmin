@@ -26,6 +26,79 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 项目审批
+        /// </summary>
+        /// <returns></returns>
+        public static bool Approve(int user_id, int project_id,Entity.ApproveStatusType status,string remark, out string msg)
+        {
+            msg = "";
+            if(status == Entity.ApproveStatusType.no)
+            {
+                if(string.IsNullOrWhiteSpace(remark))
+                {
+                    msg = "当审核不通过时，必须填写不通过原因";
+                    return false;
+                }
+            }
+            var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == user_id);
+            if (entity_user == null)
+            {
+                msg = "审核的用户不存在";
+                return false;
+            }
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == project_id);
+            if (entity == null)
+            {
+                msg = "要审批的项目不存在";
+                return false;
+            }
+
+            if (entity.ApproveUserID != user_id)
+            {
+                msg = "该项目不是由您来审核";
+                return false;
+            }
+            
+            if (entity.ApproveStatus == Entity.ApproveStatusType.yes)
+            {
+                msg = "已审批";
+                return false;
+            }
+
+
+            entity.ApproveStatus = status;
+            entity.ApproveRemark = remark;
+            if (bll.Modify(entity, "ApproveStatus", "ApproveRemark") > 0)
+            {
+                msg = "审批成功";
+                switch (status)
+                {
+                    case Entity.ApproveStatusType.nodo:
+                        break;
+                    case Entity.ApproveStatusType.yes:
+                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveok, string.Format(BLL.BLLMsgTemplate.AppproveOK, entity.Title), entity.ID);
+                        //向收藏此项目的用户发送通知
+                        BLL.BLLMsg.PushFavProjectUser(entity.ID);
+                        break;
+                    case Entity.ApproveStatusType.no:
+                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveno, string.Format(BLL.BLLMsgTemplate.AppproveNo, entity.Title, remark), entity.ID);
+                        break;
+                    default:
+                        break;
+                }
+                
+                return true;
+            }
+            else
+            {
+                msg = "审批失败";
+                return false;
+            }
+        }
+
+
+        /// <summary>
         /// 添加项目
         /// </summary>
         /// <param name="entity"></param>
@@ -34,6 +107,13 @@ namespace Universal.BLL
         public static int Add(Entity.Project entity, string user_ids, out string msg)
         {
             msg = "";
+
+            if(entity.ApproveUserID == entity.CusUserID)
+            {
+                msg = "不能自己审批自己的项目";
+                return 0;
+            }
+
             var db = new DataCore.EFDBContext();
             db.Set<Entity.Project>().Add(entity);
 
@@ -41,6 +121,13 @@ namespace Universal.BLL
             if (flow_entity == null)
             {
                 msg = "所选流程不存在";
+                return 0;
+            }
+
+            var entity_user = db.CusUsers.Find(entity.CusUserID);
+            if(entity_user == null)
+            {
+                msg = "该用户不存在";
                 return 0;
             }
 
@@ -75,9 +162,10 @@ namespace Universal.BLL
                 entity_node.Top = item.Top;
                 db.ProjectFlowNodes.Add(entity_node);
             }
-
+            
             db.SaveChanges();
             db.Dispose();
+            BLL.BLLMsg.PushMsg(entity.ApproveUserID, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
             return entity.ID;
         }
 
@@ -90,8 +178,18 @@ namespace Universal.BLL
         public static int Modify(Entity.Project entity, string user_ids, out string msg)
         {
             msg = "";
+            if (entity.ApproveUserID == entity.CusUserID)
+            {
+                msg = "不能自己审批自己的项目";
+                return 0;
+            }
             var db = new DataCore.EFDBContext();
-
+            var entity_user = db.CusUsers.Find(entity.CusUserID);
+            if (entity_user == null)
+            {
+                msg = "该用户不存在";
+                return 0;
+            }
             db.ProjectFiles.Where(p => p.ProjectID == entity.ID).ToList().ForEach(p => db.ProjectFiles.Remove(p));
             db.ProjectUsers.Where(p => p.ProjectID == entity.ID).ToList().ForEach(p => db.ProjectUsers.Remove(p));
 
@@ -122,6 +220,7 @@ namespace Universal.BLL
 
             db.SaveChanges();
             db.Dispose();
+            BLL.BLLMsg.PushMsg(entity.ApproveUserID, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
             return entity.ID;
         }
 

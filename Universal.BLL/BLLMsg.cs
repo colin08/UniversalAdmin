@@ -9,7 +9,7 @@ namespace Universal.BLL
     /// <summary>
     /// 用户消息模板
     /// </summary>
-    public class MsgTemplate
+    public class BLLMsgTemplate
     {
         /// <summary>
         /// app 新版本发布 APP【0】有新版本发布啦
@@ -29,7 +29,7 @@ namespace Universal.BLL
         /// <summary>
         /// 待审核项目 {0}创建了新的项目【{1}】，需要您的审核
         /// </summary>
-        public static readonly string ApproveProject = "{0}创建了新的项目【{1}】，需要您的审核";
+        public static readonly string ApproveProject = "{0}了新的项目【{1}】，需要您的审核";
 
         /// <summary>
         /// 项目审核通过 您的项目【{0}】审核已经通过
@@ -92,14 +92,14 @@ namespace Universal.BLL
         public static readonly string PlanApproveNO = "您的工作计划审核未通过，原因：{1}";
 
         /// <summary>
-        /// 收藏的项目更新提醒 您收藏的项目【{0}】于{2016/01/01}被{2}更新了
+        /// 收藏的项目更新提醒 您收藏的项目【{0}】有新的更新
         /// </summary>
-        public static readonly string FavProjectUpdate = "您收藏的项目【{0}】于{1}被{2}更新了";
+        public static readonly string FavProjectUpdate = "您收藏的项目【{0}】有新的更新";
 
         /// <summary>
-        /// 收藏的秘籍更新提醒 您收藏的秘籍【{0}】于{2016/01/01}被{2}更新了
+        /// 收藏的秘籍更新提醒 您收藏的秘籍【{0}】有新的更新
         /// </summary>
-        public static readonly string FavDocUpdate = "您收藏的秘籍【{0}】于{1}被{2}更新了";
+        public static readonly string FavDocUpdate = "您收藏的秘籍【{0}】有新的更新";
 
         /// <summary>
         /// 流程更新提醒 流程【{0}】于{1}被{2}更新了
@@ -115,8 +115,109 @@ namespace Universal.BLL
     /// </summary>
     public class BLLMsg
     {
+        /// <summary>
+        /// 向收藏项目的用户发送通知
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <param name="user_id"></param>
+        public static void PushFavProjectUser(int project_id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity_project = db.Projects.Find(project_id);
+                if (entity_project == null)
+                    return;
+                List<int> user_list = db.Database.SqlQuery<int>("SELECT CusUserID FROM CusUserProjectFavorites WHERE ProjectID = " + project_id.ToString()).ToList();
+                foreach (var item in user_list)
+                {
+                    Entity.CusUserMessage entity = new Entity.CusUserMessage();
+                    entity.Content = string.Format(BLLMsgTemplate.FavProjectUpdate, entity_project.Title);
+                    entity.CusUserID = item;
+                    entity.Type = Entity.CusUserMessageType.favprojectupdate;
+                    entity.LinkID = project_id.ToString();
+                    db.CusUserMessages.Add(entity);
+                }
+                db.SaveChanges();
+            }
+        }
 
+        /// <summary>
+        /// 向收藏秘籍的用户发送通知
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <param name="user_id"></param>
+        public static void PushFavDocUser(int doc_id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity_doc = db.DocPosts.Find(doc_id);
+                if (entity_doc == null)
+                    return;
+                List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from CusUserDocFavorites where DocPostID = " + doc_id.ToString()).ToList();
+                foreach (var item in user_list)
+                {
+                    Entity.CusUserMessage entity = new Entity.CusUserMessage();
+                    entity.Content = string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
+                    entity.CusUserID = item;
+                    entity.Type = Entity.CusUserMessageType.favdocupdate;
+                    entity.LinkID = doc_id.ToString();
+                    db.CusUserMessages.Add(entity);
+                }
+                db.SaveChanges();
+            }
+        }
 
+        /// <summary>
+        /// 推送给所有用户
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="content"></param>
+        /// <param name="link_id"></param>
+        /// <returns></returns>
+        public static void PushAllUser(Entity.CusUserMessageType type, string content, int link_id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                List<int> user_list = db.Database.SqlQuery<int>("select ID from CusUser").ToList();
+                foreach (var item in user_list)
+                {
+                    Entity.CusUserMessage entity = new Entity.CusUserMessage();
+                    entity.Content = content;
+                    entity.CusUserID = item;
+                    entity.Type = type;
+                    entity.LinkID = link_id.ToString();
+                    db.CusUserMessages.Add(entity);
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 推送给指定用户
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="content"></param>
+        /// <param name="link_id"></param>
+        /// <returns></returns>
+        public static void PushSomeUser(string user_ids,Entity.CusUserMessageType type, string content, int link_id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                var id_list = Array.ConvertAll<string, int>(user_ids.Split(','), int.Parse);
+                foreach (var item in id_list)
+                {
+                    if (!db.CusUsers.Any(p => p.ID == item))
+                        continue;
+                    Entity.CusUserMessage entity = new Entity.CusUserMessage();
+                    entity.Content = content;
+                    entity.CusUserID = item;
+                    entity.Type = type;
+                    entity.LinkID = link_id.ToString();
+                    db.CusUserMessages.Add(entity);
+                }
+                db.SaveChanges();
+            }
+        }
 
         /// <summary>
         /// 添加消息
@@ -126,7 +227,7 @@ namespace Universal.BLL
         /// <param name="content">消息内容,string.Format 拼接MsgTemplate类中的常量</param>
         /// <param name="link_id">链接id</param>
         /// <returns></returns>
-        public bool AddMsg(int user_id,Entity.CusUserMessageType type,string content,int link_id)
+        public static bool PushMsg(int user_id, Entity.CusUserMessageType type, string content, int link_id)
         {
             BLL.BaseBLL<Entity.CusUser> bll_user = new BaseBLL<Entity.CusUser>();
             if (bll_user.Exists(p => p.ID == user_id))
@@ -140,5 +241,6 @@ namespace Universal.BLL
             bll_msg.Add(entity);
             return entity.ID > 0;
         }
+
     }
 }

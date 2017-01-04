@@ -85,7 +85,12 @@ namespace Universal.Web.Controllers.api
             foreach (var item in db_list)
             {
                 Models.Response.ProjectListInfo model = new Models.Response.ProjectListInfo();
-                model.is_fav = bll_fav.Exists(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.ProjectID == item.ID);
+                if (fav_entity != null)
+                {
+                    model.is_fav = true;
+                    model.favorites_id = fav_entity.ID;
+                }
                 model.last_update_time = item.LastUpdateTime;
                 model.project_id = item.ID;
                 model.title = item.Title;
@@ -207,6 +212,12 @@ namespace Universal.Web.Controllers.api
                 Models.Response.ProjectInfo response_model = new Models.Response.ProjectInfo();
                 var entity_flow = new BLL.BaseBLL<Entity.Flow>().GetModel(p => p.ID == entity.FlowID);
                 BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == user_id && p.ProjectID == project_id);
+                if(fav_entity != null)
+                {
+                    response_model.is_fav = true;
+                    response_model.favorites_id = fav_entity.ID;
+                }
                 response_model.flow_name = entity_flow == null ? "" : entity_flow.Title;
                 response_model.project_id = project_id;
                 response_model.title = entity.Title;
@@ -215,7 +226,7 @@ namespace Universal.Web.Controllers.api
                 response_model.user_telphone = entity.CusUser.Telphone;
                 response_model.approve_id = entity.ApproveUserID;
                 response_model.approve_name = entity.ApproveUser.NickName;
-                response_model.is_fav = bll_fav.Exists(p => p.CusUserID == user_id && p.ProjectID == project_id);
+
                 response_model.post_see = entity.See;
 
                 System.Text.StringBuilder str_see_ids = new System.Text.StringBuilder();
@@ -287,8 +298,13 @@ namespace Universal.Web.Controllers.api
             {
                 Models.Response.ProjectInfoPro response_model = new Models.Response.ProjectInfoPro();
                 BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
+                var fav_entity = bll_fav.GetModel(p => p.CusUserID == user_id && p.ProjectID == project_id);
+                if (fav_entity != null)
+                {
+                    response_model.is_fav = true;
+                    response_model.favorites_id = fav_entity.ID;
+                }
                 response_model.project_id = project_id;
-                response_model.is_fav = bll_fav.Exists(p => p.CusUserID == user_id && p.ProjectID == project_id);
                 response_model.Area = entity.Area;
                 response_model.ChaiQianJianZhuMianJi = entity.ChaiQianJianZhuMianJi;
                 response_model.ChaiQianYongDiMianJi = entity.ChaiQianYongDiMianJi;

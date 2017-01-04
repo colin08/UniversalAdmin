@@ -47,6 +47,19 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 用户点击参会
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Join(int id)
+        {
+            BLL.BLLWorkMeeting.Join(id, WorkContext.UserInfo.ID);
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="ids"></param>

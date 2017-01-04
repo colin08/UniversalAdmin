@@ -43,6 +43,12 @@ namespace Universal.Entity
         appproveok,
 
         /// <summary>
+        /// 项目审核不通过
+        /// </summary>
+        [Description("项目审核不通过")]
+        appproveno,
+
+        /// <summary>
         /// 待参加会议
         /// </summary>
         [Description("待参加会议")]
@@ -213,37 +219,31 @@ namespace Universal.Entity
                 switch (Type)
                 {
                     case CusUserMessageType.appupdate:
-                        return "/Info/AppUpdate?id="+this.LinkID+"&msg="+this.ID.ToString()+"";
+                        return "/Info/AppUpdate?id="+this.LinkID+"&msg="+this.ID.ToString();
                     case CusUserMessageType.notice:
-                        return "/Info/Notice?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/Notice?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.fileshare:
                         return "";
                     case CusUserMessageType.approveproject:
-                        return "";
                     case CusUserMessageType.appproveok:
-                        return "";
+                    case CusUserMessageType.appproveno:
+                    case CusUserMessageType.favprojectupdate:
+                        return "/Info/Project?id=" + this.LinkID + "msg=" + this.ID.ToString();
                     case CusUserMessageType.waitmeeting:
-                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.confrimjoinmeeting:
-                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.meetingcancel:
-                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.meetingchangedate:
-                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitjobdone:
-                        return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.jobtimeout:
-                        return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
                     case CusUserMessageType.confrimdonejob:
-                        return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString() + "";
+                        return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitapproveplan:
-                        return "";
+                        return "/Info/Plan?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.planapproveok:
                         return "";
-                    case CusUserMessageType.favprojectupdate:
-                        return "";
                     case CusUserMessageType.favdocupdate:
-                        return "";
+                        return "/Info/Document?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.flowupdate:
                         return "";
                     default:

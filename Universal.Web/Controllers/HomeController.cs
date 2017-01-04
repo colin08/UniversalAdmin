@@ -22,8 +22,13 @@ namespace Universal.Web.Controllers
                 item.FileList = bll_file.GetListBy(0, p => p.DocPostID == item.ID, "ID ASC").ToList();
             }
             view_model.DocumentList = doc_list;
-            
-            view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.See == Entity.DocPostSee.everyone, "AddTime DESC");
+            int cus_user_id = WorkContext.UserInfo.ID;
+            var notice_msg = new BLL.BaseBLL<Entity.CusUserMessage>().GetModel(p => p.CusUserID == cus_user_id && p.Type == Entity.CusUserMessageType.notice, "AddTime DESC");
+            if(notice_msg != null)
+            {
+                int li_id = TypeHelper.ObjectToInt(notice_msg.LinkID) ;
+                view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == li_id);
+            }
 
             view_model.JobTask = new BLL.BaseBLL<Entity.CusUserMessage>().GetListBy(9, p => p.CusUserID == WorkContext.UserInfo.ID && p.IsDone == false && p.Type == Entity.CusUserMessageType.approveproject || p.Type == Entity.CusUserMessageType.waitmeeting || p.Type == Entity.CusUserMessageType.waitjobdone || p.Type == Entity.CusUserMessageType.waitapproveplan, "AddTime DESC");
 

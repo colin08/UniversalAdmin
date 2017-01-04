@@ -1,0 +1,153 @@
+﻿@model Universal.Entity.Project
+@{
+    ViewBag.Title = "项目审核信息";
+    ViewData["tabLeft"] = "msg";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/User/Message" class="fl f16"><i class="i-back"></i>消息列表</a>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">项目名称</div>
+                        <div class="limd">
+                            <span>@Model.Title</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">审批人</div>
+                        <div class="limd">
+                            <span>@Model.ApproveUser.NickName</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">项目流程</div>
+                        <div class="limd">
+                            <span>@ViewData["FlowName"]</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">审批状态</div>
+                        <div class="limd">
+                            <span>@Model.ApproveStatusTxt</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    @if((int)ViewData["ShowApprove"] == 1)
+                    {
+                        <li>
+                            <div class="lilt">审批备注</div>
+                            <div class="limd">
+                                <span>@Model.ApproveRemark</span>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                    }
+                    else if ((int)ViewData["ShowApprove"] == 2)
+                    {
+                        <li>
+                            <div class="lilt">修改审批状态</div>
+                            <div class="limd">
+                                <label class="lab pub_lab" for="ra_app_status_1">
+                                    <input type="radio" name="ra_app_status" value="1" id="ra_app_status_1" checked />
+                                    <i class="pub_radio"></i>
+                                    <span>审核通过</span>
+                                </label>
+                                <label class="lab pub_lab" for="ra_app_status_2">
+                                    <input type="radio" name="ra_app_status" value="2" id="ra_app_status_2" />
+                                    <i class="pub_radio"></i>
+                                    <span>审核不通过</span>
+                                </label>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                        <li>
+                            <div class="lilt">审核不通过原因</div>
+                            <div class="limd">
+                                <input type="text" class="usInput" id="txt_app_status_remark" max="500" />
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                        <li>
+                            <div class="lilt"></div>
+                            <div class="limd">
+                                <button type="button" class="btn1" onclick="approve()">提交审核结果</button>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                    }
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            <a  href="/Project/BasicInfo?id=@Model.ID" class="btn1 grey" target="_blank">项目详细信息</a>
+                            <button type="button" onclick="location.href = '/User/Message';" class="btn1 grey">返回消息列表</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        function approve() {
+            var remark = $("#txt_app_status_remark").val();
+            var ck_val = $("input[name='ra_app_status']:checked").val();
+            if(ck_val == 2 && remark.length == 0)
+            {
+                alert("审核不通过时必须填写不通过原因");
+                return;
+            }
+            $.ajax({
+                type: "post",
+                url: "/Project/DoApprove",
+                data: { "project_id": @Model.ID,"status":1,"remark":remark },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("审批成功");
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+}
+<!--底部脚本 end-->
