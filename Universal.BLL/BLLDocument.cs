@@ -200,6 +200,7 @@ namespace Universal.BLL
             db_entity.State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
             db.Dispose();
+            BLL.BLLMsg.PushFavDocUser(entity.ID);
             return true;
         }
 

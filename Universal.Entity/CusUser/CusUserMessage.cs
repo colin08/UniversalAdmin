@@ -233,7 +233,7 @@ namespace Universal.Entity
                     case CusUserMessageType.confrimjoinmeeting:
                     case CusUserMessageType.meetingcancel:
                     case CusUserMessageType.meetingchangedate:
-                        return "/Info/WorkMeeting?id=" + this.LinkID + "&msg=" + this.ID.ToString();
+                        return "/Info/Meeting?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitjobdone:
                     case CusUserMessageType.jobtimeout:
                     case CusUserMessageType.confrimdonejob:
