@@ -12,22 +12,34 @@
         <div class="search"><input type="text" id="txt_word" value="@Model.w" placeholder="请输入手机号/姓名" /><input type="button" onclick="WordSearch()" /></div>
 
     </div>
-
+	<style type="text/css">
+		.memList li{width:150px;height:auto;margin:0;margin-bottom:10px}
+		.memList .item{border:1px solid #ccc;margin:0 auto;width:140px;}
+		.memList .item img{height:130px;widht:100%}
+		.memList .item:after {content:".";display:block;height:0;visibility:hidden;clear:both;}
+		.memList .info{border-top:1px solid #ccc;padding:8px}
+		.memList .info:after {content:".";display:block;height:0;visibility:hidden;clear:both;}
+		.memList .avatar:after {content:".";display:block;height:0;visibility:hidden;clear:both;}
+	</style>
     <div class="mt_10">
         <div class="memList">
             @if (Model.DataList.Count > 0)
             {
-                <ul class="memFL">
+                <ul>
                     @foreach (var item in Model.DataList)
                     {
                         <li>
+                        	<div class="item">
+                        	<div class="avatar">
                             <a href="javascript:;"><img src="@item.Avatar" /></a>
-                            <div class="memInfo">
+                            </div>
+                            <div class="info">
                                 <a href="#4">
                                     <h4>@item.NickName</h4>
                                     <p>短号：@item.ShorNum</p>
                                     <p>手机：@item.Telphone</p>
                                 </a>
+                            </div>
                             </div>
                         </li>
                     }

@@ -44,8 +44,8 @@
                         <li>
                             <label for="" class="lab1"><span class="red">*</span>审批人</label>
                             @Html.HiddenFor(p=>p.approve_user_id)
-                            <input type="text" value="@Model.approve_user_name" class="add-input" />
-                            <a href="javascript:;" class="btn-peo">选择成员</a>
+                            <input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
+                            <a href="javascript:;" onclick="selapprove_user(this)" class="btn-peo">选择成员</a>
                         </li>
                         <li>
                             <label for="" class="lab1"><span class="red">*</span>项目流程</label>
@@ -58,26 +58,25 @@
                             {
                                 <lable style="font-size: 12px;margin-left: 10px;">添加后不可修改</lable>
                             }
-
                             @Html.ValidationMessageFor(p => p.flow_id)
                         </li>
                         <li>
-                            <div class="lilt">项目联系人</div>
-                            <div class="limd big">
-                                <span><a id="add_users" href="javascript:" onclick="selUser(this)" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
-                                <div class="menlist" id="user_list">
+                        	<label style="float:left" for="" class="lab1"><span class="red">*</span>项目联系人</label>
+                        	<div class="lab2">
+                        	<span><a href="javascript:" onclick="selUser(this,'user_list1','#user_ids')" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+                                <div class="user_list_box" id="user_list1">
                                     <ul>
                                         @foreach (var item in Model.users_entity)
                                         {
-                                            <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                            <li id="user_list1_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
                                         }
                                     </ul>
                                 </div>
-                            </div>
+                        	</div>
                         </li>
                         <li>
-                            <div class="lilt">节点附件</div>
-                            <div class="limd big">
+                            <label style="float:left" for="" class="lab1">节点附件</label>
+                            <div class="lab2">
                                 <ul id="file_list">
                                     @foreach (var item in Model.file_list)
                                     {
@@ -96,8 +95,8 @@
                             </div>
                         </li>
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>谁可以看</label>
-                            <div class="create-radio">
+                            <label style="float:left" for="" class="lab1"><span class="red">*</span>谁可以看</label>
+                            <div class="lab2">
                                 <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.everyone">
                                     @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
                                     <span>所有人</span>
@@ -110,16 +109,17 @@
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
                                 </label>
-                                <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
-                            </div>
-                            <div class="scrollbox scrollbox-big">
+                                <a id="add_users" href="javascript:;" onclick="selUser(this,'ul2','#see_ids')"  class="btn-add"><i class="i-attach"></i>添加成员</a>
+                           
+                            <div class="user_list_box" id="ul2">
                                 <ul>
                                     @foreach (var item in Model.see_entity)
                                     {
-                                        <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                        <li id="ul2_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
                                     }
                                 </ul>
                             </div>
+                             </div>
                         </li>
                         <li>
                             <div class="lilt">&nbsp;</div>
@@ -136,13 +136,13 @@
                 <div class="userInfo">
                     <ul>
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>项目区域</label>
+                            <label ><span class="red">*</span>项目区域</label>
                             @Html.DropDownListFor(p => p.area, ViewData["AreaList"] as List<SelectListItem>, new { @class = "select-input" })
                             @Html.ValidationMessageFor(p => p.area)
                         </li>
 
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>改造性质</label>
+                            <label ><span class="red">*</span>改造性质</label>
                             @Html.DropDownListFor(p => p.GaiZaoXingZhi, ViewData["GZXZList"] as List<SelectListItem>, new { @class = "select-input" })
                             @Html.ValidationMessageFor(p => p.GaiZaoXingZhi)
                         </li>
@@ -154,11 +154,6 @@
                         <li><label for="">申报主体</label>
                             @Html.TextBoxFor(p => p.ShenBaoZhuTi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ShenBaoZhuTi)
-                        </li>
-                        <li>
-                            <label for=""><span class="red">*</span>更新单元用地面积</label>
-                            @Html.TextBoxFor(p => p.GengXinDanYuanYongDiMianJi, new { @class = "add-input" })
-                            @Html.ValidationMessageFor(p => p.GengXinDanYuanYongDiMianJi)
                         </li>
                         <li><label for=""><span class="red">*</span>总建筑面积</label>
                             @Html.TextBoxFor(p => p.ZongMianJi, new { @class = "add-input" })
@@ -211,24 +206,24 @@
                         <li><label for=""><span class="red">*</span>立项时间</label>
                             @Html.TextBoxFor(p => p.LiXiangTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.LiXiangTime)
-                            <a href="javascript:;" class="btn-time"><i class="i-time"></i></a>
+                            <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#LiXiangTime'});"><i class="i-time"></i></a>
                         </li>
                         <li><label for="">专项规划时间</label>
                             @Html.TextBoxFor(p => p.ZhuanXiangTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ZhuanXiangTime)
-                        <a href="javascript:;" class="btn-time"><i class="i-time"></i></a></li>
+                        <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#ZhuanXiangTime'});"><i class="i-time"></i></a></li>
                         <li><label for="">主体确认时间</label>
                             @Html.TextBoxFor(p => p.ZhuTiTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ZhuTiTime)
-                        <a href="javascript:;" class="btn-time"><i class="i-time"></i></a></li>
+                        <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#ZhuTiTime'});"><i class="i-time"></i></a></li>
                         <li><label for="">用地审批时间</label>
                             @Html.TextBoxFor(p => p.YongDiTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.YongDiTime)
-                        <a href="javascript:;" class="btn-time"><i class="i-time"></i></a></li>
+                        <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#YongDiTime'});"><i class="i-time"></i></a></li>
                         <li><label for="">开盘时间</label>
                             @Html.TextBoxFor(p => p.KaiPanTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.KaiPanTime)
-                        <a href="javascript:;" class="btn-time"><i class="i-time"></i></a></li>
+                        <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#KaiPanTime'});"><i class="i-time"></i></a></li>
                     </ul>
                     <h3>经济信息</h3>
                     <ul>
@@ -243,7 +238,10 @@
                     </ul>
 
                 </div>
-                <div class="mt_35"><button type="submit" class="btn1">确定</button> <button type="button" class="btn1 grey" onclick="show_div(1)">上一步</button></div>
+                <div class="mt_35"> 
+                            <div style="margin-left:150px">
+                <button type="submit" class="btn1">确定</button> 
+                <button type="button" class="btn1 grey" onclick="show_div(1)">上一步</button></div></div>
 
             </div>
 
@@ -276,7 +274,81 @@
 @section foot
 {
 @Scripts.Render("~/bundles/jqueryval")
+<script src="/assets/laydate/laydate.js"></script>
     <script type="text/javascript">
+		function switchSee(id){
+			if(id==2){
+				$('#ul2').show();
+				$('#add_users').show();
+			}else{
+				$('#ul2').hide();
+				$('#add_users').hide();
+			}
+		}
+		$('input[name=post_see]').click(function(){
+			switchSee(this.value);
+		});
+		switchSee('@Model.post_see'=='user'?2:0);
+    	function selapprove_user(obj)
+    	{
+    		selUserDialog({max:1,callback:function(data){
+    			$(data).each(function(){
+    				$('#approve_user_id').val(this.id);
+    				$('#approve_user_name').val(this.nick_name);
+    			});
+    		}});
+    	}
+		function selUser(obj,objid,hid)
+		{
+			selUserDialog({callback:function(data){
+				var ids=$(hid).val().split(',');
+				var ul=$('#'+objid).find('ul');
+				$(data).each(function(){
+					if(ul.find('#'+objid+'_'+this.id).size()>0){
+						return true;
+					}
+					var li=$('<li></li>').appendTo(ul).attr('id',objid+'_'+this.id);
+					var a=$('<a href="javascript:;"></a>').attr('data-id',this.id).appendTo(li).click(function(){
+		        		var id=$(this).attr('data-id');
+		        		moveId(id,objid,hid);
+		        	});
+					$('<span></span>').appendTo(a).html(this.telphone+' ('+this.nick_name+')');
+					$('<i class="i-mdel"></i>').appendTo(a);
+					ids.push(this.id);
+				});
+				$(hid).val(ids.join(','));
+			}});
+			
+		}
+		var tmp=[];
+		$('#ul2 ul li a').each(function(){
+			tmp.push($(this).attr('data-id'));
+       		$(this).click(function(){
+       			var id=$(this).attr('data-id');
+        	    moveId(id,'ul2','#see_ids');
+       		});
+       	});
+		$('#see_ids').val(tmp.join(','));
+		var tmp=[];
+		$('#user_list1 ul li a').each(function(){
+			tmp.push($(this).attr('data-id'));
+       		$(this).click(function(){
+       			var id=$(this).attr('data-id');
+        	    moveId(id,'user_list1','#user_ids');
+       		});
+       	});
+		$('#user_ids').val(tmp.join(','));
+		function moveId(id,objid,hid){
+    		var ids=[];
+    		$($(hid).val().split(',')).each(function(){
+    			if(this!=id){
+    				ids.push(this);
+    			}
+    		});
+    		$('#'+objid+'_'+id).remove();
+    		$(hid).val(ids.join(','));
+    	}
+
         $(document).ready(function (e) {
                 @if(Model.Msg == 1)
                 {

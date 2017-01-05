@@ -18,7 +18,7 @@
             <dd @(ViewData["tabLeft"].ToString().Equals("project") ? "class=act" : "")><a href="/User/ProjectFavorites" title="项目收藏"><em><i class="i-lm5"></i></em><span>项目收藏</span></a></dd>
             <dd @(ViewData["tabLeft"].ToString().Equals("file") ? "class=act" : "")><a href="/User/DocFavorites" title="文件收藏"><em><i class="i-lm6"></i></em><span>文件收藏</span></a></dd>
         </dl>
-        <dl>
+        <dl style="display:none">
             <dt>下载记录</dt>
             <dd @(ViewData["tabLeft"].ToString().Equals("down") ? "class=act" : "")><a href="/User/DownloadLog" title="我的下载"><em><i class="i-lm7"></i></em><span>我的下载</span></a></dd>
         </dl>

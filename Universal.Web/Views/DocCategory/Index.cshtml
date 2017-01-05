@@ -1,108 +1,291 @@
-﻿@{
-    ViewBag.Title = "秘籍管理";
-    ViewData["tabLeft"] = "doccategory";
-    ViewData["tabTop"] = "manager";
-}
+﻿@{ ViewBag.Title = "秘籍管理"; ViewData["tabLeft"] = "doccategory";
+ViewData["tabTop"] = "manager"; }
 
 <!--头部脚本-->
-@section head
-{
-
-}
+@section head { }
 <!--头部脚本 end-->
 
 <div class="wapper">
-@Html.Partial("_AdminMenuLeft", this.ViewData)
+	@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="rightBox">
-        <div class="container">
-            <div class="tit1">
-                <span class="fr f14 col_grey">注：编辑流程时，可按住 “流程块” 调整顺序</span>
-                <b>分类设置</b>
-            </div>
+	<div class="rightBox">
+		<div class="container">
+			<div class="tit1">
+				<span class="fr f14 col_grey">注：编辑分类时，可按住 “分类块” 调整顺序</span> <b>分类设置</b>
+			</div>
 
-            <div class="sortBox">
-                <table border="0" cellspacing="0" cellpadding="0" class="table2">
-                    <tr>
-                        <th width="15%">一级分类</th>
-                        <th width="15%">二级分类</th>
-                        <th width="15%">三级分类</th>
-                        <th>新增分类</th>
-                    </tr>
-                    <tr class="">
-                        <td valign="top">
-                            <ul class="sortUL">
-                                <li><a href="javascript:;">政策 <i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">指引<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;" class="aAppend">点击插入</a></li>
-                            </ul>
-                        </td>
-                        <td valign="top">
-                            <ul class="sortUL">
-                                <li><a href="javascript:;">法律法规<i class="i-del"></i></a></li>
-                                <li class="act"><a href="javascript:;">旧改秘籍<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">政策法规<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">行业干货<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">其他<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;" class="aAppend">点击插入</a></li>
-                            </ul>
-                        </td>
-                        <td valign="top">
-                            <ul class="sortUL">
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;">分类名称<i class="i-del"></i></a></li>
-                                <li><a href="javascript:;" class="aAppend">点击插入</a></li>
-                            </ul>
-                        </td>
-                        <td valign="middle" class="sortA"><a href="#" title="#" class="add_lc">+ 新增分类</a></td>
-                    </tr>
-                    <tr>
-                        <td valign="middle" class="sortA"><a href="#">编辑分类 </a></td>
-                        <td valign="middle" class="sortA"><a href="#">编辑分类 </a></td>
-                        <td valign="middle" class="sortA"><a href="#">编辑分类 </a></td>
-                        <td valign="middle" class="sortA">&nbsp;</td>
-                    </tr>
-                </table>
+			<div class="sortBox">
+				<table border="0" cellspacing="0" cellpadding="0" class="table2">
+					<tr>
+						<th width="15%">一级分类</th>
+						<th width="15%">二级分类</th>
+						<th width="15%">三级分类</th>
+						<th>新增分类</th>
+					</tr>
+					<tr class="">
+						<td valign="top">
+							<ul class="sortUL" id="lv1">
 
-            </div>
+							</ul>
+						</td>
+						<td valign="top">
+							<ul class="sortUL" id="lv2">
 
-        </div>
+							</ul>
+						</td>
+						<td valign="top">
+							<ul class="sortUL" id="lv3">
+							</ul>
+						</td>
+						<td valign="middle" class="sortA"><a href="javascript:"  data-pid="0" data-id="0" onclick="AddItem(this)" title="#"
+							class="add_lc">+ 新增分类</a></td>
+					</tr>
+					<tr>
+						<td valign="middle" class="sortA"><a href="javascript:"
+							onclick="EditItem(this,1)">编辑分类 </a></td>
+						<td valign="middle" class="sortA"><a href="javascript:"
+							onclick="EditItem(this,2)">编辑分类 </a></td>
+						<td valign="middle" class="sortA"><a href="javascript:"
+							onclick="EditItem(this,3)">编辑分类 </a></td>
+						<td valign="middle" class="sortA">&nbsp;</td>
+					</tr>
+				</table>
+
+			</div>
+
+		</div>
 
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
-    </div>
+		<div class="footer">Copyright © 深圳花伴里实业集团有限公司 粤ICP备13089427号-1</div>
+	</div>
 
 </div>
 
-    <!--底部脚本-->
-    @section foot
-{
-        <script type="text/javascript">
+<!--底部脚本-->
+@section foot {
+<style type="text/css">
+.select-input{width:auto;margin-right:4px}
+</style>
+    <script type="text/javascript" src="/assets/js/jquery-ui-1.10.4.min.js"></script>
+    <script type="text/javascript" src="/assets/js/category.js"></script>
+<script type="text/javascript">
+			var item_data={};
+			function getList(pid,l){
+				if(!l){
+					l=1;
+				}
+				var data={};
+				if(pid>0){
+					data['PId']=pid;
+				}else{
+					l=1;
+				}
+				$.ajax({
+					url:'/DocCategory/GetDocCategory',
+					data:data,
+					success:function(data){
+						if(data.msg!=1){
+							alert(data.msgbox);
+							return;
+						}
+						item_data[pid]=data.data;
+						var ul=$('#lv'+l).empty();
+						$(data.data).each(function(){
+							var li=$('<li class="item"></li>').appendTo(ul).attr('data-id',this.department_id).attr('data-pid',this.parent_id).attr('data-title',this.title).click(function(){
+								for(i=l+1;i<=3;i++){
+									$('#lv'+i).find('li').remove();
+								}
+								$(this).parent().find('.act').removeClass('act');
+								$(this).addClass('act');
+								getList($(this).attr('data-id'),l+1);
+							});
+							var a=$('<a href="javascript:;"></a>').appendTo(li).html(this.title);
+							$('<i class="i-del"></i>').appendTo(a).click(function(){
+								Del(this);
+							})
+						});
+						setMove(ul);
+						var li=$('<li></li>').appendTo(ul);
+						$('<a href="javascript:;" class="aAppend">点击插入</a>').attr('data-id',pid).attr('data-level',l).appendTo(li).click(function(){
+							AddItem(this);
+						});
+					}
+				});
+			}
+			getList(0);
+			function setMove(ul)
+			{
+				//ul.children("li");
+				ul.sortable({
+					helper: 'clone',
+					items:'.item',
+					axis : 'y',//只能横向拖动 
+					opacity : 0.7,// 移动时的透明度 
+					update : function(data) {//当排序动作结束时且元素坐标已经发生改变时触发此事件。 
+						//Submit(check.attr("checked"));
+						//console.log(JSON.stringify(data));
+						//console.log(ul.attr('id'))
+						var ids=[];
+						ul.find('li.item').each(function(){
+							ids.push($(this).attr('data-id'));
+						});
+						update_sort(ids);
+					}
+				});
+			}
+			function update_sort(ids)
+			{
+				var data={ids:ids.join(',')};
+				console.log(JSON.stringify(data));
+				$.ajax({
+					url:'/DocCategory/Sort',
+					data:data,
+					type:'post',
+					success:function(data){
+						console.log(JSON.stringify(data));
+					}
+				});
+			}
+			function AddItem(obj){
+				var pid=parseInt($(obj).attr('data-id'));
+				var level=parseInt($(obj).attr('data-level'));
+				showEdit({pagetitle:'增加分类',parent_id:pid,level:level})
+			}
+			function EditItem(obj,l){
+				var ul=$('#lv'+l);
+				var li=ul.find('.act');
+				if(li.size()<1){
+					alert('请选择您要编辑的分类');
+					return;
+				}
+				var id=li.attr('data-id');
+				var pid=li.attr('data-pid');
+				var title=li.attr('data-title');
+				showEdit({pagetitle:'编辑分类',department_id:id,title:title,level:l,parent_id:pid});
+				
+			}
+			function showEdit(item){
+				item = $.extend({
+					parent_id : 0,
+					department_id:0,
+					title:'',
+					level:1
+				}, item || {});
+            	var html=$('<div class="safeyPop"></div>');
+            	var form=$('<form></form>').appendTo(html).attr('data-level',item.level)
+            	$('<input type="hidden" name="pid" id="pid" />').appendTo(form).val(item.parent_id);
+            	$('<input type="hidden" name="id" id="id" />').appendTo(form).val(item.department_id);
+            	$('<input type="hidden" name="user_ids" id="user_ids" />').appendTo(form);
+            	var ul=$('<ul></ul>').appendTo(form);
+            	if(item.department_id==0){
+            	var li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">上级分类</span>').appendTo(li);
+            	var div=$('<div class="pliRt lh18 pr"></div>').appendTo(li).attr('id','pid_box');
+            	}
+            	
+            	
+            	
+            	var li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">分类名称</span>').appendTo(li);
+            	var div=$('<div class="pliRt lh18 pr"></div>').appendTo(li);
+            	$('<input type="text" name="title" class="plinput" id="title" placeholder="请输入分类名称" />').appendTo(div).val(item.title);
+            	$('<br /><span class="col_grey lh18">不得超过20个字符</span><i class="i-delG"></i>').appendTo(div);
+            	
+            	li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">&nbsp;</span>').appendTo(li);
+            	div=$('<div class="pliRt"></div>').appendTo(li);
+            	$('<button type="button" class="Btn2 red mr_15">确定</button>').appendTo(div).click(function(){
+            		if(item.department_id==0){
+            			doAdd(form);
+            		}else{
+            			doEdit(form);
+            		}
+            	});
+            	$('<button type="button" class="Btn2">取消</button>').appendTo(div).click(function(){
+            		hideDialog();
+            	});
+            	
+    			
+            	showDialog({
+            		title:item.pagetitle,
+            		html:html,
+            		onshow:function(){
+                    	$('#pid_box').category({defText:['请选择','请选择'],max:2,value:item.parent_id,cssName:'select-input',name:'parent'});
+            		}
+            	});
+            }
+			
+			/**
+	            * 【添加秘籍分类】
+	            * 接口地址：/DocCategory/AddDocCategory
+	            * 请求参数示例：data: { "pid": 父级ID, "title": "部门名称"},
+	            * 请求方式：Post
+	            * 返回数据：json
+	            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+	            */
+			function doAdd(form){
+				form=$(form);
+				var level=parseInt(form.attr('data-level'));
+            	var pid=parseInt(form.find('#pid').val());
+            	var title=form.find('#title').val();
+            	var data={title:title};
+            		data['pid']=pid;
+            	for(i=2;i>=0;i--){
+            		var t=parseInt($('#parent'+i).val());
+            		if(t>0){
+            			data['pid']=t;
+            			break;
+            		}
+            	}
+            	$.ajax({
+            		url:'/DocCategory/AddDocCategory',
+            		data:data,
+            		type:'post',
+            		dataType:'json',
+            		error:function(data){
+	        			alert('添加失败，请联系管理员');
+	        		},
+            		success:function(ret){
+            			
+            			if(ret.msg ==1){
+                			hideDialog();
+                			getList(pid,level);
+            			}else{
+            				alert(ret.msgbox);
+            			}
+            		}
+            	});
+			}
 
-            /**
-           * 【获取秘籍分类】
-           * 接口地址：/DocCategory/GetDocCategory?PId=
-           * 请求参数：PID，父级ID，如果是一级，则不传数据，传入-1，获取所有
-           * 请求方式：GET
-           * 返回数据：json
-           * 返回数据格式：直接在浏览器打开地址就可以看到
-           */
-
-            /**
-            * 【添加秘籍分类】
-            * 接口地址：/DocCategory/AddDocCategory
-            * 请求参数示例：data: { "pid": 父级ID, "title": "部门名称"},
-            * 请求方式：Post
-            * 返回数据：json
-            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
-            */
+	            /**
+	            * 【删除分类】
+	            * 接口地址：/DocCategory/Del?id=删除的数据ID
+	            * 请求方式：Post
+	            * 返回数据：json
+	            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+	            */
+	        function Del(obj){
+	        	var li=$(obj).parents('li');
+	        	var id=li.attr('data-id');
+	        	$.ajax({
+	        		url:'/DocCategory/Del',
+	        		data:{id:id},
+	        		type:'post',
+	        		error:function(data){
+	        			alert('删除失败，请联系管理员');
+	        		},
+	        		success:function(data){
+	        			if(data.msg==1){
+	        				li.remove();
+	        			}
+	        			else{
+	        				alert(data.msgbox);
+	        			}
+	        		}
+	        	});
+	        }
+            
 
             /**
             * 【修改分类】
@@ -112,25 +295,67 @@
             * 返回数据：json
             * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
             */
+            
+	        function doEdit(form){
+				form=$(form);
+				var level=parseInt(form.attr('data-level'));
+            	var title=form.find('#title').val();
+            	var pid=form.find('#pid').val();
+            	var id=form.find('#id').val();
+            	var data={id:id,title:title};
+            	$.ajax({
+            		url:'/DocCategory/ModifyDocCategory',
+            		data:data,
+            		type:'post',
+            		dataType:'json',
+            		success:function(ret){
+            			
+            			if(ret.msg ==1){
+                			hideDialog();
+                			getList(pid,level);
+            			}else{
+            				alert(ret.msgbox);
+            			}
+            		}
+            	});
+			}
+            function loadAll()
+            {
+            	$.ajax({
+            		url:'/DocCategory/GetDocCategory?PId=-1',
+            		data:{PId:-1},
+            		success:function(data){
+            			var items={};
+            			$(data.data).each(function(){
+            				if(typeof items[this.parent_id] =='undefined'){
+            					items[this.parent_id] =[];
+            				}
+            				items[this.parent_id].push({
+            					id:this.department_id,
+            					title:this.title,
+            					parent:this.parent_id
+            				});
+            				
+            			});
+            			$.each(items,function(k,v){
+            				$(v).each(function(){
+            					$.categoryClassification.add(this);
+            				});
+            			});
+            		}
+            	});
+            }
+            loadAll();
+            /* function initcategoryClassification()
+            {
+            	this.add=function(item)
+            	{
+            		$.categoryClassification.add(item);
+            	};
+            	this.add({"id":"1","title":"\u5317\u4eac","parent":"0","depth":"1"});
 
-            /**
-            * 【删除分类】
-            * 接口地址：/DocCategory/Del?id=删除的数据ID
-            * 请求方式：Post
-            * 返回数据：json
-            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
-            */
-
-            /**
-            * 【分类排序】
-            * 接口地址：/DocCategory/Sort
-            * 请求方式：Post
-            * 请求参数示例：data: { "ids": "1,2,3,4,5,6" }
-            * 返回数据：json
-            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
-            * PS:一次只能排当前层级的数据，把当前层级的数据id，按照拖动后的顺序组成字符串，英文逗号分割传入
-            */
-
+            };
+            new initcategoryClassification(); */
         </script>
-    }
-    <!--底部脚本 end-->
+}
+<!--底部脚本 end-->

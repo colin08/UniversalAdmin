@@ -1,0 +1,13 @@
+.search-input {
+	margin-top: 12px;
+	-moz-border-radius: 15px; /* Firefox */
+	-webkit-border-radius: 15px; /* Safari and Chrome */
+	border-radius: 15px;
+	/* Opera 10.5+, future browsers, and now also Internet Explorer 6+ using IE-CSS3 */
+	-moz-box-shadow: 10px 10px 20px #000; /* Firefox */
+	-webkit-box-shadow: 10px 10px 20px #000; /* Safari and Chrome */
+	box-shadow: 10px 10px 20px #000;
+	/* Opera 10.5+, future browsers and IE6+ using IE-CSS3 */
+	behavior: url(ie-css3.htc);
+	/* This lets IE know to call the script on all elements which get the 'box' class */
+}

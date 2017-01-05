@@ -65,16 +65,15 @@
                         <li>
                             <div class="lilt">执行人</div>
                             <div class="limd big">
-                                <span><a href="#" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
-
-                                <div class="menlist">
-                                    <ul>
+                                <span><a href="javascript:" onclick="selUser(this,'user_list1','#user_ids')" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
+                                    <div class="user_list_box" id="user_list1">
+									<ul>
                                         @foreach (var item in Model.users_entity)
                                         {
-                                            <li id="user_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
+                                            <li id="user_list1_@item.id"><a href="javascript:;" data-id="@item.id"><span>@item.title</span><i class="i-mdel"></i></a></li>
                                         }
                                     </ul>
-                                </div>
+									</div>
                             </div>
 
                         </li>
@@ -119,6 +118,48 @@
 @section foot
 {
     <script type="text/javascript">
+		function selUser(obj,objid,hid)
+		{
+			selUserDialog({callback:function(data){
+				var ids=$(hid).val().split(',');
+				var ul=$('#'+objid).find('ul');
+				$(data).each(function(){
+					if(ul.find('#'+objid+'_'+this.id).size()>0){
+						return true;
+					}
+					var li=$('<li></li>').appendTo(ul).attr('id',objid+'_'+this.id);
+					var a=$('<a href="javascript:;"></a>').attr('data-id',this.id).appendTo(li).click(function(){
+		        		var id=$(this).attr('data-id');
+		        		moveId(id,objid,hid);
+		        	});
+					$('<span></span>').appendTo(a).html(this.telphone+' ('+this.nick_name+')');
+					$('<i class="i-mdel"></i>').appendTo(a);
+					ids.push(this.id);
+				});
+				$(hid).val(ids.join(','));
+			}});
+			
+		}
+		var tmp=[];
+		$('#user_list1 ul li a').each(function(){
+			tmp.push($(this).attr('data-id'));
+       		$(this).click(function(){
+       			var id=$(this).attr('data-id');
+        	    moveId(id,'user_list1','#user_ids');
+       		});
+       	});
+		$('#user_ids').val(tmp.join(','));
+		function moveId(id,objid,hid){
+    		var ids=[];
+    		$($(hid).val().split(',')).each(function(){
+    			if(this!=id){
+    				ids.push(this);
+    			}
+    		});
+    		$('#'+objid+'_'+id).remove();
+    		$(hid).val(ids.join(','));
+    	}
+		
         $(document).ready(function (e) {
             @if(Model.Msg == 1)
             {

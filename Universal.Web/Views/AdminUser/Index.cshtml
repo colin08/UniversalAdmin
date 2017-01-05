@@ -36,27 +36,29 @@
                             <thead>
                                 <tr>
                                     <th width="5%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
-                                    <th width="10%">姓名</th>
+                                    <th width="15%">姓名</th>
                                     <th width="20%">手机号</th>
                                     <th width="10%">管理权限</th>
                                     <th width="15%">职位</th>
                                     <th width="15%">登录邮箱</th>
                                     <th width="10%">登录密码</th>
-                                    <th width="15%">操作</th>
+                                    <th width="10%">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="listData"></tbody>
                         </table>
                         <div class="listBtm">
-                            <div class="page fr">
-                                <span>共有<span id="span_data_total"></span>条，每页显示</span>
-                                <select class="sel" id="select_page_size">
-                                    <option value="10" selected>10</option>
-                                    <option value="20">20</option>
-                                </select>
-                                <span>条</span>
-                                <div id="pager"></div>
-                            </div>
+                            <div style="width: 22%;float: left;">
+								<span>共有<span id="span_data_total"></span>条，每页显示</span>
+								<select class="sel" id="select_page_size">
+									<option value="10" selected>10</option>
+									<option value="20">20</option>
+								</select>
+								<span>条</span>
+							</div>
+							<div class="page fr">                        
+								<div id="pager"></div>
+							</div>
 
                             <a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>
                         </div>
@@ -181,15 +183,7 @@
             }
             /*******************列表 end *************************/
 
-            //列表的选中
-            function CheckAll(obj) {
-                if ($(obj).is(':checked')) {
-                    $(".all_checked_but").prop("checked", true);
-                } else {
-                    $(".all_checked_but").prop("checked", false);
-                }
-            }
-
+          
             function del(id) {
                 var ids = "";
                 if(id==0)

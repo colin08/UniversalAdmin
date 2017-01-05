@@ -44,15 +44,17 @@
                             <tbody id="listData"></tbody>
                         </table>
                         <div class="listBtm">
-                            <div class="page fr">
-                                <span>共有<span id="span_data_total"></span>条，每页显示</span>
-                                <select class="sel" id="select_page_size">
-                                    <option value="10" selected>10</option>
-                                    <option value="20">20</option>
-                                </select>
-                                <span>条</span>
-                                <div id="pager"></div>
-                            </div>
+                            <div style="width: 22%;float: left;">
+								<span>共有<span id="span_data_total"></span>条，每页显示</span>
+								<select class="sel" id="select_page_size">
+									<option value="10" selected>10</option>
+									<option value="20">20</option>
+								</select>
+								<span>条</span>
+							</div>
+							<div class="page fr">                        
+								<div id="pager"></div>
+							</div>
 
                             <a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>
                         </div>
@@ -121,7 +123,7 @@
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                             dataHtml += "<td>"+CutString(item.Title,25)+"</td>";
                             dataHtml += "<td>"+item.CusUser.NickName+"</td>";
-                            dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"yyyy-MM-dd HH:mm:ss") + "</td>";
+                            dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"") + "</td>";
                             dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Document/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\""+item.FavIcon+"\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
@@ -153,47 +155,6 @@
                 })
             }
             /*******************列表 end *************************/
-
-            //列表的选中
-            function CheckAll(obj) {
-                if ($(obj).is(':checked')) {
-                    $(".all_checked_but").prop("checked", true);
-                } else {
-                    $(".all_checked_but").prop("checked", false);
-                }
-            }
-
-            //截取字符串
-            function CutString(str, len) {
-                if (str.length > len) {
-                    return str.substring(0, len) + "...";
-                } else {
-                    return str;
-                }
-            }
-
-            //格式化时间
-            function ChangeDateFormat(cellval, format) {
-                try {
-                    var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                    var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                    var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                    var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                    var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                    var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                    switch (format) {
-                        case "yyyy-MM-dd":
-                            return date.getFullYear() + "-" + month + "-" + currentDate;
-                        case "yyyy-MM-dd HH:mm:ss":
-                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                        default:
-                            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    }
-                }
-                catch (e) {
-                    return "";
-                }
-            }
 
             function del(id) {
                 var ids = "";

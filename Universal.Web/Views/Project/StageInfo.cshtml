@@ -6,13 +6,16 @@
 <!--头部脚本-->
 @section head
 {
-
+<link rel="stylesheet" type="text/css"
+	href="/assets/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="/assets/bootstrap/css/bootstrap.min.css" />
 }
 <!--头部脚本 end-->
 
 <div class="clear"></div>
 <!--wrapper [[-->
-<div class="container">
+<div class="container" style="width:100%">
     <div class="new-head mb-40 clearfix">
         <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
         <b class="f20">项目祥情</b>
@@ -27,38 +30,109 @@
         <li><a href="/Project/BasicInfo?id=@ViewData["ProjectID"]">基本信息</a></li>
         <li class="current"><a href="/Project/StageInfo?id=@ViewData["ProjectID"]">拆迁概况</a></li>
     </ul>
-    <div class="new-box">
+    <div id="item_list">
+    
+    </div>
+    <div id="template" style="display:none">
+    <div class="new-box" style="margin-bottom:10px" id="item_{stage_id}">
         <div class="new-box-head clearfix">
-            <h2 class="fl f16">阳光湾畔第1期</h2>
+            <h2 class="fl f16" style="line-height:inherit" >{title}</h2>
             <span class="fr">
-                <a href="javascript:;" class="btn-major">编辑分期</a>
-                <a href="javascript:;" class="btn-minor">添加分期</a>
+                <a href="javascript:;" onclick="edit(this)" data-id="{stage_id}" class="btn-major">编辑分期</a>
+                <a href="javascript:;" onclick="add(this)" class="btn-minor">添加分期</a>
             </span>
         </div>
         <div class="demolition clearfix ">
             <dl class="col1">
                 <dt>基本信息</dt>
-                <dd><label for="">拆迁开始时间</label><span>2016-12-20</span></dd>
-                <dd><label for="">总户数</label><span>324m2</span></dd>
-                <dd><label for="">已签约户数</label><span>234m2 （占比已签约户数/总户数）</span></dd>
-                <dd><label for="">未签约户数</label><span>总户数-已签约户数 （占比未签约户数/总户数）</span></dd>
-                <dd><label for="">占地面积</label><span>435m2 （等于基地面积+空地面积）</span></dd>
-                <dd><label for="">基底面积</label><span>435m2</span></dd>
-                <dd><label for="">空地面积</label><span>345m2</span></dd>
-                <dd><label for="">已签约面积</label><span>345m2  (占比	已签约面积/占地面积）</span></dd>
-                <dd><label for="">未签约面积</label><span>建筑面积-已签约建筑面积  (占比未签约建筑面积/建筑面积）</span></dd>
-                <dd><label for="">附件</label><span><i class="i-word"></i>签约房屋位置平面图（标记）.doc</span></dd>
+                <dd><label for="">拆迁开始时间</label><span>{begin_time}</span></dd>
+                <dd><label for="">总户数</label><span>{ZongHuShu}</span></dd>
+                <dd><label for="">已签约户数</label><span>{YiQYHuShu} （<em class="YiQYHuShu"></em>）</span></dd>
+                <dd><label for="">未签约户数</label><span>{WeiQYHuShu}（<em class="WeiQYHuShu"></em>）</span></dd>
+                <dd><label for="">占地面积</label><span>{ZhanDiMianJi}㎡</span></dd>
+                <dd><label for="">基底面积</label><span>{JiDiMianJi}㎡</span></dd>
+                <dd><label for="">空地面积</label><span>{KongDiMianJi}㎡</span></dd>
+                <dd><label for="">已签约面积</label><span>{YiQYMianJi}㎡  (<em class="YiQYMianJi"></em>）</span></dd>
+                <dd><label for="">未签约面积</label><span>{WeiQYMianJi}㎡  (<em class="WeiQYMianJi"></em>）</span></dd>
+                <dd class="clearfix att">
+                	<label for="" style="float:left">附件</label>
+                	<div  style="float:left;width:380px">
+                	</div>
+                </dd>
             </dl>
-            <dl class="col2">
+            <dl class="col2" >
                 <dt>房屋拆除</dt>
-                <dd><label for="" class="lab1">占地面积</label><span>435m2</span></dd>
-                <dd><label for="" class="lab1">建筑面积</label><span>435m2</span></dd>
-                <dd><label for="" class="lab1">补偿面积</label><span>435m2</span></dd>
-                <dd><label for="" class="lab1">补偿金额</label><span>435m2</span></dd>
+                <dd><label for="" class="lab1">占地面积</label><span>{ChaiZhanDiMianJi}㎡</span></dd>
+                <dd><label for="" class="lab1">建筑面积</label><span>{ChaiJianZhuMianJi}㎡</span></dd>
+                <dd><label for="" class="lab1">补偿面积</label><span>{ChaiBuChangMianJi}㎡</span></dd>
+                <dd><label for="" class="lab1">补偿金额</label><span>{ChaiBuChangjinE}</span></dd>
             </dl>
         </div>
     </div>
+    </div>
+    
+    
+<div class="modal fade" id="edit_template">
+	<div class="modal-dialog" style="width:800px">
+				<form id="form1" method="post">
+				<input type="hidden" id="stage_id" name="stage_id" value="0" />
+				<input type="hidden" id="file_list" name="file_list"  />
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">Modal title</h4>
+			</div>
+			<div class="modal-body" style="overflow:auto">
+                <div class="demolition clearfix demolition-edit">
+                    <dl style="width:100%">
+                        <dt>基本信息</dt>
+                        <dd><label for="">分期标题：</label><input type="text" id="title" name="title" class="add-input" placeholder="必填" ></dd>
+                        <dd><label for="">拆迁开始时间</label>
+                       
+                      	 <input id="begin_time" name="begin_time" type="text" class="add-input">
+                        </dd>
+                        <dd><label for="">总户数</label><input id="ZongHuShu" name="ZongHuShu" type="text" class="add-input"></dd>
+                        <dd><label for="">已签约户数</label><input id="YiQYHuShu" name="YiQYHuShu" type="text" class="add-input"></dd>
+                        <dd><label for="">未签约户数</label><input id="WeiQYHuShu" name="WeiQYHuShu" type="text" class="add-input"></dd>
+                        <dd><label for="">占地面积</label><input id="ZhanDiMianJi" name="ZhanDiMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="">基底面积</label><input id="JiDiMianJi" name="JiDiMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="">空地面积</label><input id="KongDiMianJi" name="KongDiMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="">已签约面积</label><input id="YiQYMianJi" name="YiQYMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="">未签约面积</label><input id="WeiQYMianJi" name="WeiQYMianJi" type="text" class="add-input"></dd>
+                        <dd class="clearfix"><label for="" style="float:left;">附件</label>
+                        <div style="float:left;">
+                                <ul id="file_lists">
+                                    
+                                </ul>
+                                 <a href="javascript:;" class="btn-add uploadBtnBox" onclick="AddFile()"><i class="i-attach"></i>新增</a>
+                        </div>
+                        </dd>
+                        <dt>房屋拆除</dt>
+                        <dd><label for="">占地面积</label><input id="ChaiZhanDiMianJi" name="ChaiZhanDiMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="" >建筑面积</label><input id="ChaiJianZhuMianJi" name="ChaiJianZhuMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="" >补偿面积</label><input id="ChaiBuChangMianJi" name="ChaiBuChangMianJi" type="text" class="add-input"></dd>
+                        <dd><label for="">补偿金额</label><input id="ChaiBuChangjinE" name="ChaiBuChangjinE" type="text" class="add-input"></dd>
+                    </dl>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+				<button type="submit" class="btn btn-primary">确定保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+                </form>
+    </div>
+    </div>
+    </div>
+    
+    
+    
+    
+    
 </div>
+
 <!--wrapper ]]-->
 
 
@@ -67,9 +141,100 @@
 <!--底部脚本-->
 @section foot
 {
+
+<script type="text/javascript"
+	src="/assets/bootstrap/js/bootstrap.min.js"></script>
+	
+<script type="text/javascript" src="/assets/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/assets/laydate/laydate.js"></script>
+<style type="text/css">
+.demolition dl dd label.error{width: 100%;
+display:block;
+padding-left:120px;
+float: left;
+text-align:left;
+color:red;}
+</style>
     <script type="text/javascript">
         var project_id = @ViewData["ProjectID"];
+        function AddFile()
+        {
+           var li=$('<li></li>').appendTo($('#file_lists'));
+            
+                		$('<a href="javascript:;" class="btn-add uploadBtnBox" onclick="RemoveUp(this)"><i class="i-barrel"></i></a>').appendTo(li);
+                		$(' <a href="javascript:;" class="btn-add uploadBtnBox"><i class="i-redbb"></i>上传文件<input type="file" class="uploadBtn" onchange="Upload(this)"></a>').appendTo(li);
+                		$('<span></span>').appendTo(li).addClass('file_name');
+                		$('<span></span>').appendTo(li).addClass('file_size');
+                		$('<span></span>').appendTo(li).addClass('file_status');
+        }
+        function RemoveUp(obj)
+        {
+            $(obj).parent("li").remove();
+        }
+        function Upload(obj)
+        {
+        	var li=$(obj).parents('li');
+            //原始文件名
+            var file_name = getFileName($(obj).val());
+            if (CheckIsUpload(file_name))
+            {
+                alert("该文件已上传");
+                return;
+            }
+            var fd = new FormData();
+            fd.append("FileData", $(obj)[0].files[0]);
+            li.find('.file_status').html("上传中...");
+            li.find('.file_name').html(file_name);
+            $.ajax({
+                url: '/Tools/UploadFile',
+                type: 'POST',
+                cache: false,
+                contentType: "multipart/form-data",
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+            	li.find('.file_status').html("");
+                if (res.msg == 1) {
+                	li.attr('data-file_path',res.data);
+                	li.attr('data-file_size',res.msgbox);
+                	li.attr('data-file_name',file_name);
+                	li.find('.file_size').html('('+res.msgbox+')');
+                } else {
+                    alert(res.msgbox);
+                }
+            }).fail(function (res) { });
 
+        }
+
+        //创建服务数据
+        function CreateUploadData()
+        {
+            var list = [];
+            $.each($("#file_lists").find("li"), function () {
+               var li=$(this);
+               var item={
+            		   file_name:li.attr('data-file_name'),
+            		   file_size:li.attr('data-file_size'),
+            		   file_path:li.attr('data-file_path')
+               };
+               list.push(item);
+            })
+            return list;
+        }
+        
+        function CheckIsUpload(file_name)
+        {
+           return $("#file_lists").find("li[data-file_name='"+file_name+"']").size()>0;
+        }
+
+        function getFileName(o) {
+            var pos = o.lastIndexOf("\\");
+            return o.substring(pos + 1);
+        }
+        laydate({
+        	   elem: '#begin_time'
+        	})
         /** 【获取所有拆迁分期】
         *  /Project/GetAllStage?project_id=4
         *  get  
@@ -78,7 +243,257 @@
         *  有些字段说明json里已经写了，基本是对应页面的
         *   
         **/
-
+        function getIntValue(v){
+        	v=parseInt(v);
+        	return isNaN(v)?0:v;
+        }
+        function getPercentage(val,total){
+        	return (total<1?0:(Math.round(val / total * 10000) / 100.00))+'%';
+        }
+		function getItemList(){
+        	$.ajax({
+        		url:'/Project/GetAllStage',
+        		data:{
+        			project_id:project_id
+        		},
+        		success:function(data){
+        			var template=$('#template').html();
+        			var box=$('#item_list').empty(); 
+        			if(data.data.length<1){
+        				
+        				var div=$('<div></div>').appendTo(box).css({textAlign:'center','margin':'0 auto','width':'100%'});
+        				$('<a href="javascript:;" onclick="add(this)" class="btn-minor">添加分期</a>').appendTo(div);
+        			}
+        			$(data.data).each(function(){
+        				var item=this;
+        				var html=template;
+        				$.each(this,function(k,v){
+        					html=html.format(k,v);
+        				});
+        				html=$(html);
+        				
+        				var total=getIntValue(this.ZongHuShu);
+        				var pp=['WeiQYHuShu','YiQYHuShu'];
+        				$(pp).each(function(){
+        					html.find('.'+this).html(getPercentage(getIntValue(item[this]),total));
+        				});
+        				
+        				html.find('.YiQYMianJi').html(getPercentage(getIntValue(this.YiQYMianJi),getIntValue(this.ZhanDiMianJi)));
+        				html.find('.WeiQYMianJi').html(getPercentage(getIntValue(this.WeiQYMianJi),getIntValue(this.ChaiJianZhuMianJi)));
+        				if(this.file_list.length>0){
+        					var att=html.find('.att').show().find('div').empty();
+        					$(this.file_list).each(function(){
+        						var a=$('<a></a>').appendTo(att).css({width:'100%',display:'block'});
+        						a.html(this.file_name+' ('+this.file_size+')');
+        						a.attr('href',this.file_path);
+        					});
+        				}else{
+        					html.find('.att').hide();
+        				}
+        				html.appendTo(box);
+        			});
+        		}
+        	});
+        }
+        getItemList();
+        function edit(obj){
+        	var id=$(obj).attr('data-id');
+        	$.ajax({
+        		url:'/Project/GetStage',
+        		data:{stage_id:id},
+        		success:function(data){
+        			$('.modal-body').css({maxHeight:$(window).height()-200});
+                	$('.modal-title').html('编辑分期');
+                	var m=$('#edit_template').modal({backdrop: 'static', keyboard: false}); 
+                	$.each(data.data,function(k,v){
+                		m.find('#'+k).val(v);
+                	});
+                	var ul=m.find('#file_lists').empty();
+                	$(data.data.file_list).each(function()
+                	{
+                		var li=$('<li></li>').appendTo(ul);
+                		$.each(this,function(k,v){
+                			li.attr('data-'+k,v);
+                		});
+                		$('<a href="javascript:;" class="btn-add uploadBtnBox" onclick="RemoveUp(this)"><i class="i-barrel"></i></a>').appendTo(li);
+                		$(' <a href="javascript:;" class="btn-add uploadBtnBox"><i class="i-redbb"></i>上传文件<input type="file" class="uploadBtn" onchange="Upload(this)"></a>').appendTo(li);
+                		$('<span></span>').appendTo(li).html(this.file_name).addClass('file_name');
+                		$('<span></span>').appendTo(li).html(' ('+this.file_size+')').addClass('file_size');
+                		$('<span></span>').appendTo(li).addClass('file_status');
+                	});
+                	
+                	
+        		}
+        	});
+        	
+        }
+        function add(obj){
+        	$('.modal-body').css({maxHeight:$(window).height()-200});
+        	$('.modal-title').html('增加分期');
+        	var m=$('#edit_template').modal({backdrop: 'static', keyboard: false});
+        	
+        	$(m.find('input')).each(function(){
+	            	if(this.name==''){
+	            		return true;
+	            	}
+	            	this.value='';
+	        });
+        	m.find('#stage_id').val('0');
+        	m.find('#file_lists').empty();
+        }
+        $("#form1").validate({
+   	     
+	        onkeyup: false,
+	        rules:{
+	        	title:{
+	                required:true
+	            },
+	            begin_time:{required:true},
+	            ZongHuShu:{
+	                required:true,
+	                number:true,
+	                min:1
+	            },
+	            YiQYHuShu:{
+	                required:true,
+	                number:true,
+	                min:0
+	            },
+	            WeiQYHuShu:{
+	                required:true,
+	                number:true,
+	                min:0
+	            },
+	            ZhanDiMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            JiDiMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            KongDiMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            YiQYMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            WeiQYMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            ChaiZhanDiMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            ChaiJianZhuMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            ChaiBuChangMianJi:{
+	                required:true,
+	                number:true
+	            },
+	            ChaiBuChangjinE:{
+	                required:true,
+	                number:true
+	            }
+	            
+	        },
+	        messages:{
+	            title:{
+	                required:"分期标题不能为空"
+	            },
+	            begin_time:{required:'开始时间不能为空'},
+	            ZongHuShu:{
+	                required:'总户数不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            YiQYHuShu:{
+	                required:'已签约户数不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            WeiQYHuShu:{
+	                required:'未签约户数不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            ZhanDiMianJi:{
+	                required:'占地面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            JiDiMianJi:{
+	                required:'基底面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            KongDiMianJi:{
+	                required:'空地面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            YiQYMianJi:{
+	                required:'已签约面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            WeiQYMianJi:{
+	                required:'未签约面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            ChaiZhanDiMianJi:{
+	                required:'占地面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            ChaiJianZhuMianJi:{
+	                required:'建筑面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            ChaiBuChangMianJi:{
+	                required:'补偿面积不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            },
+	            ChaiBuChangjinE:{
+	                required:'补偿金额不能为空',
+	                number:'只能是数字',
+	                min:'必需大于{0}的数字'
+	            }
+	        }
+	        ,submitHandler: function(form) {
+	            var data={};
+	            $($(form).find('input')).each(function(){
+	            	if(this.name==''){
+	            		return true;
+	            	}
+	            	data[this.name]=this.value;
+	            });
+	            data.file_list=CreateUploadData();
+	            console.log(JSON.stringify(data));
+	        	$.ajax({
+	            	url:'/Project/SaveStage?project_id='+project_id,
+	                type:'post',
+	                data:JSON.stringify(data),
+	                success: function (data) {
+	                	if(data.msg==1){getItemList();
+	                	$('#edit_template').modal('hide');
+	                	alert('保存成功');
+	                	}else{
+	                		alert(data.msgbox);
+	                	}
+	            	}
+	        	});
+	            return false;
+			}
+	    });
         /** 【获取某期】
         *  /Project/GetStage?stage_id=1
         *   get

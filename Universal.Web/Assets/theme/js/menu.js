@@ -35,8 +35,10 @@ $(function () {
         }
     }
 
-    $("#tree_root").find("li").children("span").click(function () {
-        setTreeStyle($(this));
+    $("#tree_root").find("li").children("span").each(function(){
+    	$(this).click(function () {
+            setTreeStyle($(this));
+        });
     });
 // -----------------------------------------
 });

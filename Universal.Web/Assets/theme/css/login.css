@@ -6,8 +6,8 @@ body{ background: url(../images/loginBg.jpg) no-repeat center top #e5e4e2; backg
 .loginBox h1{ text-align: center; }
 .loginBox ul{ margin-top: 20px;;}
 .loginBox ul li{ padding: 10px 0;}
-.loginBox li input[type='text']{ border: 1px solid #ddd; border-radius: 4px; display: block; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;}
-.loginBox li input[type='password']{ border: 1px solid #ddd; border-radius: 4px; display: block; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;}
+.loginBox li input[type='text']{ border: 1px solid #ddd; border-radius: 4px; display: block;height:40px; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;behavior: url(http://fetchak.com/ie-css3/ie-css3.htc);}
+.loginBox li input[type='password']{ border: 1px solid #ddd; border-radius: 4px; display: block;height:40px; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;}
 .loginBox li input[type='text']:focus{ color: #333;}
 .loginBox li input[type='checkbox']{ display: inline-block; vertical-align: middle;; margin-right: 5px;;}
 .btnLg{ border: 0; display: block; width:100%; text-align: center; font-size: 16px; line-height: 38px;; height: 40px; color: #fff; border-radius: 4px;  cursor: pointer; background: #e22d3e;}
@@ -23,7 +23,7 @@ body{ background: url(../images/loginBg.jpg) no-repeat center top #e5e4e2; backg
 .fgBoxIner h6{ font-size: 12px; font-weight: normal; color: #929ca3; line-height: 32px;;}
 .fgBoxIner ul{ margin-top: 0px;;}
 .fgBoxIner ul li{ padding: 10px 0;}
-.fgBoxIner li input[type='text']{ border: 1px solid #ddd; border-radius: 4px; display: block; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;}
+.fgBoxIner li input[type='text']{ border: 1px solid #ddd; border-radius: 4px; display: block;height:40px; line-height: 40px; padding: 0 10px; font-size: 14px; width: 92%; color: #999;}
 .fgBoxIner li input[type='text']:focus{ color: #333;}
 .yzm{ position: relative;}
 .yzm a{position: absolute; right: 10px; top: 20px; color: #e22d3e; font-size: 14px;;}

@@ -64,11 +64,11 @@
                             <div class="litip">&nbsp;</div>
                         </li>
                         <li>
-                            <div class="lilt">审批人</div>
-                            <div class="limd">
+                            <div class="lilt"><span class="red">*</span>审批人</div>
+                            <div class="limd" style="position: relative">
                                 @Html.HiddenFor(p => p.approve_user_id)
-                                <input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
-                                <a href="javascript:;" onclick="selapprove_user(this)" class="btn-peo">选择成员</a>
+								<input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
+                                <a href="javascript:;" onclick="selapprove_user(this)" class="btn-peo" style="left: 290px;">选择成员</a>
                             </div>
                             <div class="litip">&nbsp;</div>
                         </li>
@@ -134,6 +134,19 @@
 @section foot
 {
     <script type="text/javascript">
+    function selapprove_user(obj)
+	{
+		selUserDialog({max:1,callback:function(data){
+			$(data).each(function(){
+				$('#approve_user_id').val(this.id);
+				$('#approve_user_name').val(this.nick_name);
+			});
+		}});
+	}
+
+
+
+
         $(document).ready(function (e) {
                @if(Model.Msg == 1)
                {

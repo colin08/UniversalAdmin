@@ -49,7 +49,8 @@
 .add-select select.add-select2{width: 100px;margin-right: 12px;}
 .add-select select.add-select3{width: 100px;}
 
-
+.lab2{float:left;width:750px}
+.lab2:after {content:".";display:block;height:0;visibility:hidden;clear:both;}
 .new-box-submit{width: 990px;margin: 20px auto 0;}
 .new-box-submit a{width: 120px;height: 40px;line-height: 40px;margin-left: 170px;}
 .new-info{text-align: center;height: 42px;line-height: 42px;}
@@ -71,12 +72,18 @@
 .creater-box-submit a{width: 120px;height: 40px;line-height: 40px;margin-right: 20px;}
 .creater-box-submit a.btn-cencel{width: 100px;}
 
-.btn-time{position: absolute;left: 536px; top: 3px;border-left: #dce2ea 1px solid;width: 54px;text-align: center;height: 34px;vertical-align: top;}
+.btn-time{position: absolute;left: 536px;border-left: #dce2ea 1px solid;width: 54px;text-align: center;height: 38px;vertical-align: top;}
+.btn-time i{margin-top:10px}
 .top-step1{background: url("../images/top-step1.png");width: 900px;height: 36px;margin: 0 auto;}
 .top-step2{background: url("../images/top-step2.png");width: 900px;height: 36px;margin: 0 auto;}
 .slide-pos{position: absolute;right: 0;top: 90px;}
 .creater-box ul li label.lab1{width: 90px;margin-right: 16px;}
-.btn-peo{position: absolute;left: 386px; top: 3px;border-left: #dce2ea 1px solid;width: 98px;text-align: center;height: 34px;line-height: 34px;vertical-align: top;font-size: 14px;color: #506470;}
+.btn-peo{position: absolute;left: 386px; 
+/* top: 3px; */
+border-left: #dce2ea 1px solid;width: 98px;text-align: center;
+/* height: 34px;line-height: 34px; */
+height: 38px;line-height: 38px;
+vertical-align: top;font-size: 14px;color: #506470;}
 .btn-add{display: inline-block;font-size: 14px;}
 .btn-add i{margin-right: 10px;}
 .scrollbox-big{display: block;width: 586px;margin-left: 106px;}
@@ -129,7 +136,7 @@
 
 /*header*/
 .toplink{position: relative;width: auto;}
-.top-msg{position: absolute; top: 67px; right: -62px; background: #fff; box-shadow: 0 0 10px #ccc;width: 360px;z-index: 1;}
+.top-msg{position: absolute; top: 67px; right: -62px; background: #fff; box-shadow: 0 0 10px #ccc;width: 360px;z-index: 1000;}
 .top-msg ul li{border-bottom: #e8edf6 1px solid;position: relative;padding: 0 10px 0 15px;float: none;}
 .top-msg ul li.bg{background: #f7f7f7;}
 .top-msg ul li i{background-image: url("../ico/i-top-msg.png");width: 36px;height: 36px;vertical-align: middle;margin-right: 10px;}
@@ -158,10 +165,12 @@
 #menu #tree_root li span.tree7{padding:0 0 0 90px;}
 #menu li .hover,#menu li span:hover{background-color:#e9edf6;}
 #menu ul{overflow:hidden;}
+#menu ul li{overflow:hidden}
 #menu ul li b{font-weight:normal;position:relative;padding-left:16px;color: #506470;font-size: 14px;}
 #menu ul li b:before{display:block;font-size:0;top:5px;left:0;content:"";width:5px;height:9px;position:absolute;}
 #menu ul li .On:before,#menu ul li .On2Off:before{top:7px;background-image: url("../ico/ico_arrDownB.png");width: 9px;height: 5px;}
 #menu ul li .Off:before{top:5px;background-image: url("../ico/ico_arrRB.png");}
 #menu ul li .On2Off:before{transform:rotate(0deg);-o-transform:rotate(0deg);-ms-transform:rotate(0deg);-moz-transform:rotate(0deg);-webkit-transform:rotate(0deg);}
-.fileLt{height: 374px; overflow-y: auto;}
+.fileLt{height: 374px;overflow: auto;
+width:20%;}
 .fileLt li{padding: 0;}

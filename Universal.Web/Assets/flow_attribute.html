@@ -1,0 +1,201 @@
+
+	<script src="/assets/js/tinycolor-0.9.15.min.js"></script>
+	<script src="/assets/pick-a-color/js/pick-a-color.js"></script>	
+
+	<link rel="stylesheet" href="/assets/pick-a-color/css/pick-a-color-1.2.3.min.css" />	  
+	<ul id="myTab" class="nav nav-tabs" style="float: none; margin: 0">
+		<li class="active"><a href="#style" data-toggle="tab">样式</a></li>
+
+	</ul>
+	<br />
+
+	<form class="form-horizontal" role="form">
+		<div class="tab-content">
+			<div class="tab-pane fade in active " id="style">
+				<!-- <div class="form-group">
+					<label for="style_size" class="col-sm-2 control-label">尺寸</label>
+					<div class="col-sm-10" id="style_size">
+						宽 <input style="width: 100px; display: inline" type="text"
+							class="form-control" id="style_width" name="style_width"
+							placeholder="宽">px  高 <input
+							style="width: 100px; display: inline" type="text"
+							class="form-control" id="style_height" name="style_height"
+							placeholder="高">px
+					</div>
+				</div> -->
+				<div class="form-group" style="display:none">
+					<label class="col-sm-2 control-label" for="e_index">节点编号</label>
+					<div class="col-sm-5">
+						<input type="text" id="e_index" name="e_index" class="form-control">
+					</div>
+				</div>
+				<div class="form-group" style="display:none">
+					<label for="style_size" class="col-sm-2 control-label">状态</label>
+					<div class="col-sm-10">
+						<label for="status_1" class="radio-inline">
+							<input id="status_1" name="status" type="radio" value="true">
+							开启
+						</label>
+						<label for="status_2" class="radio-inline">
+							<input id="status_2" name="status" type="radio" value="false">
+							关闭
+						</label>
+					</div>
+				</div>
+				<div class="form-group" style="display:none">
+					<label for="style_size" class="col-sm-2 control-label">开始结点</label>
+					<div class="col-sm-10">
+						<label for="is_start1" class="radio-inline">
+							<input id="is_start1" name="is_start" type="radio" value="true">
+							是
+						</label>
+						<label for="is_start2" class="radio-inline">
+							<input id="is_start2" name="is_start" type="radio" value="false">
+							否
+						</label>
+					</div>
+				</div>
+				
+				<div class="form-group" style="display:none">
+					<label for="style_size" class="col-sm-2 control-label">结束结点</label>
+					<div class="col-sm-10">
+						<label for="is_end1" class="radio-inline">
+							<input id="is_end1" name="is_end" type="radio" value="true">
+							是
+						</label>
+						<label for="is_end2" class="radio-inline">
+							<input id="is_end2" name="is_end" type="radio" value="false">
+							否
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="style_size" class="col-sm-2 control-label">位置</label>
+					<div class="col-sm-10" id="style_size">
+						左 <input style="width: 100px; display: inline" type="text"
+							class="form-control" id="style_x" name="style_x"
+							placeholder="x">px  上 <input
+							style="width: 100px; display: inline" type="text"
+							class="form-control" id="style_y" name="style_y"
+							placeholder="y">px
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="style_color">字体颜色</label>
+					<div class="col-sm-5">
+						<input type="text" id="style_color" name="style_color" class="pick-a-color form-control">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="style_icon"><span
+						class="process-flag badge badge-inverse" id="style_icon_preview"><i
+							class="fa fa-star" ></i></span> 图标</label>
+					<div class="col-sm-10">
+						<input style="display: inline; width: 100px" type="text"
+							class="form-control" name="style_icon" id="style_icon"
+							 value="fa-check">
+						<div id="icon_list">
+							<ul>
+
+							</ul>
+							<a href="http://fontawesome.io/icons/" target="_blank">更多</a>
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+			</div>
+
+		</div>
+
+
+
+	</form>
+
+
+
+	<script type="text/javascript">
+	function init_flow_node_edit(obj,item)
+	{
+		item=$.extend({color:'',top:'',left:'',icon:'',status:true,is_end:false,is_start:false,index:0},item||{});
+		
+		$('#style_color').val(item.color);
+		$('#style_x').val(item.left);
+		$('#style_y').val(item.top);
+		$('#style_icon').val(item.icon);
+		$('#e_index').val(item.index);
+		$('#status_1').attr('checked',item.status);
+		$('#status_2').attr('checked',!item.status);
+		$('#is_start1').attr('checked',item.is_start);
+		$('#is_start2').attr('checked',!item.is_start);
+		$('#is_end1').attr('checked',item.is_end);
+		$('#is_end2').attr('checked',!item.is_end);
+		
+		
+		
+		$('<i></i>').appendTo($('#style_icon_preview').empty()).addClass('fa '+item.icon);
+		$(".pick-a-color").pickAColor({
+			  showSpectrum            : true,
+			  showSavedColors         : true,
+			  saveColorsPerElement    : false,
+			  fadeMenuToggle          : true,
+			  showHexInput            : true,
+			  showBasicColors         : true,
+			  allowBlank              : true,
+			  inlineDropdown          : false
+			}).on('change',function(){
+				$(this).attr('data-value',$(this).val());
+			});
+		}
+
+		$('input[name=status]').change(function(){
+			$('input[name=is_start]').attr('disabled',this.value=='false');
+			$('input[name=is_end]').attr('disabled',this.value=='false');
+		})
+		function get_node_edit_value(item)
+		{
+			item=$.extend({},item||{});
+			item.color=$('.pick-a-color').val();
+			item.icon=$('#style_icon').val();
+			item.left=parseInt($('#style_x').val());
+			item.top=parseInt($('#style_y').val());
+			if(isNaN(item.left) || isNaN(item.top)){
+				alert('左、右数据只能是数字');
+				return false;
+			}
+			item.index=parseInt($('#e_index').val());
+			item.status=$('input[name=status]:checked').val()=='true';
+			if(item.status==false){
+				item.is_start=false;
+				item.is_end=false;
+			}else{
+				item.is_start=$('input[name=is_start]:checked').val()=='true';
+				item.is_end=$('input[name=is_end]:checked').val()=='true';
+			}
+			console.log(JSON.stringify(item));
+			return item;
+		}
+		function initIconList() {
+			var arr = [ 'home', 'star', 'check', 'remove', 'refresh', 'plane',
+					'play', 'heart', 'random', 'lock' ];
+			var ul = $('#icon_list ul').empty();
+			$(arr).each(function() {
+				var css = "fa-" + this;
+				var li = $('<li></li>').appendTo(ul).attr('data-value', css).click(function(){
+					$(this).addClass('active').siblings().removeClass('active');
+					var icon=$(this).attr('data-value');
+					var p=$('#style_icon_preview').empty();
+					$('<i></i>').appendTo(p).addClass('fa '+icon);
+					$('#style_icon').val(icon);
+				});
+				$('<i class="fa"></i>').appendTo(li).addClass(css);
+			});
+		}
+		initIconList();
+		
+	</script>
+

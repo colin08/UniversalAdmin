@@ -1,97 +1,69 @@
-﻿@{
-    ViewBag.Title = "部门管理";
-    ViewData["tabLeft"] = "department";
-    ViewData["tabTop"] = "manager";
-}
+﻿@{ ViewBag.Title = "部门管理"; ViewData["tabLeft"] = "department";
+ViewData["tabTop"] = "manager"; }
 
 <!--头部脚本-->
-@section head
-{
-
-}
+@section head { }
 <!--头部脚本 end-->
 
 
 <div class="wapper">
-@Html.Partial("_AdminMenuLeft", this.ViewData)
+	@Html.Partial("_AdminMenuLeft", this.ViewData)
 
-    <div class="rightBox">
-        <div class="container">
-            <div class="tit1">
-                <b>部门设置</b>
-                <div class="search"><input type="text" id="" value="" placeholder="请输入部门" /><input type="button" id="" value="" /></div>
-            </div>
+	<div class="rightBox">
+		<div class="container">
+			<div class="tit1">
+				<b>部门设置</b>
+				<div class="search">
+					<input type="text" id="" value="" placeholder="请输入部门" /><input
+						type="button" id="" value="" />
+				</div>
+			</div>
 
-            <div class="bmList">
-                <dl>
-                    <dt>公司名称</dt>
-                    <dd>
-                        <div class="bmBox"><b>深圳花伴里实业集团有限公司  </b> </div>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>一级部门</dt>
-                    <dd>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <a href="javascript:;" class="addBm">点击添加</a>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>二级部门</dt>
-                    <dd>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <a href="javascript:;" class="addBm">点击添加</a>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>三级部门</dt>
-                    <dd>
+			<div class="bmList">
+				<dl>
+					<dt>公司名称</dt>
+					<dd>
+						<div class="bmBox">
+							<b>深圳花伴里实业集团有限公司 </b>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>一级部门</dt>
+					<dd id="lv1">
+						
+					</dd>
+				</dl>
+				<dl>
+					<dt>二级部门</dt>
+					<dd id="lv2">
+						
+					</dd>
+				</dl>
+				<dl>
+					<dt>三级部门</dt>
+					<dd id="lv3">
 
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <div class="bmBox">
-                            <b>总经办</b>
-                            <span>主管：<em>张总</em><em>张总</em></span>
-                        </div>
-                        <a href="javascript:;" class="addBm">点击添加</a>
-                    </dd>
-                </dl>
-            </div>
+					</dd>
+				</dl>
+			</div>
 
 
-        </div>
+		</div>
 
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
-    </div>
+		<div class="footer">Copyright © 深圳花伴里实业集团有限公司 粤ICP备13089427号-1</div>
+	</div>
 </div>
 
-    <!--底部脚本-->
-    @section foot
-{
-        <script type="text/javascript">
 
+
+<!--底部脚本-->
+@section foot {
+<script type="text/javascript">
+sessionStorage.lastname=['jj','11',2];
+document.write(typeof sessionStorage.lastname1);
             /**
             * 【获取部门信息】
             * 接口地址：/Department/GetDeparment?PId=
@@ -100,7 +72,76 @@
             * 返回数据：json
             * 返回数据格式：直接在浏览器打开地址就可以看到
             */
-
+            var items={};
+           	function switchLevel(l){
+           		for(i=1;i<=3;i++){
+           			if(i<=l){
+           				$('#lv'+i).parent().show();
+           			}else{$('#lv'+i).parent().hide();}
+           		}
+           	}
+           	var loading=false;
+            function GetDeparment(pid,l)
+            {
+            	if(!l){
+            		l=1;
+            	}
+            	if(loading){
+            		return;
+            	}
+            	loading=true;
+            	var data={};
+            	if(pid>0){
+            		data['PId']=pid;
+            	}else{
+            		pid=0;
+            	}
+            	console.log(JSON.stringify(data));
+            	$.ajax({
+            		url:"/Department/GetDeparment",
+            		data:data,
+            		error:function(data){
+            			loading=false;
+            			console.log(JSON.stringify(data));
+            		},
+            		success:function(data){
+            			loading=false;
+            			console.log('2');
+            			var dd=$('#lv'+l).empty();
+            			switchLevel(l);
+            			$(data.data).each(function(){
+                			items['item_'+this.department_id]=this;
+            				 	var div=$('<div></div>').addClass('bmBox jjxbox').attr('data-level',l).attr('id','item_'+this.department_id).attr('data-id',this.department_id).css({'cursor':'pointer'}).appendTo(dd).click(function(){
+            				 		$(this).parent().find('.act').removeClass('act');
+            				 		$(this).addClass('act');
+            				 		var id=$(this).attr('data-id');
+            				 		if(l<3){
+            				 			GetDeparment(id,l+1);
+            				 		}
+            				 	});
+            				 	var ebox=$('<div></div>').appendTo(div).addClass('ebtn');
+            				 	$('<button></button>').appendTo(ebox).html('编辑').attr('data-id',this.department_id).attr('data-pid',this.parent_id).click(function(){
+            				 		editFn(this);
+            				 	});
+            				 	$('<button></button>').appendTo(ebox).html('删除').attr('data-id',this.department_id).attr('data-pid',this.parent_id).click(function(){
+            				 		delFn(this);
+            				 	});
+            					 $('<b></b>').appendTo(div).html(this.title);
+            					 var span=$('<span>主管：</span>').appendTo(div); 
+            					 $(this.admin_list).each(function(){
+            						 $('<em></em>').appendTo(span).html(this.name);
+            					});
+            					 
+            				
+            			});
+            			$('<a></a>').appendTo(dd).html('点击添加').click(function(){
+        					addFn(this,pid);
+        				}).addClass('addBm');
+            		}
+            	});
+            }
+            $('body').ready(function(){GetDeparment(0,1);});
+            
             /**
             * 【加载用户列表】
             * 接口地址：/Tools/GetUserList?search=
@@ -109,23 +150,165 @@
             * 返回数据格式：直接在浏览器打开地址就可以看到
             */
 
-            /**
-            * 【添加部门】
-            * 接口地址：/Department/Add
-            * 请求参数示例：data: { "pid": 父级ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
-            * 请求方式：Post
-            * 返回数据：json
-            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
-            */
+         
 
-            /**
-            * 【修改部门】
-            * 接口地址：/Department/Modify
-            * 请求参数示例：data: { "id": 部门ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
-            * 请求方式：Post
-            * 返回数据：json
-            * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
-            */
+           
+
+			function showEdit(item){
+				item = $.extend({
+					parent_id : 0
+				}, item || {});
+            	var html=$('<div class="safeyPop"></div>');
+            	var form=$('<form></form>').appendTo(html);
+            	$('<input type="hidden" name="pid" id="pid" />').appendTo(form).val(item.parent_id);
+            	$('<input type="hidden" name="id" id="id" />').appendTo(form).val(item.department_id);
+            	$('<input type="hidden" name="user_ids" id="user_ids" />').appendTo(form);
+            	var ul=$('<ul></ul>').appendTo(form);
+            	var li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">部门名称</span>').appendTo(li);
+            	var div=$('<div class="pliRt lh18 pr"></div>').appendTo(li);
+            	$('<input type="text" name="title" class="plinput" id="title" placeholder="请输入部门名称" />').appendTo(div).val(item.title);
+            	$('<br /><span class="col_grey lh18">不得超过20个字符</span><i class="i-delG"></i>').appendTo(div);
+            	li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">主管</span>').appendTo(li);
+            	var div=$('<div class="pliRt pr addbox"></div>').appendTo(li);
+            	var lst=$('<div class="addboxList" style="min-height:40px"></div>').appendTo(div);
+            	$(item.admin_list).each(function(){
+            		var a=$('<a href="javascript:"></a>').appendTo(lst).attr('id','adm_id_'+this.user_id).attr('data-id',this.user_id).click(function(){
+            			$(this).remove();
+            		});
+            		$('<em></em>').appendTo(a).html(this.name);
+            		$('<i class="i-mdel"></i>').appendTo(a);
+            	});
+            	$('<a href="javascript:" class="a-add col_red">添加主管</a>').appendTo(div).click(function(){
+            		selUserDialog({callback:function(data){
+            			 //alert(JSON.stringify(data));
+            			 $(data).each(function(){
+            				 if(lst.find('#adm_id_'+this.id).size()>0){
+            					 return true;
+            				 }
+            				 var a=$('<a></a>').appendTo(lst).attr('data-id',this.id).attr('id','adm_id_'+this.id);
+                     		$('<em></em>').appendTo(a).html(this.nick_name);
+                     		$('<i class="i-mdel"></i>').appendTo(a);
+            			 });
+            			 
+            			
+            		}});
+            	});
+            	li=$('<li></li>').appendTo(ul);
+            	$('<span class="pliLt">&nbsp;</span>').appendTo(li);
+            	div=$('<div class="pliRt"></div>').appendTo(li);
+            	$('<button type="button" class="Btn2 red mr_15">确定</button>').appendTo(div).click(function(){
+            		var ids=[];
+            		lst.find('a').each(function(){
+            			ids.push($(this).attr('data-id'));
+            		});
+            		form.find('#user_ids').val(ids.join(','));
+            		if(item.department_id==0){
+            			doAdd(form);
+            		}else{
+            			doEdit(form);
+            		}
+            	});
+            	$('<button type="button" class="Btn2">取消</button>').appendTo(div).click(function(){
+            		hideDialog();
+            	});
+            	
+    			
+            	showDialog({
+            		title:item.pagetitle,
+            		html:html
+            	});
+            	
+            }
+			/**
+             * 【修改部门】
+             * 接口地址：/Department/Modify
+             * 请求参数示例：data: { "id": 部门ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
+             * 请求方式：Post
+             * 返回数据：json
+             * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+             */
+            function doEdit(form){
+            	form=$(form);
+            	var pid=form.find('#pid').val();
+            	var id=form.find('#id').val();
+            	var title=form.find('#title').val();
+            	var user_ids=form.find('#user_ids').val();
+            	var data={id:id,title:title,user_ids:user_ids};
+            	$.ajax({
+            		url:'/Department/Modify',
+            		data:data,
+            		type:'post',
+            		dataType:'json',
+            		success:function(ret){
+            			alert(ret.msgbox);
+            			if(ret.msg ==1){
+                			hideDialog();
+                			reloadData(pid);
+            			}
+                    	//alert(JSON.stringify(ret));
+            		}
+            	});
+            }
+             function reloadData(id){
+            	 id=parseInt(id);
+            	 if(id==0){
+                	 setTimeout(function(){
+                 		GetDeparment(id,1);
+                 	},1000);
+            		 return;
+            	 }
+            	 var t= $('#item_'+id);
+            	var l=parseInt(t.attr('data-level'));
+            	setTimeout(function(){
+            		GetDeparment(pid,l);
+            	},200);
+            	
+            	
+             }
+            
+             /**
+              * 【添加部门】
+              * 接口地址：/Department/Add
+              * 请求参数示例：data: { "pid": 父级ID, "title": "部门名称",user_ids:"管理员ID,可为空字符串,格式：1,2,3,4,5" },
+              * 请求方式：Post
+              * 返回数据：json
+              * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
+              */
+            function doAdd(form){
+            	form=$(form);
+            	var pid=form.find('#pid').val();
+            	var title=form.find('#title').val();
+            	var user_ids=form.find('#user_ids').val();
+            	var data={title:title,user_ids:user_ids,pid:pid};
+            	console.log(JSON.stringify(data));
+            	$.ajax({
+            		url:'/Department/Add',
+            		data:data,
+            		type:'post',
+            		dataType:'json',
+            		success:function(ret){
+            			alert(ret.msgbox);
+            			if(ret.msg ==1){
+                			hideDialog();
+                			reloadData(pid);
+            			}
+                    	//alert(JSON.stringify(ret));
+            		}
+            	});
+            }
+			function editFn(obj){
+            	var id=$(obj).attr('data-id');
+             	var item=items['item_'+id];
+            	item.pagetitle="编辑部门";
+             	showEdit(item);
+            }
+			function addFn(obj,pid){
+             	var item={department_id:0,parent_id:pid};
+            	item.pagetitle="增加部门";
+             	showEdit(item);
+		    }
 
             /**
             * 【删除部门】
@@ -134,9 +317,33 @@
             * 返回数据：json
             * 操作状态判断：result.msg =1：成功；result.msg=0：失败，result.msgbox 为错误原因描述
             */
-
-
+            function delFn(obj){
+            	if(!confirm('删除后不可恢复是否确认删除？')){
+            		return;
+            	}
+            	var id=$(obj).attr('data-id');
+            	var pid=$(obj).attr('data-pid');
+            	$.ajax({
+            		url:'/Department/Del',
+            		data:{id:id},
+            		type:'post',
+            		error:function(data){
+            			alert('删除失败,有下级部门时请先删除所有下级部门');
+            		},
+            		success:function(data){
+            			console.log(JSON.stringify(data));
+            			if(data.msg==1){
+            				$(obj).parent().remove();
+            				reloadData(pid);
+            			}else{
+            				alert(data.msgbox);
+            			}
+            		}
+            	});
+            }
         </script>
 
-    }
-    <!--底部脚本 end-->
+}
+
+<!--底部脚本1 end-->
+

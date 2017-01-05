@@ -5,15 +5,30 @@
     <meta charset="UTF-8" />
     <meta name="description" content="花伴里" />
     <meta name="keywords" content="花伴里" />
-    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+<meta  http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" /> 
 @RenderSection("head", required: false)
+    <link href="~/Assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="/assets/theme/css/public.css" rel="stylesheet" type="text/css" />
     <link href="/assets/theme/css/home.css" rel="stylesheet" type="text/css" />
     <link href="/assets/theme/css/style.css" rel="stylesheet" type="text/css" />
     <link href="~/Assets/theme/css/style1.css" rel="stylesheet" />
     <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
-    
-    @Scripts.Render("~/bundles/jquery")
+    <!--[if !IE]> -->
+        @Scripts.Render("~/bundles/jquery")
+<!-- <![endif]-->
+<!--[if gte IE 9]>
+	@Scripts.Render("~/bundles/jquery")
+<![endif]-->
+<!--[if lt IE 9]>
+  <script src="/Assets/js/jquery-1.11.1.js"></script>
+  <link rel="stylesheet" href="/Assets/css/ie.css" type="text/css" media="screen" />
+  <script src="/Assets/js/html5shiv.js"></script>
+  <script src="/Assets/js/respond.min.js"></script>
+<![endif]-->
+<!--[if IE]><script type="text/javascript" src="/Assets/js/excanvas.js"></script>
+    <link href="/assets/theme/css/ie.css" rel="stylesheet" type="text/css" /><![endif]-->
+ 
+    <script type="text/javascript" src="/assets/theme/js/common.js"></script>
 </head>
 
 <body>
@@ -44,14 +59,14 @@
             </div>
             <div class="toplink">
                 <ul>
-                    <li class="a-msg"><a href="#" title="#"><i class="i-msg"></i>
+                    <li class="a-msg"><a href="#"><i class="i-msg"></i>
                         @if(WorkContext.MessageTotal>0)
                         {
                             <em>@WorkContext.MessageTotal</em>
                         }
                         </a></li>
                     <li>
-                        <a href="#" title="#"><i class="i-mbe"></i></a>
+                        <a href="#"><i class="i-mbe"></i></a>
                         <div class="lipop mbePop">
                             <i class="i-dltop"></i>
                             <div class="mbdownLt">
@@ -67,7 +82,7 @@
                     </li>
 
                     <li>
-                        <a href="#" title="#"><i class="i-fav"></i></a>
+                        <a href="#"><i class="i-fav"></i></a>
                         <div class="lipop favPop">
                             <i class="i-dltop"></i>
                             <div class="favList">
@@ -140,7 +155,7 @@
 
 
         <div class="nav">
-            <ul>
+             <ul>
                 <li @(ViewData["tabTop"].ToString().Equals("home") ? "class=act" : "")><a href="/" title="首页">首页</a></li>
                 <li @(ViewData["tabTop"].ToString().Equals("project") ? "class=act" : "")><a href="/Project/Index" title="项目管理">项目管理</a></li>
                 <li @(ViewData["tabTop"].ToString().Equals("school") ? "class=act" : "")><a href="/Shool/Index" title="学院秘籍">学院秘籍</a></li>
@@ -153,7 +168,6 @@
     <div class="clear"></div>
     @RenderBody()
     
-    <script type="text/javascript" src="/assets/theme/js/common.js"></script>
     @RenderSection("foot", required: false)
     <script type="text/javascript">
         $(function () {

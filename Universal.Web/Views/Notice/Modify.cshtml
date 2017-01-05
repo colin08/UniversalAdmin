@@ -31,8 +31,8 @@
                             <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
                         </li>
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>谁可以看</label>
-                            <div class="create-radio">
+                            <div class="lilt"><span class="red">*</span>谁可以看</div>
+                            <div class="limd">
                                 <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.everyone">
                                     @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
                                     <span>所有人</span>
@@ -45,9 +45,10 @@
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
                                 </label>
-                                <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
+                                <a id="add_users" href="javascript:" onclick="selUser(this)" class="btn-add"><i class="i-attach"></i>添加成员</a>
                             </div>
-                            <div class="scrollbox scrollbox-big">
+                            <div class="lilt"></div>
+                            <div class="scrollbox scrollbox-big" id="user_list_box">
                                 <ul>
                                     @foreach (var item in Model.see_entity)
                                     {
@@ -83,7 +84,68 @@
     @section foot
 {
         <script type="text/javascript">
+        function switchSee(id){
+        	if(id==2){
+        		$('.scrollbox').show();
+        		$('#add_users').show();
+        	}else{
+        		$('.scrollbox').hide();
+        		$('#add_users').hide();
+        	}
+        }
+        $('input[name=post_see]').click(function(){
+        	switchSee(this.value);
+        });
+        switchSee('@Model.post_see'=='user'?2:0);
+        function selUser(obj)
+    	{
+    		selUserDialog({callback:function(data){
+    			var ids=$("#see_ids").val().split(',');
+    			var ul=$('.scrollbox').find('ul');
+    			$(data).each(function(){
+    				if(ul.find('#user_'+this.id).size()>0){
+    					return true;
+    				}
+    				var li=$('<li></li>').appendTo(ul).attr('id','user_'+this.id);
+    				var a=$('<a href="javascript:;"></a>').attr('data-id',this.id).appendTo(li).click(function(){
+    	        		var id=$(this).attr('data-id');
+    	        		moveId(id);
+    	        	});
+    				$('<span></span>').appendTo(a).html(this.telphone+' ('+this.nick_name+')');
+    				$('<i class="i-mdel"></i>').appendTo(a);
+    				ids.push(this.id);
+    			});
+    			$("#see_ids").val(ids.join(','));
+    		}});
+    		
+    	}
+       	$('.scrollbox ul li a').each(function(){
+       		$(this).click(function(){
+       			var id=$(this).attr('data-id');
+        	    moveId(id);
+       		});
+       		
+       	});
+        function moveId(id){
+    		var ids=[];
+    		$($("#see_ids").val().split(',')).each(function(){
+    			if(this!=id){
+    				ids.push(this);
+    			}
+    		});
+    		$('#user_'+id).remove();
+    		$("#see_ids").val(ids.join(','));
+    	}
             $(document).ready(function (e) {
+                @if(Model.Msg == 1)
+            {
+                @: location.href = "/Notice/Index";
+                            }
+
+
+            });
+			
+			$(document).ready(function (e) {
                 @if(Model.Msg == 1)
                 {
                     @: location.href = "/Notice/Index";
@@ -97,6 +159,7 @@
 
 
             });
+			
         </script>
 
     }

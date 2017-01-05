@@ -6,7 +6,17 @@
 }
 
 <div class="wapper">
+<style type="text/css">
+.creater-box{ margin: 40px 0 0 40px; font-size: 14px;;}
+.creater-box li{ width: 100%; display: table; padding: 8px 0;}
+.creater-box .lilt{ width: 90px; float: left; padding: 10px 0; text-align: right; padding-right: 20px;;}
+.creater-box .limd{ width: 400px; float: left;}
+.creater-box .limd span{ padding: 10px 0; display: inline-block;}
+.creater-box .litip{ float: left;width: 100%;
+padding-left:110px;}
+.creater-box .litip span{  padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;;}
 
+</style>
     @Html.Partial("_ShoolMenuLeft", this.ViewData)
 
     <div class="rightBox">
@@ -18,13 +28,12 @@
             <form method="post" class="form-horizontal" id="form">
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(p => p.see_ids)
-                @Html.HiddenFor(p => p.files)
                 <div class="creater-box new-box-min demolition">
                     <ul>
                         <li>
                             <div class="lilt"><em class="col_red">*</em>秘籍标题</div>
                             <div class="limd">
-                                @Html.TextBoxFor(p => p.title, new { @class = "usInput" })
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput",style="width:570px" })
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
                         </li>
@@ -34,24 +43,15 @@
                             @Html.ValidationMessageFor(p => p.category_id)
                         </li>
                         <li>
-                            <div class="lilt">附件</div>
-                            <div class="limd big">
-                                <ul id="file_list">
-                                    @foreach (var item in Model.file_list)
-                                    {
-                                        <li>
-                                            <a href="javascript:;" onclick="RemoveUp(this)" class="btn-add uploadBtnBox"><i class="i-barrel"></i></a>
-                                            <a href="javascript:;" class="btn-add uploadBtnBox"><i class="i-redbb"></i>上传文件<input type="file" class="uploadBtn" onchange="Upload(this)" /></a>
-                                            <span spath="@item.file_path">@item.file_name</span> &nbsp;
-                                            <span></span>
-                                            <span>@item.file_size</span>
-                                        </li>
-                                    }
-                                    <li class="guding">
-                                        <a href="javascript:;" class="btn-add uploadBtnBox" onclick="AddFile()"><i class="i-attach"></i>新增</a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <label for="" class="lab1"><span class="red">*</span>文件</label>
+                            @Html.HiddenFor(p => p.filepath)
+                            @Html.HiddenFor(p => p.filesize)
+                            <a href="javascript:;" class="btn-add uploadBtnBox">
+                                <i class="i-attach"></i>
+                                上传文件
+                                <input type="file" class="uploadBtn" id="but_upload" />
+                            </a>
+                            <span id="span_filename">@Model.filepath</span> &nbsp; <span id="span_upload_status"></span>
                         </li>
                         <li>
                             <label for="" class="lab1"><span class="red">*</span>谁可以看</label>
@@ -68,7 +68,8 @@
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
                                 </label>
-                                <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
+                                
+                                <a id="add_users" href="javascript:" onclick="selUser(this)" class="btn-add"><i class="i-attach"></i>添加成员</a>
                             </div>
                             <div class="scrollbox scrollbox-big">
                                 <ul>
@@ -79,17 +80,10 @@
                                 </ul>
                             </div>
                         </li>
-                        <li>
-                            <div class="lilt">内容:</div>
-                            <div class="limd big">
-                                @Html.TextAreaFor(p => p.content)
-                            </div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
-                        </li>
                     </ul>
                     <div class="creater-box-submit creater-box1-submit">
-                        <input type="submit" class="btn-major btn-submit" value="确定" />
-                        <a href="javascript:location.href='/Shool/Index';" class="btn-cencel">取消</a>
+                        <input type="submit" class="btn1" value="确定" />
+                        <button type="button" onclick="location.href = '/Shool/Index';" class="btn1 grey">取消</button>
                     </div>
                 </div>
             </form>
@@ -105,131 +99,112 @@
 @section foot
 {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/kindeditor")
-    <script type="text/javascript">
-        /**************富文本编辑器 begin *********************/
-        var editor;
-        KindEditor.ready(function (K) {
-            editor = K.create('textarea[name="content"]', {
-                items: ["undo", "redo", "preview", "print", "plainpaste", "wordpaste", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "formatblock", "fontname", "fontsize", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "image", "table", "hr", "link", "unlink", "source"],
-                width: '98%',
-                height: '350px',
-                resizeType: 1,
-                uploadJson: '/Tools/UploadTextArea?operation=TextArea',
-                allowFileManager: true
-            });
-        })
-        /**************富文本编辑器 end *********************/
-            $(document).ready(function (e) {
-                @if(Model.Msg == 1)
-                {
-                    @:location.href = "/Shool/index";
 
-                }else if(Model.Msg == 2)
-                {
-                    @:alert("数据不存在");
-                }else if(Model.Msg == 3)
-                {
-                    @:alert("数据验证失败");
-                }
+    <script type="text/javascript">
+    function switchSee(id){
+    	if(id==2){
+    		$('.scrollbox').show();
+    		$('#add_users').show();
+    	}else{
+    		$('.scrollbox').hide();
+    		$('#add_users').hide();
+    	}
+    }
+    $('input[name=post_see]').click(function(){
+    	switchSee(this.value);
+    });
+    switchSee('@Model.post_see'=='user'?2:0);
+    function selUser(obj)
+	{
+		selUserDialog({callback:function(data){
+			var ids=$("#see_ids").val().split(',');
+			var ul=$('.scrollbox').find('ul');
+			$(data).each(function(){
+				if(ul.find('#user_'+this.id).size()>0){
+					return true;
+				}
+				var li=$('<li></li>').appendTo(ul).attr('id','user_'+this.id);
+				var a=$('<a href="javascript:;"></a>').attr('data-id',this.id).appendTo(li).click(function(){
+	        		var id=$(this).attr('data-id');
+	        		moveId(id);
+	        	});
+				$('<span></span>').appendTo(a).html(this.telphone+' ('+this.nick_name+')');
+				$('<i class="i-mdel"></i>').appendTo(a);
+				ids.push(this.id);
+			});
+			$("#see_ids").val(ids.join(','));
+		}});
+		
+	}
+   	$('.scrollbox ul li a').each(function(){
+   		$(this).click(function(){
+   			var id=$(this).attr('data-id');
+    	    moveId(id);
+   		});
+   		
+   	});
+    function moveId(id){
+		var ids=[];
+		$($("#see_ids").val().split(',')).each(function(){
+			if(this!=id){
+				ids.push(this);
+			}
+		});
+		$('#user_'+id).remove();
+		$("#see_ids").val(ids.join(','));
+	}
+    
+            $(function () {
+                $("#but_upload").on("change", function () {
+                    var filePath = $(this).val().toLowerCase();
+                    if (filePath != "") {
+                        upload();
+                    }
+                })
+
+            })
+
+            function upload() {
+                var fd = new FormData();
+                fd.append("FileData", document.getElementById('but_upload').files[0]);
+                $("#span_upload_status").html("上传中...");
+                $.ajax({
+                    url: '/Tools/UploadDocument',
+                    type: 'POST',
+                    cache: false,
+                    contentType: "multipart/form-data",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    $("#span_upload_status").html("");
+                    if (res.msg == 1) {
+                        $("#span_filename").html(res.data);
+                        $("#filepath").val(res.data);
+                        $("#filesize").val(res.msgbox);
+                    } else {
+                        alert(res.msgbox);
+                    }
+                }).fail(function (res) { });
+            }
+
+
+
+            $(document).ready(function (e) {
+            @if(Model.Msg == 1)
+            {
+                @:alert("操作成功");
+                @:location.href = "/Shool/index";
+                @:getWindow();
+
+            }
+            else if(Model.Msg == 2)
+            {
+                @:alert("数据不存在");
+            }
             });
     </script>
-<script type="text/javascript">
-        function RemoveUp(obj)
-        {
-            $(obj).parent("li").remove();
-            CreateUploadData();
-        }
 
-        function AddFile()
-        {
-            var li_html = "<li>";
-            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"  onclick=\"RemoveUp(this)\"><i class=\"i-barrel\"></i></a>";
-            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"><i class=\"i-redbb\"></i>上传文件<input type=\"file\" class=\"uploadBtn\" onchange=\"Upload(this)\" /></a>";
-            li_html += "    <span spath=\"\"></span> &nbsp;<span></span><span></span>";
-            li_html += "</li>";
-            $(".guding").before(li_html);
-        }
-
-        function Upload(obj)
-        {
-            //alert($(obj).parent("a").parent("li").attr("data_id"));
-            //显示的文件名
-            var span_file_name = $(obj).parent("a").next();
-
-            //上传状态
-            var span_file_status = $(obj).parent("a").next().next();
-
-            //文件大小
-            var span_file_size = $(obj).parent("a").next().next().next();
-
-            //原始文件名
-            var file_name = getFileName($(obj).val());
-            if (CheckIsUpload(file_name))
-            {
-                alert("该文件已上传");
-                return;
-            }
-            var fd = new FormData();
-            fd.append("FileData", $(obj)[0].files[0]);
-            $(span_file_status).html("上传中...");
-            $(span_file_name).html(file_name);
-            $.ajax({
-                url: '/Tools/UploadFile',
-                type: 'POST',
-                cache: false,
-                contentType: "multipart/form-data",
-                data: fd,
-                processData: false,
-                contentType: false
-            }).done(function (res) {
-                $(span_file_status).html("");
-                if (res.msg == 1) {
-                    $(span_file_name).attr("spath", res.data);
-                    $(span_file_size).html(res.msgbox);
-                    CreateUploadData();
-                } else {
-                    alert(res.msgbox);
-                }
-            }).fail(function (res) { });
-
-        }
-
-        //创建服务数据
-        function CreateUploadData()
-        {
-            var filestr = "";
-            $.each($("#file_list").find("li"), function () {
-                if ($(this).attr("class") == undefined)
-                {
-                    var server_path = $(this).find("span:eq(0)").attr("spath");
-                    var file_name = $(this).find("span:eq(0)").text();
-                    var file_size = $(this).find("span:eq(2)").text();
-                    if(server_path.length != 0&& file_name.length != 0 && file_size.length != 0)
-                        filestr += server_path + "," + file_name + "," + file_size + "|";
-                }
-            })
-            $("#files").val(filestr);
-        }
-
-        function CheckIsUpload(file_name)
-        {
-            var is_ext = false;
-            $.each($("#file_list").find("li"), function () {
-                if ($(this).attr("class") == undefined) {
-                    if ($(this).find("span:eq(0)").text() == file_name)
-                        is_ext = true;
-                }
-            })
-            return is_ext;
-        }
-
-        function getFileName(o) {
-            var pos = o.lastIndexOf("\\");
-            return o.substring(pos + 1);
-        }
-
-</script>
 }
 <!--底部脚本 end-->
 

@@ -7,6 +7,7 @@
 <!--头部脚本-->
 @section head
 {
+
 }
 <!--头部脚本 end-->
 
@@ -21,7 +22,7 @@
         <li>
             <select id="select_year" onchange="loadData()">
                 <option value="0">所有年度</option>
-                @foreach (var item in Universal.BLL.BLLProject.GetYearGroup())
+                 @foreach (var item in Universal.BLL.BLLProject.GetYearGroup())
                 {
                     <option value="@item.x_data">@item.x_data</option>
                 }
@@ -64,7 +65,7 @@
             </select>
         </li>
         <li>
-            <select name="" id="select_project" onchange="redic()"></select>
+            <select name="" id="select_project" multiple="multiple" onchange="redic()"></select>
         </li>
     </ul>
     <div class="chart-box tc" id="charts_content">
@@ -80,8 +81,24 @@
 <!--底部脚本-->
 @section foot
 {
+    <link href="/assets/css/jquery.multiselect.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/prettify.css" rel="stylesheet" type="text/css" />
     <script src="~/Assets/js/plugins/Highcharts-4.2.1/js/highcharts.js"></script>
+	<script type="text/javascript" src="/assets/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="/assets/js/jquery.multiselect.js"></script>
+    <style type="text/css">
+    .ui-multiselect{
+    width: 90%;
+border: 1px solid #ddd;
+border-radius: 3px;
+height: 36px;
+line-height: 36px;
+color: #929ca3;
+    }
+    </style>
     <script type="text/javascript">
+    
         $(function () {
             loadData();
         });
@@ -89,7 +106,7 @@
         function redic() {
             var ids = "";
             ids = $("#select_project").val();
-            if(ids == null || ids ==0)
+			if(ids == null || ids ==0)
             {
                 ids = "";
                 $("#select_project option").each(function(){ //遍历全部option
@@ -105,12 +122,12 @@
                     ids = "-1";
                 }
             }
-            console.log(ids);
+			console.log(ids);
             $.get("/Statctics/DomainCharts?ids=" + ids, function (result) {
                 $("#charts_content").html(result);
             });
         }
-
+       var msel= $("#select_project").multiselect({ menuWidth:204,header: false,checkAllText:'全选',uncheckAllText:'反选',selectedText:'选择了#个',noneSelectedText:'请选择'});
         function loadData() {
             $.ajax({
                 type: "post",
@@ -130,7 +147,8 @@
                         $.each(data.data, function (i, item) {
                             $("#select_project").append("<option value='" + item.id + "'>" + item.title + "</option>");
                         });
-                        redic();
+                        msel.multiselect('refresh').width(204);
+						redic();
                     }
                     else {
                         alert(data.msgbox);
