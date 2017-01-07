@@ -26,6 +26,9 @@ namespace Universal.Web.Models
         [Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
         public string title { get; set; }
 
+        [Required(ErrorMessage ="分类必填")]
+        public int category_id { get; set; }
+
         /// <summary>
         /// 办事地址
         /// </summary>

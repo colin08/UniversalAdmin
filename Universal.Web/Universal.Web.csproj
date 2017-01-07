@@ -905,6 +905,7 @@
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />
     <Compile Include="Controllers\InfoController.cs" />
+    <Compile Include="Controllers\NodeCategoryController.cs" />
     <Compile Include="Controllers\WorkMeetingController.cs" />
     <Compile Include="Controllers\WorkJobController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -930,6 +931,7 @@
     <Compile Include="Models\Request\AddDownLog.cs" />
     <Compile Include="Models\Request\AddProject.cs" />
     <Compile Include="Models\Request\BasePage.cs" />
+    <Compile Include="Models\Request\FeebBack.cs" />
     <Compile Include="Models\Request\DocumentList.cs" />
     <Compile Include="Models\Request\EditProject.cs" />
     <Compile Include="Models\Request\MessageList.cs" />
@@ -964,6 +966,7 @@
     <Compile Include="Models\ViewModelIndex.cs" />
     <Compile Include="Models\ViewModelJob.cs" />
     <Compile Include="Models\ViewModelNode.cs" />
+    <Compile Include="Models\ViewModelNodeCategory.cs" />
     <Compile Include="Models\ViewModelNotice.cs" />
     <Compile Include="Models\ViewModelProject.cs" />
     <Compile Include="Models\ViewModelProjectFlowNode.cs" />
@@ -1090,7 +1093,6 @@
     <Content Include="Views\Search\Node.cshtml" />
     <Content Include="Views\Shool\Modify.cshtml" />
     <Content Include="Views\Project\Modify.cshtml" />
-    <Content Include="Views\Project\Add.cshtml" />
     <Content Include="Views\Node\Modify.cshtml" />
     <Content Include="Views\Flow\Modify.cshtml" />
     <Content Include="Views\WorkPlan\Index.cshtml" />
@@ -1120,6 +1122,10 @@
     <Content Include="Views\Info\Meeting.cshtml" />
     <Content Include="Views\Info\Project.cshtml" />
     <Content Include="Views\Project\FlowStage.cshtml" />
+    <Content Include="Views\Info\Job.cshtml" />
+    <Content Include="Views\NodeCategory\Index.cshtml" />
+    <Content Include="Views\NodeCategory\Modify.cshtml" />
+    <Content Include="Views\Shool\Flow.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

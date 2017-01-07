@@ -8,6 +8,11 @@ namespace Universal.Entity
     /// </summary>
     public class Feedback
     {
+        public Feedback()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         /// <summary>
         /// 
         /// </summary>

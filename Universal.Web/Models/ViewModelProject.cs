@@ -18,7 +18,6 @@ namespace Universal.Web.Models
             this.users_entity = new List<ViewModelDocumentCategory>();
             this.see_entity = new List<ViewModelDocumentCategory>();
             this.file_list = new List<ViewModelListFile>();
-            this.LiXiangTime = DateTime.Now;
         }
 
         public int id { get; set; }
@@ -29,7 +28,6 @@ namespace Universal.Web.Models
         /// <summary>
         /// 审核人
         /// </summary>
-        [Required(ErrorMessage = "请选择审核人员")]
         public int approve_user_id { get; set; }
 
         public string approve_user_name { get; set; }
@@ -37,7 +35,6 @@ namespace Universal.Web.Models
         /// <summary>
         /// 引用的流程ID
         /// </summary>
-        [Required(ErrorMessage ="请选择流程")]
         public int flow_id { get; set; }
 
         /// <summary>
@@ -97,7 +94,7 @@ namespace Universal.Web.Models
                 ViewModelListFile model = new ViewModelListFile();
                 Entity.ProjectFile entity = new Entity.ProjectFile();
                 string[] f_len = item.Split(',');
-                if (f_len.Length == 3)
+                if (f_len.Length == 4)
                 {
                     model.file_path = f_len[0];
                     model.file_name = f_len[1];
@@ -106,7 +103,6 @@ namespace Universal.Web.Models
                     entity.FilePath = f_len[0];
                     entity.FileName = f_len[1];
                     entity.FileSize = f_len[2];
-                    entity.Type = Entity.ProjectFileType.file;
                     db_list.Add(entity);
                 }
                 this.file_list.Add(model);
@@ -142,13 +138,11 @@ namespace Universal.Web.Models
         /// <summary>
         /// 项目区域
         /// </summary>
-        [Required(ErrorMessage ="请选择区域")]
         public Entity.ProjectArea area { get; set; }
 
         /// <summary>
         /// 改造性质
         /// </summary>
-        [Required(ErrorMessage ="请选择改造性质")]
         public Entity.ProjectGaiZao GaiZaoXingZhi { get; set; }
 
         /// <summary>
@@ -229,8 +223,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 立项时间
         /// </summary>
-        [Required(ErrorMessage ="必填")]
-        public DateTime LiXiangTime { get; set; }
+        public DateTime? LiXiangTime { get; set; }
 
         /// <summary>
         /// 专项规划时间
@@ -256,13 +249,12 @@ namespace Universal.Web.Models
         /// <summary>
         /// 分成比例
         /// </summary>
-        [Required(ErrorMessage = "必填"),MaxLength(20,ErrorMessage ="不能超过20个字符")]
+        [MaxLength(20,ErrorMessage ="不能超过20个字符")]
         public string FenChengBiLi { get; set; }
 
         /// <summary>
         /// 均价（单位：千）
         /// </summary>
-        [Required(ErrorMessage ="必填")]
         public decimal JunJia { get; set; }
 
     }

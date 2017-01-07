@@ -130,13 +130,10 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<string> AddProject([FromBody]Models.Request.AddProject req)
         {
             if (req.flow_id <= 0)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "缺少流程ID";
-                return WorkContext.AjaxStringEntity;
-            }
+                req.flow_id = 0;
 
             var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
-            if(entity_user == null)
+            if (entity_user == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return WorkContext.AjaxStringEntity;
@@ -210,22 +207,28 @@ namespace Universal.Web.Controllers.api
             if (entity != null)
             {
                 Models.Response.ProjectInfo response_model = new Models.Response.ProjectInfo();
-                var entity_flow = new BLL.BaseBLL<Entity.Flow>().GetModel(p => p.ID == entity.FlowID);
+
                 BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == user_id && p.ProjectID == project_id);
-                if(fav_entity != null)
+                if (fav_entity != null)
                 {
                     response_model.is_fav = true;
                     response_model.favorites_id = fav_entity.ID;
                 }
-                response_model.flow_name = entity_flow == null ? "" : entity_flow.Title;
+                if (entity.FlowID != null)
+                {
+                    int fl_id = TypeHelper.ObjectToInt(entity.FlowID, 0);
+                    var entity_flow = new BLL.BaseBLL<Entity.Flow>().GetModel(p => p.ID == fl_id);
+                    response_model.flow_id = entity_flow == null ? 0 : entity_flow.ID;
+                    response_model.flow_name = entity_flow == null ? "" : entity_flow.Title;
+                }
                 response_model.project_id = project_id;
                 response_model.title = entity.Title;
                 response_model.user_id = entity.CusUserID;
                 response_model.user_name = entity.CusUser.NickName;
                 response_model.user_telphone = entity.CusUser.Telphone;
-                response_model.approve_id = entity.ApproveUserID;
-                response_model.approve_name = entity.ApproveUser.NickName;
+                response_model.approve_id = TypeHelper.ObjectToInt(entity.ApproveUserID,0);
+                response_model.approve_name = entity.ApproveUser == null ? "" : entity.ApproveUser.NickName;
 
                 response_model.post_see = entity.See;
 
@@ -345,7 +348,7 @@ namespace Universal.Web.Controllers.api
         public WebAjaxEntity<string> ModifyProjectInfoBasic([FromBody]Models.Request.EditProject req)
         {
             var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
-            if(entity_user == null)
+            if (entity_user == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
                 return WorkContext.AjaxStringEntity;
@@ -356,12 +359,6 @@ namespace Universal.Web.Controllers.api
             if (entity == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "项目不存在";
-                return WorkContext.AjaxStringEntity;
-            }
-            var entity_app = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.approve_user_id);
-            if (entity_app == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "审核人员不存在";
                 return WorkContext.AjaxStringEntity;
             }
 
@@ -410,7 +407,8 @@ namespace Universal.Web.Controllers.api
             entity.ApproveUserID = req.approve_user_id;
             entity.See = req.post_see;
             entity.TOID = final_see_ids;
-            entity.LastUpdateUserName = "";
+            entity.FlowID = req.flow_id;
+            entity.LastUpdateUserName = entity_user.NickName;
             List<Entity.ProjectFile> file_list_entity = new List<Entity.ProjectFile>();
             if (req.file_list != null)
             {
@@ -425,11 +423,11 @@ namespace Universal.Web.Controllers.api
                 }
             }
             entity.ProjectFiles = file_list_entity;
-            string msg = entity_user.NickName;
-            BLL.BLLProject.Modify(entity, final_user_ids, out msg);
+            string msg = "";
+            int result = BLL.BLLProject.Modify(entity, final_user_ids, out msg);
 
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "ok";
+            WorkContext.AjaxStringEntity.msg = result > 0 ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
             return WorkContext.AjaxStringEntity;
         }
 
@@ -488,11 +486,11 @@ namespace Universal.Web.Controllers.api
             WebAjaxEntity<List<Models.Response.ProjectInfoStage>> response_entity = new WebAjaxEntity<List<Models.Response.ProjectInfoStage>>();
             List<Models.Response.ProjectInfoStage> response_list = new List<Models.Response.ProjectInfoStage>();
             Entity.Project entity_project = new BLL.BaseBLL<Entity.Project>().GetModel(p => p.ID == project_id);
-            if(entity_project == null)
+            if (entity_project == null)
             {
                 response_entity.msgbox = "项目不存在";
                 return response_entity;
-            } 
+            }
 
             var db_list = new BLL.BaseBLL<Entity.ProjectStage>().GetListBy(0, p => p.ProjectID == project_id, "ID ASC", p => p.FileList);
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();

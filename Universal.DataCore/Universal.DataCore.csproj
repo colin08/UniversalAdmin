@@ -158,6 +158,22 @@
     <Compile Include="Migrations\201701040633008_edit_project.Designer.cs">
       <DependentUpon>201701040633008_edit_project.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701050911278_modify_from_doc.cs" />
+    <Compile Include="Migrations\201701050911278_modify_from_doc.Designer.cs">
+      <DependentUpon>201701050911278_modify_from_doc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701060642399_edit_pro_plan.cs" />
+    <Compile Include="Migrations\201701060642399_edit_pro_plan.Designer.cs">
+      <DependentUpon>201701060642399_edit_pro_plan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701070319267_add_node_category.cs" />
+    <Compile Include="Migrations\201701070319267_add_node_category.Designer.cs">
+      <DependentUpon>201701070319267_add_node_category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701070341430_modify_node_cate.cs" />
+    <Compile Include="Migrations\201701070341430_modify_node_cate.Designer.cs">
+      <DependentUpon>201701070341430_modify_node_cate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -256,6 +272,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701040633008_edit_project.resx">
       <DependentUpon>201701040633008_edit_project.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701050911278_modify_from_doc.resx">
+      <DependentUpon>201701050911278_modify_from_doc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701060642399_edit_pro_plan.resx">
+      <DependentUpon>201701060642399_edit_pro_plan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701070319267_add_node_category.resx">
+      <DependentUpon>201701070319267_add_node_category.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701070341430_modify_node_cate.resx">
+      <DependentUpon>201701070341430_modify_node_cate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -109,7 +109,7 @@
                         dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
                         dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -168,7 +168,7 @@
                 async: false,
                 success: function (data) {
                     if (data.msg == 1) {
-                        pageData();
+                        pageData(1);
                     }
                     else {
                         alert(data.msgbox);

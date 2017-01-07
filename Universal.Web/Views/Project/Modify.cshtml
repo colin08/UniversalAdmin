@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "编辑项目";
     ViewData["tabLeft"] = "project";
-    ViewData["tabTop"] = "manager";
+    ViewData["tabTop"] = "project";
 }
 
 <!--头部脚本-->
@@ -42,21 +42,23 @@
                             @Html.ValidationMessageFor(p=>p.title)
                         </li>
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>审批人</label>
+                            <label for="" class="lab1">
+                                @if(!(bool)ViewData["RequieAPPID"])
+                                {
+                                    <span class="red">*</span>
+                                }
+                                审批人
+                            </label>
                             @Html.HiddenFor(p=>p.approve_user_id)
                             <input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
                             <a href="javascript:;" onclick="selapprove_user(this)" class="btn-peo">选择成员</a>
                         </li>
                         <li>
-                            <label for="" class="lab1"><span class="red">*</span>项目流程</label>
-                            @Html.DropDownListFor(p => p.flow_id, ViewData["FlowList"] as List<SelectListItem>, Model.id > 0 ?  (object)new { @class = "select-input", disabled = "disabled" } : (object)new { @class="select-input"})
-                            @if(Model.id>0)
+                            <label for="" class="lab1">项目流程</label>
+                            @Html.DropDownListFor(p => p.flow_id, ViewData["FlowList"] as List<SelectListItem>, Model.flow_id > 0 ?  (object)new { @class = "select-input", disabled = "disabled" } : (object)new { @class="select-input"})
+                            @if(Model.flow_id>0)
                             {
-                                <lable style="font-size: 12px;margin-left: 10px;">修改项目时不可修改项目流程</lable>
-                            }
-                            else
-                            {
-                                <lable style="font-size: 12px;margin-left: 10px;">添加后不可修改</lable>
+                                <lable style="font-size: 12px;margin-left: 10px;">修改后不可再修改</lable>
                             }
                             @Html.ValidationMessageFor(p => p.flow_id)
                         </li>
@@ -101,10 +103,6 @@
                                     @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
                                     <span>所有人</span>
                                 </label>
-                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
-                                    @Html.RadioButtonFor(x => x.post_see, "1", (int)Model.post_see == 1 ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
-                                    <span>同事分组</span>
-                                </label>
                                 <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
@@ -122,6 +120,16 @@
                              </div>
                         </li>
                         <li>
+                            <label for="" class="lab1">相册</label>
+                            <div style="clear:both;"></div>
+                            <ul>
+                                <li>
+                                    <img src="http://www.model-me.cn/uploads/GlassAlbums/e6a5b5d0a4cd8f36b65ea82e1a0d14fd.jpg" ids="0" class="albums_list" style="width:100px;">
+                                    <a href="javascript:void(0)" onclick="DelPic(this,'span_upload_albums')">删除</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
                             <div class="lilt">&nbsp;</div>
                             <div class="limd"><button type="button" onclick="show_div(2)" class="btn1">下一步</button></div>
                         </li>
@@ -136,13 +144,13 @@
                 <div class="userInfo">
                     <ul>
                         <li>
-                            <label ><span class="red">*</span>项目区域</label>
+                            <label >项目区域</label>
                             @Html.DropDownListFor(p => p.area, ViewData["AreaList"] as List<SelectListItem>, new { @class = "select-input" })
                             @Html.ValidationMessageFor(p => p.area)
                         </li>
 
                         <li>
-                            <label ><span class="red">*</span>改造性质</label>
+                            <label >改造性质</label>
                             @Html.DropDownListFor(p => p.GaiZaoXingZhi, ViewData["GZXZList"] as List<SelectListItem>, new { @class = "select-input" })
                             @Html.ValidationMessageFor(p => p.GaiZaoXingZhi)
                         </li>
@@ -155,12 +163,12 @@
                             @Html.TextBoxFor(p => p.ShenBaoZhuTi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ShenBaoZhuTi)
                         </li>
-                        <li><label for=""><span class="red">*</span>总建筑面积</label>
+                        <li><label for="">总建筑面积</label>
                             @Html.TextBoxFor(p => p.ZongMianJi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ZongMianJi)
                         </li>
                         <li>
-                            <label for=""><span class="red">*</span>总建筑面积补充信息</label>
+                            <label for="">总建筑面积补充信息</label>
                             @Html.TextBoxFor(p => p.ZongMianJiOther, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.ZongMianJiOther)
                         </li>
@@ -203,7 +211,7 @@
                     </ul>
                     <h3>时点信息</h3>
                     <ul>
-                        <li><label for=""><span class="red">*</span>立项时间</label>
+                        <li><label for="">立项时间</label>
                             @Html.TextBoxFor(p => p.LiXiangTime, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.LiXiangTime)
                             <a href="javascript:;" class="btn-time" onclick="laydate({elem: '#LiXiangTime'});"><i class="i-time"></i></a>
@@ -227,12 +235,12 @@
                     </ul>
                     <h3>经济信息</h3>
                     <ul>
-                        <li><label for=""><span class="red">*</span>分成比例</label>
-                            @Html.TextBoxFor(p => p.FenChengBiLi, new { @class = "add-input", placeholder = "必填" })
+                        <li><label for="">分成比例</label>
+                            @Html.TextBoxFor(p => p.FenChengBiLi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.FenChengBiLi)
                         </li>
-                        <li><label for=""><span class="red">*</span>均价</label>
-                            @Html.TextBoxFor(p => p.JunJia, new { @class = "add-input", placeholder = "必填" })
+                        <li><label for="">均价</label>
+                            @Html.TextBoxFor(p => p.JunJia, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.JunJia)
                         </li>
                     </ul>
@@ -469,7 +477,7 @@
                     var file_name = $(this).find("span:eq(0)").text();
                     var file_size = $(this).find("span:eq(2)").text();
                     if(server_path.length != 0&& file_name.length != 0 && file_size.length != 0)
-                        filestr += server_path + "," + file_name + "," + file_size + "|";
+                        filestr += server_path + "," + file_name + "," + file_size + ",1|";
                 }
             })
             $("#files").val(filestr);

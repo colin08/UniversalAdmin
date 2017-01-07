@@ -44,6 +44,7 @@ namespace Universal.Web.Controllers
             List<Entity.DocPost> list = BLL.BLLDocument.GetPowerPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
             foreach (var item in list)
             {
+                item.Content = "";
                 string er_txt = "";
                 string yi_txt = BLL.BLLDocCategory.GetYiErTxt(item.ID, out er_txt);
 
@@ -57,6 +58,30 @@ namespace Universal.Web.Controllers
             result.total = rowCount;
 
             return Json(result);
+        }
+
+        /// <summary>
+        ///  秘籍收藏
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Fav(int id)
+        {
+            if (id <= 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            bool isOK = BLL.BllCusUserFavorites.AddDocFav(id, WorkContext.UserInfo.ID, out msg);
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            if (!isOK)
+                return Json(WorkContext.AjaxStringEntity);
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
+
         }
 
         /// <summary>
@@ -228,17 +253,16 @@ namespace Universal.Web.Controllers
         /// </summary>
         private void LoadCategory()
         {
-            //List<Models.ViewModelDocumentCategory> result = new List<Models.ViewModelDocumentCategory>();
-            BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
-            List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc", true);
-
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
-            foreach (var item in list)
+            foreach (var item in BLL.BLLDocCategory.GetTreeCategory())
             {
-                userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
+                string txt = StringHelper.StringOfChar(item.Depth - 1, "&nbsp;&nbsp;") + "├ " + StringHelper.StringOfChar(item.Depth - 1, "&nbsp;&nbsp;") + item.Title;
+                txt = HttpUtility.HtmlDecode(txt);
+                userRoleList.Add(new SelectListItem() { Text = txt, Value = item.ID.ToString() });
             }
             ViewData["category"] = userRoleList;
+
         }
 
 
@@ -260,5 +284,20 @@ namespace Universal.Web.Controllers
             ViewData["Tag"] = "piece" + entity.ID.ToString();
             return View();
         }
+
+        public ActionResult Flow(int id)
+        {
+            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
+            var entity = bll.GetModel(p => p.ID == id);
+            if (entity == null)
+            {
+                return Content("无此流程");
+            }
+            ViewData["flow_id"] = entity.ID;
+            ViewData["TabTitle"] = entity.Title;
+            ViewData["tabLeft"] = "flow" + entity.ID.ToString();
+            return View();
+        }
+
     }
 }

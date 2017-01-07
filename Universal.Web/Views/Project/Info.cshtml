@@ -51,7 +51,18 @@
         </div>
         <div class="demolition clearfix ">
             <ul>
-                <li><label for="" class="lab3">立项时间</label><span>@Model.LiXiangTime.ToShortDateString()</span></li>
+                <li><label for="" class="lab3">立项时间</label><span>
+                    @{ 
+                        var str_time = "/";
+                        if(Model.LiXiangTime != null)
+                        {
+                            str_time = Universal.Tools.TypeHelper.ObjectToDateTime(Model.LiXiangTime).ToShortDateString();
+
+                        }
+
+                    }
+                        @str_time
+                    </span></li>
                 <li><label for="" class="lab3">专项规划时间</label><span>@Model.ZhuanXiangTime</span></li>
                 <li><label for="" class="lab3">主体确认时间</label><span>@Model.ZhuTiTime</span></li>
                 <li><label for="" class="lab3">用地审批时间</label><span>@Model.YongDiTime</span></li>

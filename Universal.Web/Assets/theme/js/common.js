@@ -319,8 +319,7 @@ function selUserDialog(data) {
 						function(i, item) {
 							var dd = $('<dd></dd>').appendTo(dl).attr('id',
 									'user_data_' + this.id)
-							$('<label></label>').appendTo(dd).html(
-									this.telphone + '(' + this.nick_name + ')')
+							$('<label></label>').appendTo(dd).html(this.nick_name)
 									.attr('for', 'u_list_id_' + this.id)
 							$('<input type="checkbox" />').appendTo(dd).attr(
 									'id', 'u_list_id_' + this.id).val(this.id)
@@ -404,8 +403,7 @@ function selUserDialog(data) {
 					j++;
 					var item = this;
 					var dd = $('<dd></dd>').appendTo(dl);
-					$('<label></label>').appendTo(dd).html(
-							this.telphone + ' (' + this.nick_name + ')').attr(
+					$('<label></label>').appendTo(dd).html(this.nick_name).attr(
 							'for', 'l_user_id_' + this.id);
 					$('<input type="checkbox">').appendTo(dd).val(this.id)
 							.attr('id', 'l_user_id_' + this.id).click(

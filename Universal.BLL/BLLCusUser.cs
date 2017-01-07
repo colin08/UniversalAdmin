@@ -7,6 +7,7 @@ using Universal.Tools;
 using System.Web;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
+using EntityFramework.Extensions;
 
 namespace Universal.BLL
 {
@@ -342,6 +343,44 @@ namespace Universal.BLL
             entity.Title = title;
             bll.Add(entity);
             return true;
+        }
+
+        /// <summary>
+        /// 判断用户是否是部门主管，用于判断审批人是否必填
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckUserIsAdmin(int user_id)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.CusDepartmentAdmins.Any(p => p.CusUserID == user_id);
+            }
+        }
+
+        /// <summary>
+        /// 获取用户任务待办
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="user_id"></param>
+        /// <param name="total"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUserMessage> GetJobTaskPageList(int page_size,int page_index,int user_id,out int total)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                //使用拓展框架
+                var q = db.CusUserMessages.Where(p => p.CusUserID == user_id && p.IsDone == false
+                            && p.Type == Entity.CusUserMessageType.approveproject 
+                            && p.Type == Entity.CusUserMessageType.waitmeeting 
+                            && p.Type == Entity.CusUserMessageType.waitjobdone 
+                            && p.Type == Entity.CusUserMessageType.waitapproveplan
+                            );
+                var q1 = q.FutureCount();
+                var q3 = q.OrderByDescending(p=>p.AddTime).Skip((page_index - 1) * page_size).Take(page_size).AsNoTracking().Future();
+                total = q1.Value;
+                return q3.ToList();
+            }
         }
 
     }

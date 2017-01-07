@@ -22,6 +22,16 @@ namespace Universal.Entity
         public int ID { get; set; }
 
         /// <summary>
+        /// 所属分类
+        /// </summary>
+        public int NodeCategoryID { get; set; }
+
+        /// <summary>
+        /// 分类信息
+        /// </summary>
+        public virtual NodeCategory NodeCategory { get; set; }
+
+        /// <summary>
         /// 节点名称
         /// </summary>
         [MaxLength(255)]

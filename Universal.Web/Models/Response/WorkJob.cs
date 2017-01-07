@@ -17,12 +17,7 @@ namespace Universal.Web.Models.Response
         }
 
         public int id { get; set; }
-
-        /// <summary>
-        /// 状态 0:进行中；1：已完成；2：取消
-        /// </summary>
-        public Entity.WorkStatus status { get; set; }
-
+        
         /// <summary>
         /// 状态文本
         /// </summary>

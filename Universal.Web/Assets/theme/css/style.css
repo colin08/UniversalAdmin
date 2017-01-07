@@ -92,7 +92,8 @@ button[disabled].getyzm{ color: #999;}
 .tfe{ display: block; width: 100%; overflow: hidden;; text-overflow: ellipsis; white-space: nowrap;}
 td .tfe img{ border: 1px solid #ddd; max-width: 130px; height: auto;}
 .hover td{ background: #f9f9f9;}
-.i-edt,.i-fav,.i-barrel{width: 20px;height: 20px;background-image: url(../ico/fav.png);background-repeat: no-repeat; vertical-align: middle;}
+.i-edt,.i-fav,.i-barrel{width: 20px;height: 20px;background-image: url(../ico/ico_14.png);background-repeat: no-repeat; vertical-align: middle;}
+.i-fav{width: 20px;height: 20px;background-image: url(../ico/fav.png);background-repeat: no-repeat; vertical-align: middle;}
 .tbOpare a{ margin: 0 5px; color: #3366cc;}
 .i-edt{ background-position: 0 0;}
 .i-barrel{ background-position: -56px 0;}

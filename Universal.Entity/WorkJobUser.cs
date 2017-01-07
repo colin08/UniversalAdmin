@@ -33,7 +33,7 @@ namespace Universal.Entity
         public virtual CusUser CusUser { get; set; }
 
         /// <summary>
-        /// 是否确认
+        /// 是否完成
         /// </summary>
         public bool IsConfirm { get; set; }        
     }

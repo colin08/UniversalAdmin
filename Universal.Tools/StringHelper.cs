@@ -10,6 +10,26 @@ namespace Universal.Tools
     /// </summary>
     public class StringHelper
     {
+
+        #region 生成指定长度的字符串
+        /// <summary>
+        /// 生成指定长度的字符串,即生成strLong个str字符串
+        /// </summary>
+        /// <param name="strLong">生成的长度</param>
+        /// <param name="str">以str生成字符串</param>
+        /// <returns></returns>
+        public static string StringOfChar(int strLong, string str)
+        {
+            string ReturnStr = "";
+            for (int i = 0; i < strLong; i++)
+            {
+                ReturnStr += str;
+            }
+
+            return ReturnStr;
+        }
+        #endregion
+
         /// <summary>
         /// 获得字符串的长度,一个汉字的长度为1
         /// </summary>

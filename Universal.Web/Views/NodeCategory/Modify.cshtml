@@ -1,0 +1,82 @@
+﻿@model Universal.Web.Models.ViewModelNodeCategory
+@{
+    ViewBag.Title = "编辑节点分类";
+    ViewData["tabLeft"] = "nodecate";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/NodeCategory/Index" class="fl f16"><i class="i-back"></i>编辑节点分类</a>
+                    <b class="tit1Txt fr">编辑节点分类</b>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <form method="post" class="form-horizontal" id="form" name="form1">
+                    @Html.AntiForgeryToken()
+                    <ul>
+                        <li>
+                            <div class="lilt">分类名称</div>
+                            <div class="limd">
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput", placeholder = "请输入分类名称" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">备注</div>
+                            <div class="limd pr">@Html.TextAreaFor(p => p.remark, new { @class = "usTextarea" })</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.remark)</div>
+                        </li>
+                        <li>
+                            <div class="lilt">&nbsp;</div>
+                            <div class="limd"><button type="submit" class="btn1">发布</button> <button type="button" onclick="location.href = '/NodeCategory/Index';" class="btn1 grey">取消</button></div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            @if(Model.Msg == 1)
+            {
+                @:location.href = "/NodeCategory/index";
+            }
+            else if(Model.Msg == 2)
+            {
+                @:alert("数据不存在");
+            }else if(Model.Msg == 3)
+            {
+                @:alert("数据验证失败");
+            }
+        });
+    </script>
+}
+<!--底部脚本 end-->

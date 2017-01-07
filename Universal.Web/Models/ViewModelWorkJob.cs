@@ -33,12 +33,7 @@ namespace Universal.Web.Models
         /// </summary>
         [Required(ErrorMessage = "不能为空"), MaxLength(500, ErrorMessage = "不能超过500个字符")]
         public string content { get; set; }
-
-        /// <summary>
-        /// 状态
-        /// </summary>
-        public Entity.WorkStatus status { get; set; }
-
+        
         /// <summary>
         /// 年
         /// </summary>

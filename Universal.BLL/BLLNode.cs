@@ -22,7 +22,7 @@ namespace Universal.BLL
             Entity.Node entity = null;
             using (var db =new DataCore.EFDBContext())
             {
-                entity = db.Nodes.Include(p => p.NodeUsers.Select(s=>s.CusUser)).Include(p => p.NodeFiles).Where(p => p.ID == id).FirstOrDefault();
+                entity = db.Nodes.Include(p => p.NodeUsers.Select(s=>s.CusUser)).Include(p=>p.NodeCategory).Include(p => p.NodeFiles).Where(p => p.ID == id).FirstOrDefault();
             }
 
             return entity;
@@ -113,5 +113,18 @@ namespace Universal.BLL
 
         }
         
+
+        /// <summary>
+        /// 获取所有的节点分类
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.NodeCategory> GetNodeCategory()
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.NodeCategorys.OrderBy(p => p.ID).AsNoTracking().ToList();
+            }
+        }
+
     }
 }

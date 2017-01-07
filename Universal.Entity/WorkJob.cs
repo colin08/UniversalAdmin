@@ -9,14 +9,14 @@ namespace Universal.Entity
     /// <summary>
     /// 任务状态
     /// </summary>
-    public enum WorkStatus:byte
+    public enum WorkStatus : byte
     {
         [Description("进行中")]
-        ing =0,
+        ing = 0,
         [Description("已完成")]
-        done =1,
+        done = 1,
         [Description("取消")]
-        cancel =2
+        cancel = 2
     }
 
     /// <summary>
@@ -54,23 +54,7 @@ namespace Universal.Entity
         /// 状态文本
         /// </summary>
         [NotMapped]
-        public string StatusText
-        {
-            get
-            {
-                switch (this.Status)
-                {
-                    case WorkStatus.ing:
-                        return "进行中";
-                    case WorkStatus.done:
-                        return "已完成";
-                    case WorkStatus.cancel:
-                        return "已取消";
-                    default:
-                        return "";
-                }
-            }
-        }
+        public string StatusText { get; set; }
 
         /// <summary>
         /// 主题
@@ -88,7 +72,7 @@ namespace Universal.Entity
         /// 计划完成时间
         /// </summary>
         public DateTime DoneTime { get; set; }
-        
+
         /// <summary>
         /// 添加时间
         /// </summary>

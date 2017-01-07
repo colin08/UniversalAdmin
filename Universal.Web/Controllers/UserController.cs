@@ -488,7 +488,7 @@ namespace Universal.Web.Controllers
             }
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
             var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
+            bll.DelBy(p => id_list.Contains(p.ProjectID) && p.CusUserID == WorkContext.UserInfo.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "删除成功";
             return Json(WorkContext.AjaxStringEntity);
@@ -542,7 +542,7 @@ namespace Universal.Web.Controllers
             }
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
             var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
+            bll.DelBy(p => id_list.Contains(p.DocPostID) && p.CusUserID == WorkContext.UserInfo.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "删除成功";
             return Json(WorkContext.AjaxStringEntity);

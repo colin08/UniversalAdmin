@@ -38,6 +38,18 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取所有流程
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.Flow> GetAllFlow()
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.Flows.AsNoTracking().ToList();
+            }
+        }
+
+        /// <summary>
         /// 设置默认
         /// </summary>
         /// <param name="id"></param>

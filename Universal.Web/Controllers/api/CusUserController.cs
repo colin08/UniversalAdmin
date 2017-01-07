@@ -33,11 +33,11 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "非法手机号";
                 return WorkContext.AjaxStringEntity;
             }
-            if (!BLL.BLLCusUser.Exists(tel))
-            {
-                WorkContext.AjaxStringEntity.msgbox = "手机号不存在";
-                return WorkContext.AjaxStringEntity;
-            }
+            //if (!BLL.BLLCusUser.Exists(tel))
+            //{
+            //    WorkContext.AjaxStringEntity.msgbox = "手机号不存在";
+            //    return WorkContext.AjaxStringEntity;
+            //}
             string msg = "";
             Guid guid = Guid.NewGuid();
             BLL.BLLVerification.Send(tel, guid, Entity.CusVerificationType.Modify, out msg);
@@ -63,8 +63,8 @@ namespace Universal.Web.Controllers.api
         /// <param name="tel"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/v1/code/check")]
-        public WebAjaxEntity<string> CheckCode(string guid, string code, string tel)
+        [Route("api/v1/user/modify/resetpwd")]
+        public WebAjaxEntity<string> ResetPwd(string guid, string code, string tel)
         {
             if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(code))
             {
@@ -105,6 +105,235 @@ namespace Universal.Web.Controllers.api
                 return WorkContext.AjaxStringEntity;
             }
         }
+
+        /// <summary>
+        /// 校验密码
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/check/pwd")]
+        public WebAjaxEntity<string> CheckPwd(int user_id, string pwd)
+        {
+            if (user_id <= 0 || string.IsNullOrWhiteSpace(pwd))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.ID == user_id);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            Crypto3DES des = new Crypto3DES(SiteKey.DES3KEY);
+            string password = des.DESDeCode(pwd);
+            string md5_pwd = SecureHelper.MD5(password);
+            if (model.Password.Equals(md5_pwd))
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "验证成功";
+                return WorkContext.AjaxStringEntity;
+            }else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "验证失败";
+                return WorkContext.AjaxStringEntity;
+            }
+        }
+
+        /// <summary>
+        /// 修改邮箱
+        /// </summary>
+        /// <param name="user_id">用户id</param>
+        /// <param name="new_email">新邮箱</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/modify/email")]
+        public WebAjaxEntity<string> ModifyEmail(int user_id, string new_email)
+        {
+            if (new_email.IndexOf('@') == -1)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法邮箱";
+                return WorkContext.AjaxStringEntity;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.ID == user_id);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            model.Email = new_email;
+            bll.Modify(model, "Email");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "邮箱已重置为:" + new_email;
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="user_id">用户id</param>
+        /// <param name="old_pwd">旧密码，经过3DES加密</param>
+        /// <param name="new_pwd">新密码，经过3DES加密</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/modify/email")]
+        public WebAjaxEntity<string> ModifyPwd(int user_id, string old_pwd, string new_pwd)
+        {
+            Crypto3DES des = new Crypto3DES(SiteKey.DES3KEY);
+            string old_password = des.DESDeCode(old_pwd);
+            string new_password = des.DESDeCode(new_pwd);
+            string db_old_pwd = SecureHelper.MD5(old_password);
+            string db_new_pwd = SecureHelper.MD5(new_password);
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.ID == user_id);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            if (!model.Password.Equals(db_old_pwd))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "原密码不正确";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            model.Password = db_new_pwd;
+            bll.Modify(model, "Password");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "密码修改成功";
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
+        /// 校验验证码是否正确(校验之后验证码就失效),正确与否在data里，bool值
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="code"></param>
+        /// <param name="tel"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/check/code")]
+        public WebAjaxEntity<bool> CheckCode(string guid, string code, string tel)
+        {
+            WebAjaxEntity<bool> result = new WebAjaxEntity<bool>();
+
+            if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(code))
+            {
+                result.msgbox = "非法参数";
+                return result;
+            }
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.Telphone == tel);
+            if (model == null)
+            {
+                result.msgbox = "用户不存在";
+                return result;
+            }
+
+            Guid new_guid = new Guid();
+            try
+            {
+                new_guid = new Guid(guid);
+            }
+            catch (Exception)
+            {
+                result.msgbox = "非法guid";
+                return result;
+            }
+
+
+            if (BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
+            {
+                result.msg = 1;
+                result.msgbox = "ok";
+                result.data = true;
+                return result;
+            }
+            else
+            {
+                result.msgbox = "验证码错误";
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 修改手机号
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="code"></param>
+        /// <param name="user_id">用户ID</param>
+        /// <param name="new_tel">新手机号</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/modify/tel")]
+        public WebAjaxEntity<string> ModifyTelphone(string guid, string code, int user_id, string new_tel)
+        {
+            if (string.IsNullOrWhiteSpace(guid) || string.IsNullOrWhiteSpace(code))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            if (bll.GetModel(p => p.Telphone == new_tel) != null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "该手机号已存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            Entity.CusUser model = bll.GetModel(p => p.ID == user_id);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "该用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            Guid new_guid = new Guid();
+            try
+            {
+                new_guid = new Guid(guid);
+            }
+            catch (Exception)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法guid";
+                return WorkContext.AjaxStringEntity;
+            }
+
+
+            if (BLL.BLLVerification.Check(new_guid, Entity.CusVerificationType.Modify, code))
+            {
+                model.Telphone = new_tel;
+                bll.Modify(model, "Telphone");
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "手机号修改成功";
+                return WorkContext.AjaxStringEntity;
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "验证码错误";
+                return WorkContext.AjaxStringEntity;
+            }
+        }
+
+        /// <summary>
+        /// 判断用户是否是部门管理员，用于该用户是否必选选择审批人
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        //[HttpGet]
+        //[Route("api/v1/user/check/isadmin")]
+        //public WebAjaxEntity<bool> UserIsAdmin (int user_id)
+        //{
+        //    WebAjaxEntity<bool> result = new WebAjaxEntity<bool>();
+        //    result.data = BLL.BLLCusUser.CheckUserIsAdmin(user_id);
+        //    result.msgbox = "ok";
+        //    result.msg = 1;
+        //    return result;
+        //}
 
         /// <summary>
         /// 用户登录
@@ -243,14 +472,14 @@ namespace Universal.Web.Controllers.api
             {
                 Models.Response.WorkPlan model = new Models.Response.WorkPlan();
                 model.approve_time = item.ApproveTime;
-                model.approve_user_id = item.ApproveUserID;
-                model.approve_user_name = item.ApproveUser.NickName;
+                model.approve_user_id = TypeHelper.ObjectToInt(item.ApproveUserID, 0);
+                model.approve_user_name = item.ApproveUser == null ? "" : item.ApproveUser.NickName;
                 model.begin_time = item.BeginTime;
                 model.end_time = item.EndTime;
                 model.id = item.ID;
                 model.is_approve = item.IsApprove;
                 model.week_text = item.WeekText;
-                if(item.WorkPlanItemList != null)
+                if (item.WorkPlanItemList != null)
                 {
                     foreach (var plan_item in item.WorkPlanItemList)
                     {
@@ -283,6 +512,12 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/user/workplan/modify")]
         public WebAjaxEntity<string> AddJobPlan([FromBody]Models.Request.WorkPlan req)
         {
+            var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
+            if (entity_user == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             var entity = new Entity.WorkPlan();
             if (req.id > 0)
@@ -291,8 +526,11 @@ namespace Universal.Web.Controllers.api
             entity.CusUserID = req.user_id;
             entity.EndTime = req.end_time;
             entity.WeekText = req.week_text;
-
-            if(req.plan_item != null)
+            if (req.approve_user_id <= 0)
+                entity.ApproveUserID = null;
+            else
+                entity.ApproveUserID = req.approve_user_id;
+            if (req.plan_item != null)
             {
                 if (entity.WorkPlanItemList == null)
                     entity.WorkPlanItemList = new List<Entity.WorkPlanItem>();
@@ -312,7 +550,12 @@ namespace Universal.Web.Controllers.api
             if (req.id > 0)
                 BLL.BLLWorkPlan.Modify(entity);
             else
+            {
+                entity.SetApproveStatus();
                 bll.Add(entity);
+            }
+            if (req.approve_user_id > 0)
+                BLL.BLLMsg.PushMsg(req.approve_user_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName), entity.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
@@ -436,9 +679,8 @@ namespace Universal.Web.Controllers.api
                 model.content = item.Content;
                 model.id = item.ID;
                 model.done_time = item.DoneTime;
-                model.status = item.Status;
                 model.create_user_id = item.CusUserID;
-                model.status_text = item.StatusText;
+                model.status_text = BLL.BLLWorkJob.GetJobStatus(item.ID);
                 model.title = item.Title;
                 List<Models.Response.SelectUser> users_list = new List<Models.Response.SelectUser>();
                 if (item.WorkJobUsers != null)
@@ -489,7 +731,6 @@ namespace Universal.Web.Controllers.api
             entity.Title = req.title;
             entity.DoneTime = req.done_time;
             entity.CusUserID = req.user_id;
-            entity.Status = req.status;
             entity.ID = req.id;
             if (req.file_list != null)
             {
@@ -577,7 +818,7 @@ namespace Universal.Web.Controllers.api
             WebAjaxEntity<List<Models.Response.MessageInfo>> response_entity = new WebAjaxEntity<List<Models.Response.MessageInfo>>();
             List<Models.Response.MessageInfo> response_list = new List<Models.Response.MessageInfo>();
             int rowCount = 0;
-            var db_list = new BLL.BaseBLL<Entity.CusUserMessage>().GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id && p.IsDone == false && p.Type == Entity.CusUserMessageType.approveproject || p.Type == Entity.CusUserMessageType.waitmeeting || p.Type == Entity.CusUserMessageType.waitjobdone || p.Type == Entity.CusUserMessageType.waitapproveplan, "AddTime desc");
+            var db_list = BLL.BLLCusUser.GetJobTaskPageList(req.page_size, req.page_index, req.user_id, out rowCount);
             BLL.BaseBLL<Entity.CusUser> bll_user = new BLL.BaseBLL<Entity.CusUser>();
             foreach (var item in db_list)
             {
@@ -635,6 +876,39 @@ namespace Universal.Web.Controllers.api
             response_entity.msgbox = "ok";
             response_entity.total = total;
             return response_entity;
+        }
+
+        /// <summary>
+        /// 用户反馈
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/user/feedback")]
+        public WebAjaxEntity<string> AddFeedBack([FromBody]Models.Request.FeebBack req)
+        {
+            if(req.user_id ==0 ||string.IsNullOrWhiteSpace(req.content))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            Entity.CusUser entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
+            if(entity_user == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            Entity.Feedback entity = new Entity.Feedback();
+            entity.Content = req.content;
+            entity.Email = entity_user.Email;
+            entity.Name = entity_user.NickName;
+            entity.Telphone = entity_user.Telphone;
+            new BLL.BaseBLL<Entity.Feedback>().Add(entity);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return WorkContext.AjaxStringEntity;
         }
 
         /// <summary>

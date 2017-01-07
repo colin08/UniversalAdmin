@@ -7,9 +7,9 @@
         </dl>
         <dl>
             <dt>流程指引</dt>
-            @foreach (var item in Universal.BLL.BLLFlow.GetFlowPieceType())
+            @foreach (var item in Universal.BLL.BLLFlow.GetAllFlow())
             {
-                <dd @(ViewData["tabLeft"].ToString().Equals("piece" + item.id.ToString()) ? "class=act" : "")><a href="/Shool/Piece?id=@item.id" title="@item.title"><em><i class="@item.other"></i></em><span>@item.title</span></a></dd>
+                <dd @(ViewData["tabLeft"].ToString().Equals("flow" + item.ID.ToString()) ? "class=act" : "")><a href="/Shool/Flow?id=@item.ID" title="@item.Title"><span>@item.Title</span></a></dd>
                 
             }
         </dl>

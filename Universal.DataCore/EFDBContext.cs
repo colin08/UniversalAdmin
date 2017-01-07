@@ -171,6 +171,11 @@ namespace Universal.DataCore
         public DbSet<Entity.Node> Nodes { get; set; }
 
         /// <summary>
+        /// 节点分类
+        /// </summary>
+        public DbSet<Entity.NodeCategory> NodeCategorys { get; set; }
+
+        /// <summary>
         /// 节点附件
         /// </summary>
         public DbSet<Entity.NodeFile> NodeFiles { get; set; }

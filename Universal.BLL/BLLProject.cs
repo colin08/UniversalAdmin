@@ -108,21 +108,22 @@ namespace Universal.BLL
         {
             msg = "";
 
-            if(entity.ApproveUserID == entity.CusUserID)
+            int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID,0);
+            if (app_id != 0)
             {
-                msg = "不能自己审批自己的项目";
-                return 0;
-            }
+                if (entity.ApproveUserID == entity.CusUserID)
+                {
+                    msg = "不能自己审批自己的项目";
+                    return 0;
+                }
+            } else
+                entity.ApproveUserID = null;
+            
 
             var db = new DataCore.EFDBContext();
             db.Set<Entity.Project>().Add(entity);
 
             var flow_entity = db.Flows.Find(entity.FlowID);
-            if (flow_entity == null)
-            {
-                msg = "所选流程不存在";
-                return 0;
-            }
 
             var entity_user = db.CusUsers.Find(entity.CusUserID);
             if(entity_user == null)
@@ -130,8 +131,7 @@ namespace Universal.BLL
                 msg = "该用户不存在";
                 return 0;
             }
-
-            entity.Pieces = flow_entity.Pieces;
+                        
             //处理项目联系人
             foreach (var item in user_ids.Split(','))
             {
@@ -146,31 +146,36 @@ namespace Universal.BLL
                 }
             }
 
-            //处理节点
-            var db_flow_node_list = db.FlowNodes.Where(p => p.FlowID == flow_entity.ID).ToList();
-            foreach (var item in db_flow_node_list)
+            if(flow_entity != null)
             {
-                Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
-                entity_node.Color = item.Color;
-                entity_node.ICON = item.ICON;
-                entity_node.Left = item.Left;
-                entity_node.NodeID = item.NodeID;
-                entity_node.ProcessTo = item.ProcessTo;
-                entity_node.Project = entity;
-                entity_node.Status = true;
-                entity_node.Piece = item.Piece;
-                entity_node.Top = item.Top;
-                db.ProjectFlowNodes.Add(entity_node);
+                entity.Pieces = flow_entity.Pieces;
+                //处理节点
+                var db_flow_node_list = db.FlowNodes.Where(p => p.FlowID == flow_entity.ID).ToList();
+                foreach (var item in db_flow_node_list)
+                {
+                    Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
+                    entity_node.Color = item.Color;
+                    entity_node.ICON = item.ICON;
+                    entity_node.Left = item.Left;
+                    entity_node.NodeID = item.NodeID;
+                    entity_node.ProcessTo = item.ProcessTo;
+                    entity_node.Project = entity;
+                    entity_node.Status = true;
+                    entity_node.Piece = item.Piece;
+                    entity_node.Top = item.Top;
+                    db.ProjectFlowNodes.Add(entity_node);
+                }
             }
-            
+            entity.SetApproveStatus();
             db.SaveChanges();
             db.Dispose();
-            BLL.BLLMsg.PushMsg(entity.ApproveUserID, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
+            if (app_id != 0)
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
             return entity.ID;
         }
 
         /// <summary>
-        /// 修改项目(流程ID不可修改)
+        /// 修改项目
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="user_ids">项目联系人</param>
@@ -178,12 +183,40 @@ namespace Universal.BLL
         public static int Modify(Entity.Project entity, string user_ids, out string msg)
         {
             msg = "";
-            if (entity.ApproveUserID == entity.CusUserID)
+            int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
+            if (app_id != 0)
             {
-                msg = "不能自己审批自己的项目";
-                return 0;
+                if (entity.ApproveUserID == entity.CusUserID)
+                {
+                    msg = "不能自己审批自己的项目";
+                    return 0;
+                }
             }
             var db = new DataCore.EFDBContext();
+            var old_entity = db.Projects.AsNoTracking().Where(p => p.ID == entity.ID).FirstOrDefault();
+            if(old_entity == null)
+            {
+                msg = "该项目不存在或已被删除";
+                return 0;
+            }
+            if (old_entity.FlowID != null && entity.FlowID!= null && old_entity.FlowID != entity.FlowID)
+            {
+                msg = "已有流程，不可再修改";
+                return 0;
+            }
+
+            Entity.Flow flow_entity = null;
+            if (old_entity.FlowID == null && Tools.TypeHelper.ObjectToInt(entity.FlowID, 0) > 0)
+            {
+                //修改了流程
+                flow_entity = db.Flows.Find(entity.FlowID);
+                if(flow_entity == null)
+                {
+                    msg = "所选流程不存在";
+                    return 0;
+                }
+            }
+
             var entity_user = db.CusUsers.Find(entity.CusUserID);
             if (entity_user == null)
             {
@@ -215,12 +248,43 @@ namespace Universal.BLL
             }
             entity.ProjectFiles.Clear();
 
+            if(old_entity.FlowID ==null && Tools.TypeHelper.ObjectToInt(entity.FlowID,0) >0)
+            {
+                //修改了流程
+                entity.Pieces = flow_entity.Pieces;
+                //处理节点
+                var db_flow_node_list = db.FlowNodes.Where(p => p.FlowID == flow_entity.ID).ToList();
+                foreach (var item in db_flow_node_list)
+                {
+                    Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
+                    entity_node.Color = item.Color;
+                    entity_node.ICON = item.ICON;
+                    entity_node.Left = item.Left;
+                    entity_node.NodeID = item.NodeID;
+                    entity_node.ProcessTo = item.ProcessTo;
+                    entity_node.Project = entity;
+                    entity_node.Status = true;
+                    entity_node.Piece = item.Piece;
+                    entity_node.Top = item.Top;
+                    db.ProjectFlowNodes.Add(entity_node);
+                }
+            }
+
+            if (app_id == 0)
+                entity.ApproveUserID = null;
+            else
+                entity.ApproveUserID = app_id;
+            entity.SetApproveStatus();
+            entity.SetYear();
+            entity.SetQuarter();
             var db_entity = db.Entry<Entity.Project>(entity);
             db_entity.State = System.Data.Entity.EntityState.Modified;
 
             db.SaveChanges();
             db.Dispose();
-            BLL.BLLMsg.PushMsg(entity.ApproveUserID, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
+            if (app_id != 0)
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
+            msg = "ok";
             return entity.ID;
         }
 
@@ -270,7 +334,6 @@ namespace Universal.BLL
         /// <returns></returns>
         public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title, bool only_mine,int status,int node_id,int node_status,DateTime? node_begin,DateTime? node_end,bool is_admin)
         {
-            //TODO 项目列表
             rowCount = 0;
             List<Entity.Project> response_entity = new List<Entity.Project>();
             if (user_id == 0)

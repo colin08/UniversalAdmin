@@ -20,6 +20,11 @@ namespace Universal.Web.Models.Request
         public string title { get; set; }
 
         /// <summary>
+        /// 流程ID
+        /// </summary>
+        public int flow_id { get; set; }
+
+        /// <summary>
         /// 审核人
         /// </summary>
         public int approve_user_id { get; set; }

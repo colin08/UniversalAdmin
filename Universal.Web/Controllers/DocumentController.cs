@@ -47,6 +47,7 @@ namespace Universal.Web.Controllers
 
             foreach (var item in list)
             {
+                item.Content = "";
                 item.IsFavorites = bll_fav.Exists(p => p.CusUserID == WorkContext.UserInfo.ID && p.DocPostID == item.ID);// db.CusUserDocFavorites.Any(p => p.CusUserID == user_id && p.DocPostID == item.ID);
             }
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
@@ -160,33 +161,6 @@ namespace Universal.Web.Controllers
             return View(model);
         }
 
-        /// <summary>
-        ///  秘籍收藏
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult DocFavorites(int id)
-        {
-            if (id <= 0)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "非法参数";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            string msg = "";
-            bool isOK = BLL.BllCusUserFavorites.AddDocFav(id, WorkContext.UserInfo.ID, out msg);
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            if (!isOK)
-            {
-                return Json(WorkContext.AjaxStringEntity);
-            }
-
-            WorkContext.AjaxStringEntity.msg = 1;
-            return Json(WorkContext.AjaxStringEntity);
-
-        }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelDocument entity)
@@ -270,52 +244,24 @@ namespace Universal.Web.Controllers
 
             return View(entity);
         }
-
-
-        public ActionResult Some()
-        {
-            return View();
-        }
-
+        
 
         /// <summary>
         /// 加载分类
         /// </summary>
         private void LoadCategory()
         {
-            //List<Models.ViewModelDocumentCategory> result = new List<Models.ViewModelDocumentCategory>();
-            BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
-            List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc");
-
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
-            foreach (var item in list)
+            foreach (var item in BLL.BLLDocCategory.GetTreeCategory())
             {
-                userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
+                string txt = StringHelper.StringOfChar(item.Depth - 1, "&nbsp;&nbsp;") + "├ " + StringHelper.StringOfChar(item.Depth - 1, "&nbsp;&nbsp;") + item.Title;
+                txt = HttpUtility.HtmlDecode(txt);
+                userRoleList.Add(new SelectListItem() { Text = txt, Value = item.ID.ToString() });
             }
             ViewData["category"] = userRoleList;
-            //foreach (var one in list.Where(p => p.Depth == 1))
-            //{
-            //    Models.ViewModelDocumentCategory one_model = new Models.ViewModelDocumentCategory();
-            //    one_model.id = one.ID;
-            //    one_model.title = one.Title;
-            //    result.Add(one_model);
-            //    foreach (var two in list.Where(p => p.Depth == 2 && p.PID == one.ID))
-            //    {
-            //        Models.ViewModelDocumentCategory two_model = new Models.ViewModelDocumentCategory();
-            //        two_model.id = two.ID;
-            //        two_model.title = two.Title;
-            //        result.Add(two_model);
-            //        foreach (var three in list.Where(p => p.Depth == 3 && p.PID == two.ID))
-            //        {
-            //            Models.ViewModelDocumentCategory three_model = new Models.ViewModelDocumentCategory();
-            //            three_model.id = three.ID;
-            //            three_model.title = three.Title;
-            //            result.Add(three_model);
-            //        }
-            //    }
-            //}
+            
         }
-
+        
     }
 }

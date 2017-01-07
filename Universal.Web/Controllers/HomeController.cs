@@ -29,8 +29,8 @@ namespace Universal.Web.Controllers
                 int li_id = TypeHelper.ObjectToInt(notice_msg.LinkID) ;
                 view_model.TopNotice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == li_id);
             }
-
-            view_model.JobTask = new BLL.BaseBLL<Entity.CusUserMessage>().GetListBy(9, p => p.CusUserID == WorkContext.UserInfo.ID && p.IsDone == false && p.Type == Entity.CusUserMessageType.approveproject || p.Type == Entity.CusUserMessageType.waitmeeting || p.Type == Entity.CusUserMessageType.waitjobdone || p.Type == Entity.CusUserMessageType.waitapproveplan, "AddTime DESC");
+            int total = 0;
+            view_model.JobTask = BLL.BLLCusUser.GetJobTaskPageList(9, 1, WorkContext.UserInfo.ID, out total);
 
             return View(view_model);
         }

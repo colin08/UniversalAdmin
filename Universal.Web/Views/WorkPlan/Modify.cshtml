@@ -12,7 +12,7 @@
     <style>
         .limd table{margin-top:5px;}
         .limd td{padding:5px;}
-        .limd td input[type='text'] { width:100px;}
+        .limd td input[type='text'] { width:80px;}
         .addMember{float:left;font-size:10px;line-height:26px;padding:0 10px;display: inline-block;background: #e22d3e;color: #fff;font-weight: normal;border-radius: 4px;}
     </style>
 }
@@ -57,14 +57,19 @@
                                 <select name="DD" onchange="DDChan(this.value)" class="tb_select"></select>
                                 <br />
                                 <span>结束时间&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <select name="YYYY2" onChange="YYYYDD2(this.value)" class="tb_select"></select>
+                                <select name="YYYY2" onChange="YYYYDD2(this.value)" class="tb_select" style="margin-top:5px;"></select>
                                 <select name="MM2" onChange="MMDD2(this.value)" class="tb_select"></select>
                                 <select name="DD2" onchange="DDChan2(this.value)" class="tb_select"></select>
                             </div>
                             <div class="litip">&nbsp;</div>
                         </li>
                         <li>
-                            <div class="lilt"><span class="red">*</span>审批人</div>
+                            <div class="lilt">
+                            @if(!(bool)ViewData["RequieAPPID"])
+                            {
+                                <span class="red">*</span>
+                            }
+                            审批人</div>
                             <div class="limd" style="position: relative">
                                 @Html.HiddenFor(p => p.approve_user_id)
 								<input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
@@ -96,9 +101,9 @@
                                         {
                                             <tr>
                                                 <td><a href="javascript:;" class="btn-add uploadBtnBox" onclick="DeleteBtn(this)"><i class="i-barrel"></i></a></td>
-                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Title, new { @class = "usInput" })</td>
-                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Content, new { @class = "usInput" })</td>
-                                                <td>@Html.TextBoxFor(p => p.plan_item[i].WantTaget, new { @class = "usInput" })</td>
+                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Title, new { @class = "usInput",@style="width:150px;" })</td>
+                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Content, new { @class = "usInput", @style = "width:200px;" })</td>
+                                                <td>@Html.TextBoxFor(p => p.plan_item[i].WantTaget, new { @class = "usInput", @style = "width:120px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].DoneTime, new { @class = "usInput" })</td>
                                                 <td @show_sty>@Html.DropDownListFor(p => p.plan_item[i].Status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select"})</td>
                                                 <td @show_sty>@Html.TextBoxFor(p => p.plan_item[i].Remark, new { @class = "usInput" })</td>

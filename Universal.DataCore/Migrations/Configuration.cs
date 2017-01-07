@@ -122,6 +122,11 @@ namespace Universal.DataCore.Migrations
             //route_9.Title = "版本列表";
             //context.CusRoutes.AddOrUpdate(route_9);
 
+            //var route_10 = new Entity.CusRoute();
+            //route_10.ControllerName = "nodecategory";
+            //route_10.Title = "节点分类";
+            //context.CusRoutes.AddOrUpdate(route_10);
+
             //var user_route_1 = new Entity.CusUserRoute();
             //user_route_1.CusRoute = route_1;
             //user_route_1.CusUser = cus_user;
@@ -166,6 +171,13 @@ namespace Universal.DataCore.Migrations
             //user_route_9.CusRoute = route_9;
             //user_route_9.CusUser = cus_user;
             //context.CusUserRoutes.AddOrUpdate(user_route_9);
+
+            //var user_route_10 = new Entity.CusUserRoute();
+            //user_route_10.CusRoute = route_10;
+            //user_route_10.CusUser = cus_user;
+            //context.CusUserRoutes.AddOrUpdate(user_route_10);
+
+
 
             ////秘籍分类
             //var doc = new Entity.DocCategory();

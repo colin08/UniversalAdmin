@@ -113,6 +113,11 @@ namespace Universal.Web.Models.Response
         public string title { get; set; }
 
         /// <summary>
+        /// 流程iD
+        /// </summary>
+        public int flow_id { get; set; }
+
+        /// <summary>
         /// 项目流程名称
         /// </summary>
         public string flow_name { get; set; }
@@ -237,7 +242,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 立项时间
         /// </summary>
-        public DateTime LiXiangTime { get; set; }
+        public DateTime? LiXiangTime { get; set; }
 
         /// <summary>
         /// 专项规划时间

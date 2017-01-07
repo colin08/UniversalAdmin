@@ -12,6 +12,8 @@ namespace Universal.BLL
     {
         static string CacheDataKey1 = "CreateDocCategoryTreeDataKEY";
         static string CacheDataKey2 = "CreateDocCategoryTreeDataDEFAULTID";
+        static string CacheDataKeyTreeCategory = "CreateDocCategoryTreeDataOrderKEY";
+
         /// <summary>
         /// 添加分类数据
         /// </summary>
@@ -52,6 +54,8 @@ namespace Universal.BLL
             Tools.CacheHelper.Remove(CacheDataKey2);
             return entity.ID;
         }
+
+
 
         /// <summary>
         /// 修改分类数据
@@ -275,6 +279,58 @@ namespace Universal.BLL
             }
             db.Dispose();
             return data.ToString();
+        }
+
+        /// <summary>
+        /// 获取所有分类，经过父子排序
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.DocCategory> GetTreeCategory()
+        {
+            List<Entity.DocCategory> new_list = new List<Entity.DocCategory>();
+            object tree_data = Tools.CacheHelper.Get(CacheDataKeyTreeCategory);
+            if (tree_data == null)
+            {
+                BLL.BaseBLL<Entity.DocCategory> bll = new BLL.BaseBLL<Entity.DocCategory>();
+                List<Entity.DocCategory> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc");
+                GetCategoryChilds(list, new_list, null);
+                if (new_list.Count > 0)
+                {
+                    Tools.CacheHelper.Insert(CacheDataKeyTreeCategory, new_list, Tools.SiteKey.CACHE_TIME);
+                }
+            }
+            else
+                new_list = (List<Entity.DocCategory>)tree_data;
+            return new_list;
+        }
+
+        /// <summary>
+        /// 迭代处理父子数据
+        /// </summary>
+        /// <param name="oldData"></param>
+        /// <param name="newData"></param>
+        /// <param name="pid"></param>
+        private static void GetCategoryChilds(List<Entity.DocCategory> oldData, List<Entity.DocCategory> newData, int? pid)
+        {
+
+            List<Entity.DocCategory> list = new List<Entity.DocCategory>();
+            if (pid == null)
+                list = oldData.Where(p => p.PID == null).ToList();
+            else
+                list = oldData.Where(p => p.PID == pid).ToList();
+            foreach (var item in list)
+            {
+                Entity.DocCategory entity = new Entity.DocCategory();
+                entity.AddTime = item.AddTime;
+                entity.Depth = item.Depth;
+                entity.ID = item.ID;
+                entity.PID = item.PID;
+                entity.Priority = item.Priority;
+                entity.Status = item.Status;
+                entity.Title = item.Title;
+                newData.Add(entity);
+                GetCategoryChilds(oldData, newData, item.ID);
+            }
         }
 
     }

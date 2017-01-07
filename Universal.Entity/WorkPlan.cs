@@ -16,6 +16,24 @@ namespace Universal.Entity
             this.AddTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// 设置审核状态，必须调用一次
+        /// </summary>
+        public void SetApproveStatus()
+        {
+            int app_id = Tools.TypeHelper.ObjectToInt(this.ApproveUserID, 0);
+            if (app_id == 0)
+            {
+                //未选审核人
+                IsApprove = true;
+                ApproveTime = DateTime.Now;
+            }else
+            {
+                IsApprove = false;
+                ApproveTime = null;
+            }
+        }
+
         public int ID { get; set; }
 
         /// <summary>
@@ -47,7 +65,7 @@ namespace Universal.Entity
         /// <summary>
         /// 审核人员ID
         /// </summary>
-        public int ApproveUserID { get; set; }
+        public int? ApproveUserID { get; set; }
 
         /// <summary>
         /// 审核人员信息

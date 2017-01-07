@@ -32,6 +32,13 @@
                     @Html.HiddenFor(p=>p.files)
                     <ul>
                         <li>
+                            <div class="lilt"><span class="red">*</span>所属分类</div>
+                            <div class="limd">
+                                @Html.DropDownListFor(p => p.category_id, ViewData["category"] as List<SelectListItem>, new { @class = "select-input academy-select" })
+                            </div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.category_id)</div>
+                        </li>
+                        <li>
                             <div class="lilt">节点名称</div>
                             <div class="limd">
                                 @Html.TextBoxFor(p => p.title, new { @class = "usInput", placeholder = "请输入节点名称" })

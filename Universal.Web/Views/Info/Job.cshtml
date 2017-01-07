@@ -1,0 +1,164 @@
+﻿@model Universal.Entity.WorkJob
+@{
+    ViewBag.Title = "任务信息";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="@ViewData["BackUrl"]" class="fl f16"><i class="i-back"></i>@ViewData["BackTitle"]</a>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">任务标题</div>
+                        <div class="limd">
+                            <span>@Model.Title</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">任务内容</div>
+                        <div class="limd">
+                            <span>@Model.Content</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划完成时间</div>
+                        <div class="limd">
+                            <span>@Model.DoneTime.ToString("yyyy-MM-dd")</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">执行人</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.WorkJobUsers.ToList())
+                                {
+                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    @if (Model.CusUserID == WorkContext.UserInfo.ID)
+                    {
+                        <li>
+                        <div class="lilt">已完成人员</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.WorkJobUsers.Where(p => p.IsConfirm == true).ToList())
+                                {
+                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+
+                    <li>
+                        <div class="lilt">未完成人员</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.WorkJobUsers.Where(p => p.IsConfirm == false).ToList())
+                                {
+                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    }
+                    <li>
+                        <div class="lilt">附件</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.FileList)
+                                {
+                                    <li><span>@item.FileName &nbsp; @item.FileSize</span>&nbsp;&nbsp;&nbsp;<a href="@item.FilePath">下载</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">发布者</div>
+                        <div class="limd">
+                            <span>@Model.CusUser.NickName</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">发布时间</div>
+                        <div class="limd">
+                            <span>@Model.AddTime</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            @if ((int)ViewData["CanJoin"] == 1)
+                            {
+                                <button type="button" class="btn1" onclick="confrimjob()">完成任务</button>
+                            }
+                            <button type="button" onclick="location.href = '@ViewData["BackUrl"]';" class="btn1 grey">返回 @ViewData["BackTitle"]</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        function confrimjob() {
+            $.ajax({
+                type: "post",
+                url: "/WorkJob/Confirm",
+                data: { "id":@Model.ID },
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("确认成功");
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+        }
+    </script>
+}
+<!--底部脚本 end-->

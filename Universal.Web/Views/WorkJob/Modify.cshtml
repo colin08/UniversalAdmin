@@ -26,18 +26,6 @@
                     @Html.HiddenFor(p => p.day)
                     @Html.HiddenFor(p => p.files)
                     <ul>
-
-                        @if (Model.id > 0)
-                        {
-                            <li>
-                                <div class="lilt">任务状态</div>
-                                <div class="limd">
-                                    @Html.DropDownListFor(p => p.status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select", @style = "width: 94%;" })
-                                </div>
-                                <div class="litip">@Html.ValidationMessageFor(p => p.status)</div>
-                            </li>
-                         }
-
                         <li>
                             <div class="lilt">任务标题</div>
                             <div class="limd">

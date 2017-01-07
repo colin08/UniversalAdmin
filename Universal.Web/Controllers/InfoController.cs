@@ -113,14 +113,30 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Job(int id, int? msg)
         {
-            BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
-            var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
+            ViewData["tabLeft"] = "msg";
+            ViewData["BackUrl"] = "/User/Message";
+            ViewData["BackTitle"] = "消息列表";
+
+            var entity = BLL.BLLWorkJob.GetModel(id);
             if (entity == null)
             {
                 return View("NotFound");
             }
             SetMsgRead(msg);
-            return View();
+            if(msg== null)
+            {
+                ViewData["tabLeft"] = "workjob";
+                ViewData["BackUrl"] = "/WorkJob/Index";
+                ViewData["BackTitle"] = "任务指派列表";
+            }
+            //是否显示点击完成的按钮
+            ViewData["CanJoin"] = 0;
+            foreach (var item in entity.WorkJobUsers.ToList())
+            {
+                if (item.CusUserID == WorkContext.UserInfo.ID && item.IsConfirm)
+                    ViewData["CanJoin"] = 1;
+            }
+            return View(entity);
         }
 
         /// <summary>
@@ -148,9 +164,9 @@ namespace Universal.Web.Controllers
 
             if (msg == null)
             {
-                ViewData["BackTitle"] = "待计划列表";
+                ViewData["BackTitle"] = "待审批计划列表";
                 ViewData["tabLeft"] = "gzjh";
-                ViewData["BackUrl"] = "/WorkPlan/Index";
+                ViewData["BackUrl"] = "/WorkPlan/Approve";
             }
             return View(entity);
         }

@@ -34,7 +34,7 @@ namespace Universal.Web.Controllers
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
-            List<Entity.Node> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc");
+            List<Entity.Node> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc",p=>p.NodeCategory);
             WebAjaxEntity<List<Entity.Node>> result = new WebAjaxEntity<List<Entity.Node>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
@@ -67,6 +67,7 @@ namespace Universal.Web.Controllers
         
         public ActionResult Modify(int? id)
         {
+            LoadCategory();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelNode model = new Models.ViewModelNode();
             if (ids != 0)
@@ -78,6 +79,7 @@ namespace Universal.Web.Controllers
                     model.title = entity.Title;
                     model.location = entity.Location;
                     model.id = ids;
+                    model.category_id = entity.NodeCategoryID;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
                     foreach (var item in entity.NodeUsers)
                     {
@@ -107,7 +109,7 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(Models.ViewModelNode entity)
         {
             var isAdd = entity.id == 0 ? true : false;
-
+            LoadCategory();
 
             BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
             if (!isAdd)
@@ -117,6 +119,10 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("title", "信息不存在");
                 }
+            }
+            if(entity.category_id <=0)
+            {
+                ModelState.AddModelError("category_id", "分类必选");
             }
 
             #region 处理用户ID
@@ -150,7 +156,7 @@ namespace Universal.Web.Controllers
                 model.Content = entity.content;
                 model.Title = entity.title;
                 model.Location = entity.location;
-
+                model.NodeCategoryID = entity.category_id;
                 model.NodeFiles = entity.BuildFileList(WorkContext.UserInfo.ID);
 
                 if (isAdd)
@@ -166,6 +172,17 @@ namespace Universal.Web.Controllers
             }
 
             return View(entity);
+        }
+
+        private void LoadCategory()
+        {
+            List<SelectListItem> userRoleList = new List<SelectListItem>();
+            userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
+            foreach (var item in BLL.BLLNode.GetNodeCategory())
+            {
+                userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
+            }
+            ViewData["category"] = userRoleList;
         }
 
     }

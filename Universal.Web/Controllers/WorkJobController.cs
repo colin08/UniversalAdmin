@@ -37,6 +37,8 @@ namespace Universal.Web.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
             List<Entity.WorkJob> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc");
+            foreach (var item in list)
+                item.StatusText = BLL.BLLWorkJob.GetJobStatus(item.ID);
             WebAjaxEntity<List<Entity.WorkJob>> result = new WebAjaxEntity<List<Entity.WorkJob>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
@@ -68,9 +70,21 @@ namespace Universal.Web.Controllers
 
         }
 
+        /// <summary>
+        /// 用户点击完成
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Confirm(int id)
+        {
+            BLL.BLLWorkJob.Confirm(id, WorkContext.UserInfo.ID);
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
         public ActionResult Modify(int? id)
         {
-            LoadStatus();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelWorkJob model = new Models.ViewModelWorkJob();
             if (ids != 0)
@@ -84,7 +98,6 @@ namespace Universal.Web.Controllers
                     model.year = dt.Year.ToString();
                     model.month = dt.Month.ToString();
                     model.day = dt.Day.ToString();
-                    model.status = entity.Status;
                     model.id = ids;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
                     foreach (var item in entity.WorkJobUsers)
@@ -114,10 +127,7 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelWorkJob entity)
         {
-            LoadStatus();
             var isAdd = entity.id == 0 ? true : false;
-            
-
             BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
             if (!isAdd)
             {
@@ -154,10 +164,7 @@ namespace Universal.Web.Controllers
                     model.CusUserID = WorkContext.UserInfo.ID;
                 }
                 else
-                {
                     model = bll.GetModel(p => p.ID == entity.id);
-                    model.Status = entity.status;
-                }
 
                 model.Content = entity.content;
                 model.Title = entity.title;
@@ -179,18 +186,6 @@ namespace Universal.Web.Controllers
 
             return View(entity);
         }
-
-
-        private void LoadStatus()
-        {
-            List<SelectListItem> StatusList = new List<SelectListItem>();
-            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.WorkStatus)))
-            {
-                string text = EnumHelper.GetDescription<Entity.WorkStatus>((Entity.WorkStatus)item.Key);
-                StatusList.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
-            }
-            ViewData["StatusList"] = StatusList;
-        }
-
+        
     }
 }

@@ -14,12 +14,15 @@ namespace Universal.Web.Models
 
         public ViewModelWorkPlan()
         {
-            this.year = DateTime.Now.Year.ToString();
-            this.month = DateTime.Now.Month.ToString();
-            this.day = DateTime.Now.Day.ToString();
-            this.year2 = DateTime.Now.Year.ToString();
-            this.month2 = DateTime.Now.Month.ToString();
-            this.day2 = DateTime.Now.Day.ToString();
+            DateTime dt_next_month = DateTime.Now.AddMonths(1);
+            DateTime dt_temp_next_month_frist = dt_next_month.AddDays(1 - dt_next_month.Day);
+            DateTime dt_temp_next_month_end = dt_next_month.AddDays(1 - dt_next_month.Day).AddMonths(1).AddDays(-1);
+            this.year = dt_temp_next_month_frist.Year.ToString();
+            this.month = dt_temp_next_month_frist.Month.ToString();
+            this.day = dt_temp_next_month_frist.Day.ToString();
+            this.year2 = dt_temp_next_month_end.Year.ToString();
+            this.month2 = dt_temp_next_month_end.Month.ToString();
+            this.day2 = dt_temp_next_month_end.Day.ToString();
             this.plan_item = new List<Entity.WorkPlanItem>();
             var entity = new Entity.WorkPlanItem();
             entity.Status = Entity.WorkStatus.ing;

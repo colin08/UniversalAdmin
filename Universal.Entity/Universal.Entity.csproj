@@ -73,6 +73,7 @@
     <Compile Include="DownloadLog.cs" />
     <Compile Include="Feedback.cs" />
     <Compile Include="Flow\FlowNode.cs" />
+    <Compile Include="Node\NodeCategory.cs" />
     <Compile Include="ProjectFlowNodeDoing.cs" />
     <Compile Include="Project\ProjectFlowNode.cs" />
     <Compile Include="Project\ProjectStageFile.cs" />

@@ -12,7 +12,7 @@ namespace Universal.Entity
     public enum ProjectArea
     {
         [Description("其他")]
-        QiTa = 1,
+        QiTa,
         [Description("宝安区")]
         BaoAn,
         [Description("龙岗区")]
@@ -41,7 +41,7 @@ namespace Universal.Entity
     public enum ProjectGaiZao
     {
         [Description("其他")]
-        QiTa = 1,
+        QiTa ,
         [Description("工改工")]
         GongGaiGong,
         [Description("工改商")]
@@ -83,6 +83,24 @@ namespace Universal.Entity
             this.LastUpdateUserName = "";
         }
 
+        /// <summary>
+        /// 设置审核状态，必须调用一次
+        /// </summary>
+        public void SetApproveStatus()
+        {
+            int app_id = Tools.TypeHelper.ObjectToInt(this.ApproveUserID, 0);
+            if(app_id == 0)
+            {
+                //未选审核人
+                this.ApproveStatus = ApproveStatusType.yes;
+                this.ApproveRemark = "未选审核人，直接审核通过";
+            }else
+            {
+                this.ApproveStatus = ApproveStatusType.nodo;
+                this.ApproveRemark = "";
+            }
+        }
+
         public int ID { get; set; }
 
         /// <summary>
@@ -104,7 +122,7 @@ namespace Universal.Entity
         /// <summary>
         /// 审核人员ID
         /// </summary>
-        public int ApproveUserID { get; set; }
+        public int? ApproveUserID { get; set; }
 
         /// <summary>
         /// 最后修改人名称
@@ -156,7 +174,7 @@ namespace Universal.Entity
         /// <summary>
         /// 引用的流程ID
         /// </summary>
-        public int FlowID { get; set; }
+        public int? FlowID { get; set; }
 
         /// <summary>
         /// 权限类别
@@ -263,7 +281,7 @@ namespace Universal.Entity
         /// <summary>
         /// 立项时间
         /// </summary>
-        public DateTime LiXiangTime { get; set; }
+        public DateTime? LiXiangTime { get; set; }
 
         /// <summary>
         /// 统计使用，年度,根据立项时间来获取
@@ -280,7 +298,12 @@ namespace Universal.Entity
         /// </summary>
         public void SetYear()
         {
-            TJYear = LiXiangTime.Year;
+            if (LiXiangTime == null)
+                TJYear = 0;
+            else
+            {
+                TJYear = Tools.TypeHelper.ObjectToDateTime(LiXiangTime).Year;
+            }
         }
 
         /// <summary>
@@ -288,12 +311,18 @@ namespace Universal.Entity
         /// </summary>
         public void SetQuarter()
         {
-            double f = Convert.ToDouble(LiXiangTime.Month) / 3f;
-            if (f > Convert.ToInt32(f))
+            if (LiXiangTime == null)
+                TJQuarter = 0;
+            else
             {
-                TJQuarter = Convert.ToInt32(f) + 1;
+                var ti = Tools.TypeHelper.ObjectToDateTime(LiXiangTime);
+                double f = Convert.ToDouble(ti.Month) / 3f;
+                if (f > Convert.ToInt32(f))
+                {
+                    TJQuarter = Convert.ToInt32(f) + 1;
+                }
+                TJQuarter = Convert.ToInt32(f);
             }
-            TJQuarter = Convert.ToInt32(f);
         }
 
         /// <summary>

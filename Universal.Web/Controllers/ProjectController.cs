@@ -248,6 +248,8 @@ namespace Universal.Web.Controllers
 
         public ActionResult Modify(int? id)
         {
+            //判断审核人是否必填
+            ViewData["RequieAPPID"] = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
             LoadFlow();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelProject model = new Models.ViewModelProject();
@@ -258,9 +260,10 @@ namespace Universal.Web.Controllers
                 {
                     model.title = entity.Title;
                     model.id = ids;
-                    model.approve_user_id = entity.ApproveUserID;
-                    model.approve_user_name = entity.ApproveUser.NickName;
-                    model.flow_id = entity.FlowID;
+
+                    model.approve_user_id = TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
+                    model.approve_user_name = entity.ApproveUser == null ? "" : entity.ApproveUser.NickName;
+                    model.flow_id = TypeHelper.ObjectToInt(entity.FlowID,0);
                     model.post_see = entity.See;
                     model.area = entity.Area;
                     model.GaiZaoXingZhi = entity.GaiZaoXingZhi;
@@ -343,8 +346,8 @@ namespace Universal.Web.Controllers
             else
             {
                 //默认
-                model.approve_user_id = WorkContext.UserInfo.ID;
-                model.approve_user_name = WorkContext.UserInfo.NickName;
+                //model.approve_user_id = WorkContext.UserInfo.ID;
+                //model.approve_user_name = WorkContext.UserInfo.NickName;
             }
             return View(model);
         }
@@ -353,8 +356,13 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelProject entity)
         {
+            int app_id = TypeHelper.ObjectToInt(entity.approve_user_id, 0);
             var isAdd = entity.id == 0 ? true : false;
             LoadFlow();
+
+            //判断审核人是否必填
+            var requie_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            ViewData["RequieAPPID"] = requie_approve;
 
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             if (!isAdd)
@@ -364,6 +372,12 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("title", "信息不存在");
                 }
+            }
+
+            
+            if (requie_approve && app_id == 0)
+            {
+                ModelState.AddModelError("approve_user_id", "审核人必选");
             }
 
 
@@ -425,7 +439,11 @@ namespace Universal.Web.Controllers
                     model = bll.GetModel(p => p.ID == entity.id);
 
                 model.ApproveUserID = entity.approve_user_id;
-                model.FlowID = entity.flow_id;
+
+                if (entity.flow_id == 0)
+                    model.FlowID = null;
+                else
+                    model.FlowID = entity.flow_id;
                 model.See = entity.post_see;
                 model.Area = entity.area;
                 model.GaiZaoXingZhi = entity.GaiZaoXingZhi;

@@ -28,8 +28,8 @@
                             <th width="20"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
                             <th width="20%">节点名称</th>
                             <th width="30%">办事地址</th>
+                            <th width="20%">所属分类</th>
                             <th width="20%">添加时间</th>
-                            <th width="20%">最后修改时间</th>
                             <th width="10%">操作</th>
                         </tr>
                     </thead>
@@ -66,7 +66,7 @@
     @Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
         $(document).ready(function (e) {
-            pageData(1, false)
+            pageData(1)
         });
 
         /*******************列表 end *************************/
@@ -97,8 +97,8 @@
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>" + CutString(item.Title, 18) + "</td>";
                         dataHtml += "<td>" + CutString(item.Location, 48) + "</td>";
+                        dataHtml += "<td>" + CutString(item.NodeCategory.Title, 20) + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "") + "</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "yyyy-MM-dd HH:mm:ss") + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Node/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });

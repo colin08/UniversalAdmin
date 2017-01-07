@@ -8,7 +8,15 @@
 <!--头部脚本-->
 @section head
 {
-
+<style type="text/css">
+    .creater-box { margin: 40px 0 0 40px; font-size: 14px;; }
+        .creater-box li { width: 100%; display: table; padding: 8px 0; }
+        .creater-box .lilt { width: 90px; float: left; padding: 10px 0; text-align: right; padding-right: 20px;; }
+        .creater-box .limd { width: 400px; float: left; }
+            .creater-box .limd span { padding: 10px 0; display: inline-block; }
+        .creater-box .litip { float: left; width: 100%; padding-left: 110px; }
+            .creater-box .litip span { padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;; }
+</style>
 }
 <!--头部脚本 end-->
 
@@ -19,7 +27,7 @@
         <div class="container">
             <div class="new-head mb-40 clearfix">
                 <a href="/Document/index" class="fl f16 go-prev"><i class="i-back"></i><span>秘籍列表</span></a>
-                <b class="f20">上传秘籍</b>
+                <b class="f20">编辑秘籍</b>
             </div>
             <form method="post" class="form-horizontal" id="form">
                 @Html.AntiForgeryToken()
@@ -30,7 +38,7 @@
                         <li>
                             <div class="lilt"><em class="col_red">*</em>秘籍标题</div>
                             <div class="limd">
-                                @Html.TextBoxFor(p => p.title, new { @class = "usInput" })
+                                @Html.TextBoxFor(p => p.title, new { @class = "usInput", style = "width:570px" })
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
                         </li>
@@ -66,15 +74,12 @@
                                     @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
                                     <span>所有人</span>
                                 </label>
-                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
-                                    @Html.RadioButtonFor(x => x.post_see, "1", (int)Model.post_see == 1 ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
-                                    <span>同事分组</span>
-                                </label>
                                 <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
                                 </label>
-                                <a href="javascript:;" class="btn-add"><i class="i-attach"></i>添加成员</a>
+
+                                <a id="add_users" href="javascript:" onclick="selUser(this)" class="btn-add"><i class="i-attach"></i>添加成员</a>
                             </div>
                             <div class="scrollbox scrollbox-big">
                                 <ul>
@@ -94,8 +99,8 @@
                         </li>
                     </ul>
                     <div class="creater-box-submit creater-box1-submit">
-                        <input type="submit" class="btn-major btn-submit" value="确定" />
-                        <a href="javascript:location.href='/Document/Index';" class="btn-cencel">取消</a>
+                        <input type="submit" class="btn1" value="确定" />
+                        <button type="button" onclick="location.href = '/Document/Index';" class="btn1 grey">取消</button>
                     </div>
                 </div>
             </form>
@@ -117,7 +122,7 @@
         var editor;
         KindEditor.ready(function (K) {
             editor = K.create('textarea[name="content"]', {
-                items: ["undo", "redo", "preview", "print", "plainpaste", "wordpaste", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "formatblock", "fontname", "fontsize", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "image", "table", "hr", "link", "unlink", "source"],
+                items: ["undo", "redo", "preview", "print", "plainpaste", "wordpaste", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "formatblock", "fontname", "fontsize", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "image", "multiimage", "table", "hr", "link", "unlink", "source"],
                 width: '98%',
                 height: '350px',
                 resizeType: 1,
@@ -126,12 +131,12 @@
             });
         })
         /**************富文本编辑器 end *********************/
-        
+
         $(document).ready(function (e) {
             @if(Model.Msg == 1)
             {
                 @:alert("操作成功");
-                @:location.href = "/Document/index";
+            @:location.href = "/Document/index";
             }
             else if(Model.Msg == 2)
             {
@@ -141,9 +146,63 @@
                 @:alert("数据验证失败");
             }
         });
+
+        function switchSee(id) {
+            if (id == 2) {
+                $('.scrollbox').show();
+                $('#add_users').show();
+            } else {
+                $('.scrollbox').hide();
+                $('#add_users').hide();
+            }
+        }
+        $('input[name=post_see]').click(function () {
+            switchSee(this.value);
+        });
+        switchSee('@Model.post_see' == 'user' ? 2 : 0);
+        function selUser(obj) {
+            selUserDialog({
+                callback: function (data) {
+                    var ids = $("#see_ids").val().split(',');
+                    var ul = $('.scrollbox').find('ul');
+                    $(data).each(function () {
+                        if (ul.find('#user_' + this.id).size() > 0) {
+                            return true;
+                        }
+                        var li = $('<li></li>').appendTo(ul).attr('id', 'user_' + this.id);
+                        var a = $('<a href="javascript:;"></a>').attr('data-id', this.id).appendTo(li).click(function () {
+                            var id = $(this).attr('data-id');
+                            moveId(id);
+                        });
+                        $('<span></span>').appendTo(a).html(this.telphone + ' (' + this.nick_name + ')');
+                        $('<i class="i-mdel"></i>').appendTo(a);
+                        ids.push(this.id);
+                    });
+                    $("#see_ids").val(ids.join(','));
+                }
+            });
+
+        }
+        $('.scrollbox ul li a').each(function () {
+            $(this).click(function () {
+                var id = $(this).attr('data-id');
+                moveId(id);
+            });
+
+        });
+        function moveId(id) {
+            var ids = [];
+            $($("#see_ids").val().split(',')).each(function () {
+                if (this != id) {
+                    ids.push(this);
+                }
+            });
+            $('#user_' + id).remove();
+            $("#see_ids").val(ids.join(','));
+        }
     </script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         function RemoveUp(obj)
         {
             $(obj).parent("li").remove();
@@ -238,7 +297,7 @@
             return o.substring(pos + 1);
         }
 
-</script>
+    </script>
 
 }
 <!--底部脚本 end-->

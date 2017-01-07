@@ -84,7 +84,8 @@ namespace Universal.Web.Controllers
         public JsonResult ApprovePageData(int page_size, int page_index, string keyword)
         {
             int rowCount = 0;
-            List<Entity.WorkPlan> list = BLL.BLLWorkPlan.GetAdminApprovePageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID);
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            List<Entity.WorkPlan> list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.ApproveUserID == WorkContext.UserInfo.ID && p.IsApprove == false, "AddTime desc");
             //foreach (var item in list)
             //    item.ApproveNickName = BLL.BLLCusUser.GetUserDepartmentAdminText(item.CusUserID);
             WebAjaxEntity<List<Entity.WorkPlan>> result = new WebAjaxEntity<List<Entity.WorkPlan>>();
@@ -114,6 +115,9 @@ namespace Universal.Web.Controllers
 
         public ActionResult Modify(int? id)
         {
+            //判断审核人是否必填
+            ViewData["RequieAPPID"] = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelWorkPlan entity = new Models.ViewModelWorkPlan();
             LoadStatus();
@@ -146,9 +150,8 @@ namespace Universal.Web.Controllers
                         entity.year2 = dt2.Year.ToString();
                         entity.month2 = dt2.Month.ToString();
                         entity.day2 = dt2.Day.ToString();
-
-                        entity.approve_user_id = model.ApproveUserID;
-                        entity.approve_user_name = model.ApproveUser.NickName;
+                        entity.approve_user_id = TypeHelper.ObjectToInt(model.ApproveUserID, 0);
+                        entity.approve_user_name = model.ApproveUser == null ? "" : model.ApproveUser.NickName;
                         var item_list = model.WorkPlanItemList.ToList();
                         if (item_list.Count > 0)
                         {
@@ -168,9 +171,13 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelWorkPlan entity)
         {
+            int app_id = TypeHelper.ObjectToInt(entity.approve_user_id, 0);
+            //判断审核人是否必填
+            var requie_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            ViewData["RequieAPPID"] = requie_approve;
             var isAdd = entity.id == 0 ? true : false;
             LoadStatus();
-
+            
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             if (!isAdd)
             {
@@ -184,6 +191,11 @@ namespace Universal.Web.Controllers
                     //审批过的不能再编辑
                     entity.Msg = 4;
                 }
+            }
+            
+            if (requie_approve && app_id == 0)
+            {
+                ModelState.AddModelError("approve_user_id", "审核人必选");
             }
 
             DateTime BeginTime = DateTime.Now;
@@ -217,15 +229,20 @@ namespace Universal.Web.Controllers
                 else
                     model = bll.GetModel(p => p.ID == entity.id);
 
-                model.ApproveUserID = entity.approve_user_id;
+                if (app_id == 0)
+                    model.ApproveUserID = null;
+                else
+                    model.ApproveUserID = app_id;
                 model.BeginTime = BeginTime;
                 model.EndTime = EndTime;
                 model.WeekText = entity.week_text;
                 model.WorkPlanItemList = entity.plan_item;
                 if (isAdd)
                 {
+                    model.SetApproveStatus();
                     bll.Add(model);
-                    BLL.BLLMsg.PushMsg(model.ApproveUserID, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName), model.ID);
+                    if(app_id >0)
+                        BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName), model.ID);
                 }
                 else
                     BLL.BLLWorkPlan.Modify(model);
