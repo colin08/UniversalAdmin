@@ -9,20 +9,22 @@ namespace Universal.Web.Models
     /// <summary>
     /// 编辑项目
     /// </summary>
-    public class ViewModelProject: ViewModelCustomFormBase
+    public class ViewModelProject : ViewModelCustomFormBase
     {
 
         public ViewModelProject()
         {
             this.user_ids = "";
+            this.albums = "";
             this.users_entity = new List<ViewModelDocumentCategory>();
             this.see_entity = new List<ViewModelDocumentCategory>();
             this.file_list = new List<ViewModelListFile>();
+            this.album_list = new List<ViewModelListFile>();
         }
 
         public int id { get; set; }
 
-        [Required(ErrorMessage ="请填写项目名称"),MaxLength(200,ErrorMessage ="不能超过200个字符")]
+        [Required(ErrorMessage = "请填写项目名称"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
         public string title { get; set; }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace Universal.Web.Models
         public List<Entity.ProjectFile> BuildFileList()
         {
             List<Entity.ProjectFile> db_list = new List<Entity.ProjectFile>();
-            if (this.files == null)
+            if (this.files == null && this.albums == null)
                 return db_list;
             if (this.files.Length == 0)
                 return db_list;
@@ -86,6 +88,13 @@ namespace Universal.Web.Models
                 this.files = this.files.Substring(0, this.files.Length - 1);
             this.file_list.Clear();
 
+            if (this.albums == null)
+                this.albums = "";
+            if (this.albums.EndsWith("|"))
+                this.albums = this.albums.Substring(0, this.albums.Length - 1);
+            this.album_list.Clear();
+
+            //附件
             foreach (var item in files.Split('|'))
             {
                 if (string.IsNullOrWhiteSpace(item))
@@ -103,14 +112,44 @@ namespace Universal.Web.Models
                     entity.FilePath = f_len[0];
                     entity.FileName = f_len[1];
                     entity.FileSize = f_len[2];
+                    entity.Type = Entity.ProjectFileType.file;
+                    this.file_list.Add(model);
                     db_list.Add(entity);
                 }
-                this.file_list.Add(model);
             }
+            //相册
+            foreach (var item in albums.Split('|'))
+            {
+                if (string.IsNullOrWhiteSpace(item))
+                    continue;
 
+                ViewModelListFile model = new ViewModelListFile();
+                Entity.ProjectFile entity = new Entity.ProjectFile();
+                model.file_name = "";
+                model.file_path = item;
+                model.file_size = "";
+
+                entity.FilePath = item;
+                entity.FileName = "";
+                entity.FileSize = "";
+                entity.Type = Entity.ProjectFileType.album;
+                this.album_list.Add(model);
+                db_list.Add(entity);
+            }
             return db_list;
         }
 
+
+        /// <summary>
+        /// 相册
+        /// </summary>
+        public string albums { get; set; }
+
+        /// <summary>
+        /// 附件信息
+        /// </summary>
+        public List<ViewModelListFile> album_list { get; set; }
+        
         /// <summary>
         /// 构造前端展示所需数据
         /// </summary>
@@ -120,18 +159,28 @@ namespace Universal.Web.Models
             if (entity == null)
                 return;
             System.Text.StringBuilder files = new System.Text.StringBuilder();
+            System.Text.StringBuilder albumss = new System.Text.StringBuilder();
             foreach (var item in entity)
             {
                 if (this.file_list == null)
                     this.file_list = new List<ViewModelListFile>();
 
-                if(item.Type == Entity.ProjectFileType.file)
+                if (this.album_list == null)
+                    this.album_list = new List<ViewModelListFile>();
+
+                if (item.Type == Entity.ProjectFileType.file)
                 {
                     file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
                     files.Append(item.FilePath + "," + item.FileName + "," + item.FileSize + "|");
                 }
+                else
+                {
+                    album_list.Add(new ViewModelListFile(item.FilePath, "", ""));
+                    albumss.Append(item.FilePath + "|");
+                }
             }
             this.files = files.ToString();
+            this.albums = albumss.ToString();
         }
 
 
@@ -148,7 +197,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 用地性质、宗地号
         /// </summary>
-        [MaxLength(200,ErrorMessage ="不能超过200个字符")]
+        [MaxLength(200, ErrorMessage = "不能超过200个字符")]
         public string ZhongDiHao { get; set; }
 
         /// <summary>
@@ -161,7 +210,7 @@ namespace Universal.Web.Models
         /// 总建筑面积
         /// </summary>  
         public decimal ZongMianJi { get; set; }
-        
+
         /// <summary>
         /// 总面积其他信息
         /// </summary>
@@ -249,7 +298,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 分成比例
         /// </summary>
-        [MaxLength(20,ErrorMessage ="不能超过20个字符")]
+        [MaxLength(20, ErrorMessage = "不能超过20个字符")]
         public string FenChengBiLi { get; set; }
 
         /// <summary>

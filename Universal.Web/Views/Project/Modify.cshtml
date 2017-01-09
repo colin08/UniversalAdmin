@@ -31,6 +31,7 @@
             @Html.HiddenFor(p => p.user_ids)
             @Html.HiddenFor(p => p.files)
             @Html.HiddenFor(p => p.see_ids)
+            @Html.HiddenFor(p=>p.albums)
             <!--第一步-->
             <div class="addmb" style="display: block;" id="div_one">
                 <h4 class="tit2">基本信息</h4>
@@ -43,7 +44,7 @@
                         </li>
                         <li>
                             <label for="" class="lab1">
-                                @if(!(bool)ViewData["RequieAPPID"])
+                                @if((bool)ViewData["RequieAPPID"])
                                 {
                                     <span class="red">*</span>
                                 }
@@ -123,9 +124,15 @@
                             <label for="" class="lab1">相册</label>
                             <div style="clear:both;"></div>
                             <ul>
+                                @foreach (var item in Model.album_list)
+                                {
+                                    <li>
+                                        <img src="@item.file_path" style="width:100px;">
+                                        <a href="javascript:void(0)">删除</a>
+                                    </li>
+                                }
                                 <li>
-                                    <img src="http://www.model-me.cn/uploads/GlassAlbums/e6a5b5d0a4cd8f36b65ea82e1a0d14fd.jpg" ids="0" class="albums_list" style="width:100px;">
-                                    <a href="javascript:void(0)" onclick="DelPic(this,'span_upload_albums')">删除</a>
+                                    <a href="javascript:;">新增</a>
                                 </li>
                             </ul>
                         </li>

@@ -353,7 +353,7 @@ namespace Universal.BLL
         {
             using (var db =new DataCore.EFDBContext())
             {
-                return db.CusDepartmentAdmins.Any(p => p.CusUserID == user_id);
+                return !(db.CusDepartmentAdmins.Any(p => p.CusUserID == user_id));
             }
         }
 
