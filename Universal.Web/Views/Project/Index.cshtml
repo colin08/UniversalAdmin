@@ -32,6 +32,7 @@
             </select>
             <select id="select_node_status" onchange = "pageData(1)" class="select-input valid" style="width: 120px;">
                 <option value="0">所有状态</option>
+                <option value="1">未开始</option>
                 <option value="2">进行中</option>
                 <option value="3">已结束</option>
             </select>
@@ -48,12 +49,12 @@
         <table border="0" cellspacing="0" cellpadding="0" class="table1">
             <thead>
                 <tr>
-                    <th width="20%">项目名称</th>
-                    <th width="20%">当前节点</th>
-                    <th width="20%">节点描述</th>
-                    <th width="10%">责任人</th>
-                    <th width="20%">更新时间</th>
-                    <th width="10%">操作</th>
+                    <th style="width:160px">项目名称</th>
+                    <th style="width:160px">当前节点</th>
+                    <th>节点描述</th>
+                    <th style="width:80px">责任人</th>
+                    <th style="width:120px">更新时间</th>
+                    <th style="width:130px">操作</th>
                 </tr>
             </thead>
             <tbody id="listData"></tbody>

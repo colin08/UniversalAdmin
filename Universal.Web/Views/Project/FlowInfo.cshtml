@@ -128,7 +128,8 @@
 			class="_label">属性</span></li>
 		<li id="pmDelete"><i class="fa fa-trash"></i>&nbsp;<span
 			class="_label">删除</span></li>
-
+		<li id="pmEye"><i class="fa fa-eye"></i>&nbsp;<span
+			class="_label">节点详情</span></li>
 	</ul>
 </div>
 <div id="canvasMenu" style="display: none;">
@@ -362,6 +363,11 @@
 							"processData" : data,
 							canvasMenus:canvasMenus,
 							processMenus : {
+								
+								"pmEye":function(t){
+									var url='/Project/FlowNodeInfo?id='+_canvas.getActiveId();
+									window.open(url);
+								},
 								"pmDelete" : function(t) {
 									if (confirm("你确定删除节点吗？")) {
 										var activeId = _canvas.getActiveId();//右键当前的ID

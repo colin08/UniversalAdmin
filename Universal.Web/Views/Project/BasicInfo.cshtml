@@ -44,8 +44,8 @@
                 </li>
                 <li>
                     <label for="" class="lab5">附件：</label>
-                    <ul style="float:right">
-                        @foreach (var item in Model.ProjectFiles)
+                    <ul  style="float:right">
+                        @foreach (var item in Model.ProjectFiles.Where(p=>p.Type == Universal.Entity.ProjectFileType.file))
                         {
                             <li><a href="@item.FilePath" target="_blank" >@item.FileName  @item.FileSize</a></li>
 
@@ -53,11 +53,18 @@
                     </ul>
                     
                 </li>
+                <li>
+                    <label for="" class="lab5">相册：</label>
+                    <ul style="float:right;width:50%;">
+                        @foreach (var item in Model.ProjectFiles.Where(p=>p.Type == Universal.Entity.ProjectFileType.album))
+                        {
+                            <li><img src="@item.FilePath" style="width:100px;" /></li>
+
+                        }
+                    </ul>
+                </li>
             </ul>
-            <div class="new-msg-submit"><a href="/Project/Modify?id=@Model.ID" class="btn-major">编辑</a></div>
-        </div>
-        <div class="fl slide-box">
-            <img src="theme/images/slide.png" alt="" />
+            <div class="new-msg-submit" style="margin-top:120px;"><a href="/Project/Modify?id=@Model.ID" class="btn-major">编辑</a></div>
         </div>
     </div>
 </div>

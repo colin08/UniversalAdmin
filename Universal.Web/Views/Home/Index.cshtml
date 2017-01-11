@@ -35,12 +35,12 @@
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
 						<thead>
                         <tr>
-                                <td width="18%">项目名称</td>
-                                <td width="25%">当前节点</td>
-                                <td width="27%">节点备注</td>
-                                <td width="10%">最新修改</td>
-                                <td width="15%">修改时间</td>
-                                <td width="5%" align="center">操作</td>
+                            <td width="18%">项目名称</td>
+                            <td width="25%">当前节点</td>
+                            <td width="27%">节点备注</td>
+                            <td width="10%">最新修改</td>
+                            <td width="15%">修改时间</td>
+                            <td width="5%" align="center">操作</td>
                             </tr>
                         </thead>
                         <tbody id="listData"></tbody>
@@ -167,7 +167,7 @@
                         dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
                         dataHtml += "<td>" + user_name + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                        dataHtml += "<td><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
+                        dataHtml += "<td style=\"text-align:center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {

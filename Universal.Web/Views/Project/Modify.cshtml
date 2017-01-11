@@ -9,6 +9,9 @@
 @section head
 {
 
+<link type="text/css" rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="/assets/bootstrap/bootstrap-fileinput/css/fileinput.min.css" />
+
 }
 <!--头部脚本 end-->
 
@@ -123,16 +126,17 @@
                         <li>
                             <label for="" class="lab1">相册</label>
                             <div style="clear:both;"></div>
-                            <ul>
+                            <ul class="album">
                                 @foreach (var item in Model.album_list)
                                 {
                                     <li>
-                                        <img src="@item.file_path" style="width:100px;">
-                                        <a href="javascript:void(0)">删除</a>
+                                        <img src="@item.file_path" >
+                                        <a href="javascript:void(0)" onclick="removePic(this)">删除</a>
                                     </li>
                                 }
-                                <li>
-                                    <a href="javascript:;">新增</a>
+                                
+                                <li class="album_add">
+                                    <a href="javascript:;"><i>新增</i><input type="file" name="album_1" data-id="1" class="uploadBtn" onchange="UploadPic(this)"></a>
                                 </li>
                             </ul>
                         </li>
@@ -289,8 +293,92 @@
 @section foot
 {
 @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript" src="/assets/bootstrap/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="/assets/bootstrap/bootstrap-fileinput/js/locales/zh.js"></script>
+
 <script src="/assets/laydate/laydate.js"></script>
     <script type="text/javascript">
+    $('#add_pic').click(function()
+    {
+    	
+    });
+    var pics=[];
+    function initPics()
+    { 
+        pics=[];
+    	$('.album li').each(function()
+    	{
+    		if($(this).attr('data-image')){
+    			  pics.push($(this).attr('data-image'));
+    		}
+    	});
+        $('#albums').val(pics.join('|'));
+    }
+    initPics();
+    function removePic(obj){
+    	var li=$(obj).parent();
+    	li.remove();
+    	initPics();
+    }
+    function UploadPic(obj){
+    	if((pics.length)>=6){
+    		alert('系统最多允许上传6张图片');
+    		return;
+    	}
+        var pli=$(obj).parent().parent().removeClass('album_add');
+        var id=parseInt(pli.find('input').attr('data-id'))+1;
+        pli.find('a').hide();
+        $('<a>删除</a>').click(function(){
+            removePic(this);
+        }).appendTo(pli);
+        var li=$('<li class="album_add"></li>');
+        var a=$('<a><i>新增</i><input type="file" class="uploadBtn" onchange="UploadPic(this)"></a>').appendTo(li);
+        a.find('input').attr('data-id',id).attr('name','album_'+id);
+        
+        pli.after(li);
+        var img=pli.find('img');
+     
+        if(img.length<1){
+            img=$('<img />').appendTo(pli);
+        }
+        if (obj.files && obj.files[0])
+        {
+            var reader = new FileReader();
+            reader.onload = function(evt){img.attr('src', evt.target.result);}
+            reader.readAsDataURL(obj.files[0]);
+            doUpload(obj);
+        }
+    }
+
+    function doUpload(obj){
+    	 var fd = new FormData();
+         fd.append("FileData", $(obj)[0].files[0]);
+         //$(span_file_status).html("上传中...");
+        // $(span_file_name).html(file_name);
+         $.ajax({
+             url: '/Tools/UploadFile',
+             type: 'POST',
+             cache: false,
+             contentType: "multipart/form-data",
+             data: fd,
+             processData: false,
+             contentType: false
+         }).done(function (res) {
+        	 console.log(JSON.stringify(res));
+             if (res.msg == 1) {
+            	 var li=$(obj).parent().parent().attr('data-image',res.data);
+            	 li.find('input').remove();
+            	 initPics();
+             } else {
+                 alert(res.msgbox);
+                 $(obj).parent().parent().remove();
+             }
+         }).fail(function (res) { });
+    }
+    
+    
+    
 		function switchSee(id){
 			if(id==2){
 				$('#ul2').show();

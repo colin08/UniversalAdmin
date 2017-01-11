@@ -15,6 +15,7 @@ namespace Universal.Web.Models
         public ViewModelProject()
         {
             this.user_ids = "";
+            this.files = "";
             this.albums = "";
             this.users_entity = new List<ViewModelDocumentCategory>();
             this.see_entity = new List<ViewModelDocumentCategory>();
@@ -82,8 +83,8 @@ namespace Universal.Web.Models
             List<Entity.ProjectFile> db_list = new List<Entity.ProjectFile>();
             if (this.files == null && this.albums == null)
                 return db_list;
-            if (this.files.Length == 0)
-                return db_list;
+            this.files = this.files == null ? "" : this.files;
+            this.albums = this.albums == null ? "" : this.albums;
             if (this.files.EndsWith("|"))
                 this.files = this.files.Substring(0, this.files.Length - 1);
             this.file_list.Clear();

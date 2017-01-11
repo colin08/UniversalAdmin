@@ -6,14 +6,15 @@
 }
 
 <div class="wapper">
+    
     <style type="text/css">
-        .creater-box { margin: 40px 0 0 40px; font-size: 14px;; }
+        /*.creater-box { margin: 40px 0 0 40px; font-size: 14px;; }
             .creater-box li { width: 100%; display: table; padding: 8px 0; }
             .creater-box .lilt { width: 90px; float: left; padding: 10px 0; text-align: right; padding-right: 20px;; }
             .creater-box .limd { width: 400px; float: left; }
                 .creater-box .limd span { padding: 10px 0; display: inline-block; }
             .creater-box .litip { float: left; width: 100%; padding-left: 110px; }
-                .creater-box .litip span { padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;; }
+                .creater-box .litip span { padding: 10px; line-height: 20px; color: #506470; display: inline-block; border-radius: 3px;; }*/
     </style>
     @Html.Partial("_ShoolMenuLeft", this.ViewData)
 
@@ -31,7 +32,7 @@
                     <ul>
                         <li>
                             <div class="lilt"><em class="col_red">*</em>秘籍标题</div>
-                            <div class="limd">
+                            <div class="limd big">
                                 @Html.TextBoxFor(p => p.title, new { @class = "usInput", style = "width:570px" })
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
@@ -86,8 +87,8 @@
                         </li>
                         <li>
                             <div class="lilt">内容:</div>
-                            <div class="limd big">
-                                @Html.TextAreaFor(p => p.content)
+                            <div class="limd big" style="width:100%">
+                                @Html.TextAreaFor(p => p.content,new { @style = "clear：both" })
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
                         </li>
@@ -124,6 +125,7 @@
                 allowFileManager: true
             });
         })
+
         /**************富文本编辑器 end *********************/
         function switchSee(id) {
             if (id == 2) {
@@ -183,13 +185,13 @@
             @if(Model.Msg == 1)
             {
                 @:alert("操作成功");
-                @:location.href = "/Shool/index";
+                            @:location.href = "/Shool/index";
 
             }
             else if(Model.Msg == 2)
             {
                 @:alert("数据不存在");
-            }
+                        }
         });
     </script>
     <script type="text/javascript">

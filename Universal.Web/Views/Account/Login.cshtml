@@ -3,15 +3,31 @@
     Layout = null;
 }
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang="en">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="renderer" content="webkit" />
+<meta  http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" /> 
     <title>花伴里</title>
-    <meta charset="UTF-8" />
     <meta name="description" content="花伴里" />
     <meta name="keywords" content="花伴里" />
-    <meta http-equiv="X-UA-Compatible" content="IE=10" />
-
+    
+<!--[if !IE]> -->
+        @Scripts.Render("~/bundles/jquery")
+<!-- <![endif]-->
+<!--[if gte IE 9]>
+	@Scripts.Render("~/bundles/jquery")
+<![endif]-->
+<!--[if lt IE 9]>
+  <script src="/Assets/js/jquery-1.11.1.js"></script>
+  <link rel="stylesheet" href="/Assets/css/ie.css" type="text/css" media="screen" />
+  <script src="/Assets/js/html5shiv.js"></script>
+  <script src="/Assets/js/respond.min.js"></script>
+<![endif]-->
+<!--[if IE]><script type="text/javascript" src="/Assets/js/excanvas.js"></script><![endif]-->
+ 
     <link href="/Assets/theme/css/public.css" rel="stylesheet" type="text/css" />
     <link href="/Assets/theme/css/login.css" rel="stylesheet" type="text/css" />
     <link href="/Assets/theme/css/dev.css" rel="stylesheet" type="text/css" />
@@ -41,7 +57,6 @@
         </div>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
