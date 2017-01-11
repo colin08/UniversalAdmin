@@ -25,7 +25,6 @@
                     <thead>
                         <tr>
                             <th width="1%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
-                            <th width="5%">ICON</th>
                             <th width="5%">状态</th>
                             <th width="10%">消息类别</th>
                             <th width="25%">任务内容</th>
@@ -105,7 +104,7 @@
                     $.each(data.data, function (i, item) {
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
-                        dataHtml += "<td><img  style='width:50px; height:50px;' src=\"" + item.TypeLogo + "\"/></td>";
+                        //dataHtml += "<td><img  style='width:50px; height:50px;' src=\"" + item.TypeLogo + "\"/></td>";
                         dataHtml += "<td>" + item.IsReadText + "</td>";
                         dataHtml += "<td>" + CutString(item.TypeName, 18) + "</td>";
                         dataHtml += "<td>" + CutString(item.Content, 48) + "</td>";

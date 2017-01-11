@@ -284,7 +284,6 @@ namespace Universal.BLL
             db.Dispose();
             if (app_id != 0)
                 BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
-            msg = "ok";
             return entity.ID;
         }
 
