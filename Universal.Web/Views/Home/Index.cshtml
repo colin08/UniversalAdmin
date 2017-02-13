@@ -64,8 +64,8 @@
                         @foreach (var item in Model.DocumentList)
                         {
                             <tr>
-                                <td>@Universal.Tools.StringHelper.CutString(item.Title,25)</td>
-                                <td>@Universal.Tools.StringHelper.CutString(item.CategoryName, 6)</td>
+                                <td><a href="/Info/Doc?id=@item.ID">@Universal.Tools.StringHelper.CutString(item.Title, 25)</a></td>
+                                <td><a href="/DocCategory/Index">@Universal.Tools.StringHelper.CutString(item.CategoryName, 6)</a></td>
                                 <td>@item.CusUser.NickName</td>
                                 <td>@item.LastUpdateTime.ToString("yy-MM-dd HH:mm")</td>
                                 <td id="doc_@item.ID">
@@ -164,7 +164,7 @@
                         dataHtml += "<tr>";
                         dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "\">" + CutString(item.Title, 10) + "</a></td>";
                         dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
-                        dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
+                        dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</a></td>";
                         dataHtml += "<td>" + user_name + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
                         dataHtml += "<td style=\"text-align:center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";

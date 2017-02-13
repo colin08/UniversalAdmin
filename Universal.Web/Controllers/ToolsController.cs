@@ -238,6 +238,28 @@ namespace Universal.Web.Controllers
         #region  流程节点给前端的接口
 
         /// <summary>
+        /// 获取节点的类别
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetNodeCategory()
+        {
+            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
+            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
+            BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
+            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
+            {
+                Models.ViewModelJob model = new Models.ViewModelJob();
+                model.id = item.ID;
+                model.title = item.Title;
+                list.Add(model);
+            }
+            result.data = list;
+            result.msg = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// 获取所有节点
         /// </summary>
         /// <returns></returns>
@@ -259,6 +281,69 @@ namespace Universal.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 根据分类获取节点
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetNodeByCategory(int id)
+        {
+            int ids = TypeHelper.ObjectToInt(id,0);
+            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
+            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
+            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
+            foreach (var item in bll.GetListBy(0, p=>p.NodeCategoryID == ids, "AddTime Asc"))
+            {
+                Models.ViewModelJob model = new Models.ViewModelJob();
+                model.id = item.ID;
+                model.title = item.Title;
+                list.Add(model);
+            }
+            result.data = list;
+            result.msg = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取节点详情
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetNodeInfo(int id)
+        {
+            int ids = TypeHelper.ObjectToInt(id,0);
+            Models.ViewModelNode model = new Models.ViewModelNode();
+            Entity.Node entity = BLL.BLLNode.GetMode(ids);
+            if (entity != null)
+            {
+                model.content = entity.Content;
+                model.title = entity.Title;
+                model.location = entity.Location;
+                model.id = ids;
+                model.is_factor = entity.IsFactor;
+                model.category_id = entity.NodeCategoryID;
+                System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                foreach (var item in entity.NodeUsers)
+                {
+                    str_ids.Append(item.ID.ToString() + ",");
+                    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                }
+                if (str_ids.Length > 0)
+                {
+                    str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                }
+                model.user_ids = str_ids.ToString();
+
+                model.BuildViewModelListFile(entity.NodeFiles.ToList());
+            }
+            else
+            {
+                model.Msg = 2;
+                model.MsgBox = "数据不存在";
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 获取所有流程节点

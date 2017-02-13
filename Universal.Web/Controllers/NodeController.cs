@@ -79,6 +79,7 @@ namespace Universal.Web.Controllers
                     model.title = entity.Title;
                     model.location = entity.Location;
                     model.id = ids;
+                    model.is_factor = entity.IsFactor;
                     model.category_id = entity.NodeCategoryID;
                     System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
                     foreach (var item in entity.NodeUsers)
@@ -155,6 +156,7 @@ namespace Universal.Web.Controllers
 
                 model.Content = entity.content;
                 model.Title = entity.title;
+                model.IsFactor = entity.is_factor;
                 model.Location = entity.location;
                 model.NodeCategoryID = entity.category_id;
                 model.NodeFiles = entity.BuildFileList(WorkContext.UserInfo.ID);

@@ -1,0 +1,88 @@
+﻿@model Universal.Entity.DocPost
+@{
+    ViewBag.Title = "秘籍信息";
+    ViewData["tabTop"] = "home";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+    <div class="container">
+        <div class="tit1">
+            <div class="inner">
+                <a href="/Shool/Index" class="fl f16"><i class="i-back"></i>秘籍列表</a>
+            </div>
+        </div>
+
+        <div class="userInfo sysIn" style="margin:0;">
+            <ul>
+                <li>
+                    <div class="lilt">所属分类</div>
+                    <div class="limd">
+                        <span>@Model.DocCategory.Title</span>
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">秘籍标题</div>
+                    <div class="limd">
+                        <span>@Model.Title</span>
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">秘籍内容</div>
+                    <div class="limd">
+                        @Html.Raw(Model.Content)
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">发布者</div>
+                    <div class="limd">
+                        <span>@Model.CusUser.NickName</span>
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">发布时间</div>
+                    <div class="limd">
+                        <span>@Model.AddTime.ToString("yy-MM-dd HH:mm")</span>
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">附件</div>
+                    <div class="limd">
+                        <ul>
+                            @foreach (var item in Model.FileList)
+                            {
+                                <li><span>@item.FileName &nbsp; @item.FileSize</span>&nbsp;&nbsp;&nbsp;<a href="@item.FilePath">下载</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="litip"></div>
+                </li>
+                <li>
+                    <div class="lilt">&nbsp;</div>
+                    <div class="limd">
+                        <button type="button" onclick="location.href = '/Shool/Index';" class="btn1 grey">秘籍列表</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+}
+<!--底部脚本 end-->

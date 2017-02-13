@@ -46,6 +46,31 @@
                             <div class="litip">@Html.ValidationMessageFor(p => p.title)</div>
                         </li>
                         <li>
+                            <div class="lilt">条件节点</div>
+                            <div class="limd">
+                                <span><label style="font-weight:normal;" for="@Html.DisplayNameFor(s=>s.is_factor)">@Html.CheckBoxFor(s => s.is_factor) 是条件节点</label></span>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                        @*<li>
+                            <div class="lilt">是否条件节点</div>
+                            <div class="limd">
+                                <span>
+                                    <label for="lb_factor_0">
+                                        @Html.RadioButtonFor(x => x.is_factor, "0", Model.is_factor ? (object)new { id = "lb_factor_0", @checked = true } : (object)new { id = "lb_factor_0" })
+                                        <i class="pub_radio"></i>
+                                        <span>否</span>
+                                    </label>
+                                    <label for="lb_factor_1">
+                                        @Html.RadioButtonFor(x => x.is_factor, "1", Model.is_factor ? (object)new { id = "lb_factor_1", @checked = true } : (object)new { id = "lb_factor_1" })
+                                        <i class="pub_radio"></i>
+                                        <span>是</span>
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="litip"></div>
+                        </li>*@
+                        <li>
                             <div class="lilt">办事地址</div>
                             <div class="limd">
                                 @Html.TextBoxFor(p => p.location, new { @class = "usInput", placeholder = "请输入办事地址" })

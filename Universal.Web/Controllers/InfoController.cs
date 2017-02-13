@@ -209,6 +209,19 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 秘籍-仅做展示
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Doc(int id)
+        {
+            var entity = BLL.BLLDocument.GetModel(id);
+            if (entity == null)
+                return View("NotFound");
+            return View(entity);
+        }
+
+        /// <summary>
         /// 会议召集
         /// </summary>
         /// <param name="id"></param>

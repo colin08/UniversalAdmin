@@ -202,6 +202,7 @@ namespace Universal.BLL
             {
                 Model.WebFlowNode model = new Model.WebFlowNode();
                 model.flow_node_id = item.ID;
+                model.node_id = item.NodeID;
                 model.flow_node_title = item.Node.Title;
                 model.icon = item.ICON;
                 model.piece = item.Piece;
@@ -268,6 +269,7 @@ namespace Universal.BLL
             {
                 response_entity = new Model.WebFlowNode();
                 response_entity.flow_node_id = entity.ID;
+                response_entity.node_id = entity.NodeID;
                 response_entity.flow_node_title = entity.Node.Title;
                 response_entity.icon = entity.ICON;
                 response_entity.piece = entity.Piece;

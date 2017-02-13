@@ -33,6 +33,11 @@ namespace Universal.BLL.Model
         public int flow_node_id { get; set; }
 
         /// <summary>
+        /// 节点ID
+        /// </summary>
+        public int node_id { get; set; }
+
+        /// <summary>
         /// 流程节点标题
         /// </summary>
         public string flow_node_title { get; set; }

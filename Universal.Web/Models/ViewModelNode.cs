@@ -40,6 +40,11 @@ namespace Universal.Web.Models
         /// </summary>
         [MaxLength(2000, ErrorMessage = "不能超过2000个字符")]
         public string content { get; set; }
+        
+        /// <summary>
+        /// 是否是条件节点
+        /// </summary>
+        public bool is_factor { get; set; }
 
         /// <summary>
         /// 参与用户

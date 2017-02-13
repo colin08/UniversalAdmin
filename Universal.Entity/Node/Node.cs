@@ -38,6 +38,11 @@ namespace Universal.Entity
         public string Title { get; set; }
 
         /// <summary>
+        /// 是否是条件节点
+        /// </summary>
+        public bool IsFactor { get; set; }
+
+        /// <summary>
         /// 办事地址
         /// </summary>
         [MaxLength(500)]

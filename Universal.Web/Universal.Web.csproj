@@ -1207,6 +1207,7 @@
     <Content Include="Views\NodeCategory\Index.cshtml" />
     <Content Include="Views\NodeCategory\Modify.cshtml" />
     <Content Include="Views\Shool\Flow.cshtml" />
+    <Content Include="Views\Info\Doc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

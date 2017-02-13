@@ -39,6 +39,11 @@ namespace Universal.Entity
         public virtual Node Node { get; set; }
 
         /// <summary>
+        /// 如果是当前的节点是条件节点，是否走当前节点
+        /// </summary>
+        public bool IsSelect { get; set; }
+
+        /// <summary>
         /// 当前节点备注信息
         /// </summary>
         [MaxLength(500)]

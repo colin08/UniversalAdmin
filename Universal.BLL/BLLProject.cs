@@ -309,6 +309,19 @@ namespace Universal.BLL
                 msg = "只能删除自己添加的项目";
                 return false;
             }
+            //删除附件
+            db.ProjectFiles.Where(p => p.ProjectID == id).ToList().ForEach(p => db.ProjectFiles.Remove(p));
+
+            //删除流程节点
+            db.ProjectFlowNodes.Where(p => p.ProjectID == id).ToList().ForEach(p => db.ProjectFlowNodes.Remove(p));
+
+            //删除拆迁
+            db.ProjectStages.Where(p => p.ProjectID == id).ToList().ForEach(p => db.ProjectStages.Remove(p));
+
+            //删除项目联系人
+            db.ProjectUsers.Where(p => p.ProjectID == id).ToList().ForEach(p => db.ProjectUsers.Remove(p));
+
+            //删除项目
             db.Projects.Remove(entity);
             db.SaveChanges();
             db.Dispose();
