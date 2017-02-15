@@ -54,6 +54,48 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取项目正在进行的流程信息
+        /// </summary>
+        /// <returns></returns>
+        public static Model.ProjectFlow GetProjectFlowIng(int project_id)
+        {
+            Model.ProjectFlow response_entity = new Model.ProjectFlow();
+            if (project_id <= 0)
+                return response_entity;
+            var db = new DataCore.EFDBContext();
+            var entity_project = db.Projects.Find(project_id);
+            if (entity_project == null)
+                return response_entity;
+            var flow_node_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsEnd == true || p.Index == 10).ToList();
+            List<Model.ProjectFlowNode> response_list = new List<Model.ProjectFlowNode>();
+            foreach (var item in flow_node_list)
+            {
+
+                Model.ProjectFlowNode model = new Model.ProjectFlowNode();
+                model.icon = item.ICON;
+                model.piece = item.Piece;
+                model.process_to = item.ProcessTo;
+                model.node_id = item.NodeID;
+                model.node_title = item.Node.Title;
+                model.color = item.Color;
+                model.left = item.Left;
+                model.top = item.Top;
+                model.index = item.Index;
+                model.status = item.Status;
+                model.is_end = item.IsEnd;
+                model.id = item.ID;
+                model.is_start = item.IsStart;
+                response_list.Add(model);
+            }
+            db.Dispose();
+            response_entity.list = response_list;
+            response_entity.total = response_list.Count;
+            response_entity.project_id = project_id;
+            response_entity.reference_pieces = entity_project.Pieces;
+            return response_entity;
+        }
+
+        /// <summary>
         /// 获取项目的单个流程信息
         /// </summary>
         /// <returns></returns>

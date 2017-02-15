@@ -661,6 +661,9 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult APIAddProjectFlowNode(int project_id, string project_pieces)
         {
+            WorkContext.AjaxStringEntity.msgbox = "暂不允许添加节点";
+            return Json(WorkContext.AjaxStringEntity);
+
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
