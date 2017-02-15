@@ -1,12 +1,13 @@
-﻿@{ ViewBag.Title = "流程管理"; ViewData["tabLeft"] = "flow";
-ViewData["tabTop"] = "manager"; }
+﻿@{ 
+    ViewBag.Title = "流程管理";
+    ViewData["tabLeft"] = "flow";
+    ViewData["tabTop"] = "manager"; 
+}
 
 <!--头部脚本-->
 @section head { 
-<link rel="stylesheet" type="text/css"
-	href="/assets/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css"
-	href="/assets/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.min.css" />
 }
 
 <!--头部脚本 end-->
@@ -15,8 +16,6 @@ ViewData["tabTop"] = "manager"; }
 
 	<div class="rightBox">
 		<div class="container" style="width: auto">
-
-
 			<div class="tit1">
 				<span class="fr f14 col_grey">注：编辑流程时，可按住 “流程块” 调整顺序,<br />右键点击下面编辑区域显示更多功能。
 				</span>
@@ -34,9 +33,6 @@ ViewData["tabTop"] = "manager"; }
             </div>  -->
 
 		</div>
-
-
-
 		<div class="footer">Copyright © 深圳花伴里实业集团有限公司 粤ICP备13089427号-1</div>
 	</div>
 
@@ -46,30 +42,19 @@ ViewData["tabTop"] = "manager"; }
 @section foot {
 
 
-<script type="text/javascript"
-	src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" type="text/css"
-	href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
-<link rel="stylesheet" type="text/css"
-	href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
+<link rel="stylesheet" type="text/css" href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
+<link rel="stylesheet" type="text/css" href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
+<script type="text/javascript" src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
+<script type="text/javascript" src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
+<script type="text/javascript" src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
 <!--select 2-->
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery.multiselect2side/js/jquery.multiselect2side.js?2025"></script>
+<script type="text/javascript" src="/assets/flowdesign/js/jquery.multiselect2side/js/jquery.multiselect2side.js?2025"></script>
 <!--flowdesign-->
-<script type="text/javascript"
-	src="/assets/flowdesign/js/flowdesign/leipi.flowdesign.v32.js?2025"></script>
+<script type="text/javascript" src="/assets/flowdesign/js/flowdesign/leipi.flowdesign.v32.js?2025"></script>
 
-
-
-
-
+    
 <div class="modal fade" id="attributeModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -96,10 +81,13 @@ ViewData["tabTop"] = "manager"; }
 <div id="selNodeBox" style="display: none">
 	<table border="0" cellspacing="0" cellpadding="0" class="table1">
 		<thead>
-			<tr>
+			<tr id="node_l" style="display:none">
 				<th style="width: 80px">操作</th>
 				<th>节点名称</th>
 			</tr>
+			<tr id="node_c">
+                <th>节点分类</th>
+            </tr>
 		</thead>
 		<tbody id="listData">
 
@@ -118,14 +106,31 @@ ViewData["tabTop"] = "manager"; }
 
 </div>
 <!--end div-->
+<style type="text/css">
+.node_dialog td{padding:4px}
+</style>
+<div id="node_dialog" style="display: none">
+    <table border="0" cellspacing="0" cellpadding="0" class="table2 node_dialog">
+        <tr>
+            <td style="width:80px">节点名称</td>
+            <td data-key="title">{title}</td>
+        </tr>
+        <tr>
+            <td>节点内容</td>
+            <td data-key="content">{content}</td>
+        </tr>
+    </table>
+</div>
 <script src="/Assets/js/plugins/layer/laypage/laypage.js"></script>
 <input type="hidden" id="tmp_process_to" />
 
 <!--contextmenu div-->
 <div id="processMenu" style="display: none;">
 	<ul>
-		<li id="pmAttribute"><i class="fa fa-cog"></i>&nbsp;<span
-			class="_label">属性</span></li>
+		<li id="pmView"><i class="fa fa-eye"></i>&nbsp;<span
+			class="_label">详情</span></li>
+        <li id="pmAttribute"><i class="fa fa-cog"></i>&nbsp;<span
+            class="_label">属性</span></li>
 		<li id="pmDelete"><i class="fa fa-trash"></i>&nbsp;<span
 			class="_label">删除</span></li>
 
@@ -167,7 +172,7 @@ ViewData["tabTop"] = "manager"; }
 				title :item.title,
 				html : $('#selNodeBox').show(),
 				onshow : function() {
-					getNodeList('', 1, function(obj) {
+					GetNodeCategory( function(obj) {
 						obj = $(obj).parent();
 						id = obj.attr('data-id');
 						title = obj.attr('data-title');
@@ -270,14 +275,40 @@ ViewData["tabTop"] = "manager"; }
 		function page_reload() {
 			location.reload();
 		}
-		function getNodeList(keyword, page, selected) {
+		function GetNodeCategory(selected)
+        {
+            $.ajax({
+                url:"/Tools/GetNodeCategory",
+                success:function(data){
+                	$('#node_c').show();
+                    $('#node_l').hide();
+                	$('.listBtm').hide();
+                    var tbody = $('#listData').empty();
+                    $
+                            .each(data.data,
+                                    function(i, item) {
+                                        var tr = $('<tr></tr>')
+                                                .appendTo(tbody);
+                                        var td = $('<td></td>')
+                                                .appendTo(tr);
+                                        $('<a></a>').appendTo(td)
+                                                .html(this.title).click(function(){
+                                                	getNodeList(item.id,1,selected);
+                                                })
+
+                                    });
+                }
+            
+            });
+        }
+		function getNodeList(id, page, selected) {
 			$
 					.ajax({
-						url : "/Tools/GetAllNode",
+						url : "/Tools/GetNodeByCategory",
 						data : {
 							"page_size" : 10,
 							"page_index" : page,
-							"keyword" : keyword
+							"id" : id
 						},
 						async : false, //同步请求
 						datatype : "json",
@@ -292,6 +323,10 @@ ViewData["tabTop"] = "manager"; }
 								alert(data.msgbox);
 								return;
 							}
+
+		                    $('#node_c').hide();
+		                    $('#node_l').show();
+		                    $('.listBtm').show();
 							var tbody = $('#listData').empty();
 							$
 									.each(data.data,
@@ -329,7 +364,7 @@ ViewData["tabTop"] = "manager"; }
 								skip : true, //是否开启跳页
 								jump : function(obj, first) { //触发分页后的回调
 									if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
-										getNodeList(keyword, obj.curr, selected);
+										getNodeList(id, obj.curr, selected);
 									}
 								}
 							});
@@ -414,7 +449,8 @@ ViewData["tabTop"] = "manager"; }
 										
 									}
 								},
-								"pmAttribute" :setAttr 
+								"pmAttribute" :setAttr ,
+								"pmView":pmView
 								
 							},
 							fnRepeat : function() {
@@ -464,6 +500,30 @@ ViewData["tabTop"] = "manager"; }
 				return val.replace(/^#/gi,'');
 			}
 			return val;
+		}
+		function pmView(){
+			  var id=$('#window'+_canvas.getActiveId()).data('node_id');
+			$.ajax({
+                url:'/Tools/GetNodeInfo',
+                data:{
+                    id:id
+                },
+                success:function(data){
+                    console.log(JSON.stringify(data));
+                    if(data.Msg!=0){
+                    	alert(data.MsgBox);
+                    	return;
+                    }
+                    var body=$('#node_dialog').html();
+                    $.each(data,function(k,v){
+                    	body=body.format(k,null==v?"":v);
+                    });
+                    showDialog({
+                        title :data.title,
+                        html : body
+                    });
+                }
+			});
 		}
 		function setAttr(){
 			$.ajax({
