@@ -15,16 +15,31 @@ namespace Universal.Tests
         [TestMethod]
         public void Testxzz()
         {
-            string ids = ",1,2,3,4,5,";
-            //开头有逗号
-            if (ids.StartsWith(","))
-            {
-                ids = ids.Substring(1, ids.Length - 1);
-            }
-            if (ids.EndsWith(","))
-            {
-                ids = ids.Substring(0,ids.Length - 1);
-            }
+            string msg = "";
+            int[] tes = BLL.BLLFlow.SetNodePids(1, 59, "正经的标题", 21, "22,20", out msg);
+
+            //var isOK=  BLL.BLLFlow.GenerateFlowNodeCompact(59);
+
+
+            var a = 1;
+            //复制节点
+            //BLL.BLLProject.ExecFlowNodeProcessTo(null, 4, true, 59);
+
+            //1：插入节点，2：添加子节点，3：添加合并节点   
+            //string msg = "";
+            ////int [] test = BLL.BLLFlow.AddFlowNode(1, 59, "", 18, 123, 3, out msg);
+            ////bool is_ok = BLL.BLLFlow.DelWebFlowNode(123, out msg);
+            //int a = 1;
+            //string ids = ",1,2,3,4,5,";
+            ////开头有逗号
+            //if (ids.StartsWith(","))
+            //{
+            //    ids = ids.Substring(1, ids.Length - 1);
+            //}
+            //if (ids.EndsWith(","))
+            //{
+            //    ids = ids.Substring(0,ids.Length - 1);
+            //}
 
 
             //string s = SecureHelper.MD5("hbl123");

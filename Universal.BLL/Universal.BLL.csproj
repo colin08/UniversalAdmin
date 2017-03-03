@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -84,12 +85,13 @@
     <Compile Include="BLLWorkJob.cs" />
     <Compile Include="BLLWorkPlan.cs" />
     <Compile Include="Model\AdminUserRoute.cs" />
+    <Compile Include="Model\AllNode.cs" />
+    <Compile Include="Model\FlowNode.cs" />
     <Compile Include="Model\LayoutFavorites.cs" />
     <Compile Include="Model\ProjectFlowNode.cs" />
     <Compile Include="Model\ProjectStage.cs" />
     <Compile Include="Model\Statctics.cs" />
     <Compile Include="Model\WebFlow.cs" />
-    <Compile Include="Model\WebSaveFlow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

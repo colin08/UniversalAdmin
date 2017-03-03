@@ -12,12 +12,7 @@ namespace Universal.BLL.Model
         public int total { get; set; }
 
         public int flow_id { get; set; }
-
-        /// <summary>
-        /// 块内容
-        /// </summary>
-        public string reference_pieces { get; set; }
-
+        
         public List<WebFlowNode> list { get; set; }
     }
 
@@ -41,20 +36,11 @@ namespace Universal.BLL.Model
         /// 流程节点标题
         /// </summary>
         public string flow_node_title { get; set; }
-
-        public string process_to { get; set; }
-
+        
         /// <summary>
-        /// 所属块
+        /// 父级ID，逗号分割
         /// </summary>
-        public int piece { get; set; }
-
-        /// <summary>
-        /// 拼接的样式
-        /// </summary>
-        public string style { get; set; }
-
-        public string icon { get; set; }
+        public string pids { get; set; }
 
     }
 }

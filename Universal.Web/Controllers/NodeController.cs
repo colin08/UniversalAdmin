@@ -57,8 +57,23 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
+            BLL.BaseBLL<Entity.FlowNode> bll_flow = new BLL.BaseBLL<Entity.FlowNode>();
+            foreach (var item in ids.Split(','))
+            {
+                int node_id = TypeHelper.ObjectToInt(item);
+                string nodes = "," + item + ",";
+                var use_total = bll_flow.GetCount(p => p.NodeID == node_id || p.PIds.Contains(nodes));
+                if(use_total> 0)
+                {
+                    WorkContext.AjaxStringEntity.msgbox = "ID为：" + item + "的已经使用，无法删除";
+                    return Json(WorkContext.AjaxStringEntity);
+                }else
+                {
+                    bll.DelBy(p => p.ID == node_id);
+                }
+            }
+            //var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            //bll.DelBy(p => id_list.Contains(p.ID));
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "删除成功";
             return Json(WorkContext.AjaxStringEntity);

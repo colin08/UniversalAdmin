@@ -148,7 +148,7 @@ namespace Universal.BLL
             string strWhere = " Where ID>0 ";
             if (category_id > 0)
             {
-                strWhere += " and DocCategoryID =" + category_id.ToString() + " ";
+                strWhere += " and CHARINDEX(rtrim(DocCategoryID), (dbo.fn_GetChildDocCategoryStr(" + category_id.ToString() + ")))>0 ";
             }
             if (!string.IsNullOrWhiteSpace(search_title))
             {

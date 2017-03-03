@@ -6,10 +6,11 @@ using System.Collections.Generic;
 
 namespace Universal.Entity
 {
+
     /// <summary>
-    /// 流程的节点
+    /// 流程节点完善
     /// </summary>
-    public class FlowNode
+    public class FlowNodeCompact
     {
         public int ID { get; set; }
 
@@ -22,17 +23,6 @@ namespace Universal.Entity
         /// 所属流程信息
         /// </summary>
         public virtual Flow Flow { get; set; }
-        
-        /// <summary>
-        /// 排序，升序
-        /// </summary>
-        public int SortNo { get; set; }
-
-        /// <summary>
-        /// 父级节点ID,多个逗号分割
-        /// </summary>
-        [MaxLength(1000)]
-        public string PIds { get; set; }
 
         /// <summary>
         /// 节点ID
@@ -45,9 +35,9 @@ namespace Universal.Entity
         public virtual Node Node { get; set; }
 
         /// <summary>
-        /// 所属块
+        /// 是否是流程里的第一个
         /// </summary>
-        public int Piece { get; set; }
+        public bool IsFrist { get; set; }
 
         /// <summary>
         /// 元素距离顶部位置
@@ -73,6 +63,5 @@ namespace Universal.Entity
         /// 节点的图标
         /// </summary>
         public string ICON { get; set; }
-
     }
 }

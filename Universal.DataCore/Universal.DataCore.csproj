@@ -178,6 +178,22 @@
     <Compile Include="Migrations\201702070616517_edit_node.Designer.cs">
       <DependentUpon>201702070616517_edit_node.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702180157328_newflow.cs" />
+    <Compile Include="Migrations\201702180157328_newflow.Designer.cs">
+      <DependentUpon>201702180157328_newflow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702210821070_remove_project_flow_pidds.cs" />
+    <Compile Include="Migrations\201702210821070_remove_project_flow_pidds.Designer.cs">
+      <DependentUpon>201702210821070_remove_project_flow_pidds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702220702115_add_project_flow_frist_one.cs" />
+    <Compile Include="Migrations\201702220702115_add_project_flow_frist_one.Designer.cs">
+      <DependentUpon>201702220702115_add_project_flow_frist_one.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703030320056_add_flow_node_compact.cs" />
+    <Compile Include="Migrations\201703030320056_add_flow_node_compact.Designer.cs">
+      <DependentUpon>201703030320056_add_flow_node_compact.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -291,6 +307,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702070616517_edit_node.resx">
       <DependentUpon>201702070616517_edit_node.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702180157328_newflow.resx">
+      <DependentUpon>201702180157328_newflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702210821070_remove_project_flow_pidds.resx">
+      <DependentUpon>201702210821070_remove_project_flow_pidds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702220702115_add_project_flow_frist_one.resx">
+      <DependentUpon>201702220702115_add_project_flow_frist_one.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703030320056_add_flow_node_compact.resx">
+      <DependentUpon>201703030320056_add_flow_node_compact.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

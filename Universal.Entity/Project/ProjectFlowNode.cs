@@ -22,12 +22,7 @@ namespace Universal.Entity
         /// 所属项目
         /// </summary>
         public virtual Project Project { get; set; }
-
-        /// <summary>
-        /// 索引，用户自行输入
-        /// </summary>
-        public int Index { get; set; }
-
+        
         /// <summary>
         /// 节点ID
         /// </summary>
@@ -42,6 +37,11 @@ namespace Universal.Entity
         /// 如果是当前的节点是条件节点，是否走当前节点
         /// </summary>
         public bool IsSelect { get; set; }
+
+        /// <summary>
+        /// 是否是流程里的第一个
+        /// </summary>
+        public bool IsFrist { get; set; }
 
         /// <summary>
         /// 当前节点备注信息

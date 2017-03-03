@@ -230,6 +230,11 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.CusUserProjectFavorites> CusUserProjectFavorites { get; set; }
 
+        /// <summary>
+        /// 流程演示
+        /// </summary>
+        public DbSet<Entity.FlowNodeCompact> FlowNodeCompacts { get; set; }
+    
 
         /// <summary>
         /// 

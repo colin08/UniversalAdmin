@@ -913,6 +913,39 @@ namespace Universal.DataCore.Migrations
                         ";
             Sql(fn_DocCateTopPTitle);
 
+            string fn_GetChildDocCategoryStr = @"
+                        CREATE FUNCTION [dbo].[fn_GetChildDocCategoryStr] (@Id int) RETURNS varchar(1000) 
+                        AS
+                            BEGIN
+
+                        declare @a VARCHAR(1000);
+                        set @a='';
+
+                            WITH Record AS(
+                                SELECT
+                                Id,
+                                PID,
+                                Status
+                            FROM
+                                DocCategory(NOLOCK)
+                                WHERE Id=@Id
+                                UNION ALL
+                                    SELECT
+                                a.Id Id,
+                                a.PID PID,
+                                a.Status Status
+                                    FROM
+                                        DocCategory(NOLOCK) a JOIN Record b
+                                        ON a.PID=b.Id
+                                    )
+
+                        SELECT @a=isnull(@a+',','')+ltrim(Id) FROM Record  WHERE Status=1  
+                        return SUBSTRING(@a, 2, len(@a))
+                        END
+
+                        ";
+            Sql(fn_GetChildDocCategoryStr);
+
 
         }
 

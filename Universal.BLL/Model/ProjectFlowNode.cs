@@ -33,7 +33,7 @@ namespace Universal.BLL.Model
         /// <summary>
         /// 当前流程节点在数据库保存的值
         /// </summary>
-        public int id { get; set; }
+        public int project_flow_node_id { get; set; }
 
         /// <summary>
         /// 流程节点ID(那几个定死的节点)
@@ -44,6 +44,11 @@ namespace Universal.BLL.Model
         /// 流程节点标题
         /// </summary>
         public string node_title { get; set; }
+
+        /// <summary>
+        /// 节点是否是条件节点
+        /// </summary>
+        public bool node_is_fator { get; set; }
 
         public string process_to { get; set; }
 
@@ -57,25 +62,9 @@ namespace Universal.BLL.Model
         public int top { get; set; }
         
         public string color { get; set; }
-
-        public int index { get; set; }
-
+        
         public string icon { get; set; }
 
-        /// <summary>
-        /// 开启/关闭节点
-        /// </summary>
-        public bool status { get; set; }
-
-        /// <summary>
-        /// 是否开始
-        /// </summary>
-        public bool is_start { get; set; }
-
-        /// <summary>
-        /// 是否结束
-        /// </summary>
         public bool is_end { get; set; }
-
     }
 }

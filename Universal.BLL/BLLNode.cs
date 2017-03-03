@@ -13,6 +13,47 @@ namespace Universal.BLL
     public class BLLNode
     {
         /// <summary>
+        /// 获取流程选择时可用的节点集合
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static List<Model.AllNode> GetFlowSelectNode(int flow_id,bool is_factor)
+        {
+            List<BLL.Model.AllNode> result = new List<Model.AllNode>();
+            var db = new DataCore.EFDBContext();
+            var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
+            if(entity_flow == null)
+            {
+                db.Dispose();
+                return result;
+            }
+
+            var category_list = db.NodeCategorys.AsNoTracking().OrderByDescending(p=>p.AddTime).ToList();            
+            foreach (var category in category_list)
+            {
+                BLL.Model.AllNode model_category = new Model.AllNode();
+                model_category.category_id = category.ID;
+                model_category.category_name = category.Title;
+                List<BLL.Model.AllNodeList> node_list = new List<Model.AllNodeList>();
+                //string sql = "SELECT * FROM [dbo].[Node] WHERE NodeCategoryID = " + category.ID.ToString() + " and IsFactor = " + (is_factor ? "1" : "0") + " and ID not in(SELECT NodeID FROM [dbo].[FlowNode] where FlowID = " + flow_id.ToString() + " group by NodeID) order BY AddTime DESC";
+                string sql = "SELECT * FROM [dbo].[Node] WHERE NodeCategoryID = " + category.ID.ToString() + " and IsFactor = " + (is_factor ? "1" : "0") + " order BY AddTime DESC";
+                var db_node_list = db.Nodes.SqlQuery(sql).AsNoTracking().ToList();
+                foreach (var node in db_node_list)
+                {
+                    BLL.Model.AllNodeList model_node = new Model.AllNodeList();
+                    model_node.node_id = node.ID;
+                    model_node.node_name = node.Title;
+                    node_list.Add(model_node);
+                }
+                model_category.node_list = node_list;
+                result.Add(model_category);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 获取视图，包含incloud
         /// </summary>
         /// <param name="id"></param>

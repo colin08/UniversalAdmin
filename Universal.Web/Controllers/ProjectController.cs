@@ -65,7 +65,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             string msg = "";
-            if (BLL.BLLProject.Del(id,WorkContext.UserInfo.ID,out msg))
+            if (BLL.BLLProject.Del(id, WorkContext.UserInfo.ID, out msg))
                 WorkContext.AjaxStringEntity.msg = 1;
 
             WorkContext.AjaxStringEntity.msgbox = msg;
@@ -133,11 +133,11 @@ namespace Universal.Web.Controllers
         /// <param name="status"></param>
         /// <param name="remark"></param>
         /// <returns></returns>
-        public JsonResult DoApprove(int project_id,string status,string remark)
+        public JsonResult DoApprove(int project_id, string status, string remark)
         {
             string msg = "";
             int sta = TypeHelper.ObjectToInt(status);
-            if(sta != 1 && sta != 2)
+            if (sta != 1 && sta != 2)
             {
                 WorkContext.AjaxStringEntity.msgbox = "审核状态不正确";
                 return Json(WorkContext.AjaxStringEntity);
@@ -202,7 +202,7 @@ namespace Universal.Web.Controllers
                 entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
 
             entity.BuildViewModelListFile(node_info.NodeFiles.ToList());
-            
+
             return View(entity);
         }
 
@@ -213,11 +213,11 @@ namespace Universal.Web.Controllers
         /// <param name="remark"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveFlowNodeRemark(int id,string remark)
+        public JsonResult SaveFlowNodeRemark(int id, string remark)
         {
             BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
             var entity = bll.GetModel(p => p.ID == id);
-            if(entity == null)
+            if (entity == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "流程节点不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -263,7 +263,7 @@ namespace Universal.Web.Controllers
 
                     model.approve_user_id = TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
                     model.approve_user_name = entity.ApproveUser == null ? "" : entity.ApproveUser.NickName;
-                    model.flow_id = TypeHelper.ObjectToInt(entity.FlowID,0);
+                    model.flow_id = TypeHelper.ObjectToInt(entity.FlowID, 0);
                     model.post_see = entity.See;
                     model.area = entity.Area;
                     model.GaiZaoXingZhi = entity.GaiZaoXingZhi;
@@ -374,7 +374,7 @@ namespace Universal.Web.Controllers
                 }
             }
 
-            
+
             if (requie_approve && app_id == 0)
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
@@ -544,14 +544,16 @@ namespace Universal.Web.Controllers
 
         #region 前端流程接口
 
+
         /// <summary>
-        /// 获取所有项目的流程节点信息
+        /// 获取当前项目已进行的的流程信息
         /// </summary>
+        /// <param name="project_id"></param>
         /// <returns></returns>
         [HttpGet]
         public JsonResult APIGetProjectFlow(int project_id)
         {
-            WebAjaxEntity<BLL.Model.ProjectFlow> result = new WebAjaxEntity<BLL.Model.ProjectFlow>();
+            WebAjaxEntity<List<BLL.Model.ProjectFlowNode>> result = new WebAjaxEntity<List<BLL.Model.ProjectFlowNode>>();
             result.data = BLL.BLLProjectFlowNode.GetProjectFlow(project_id);
             result.msg = 1;
             result.msgbox = "ok";
@@ -559,140 +561,215 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 获取所有项目的单个流程节点信息
+        /// 获取下一个要进行的节点
         /// </summary>
+        /// <param name="project_id"></param>
+        /// <param name="project_flow_node_id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult APIGetProjectFlowNode(int project_flow_node_id)
+        public JsonResult APIGetNextFlowNode(int project_id, int project_flow_node_id)
+        {
+            WebAjaxEntity<List<BLL.Model.ProjectFlowNode>> result = new WebAjaxEntity<List<BLL.Model.ProjectFlowNode>>();
+            result.data = BLL.BLLProjectFlowNode.GetNextFlowNode(project_id, project_flow_node_id);
+            result.msg = 1;
+            result.msgbox = "ok";
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取项目的单个流程信息
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APIGetProjectFlowNodeInfo(int project_flow_node_id)
         {
             WebAjaxEntity<BLL.Model.ProjectFlowNode> result = new WebAjaxEntity<BLL.Model.ProjectFlowNode>();
-            result.data = BLL.BLLProjectFlowNode.GetProjectFlowNode(project_flow_node_id);
+            result.data = BLL.BLLProjectFlowNode.GetProjectFlowNodeInfo(project_flow_node_id);
             result.msg = 1;
             result.msgbox = "ok";
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 
+        /// <summary>
+        /// 保存修改的节点位置信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APISaveLocaltion()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            List<BLL.Model.ProjectFlowNode> data = null;
+            try
+            {
+                data = js.Deserialize<List<BLL.Model.ProjectFlowNode>>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            BLL.BLLProjectFlowNode.SaveLocation(data);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 设置节点结束
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APISetEnd(int project_flow_node_id)
+        {
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetEnd(project_flow_node_id) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 设置条件节点选中
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APISetSelect(int project_flow_node_id)
+        {
+            string msg = "";
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetSelect(project_flow_node_id,out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 删除节点
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost]
-        public JsonResult APIDelProjectFlowNode(int id, string project_pieces)
-        {
-            string msg = "";
-            BLL.BLLProjectFlowNode.DelProjectFlowNode(id, project_pieces, out msg);
-            if (msg == "")
-                WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        //[HttpPost]
+        //public JsonResult APIDelProjectFlowNode(int id, string project_pieces)
+        //{
+        //    string msg = "";
+        //    BLL.BLLProjectFlowNode.DelProjectFlowNode(id, project_pieces, out msg);
+        //    if (msg == "")
+        //        WorkContext.AjaxStringEntity.msg = 1;
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
-        /// <summary>
-        /// 保存修改的节点信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult APISave()
-        {
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.ProjectFlowNode data = null;
-            try
-            {
-                data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
-            }
-            catch
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            if (data == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
+        ///// <summary>
+        ///// 保存修改的节点信息
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult APISave()
+        //{
+        //    var sr = new StreamReader(Request.InputStream);
+        //    var stream = sr.ReadToEnd();
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    BLL.Model.ProjectFlowNode data = null;
+        //    try
+        //    {
+        //        data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
+        //    }
+        //    catch
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
+        //    if (data == null)
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
 
-            string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveNode(data, out msg) ? 1 : 0;
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        //    string msg = "";
+        //    WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveNode(data, out msg) ? 1 : 0;
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
-        /// <summary>
-        /// 保存修改的节点信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult APISaveALL()
-        {
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.ProjectFlow data = null;
-            try
-            {
-                data = js.Deserialize<BLL.Model.ProjectFlow>(stream);
-            }
-            catch
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            if (data == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
+        ///// <summary>
+        ///// 保存修改的节点信息
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult APISaveALL()
+        //{
+        //    var sr = new StreamReader(Request.InputStream);
+        //    var stream = sr.ReadToEnd();
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    BLL.Model.ProjectFlow data = null;
+        //    try
+        //    {
+        //        data = js.Deserialize<BLL.Model.ProjectFlow>(stream);
+        //    }
+        //    catch
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
+        //    if (data == null)
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
 
-            string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveAllNode(data, out msg) ? 1 : 0;
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        //    string msg = "";
+        //    WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SaveAllNode(data, out msg) ? 1 : 0;
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
-        /// <summary>
-        /// 添加项目流程节点
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult APIAddProjectFlowNode(int project_id, string project_pieces)
-        {
-            WorkContext.AjaxStringEntity.msgbox = "暂不允许添加节点";
-            return Json(WorkContext.AjaxStringEntity);
+        ///// <summary>
+        ///// 添加项目流程节点
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult APIAddProjectFlowNode(int project_id, string project_pieces)
+        //{
+        //    WorkContext.AjaxStringEntity.msgbox = "暂不允许添加节点";
+        //    return Json(WorkContext.AjaxStringEntity);
 
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.ProjectFlowNode data = null;
-            try
-            {
-                data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
-            }
-            catch
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            if (data == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化后为空";
-                return Json(WorkContext.AjaxStringEntity);
-            }
+        //    var sr = new StreamReader(Request.InputStream);
+        //    var stream = sr.ReadToEnd();
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    BLL.Model.ProjectFlowNode data = null;
+        //    try
+        //    {
+        //        data = js.Deserialize<BLL.Model.ProjectFlowNode>(stream);
+        //    }
+        //    catch
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
+        //    if (data == null)
+        //    {
+        //        WorkContext.AjaxStringEntity.msgbox = "json序列化后为空";
+        //        return Json(WorkContext.AjaxStringEntity);
+        //    }
 
-            string msg = "";
-            int id = BLL.BLLProjectFlowNode.AddNode(project_id, project_pieces, data, out msg);
-            if (id > 0)
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.data = id.ToString();
-            }
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        //    string msg = "";
+        //    int id = BLL.BLLProjectFlowNode.AddNode(project_id, project_pieces, data, out msg);
+        //    if (id > 0)
+        //    {
+        //        WorkContext.AjaxStringEntity.msg = 1;
+        //        WorkContext.AjaxStringEntity.data = id.ToString();
+        //    }
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
         #endregion
 

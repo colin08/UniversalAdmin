@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "流程管理";
+    ViewData["tabLeft"] = "flow";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+<div class="wapper">
+    @Html.Partial("_AdminMenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <b>流程效果</b>
+                <a href="" title="Back" class="add_lc fr">返回</a>
+            </div>
+
+
+
+
+            <!--do something-->
+
+
+
+
+        </div>
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        //流程ID
+        var flow_id = @ViewData["flow_id"];
+
+
+
+    </script>
+
+}
+<!--底部脚本 end-->

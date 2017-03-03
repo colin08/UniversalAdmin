@@ -125,7 +125,7 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "保存位置不明确";
                 return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
             }
-            
+
 
             //保存的目录
             string filePath = "/uploads/" + operation + "/";
@@ -233,74 +233,56 @@ namespace Universal.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        
+
 
         #region  流程节点给前端的接口
 
         /// <summary>
-        /// 获取节点的类别
+        /// 获取所有系统节点
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GetNodeCategory()
+        public JsonResult GetAllNode(int flow_id, int t)
         {
-            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
-            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
-            BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
-            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
-            {
-                Models.ViewModelJob model = new Models.ViewModelJob();
-                model.id = item.ID;
-                model.title = item.Title;
-                list.Add(model);
-            }
-            result.data = list;
+            bool is_factor = TypeHelper.ObjectToInt(t, 0) == 1;
+            //WebAjaxEntity<List<Models.ViewModelAllNode>> result = new WebAjaxEntity<List<Models.ViewModelAllNode>>();
+            //List<Models.ViewModelAllNode> response_entity = new List<Models.ViewModelAllNode>();
+            //BLL.BaseBLL<Entity.Node> bll_node = new BLL.BaseBLL<Entity.Node>();
+            //BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
+            //foreach (var category in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
+            //{
+            //    Models.ViewModelAllNode model_category = new Models.ViewModelAllNode();
+            //    model_category.category_id = category.ID;
+            //    model_category.category_name = category.Title;
+            //    List<Models.ViewModelAllNodeList> node_list = new List<Models.ViewModelAllNodeList>();
+            //    foreach (var node in bll_node.GetListBy(0, p => p.NodeCategoryID == category.ID && p.IsFactor == is_factor, "AddTime Asc"))
+            //    {
+            //        Models.ViewModelAllNodeList model_node = new Models.ViewModelAllNodeList();
+            //        model_node.node_id = node.ID;
+            //        model_node.node_name = node.Title;
+            //        node_list.Add(model_node);
+            //    }
+            //    model_category.node_list = node_list;
+            //    response_entity.Add(model_category);                
+            //}
+            WebAjaxEntity<List<BLL.Model.AllNode>> result = new WebAjaxEntity<List<BLL.Model.AllNode>>();
+            result.data = BLL.BLLNode.GetFlowSelectNode(flow_id, is_factor);
             result.msg = 1;
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
-        /// 获取所有节点
+        /// 获取流程的节点
         /// </summary>
+        /// <param name="flow_id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GetAllNode()
+        public JsonResult GetFlowNode(int flow_id)
         {
-            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
-            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
-            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            foreach (var item in bll.GetListBy(0, new List<BLL.FilterSearch>(), "AddTime Asc"))
-            {
-                Models.ViewModelJob model = new Models.ViewModelJob();
-                model.id = item.ID;
-                model.title = item.Title;
-                list.Add(model);
-            }
-            result.data = list;
+            WebAjaxEntity<List<BLL.Model.FlowNode>> result = new WebAjaxEntity<List<BLL.Model.FlowNode>>();
+            result.data = BLL.BLLFlow.GetUIFlowNode(flow_id);
             result.msg = 1;
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// 根据分类获取节点
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult GetNodeByCategory(int id)
-        {
-            int ids = TypeHelper.ObjectToInt(id,0);
-            WebAjaxEntity<List<Models.ViewModelJob>> result = new WebAjaxEntity<List<Models.ViewModelJob>>();
-            List<Models.ViewModelJob> list = new List<Models.ViewModelJob>();
-            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            foreach (var item in bll.GetListBy(0, p=>p.NodeCategoryID == ids, "AddTime Asc"))
-            {
-                Models.ViewModelJob model = new Models.ViewModelJob();
-                model.id = item.ID;
-                model.title = item.Title;
-                list.Add(model);
-            }
-            result.data = list;
-            result.msg = 1;
+            result.msgbox = "ok";
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -311,7 +293,7 @@ namespace Universal.Web.Controllers
         [HttpGet]
         public JsonResult GetNodeInfo(int id)
         {
-            int ids = TypeHelper.ObjectToInt(id,0);
+            int ids = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelNode model = new Models.ViewModelNode();
             Entity.Node entity = BLL.BLLNode.GetMode(ids);
             if (entity != null)
@@ -346,59 +328,18 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 获取所有流程节点
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult GetAllFlowNode(int flow_id)
-        {
-            var result = BLL.BLLFlow.GetWebFlowData(flow_id);
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// 获取单个流程节点
-        /// </summary>
-        /// <param name="flow_node_id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult GetFLowNode(int flow_node_id)
-        {
-            WebAjaxEntity<BLL.Model.WebFlowNode> response_entity = new WebAjaxEntity<BLL.Model.WebFlowNode>();
-            response_entity.msg = 1;
-            response_entity.msgbox = "ok";
-            response_entity.data = BLL.BLLFlow.GetWebFlowNodeData(flow_node_id);
-            return Json(response_entity, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// 删除某个流程节点
-        /// </summary>
-        /// <param name="flow_node_id"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult DelFlowNode(int flow_node_id)
-        {
-            if (BLL.BLLFlow.DelWebFlowNode(flow_node_id))
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "ok";
-            }
-            WorkContext.AjaxStringEntity.msgbox = "删除失败";
-            return Json(WorkContext.AjaxStringEntity);
-        }
-
-        /// <summary>
-        /// 添加流程
+        /// 设置节点父级信息
         /// </summary>
         /// <param name="flow_id">为-1时为顶级</param>
+        /// <param name="title">流程标题</param>
         /// <param name="node_id"></param>
+        /// <param name="pids">父级id，逗号分割</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult AddNode(int flow_id, int node_id, int top, int left, string icon, string color, string process_to,string title)
+        public JsonResult SetNodePids(int flow_id, string title, int node_id, string pids)
         {
             string msg = "";
-            var ids = BLL.BLLFlow.AddFlowNode(WorkContext.UserInfo.ID, flow_id, node_id, top, left, icon, color, process_to,title, out msg);
+            var ids = BLL.BLLFlow.SetNodePids(WorkContext.UserInfo.ID, flow_id, title, node_id, pids, out msg);
             if (TypeHelper.ObjectToInt(ids[0]) != -1)
             {
                 WorkContext.AjaxStringEntity.msg = 1;
@@ -410,42 +351,64 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 修改流程标题
+        /// 将节点从流程中删除
         /// </summary>
-        /// <param name="flow_id"></param>
-        /// <param name="new_title"></param>
+        /// <param name="node_id"></param>
         /// <returns></returns>
-        [HttpPost]
-        public JsonResult ModifyFlowTitle(int flow_id,string new_title)
+        [HttpGet]
+        public JsonResult DelFlowNode(int node_id)
         {
-            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
-            Entity.Flow entity = bll.GetModel(p => p.ID == flow_id);
-            if(entity == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "流程不存在";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            entity.Title = new_title;
-            bll.Modify(entity, "Title");
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "ok";
-            return Json(WorkContext.AjaxStringEntity);
+            var isOK = BLL.BLLFlow.DelFlowNode(node_id);
+            WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = "";
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
-        /// 修改流程的节点
+        /// 生成流程图插件所需节点数据
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GenerateFlowNodeCompact(int flow_id)
+        {
+            WebAjaxEntity<string> result = new WebAjaxEntity<string>();
+            var isOK = BLL.BLLFlow.GenerateFlowNodeCompact(flow_id);
+            result.msg = isOK ? 1 : 0;
+            result.msgbox = "";
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 获取流程效果页面里的流程信息
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetFlowCompact(int flow_id)
+        {
+            WebAjaxEntity<List<BLL.Model.ProjectFlowNode>> result = new WebAjaxEntity<List<BLL.Model.ProjectFlowNode>>();
+            result.data = BLL.BLLFlow.GetFlowCompact(flow_id);
+            result.msg = 1;
+            result.msgbox = "ok";
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 保存流程效果页面里的流程位置信息
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveFlow()
+        public JsonResult SaveFlowCompact()
         {
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.WebSaveFlow flow_info = null;
+            List<BLL.Model.ProjectFlowNode> flow_info = null;
             try
             {
-                flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(stream);
+                flow_info = js.Deserialize<List<BLL.Model.ProjectFlowNode>>(stream);
             }
             catch
             {
@@ -457,77 +420,176 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            string msg = "";
-            if (BLL.BLLFlow.WebSaveFlowData(flow_info, out msg))
-                WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = msg;
-            return Json(WorkContext.AjaxStringEntity);
-        }
 
-        /// <summary>
-        /// 修改某个流程节点
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult SaveFlowNode()
-        {
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            BLL.Model.WebSaveFlowNode flow_node_info = null;
-            try
-            {
-                flow_node_info = js.Deserialize<BLL.Model.WebSaveFlowNode>(stream);
-            }
-            catch
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            if (flow_node_info == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            string msg = "";
-            if (BLL.BLLFlow.WebSaveFlowNodeData(flow_node_info, out msg))
+            if (BLL.BLLFlow.SaveCompactNode(flow_info))
             {
                 WorkContext.AjaxStringEntity.msg = 1;
                 WorkContext.AjaxStringEntity.msgbox = "ok";
             }
-            WorkContext.AjaxStringEntity.msgbox = msg;
+            else
+                WorkContext.AjaxStringEntity.msgbox = "保存失败";
+
             return Json(WorkContext.AjaxStringEntity);
         }
 
-        /// <summary>
-        /// 获取流程所有块类别类别信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult GetFlowPiece()
-        {
-            WebAjaxEntity<List<BLL.Model.AdminUserRoute>> response_entity = new WebAjaxEntity<List<BLL.Model.AdminUserRoute>>();
-            response_entity.msg = 1;
-            response_entity.data = BLL.BLLFlow.GetFlowPieceType();
-            return Json(response_entity, JsonRequestBehavior.AllowGet);
-        }
+
+        ///// <summary>
+        ///// 获取所有流程节点
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet]
+        //public JsonResult GetAllFlowNode(int flow_id)
+        //{
+        //    var result = BLL.BLLFlow.GetWebFlowData(flow_id);
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
+
+        ///// <summary>
+        ///// 获取单个流程节点
+        ///// </summary>
+        ///// <param name="flow_node_id"></param>
+        ///// <returns></returns>
+        //[HttpGet]
+        //public JsonResult GetFLowNode(int flow_node_id)
+        //{
+        //    WebAjaxEntity<BLL.Model.WebFlowNode> response_entity = new WebAjaxEntity<BLL.Model.WebFlowNode>();
+        //    response_entity.msg = 1;
+        //    response_entity.msgbox = "ok";
+        //    response_entity.data = BLL.BLLFlow.GetWebFlowNodeData(flow_node_id);
+        //    return Json(response_entity, JsonRequestBehavior.AllowGet);
+        //}
 
         /// <summary>
-        /// 根据块获取流程节点信息
+        /// 删除某个流程节点
         /// </summary>
-        /// <param name="piece_id"></param>
+        /// <param name="flow_node_id"></param>
         /// <returns></returns>
-        [HttpGet]
-        public JsonResult GetFlowNodeByPiece(int piece_id)
+        //[HttpPost]
+        //public JsonResult DelFlowNode(int flow_node_id)
+        //{
+        //    string msg = "";
+        //    if (BLL.BLLFlow.DelWebFlowNode(flow_node_id,out msg))
+        //        WorkContext.AjaxStringEntity.msg = 1;
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
+
+        ///// <summary>
+        ///// 添加流程
+        ///// </summary>
+        ///// <param name="flow_id">为-1时为顶级</param>
+        ///// <param name="parent_flow_node_id">父级ID</param>
+        ///// <param name="title">流程标题</param>
+        ///// <param name="node_id"></param>
+        ///// <param name="type">添加类别，1：插入节点，2：添加子节点，3：添加合并节点</param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult AddNode(int flow_id, string title, int node_id, int parent_flow_node_id,int type)
+        //{
+        //    string msg = "";
+        //    var ids = BLL.BLLFlow.AddFlowNode(WorkContext.UserInfo.ID, flow_id, title, node_id, parent_flow_node_id, type, out msg);
+        //    if (TypeHelper.ObjectToInt(ids[0]) != -1)
+        //    {
+        //        WorkContext.AjaxStringEntity.msg = 1;
+        //        WorkContext.AjaxStringEntity.data = ids[1].ToString();
+        //        WorkContext.AjaxStringEntity.total = TypeHelper.ObjectToInt(ids[0]);
+        //    }
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
+
+        /// <summary>
+        /// 修改流程标题
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <param name="new_title"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ModifyFlowTitle(int flow_id, string new_title)
         {
-            WebAjaxEntity<BLL.Model.WebFlow> response_entity = new WebAjaxEntity<BLL.Model.WebFlow>();
-            response_entity.msg = 1;
-            response_entity.data = BLL.BLLFlow.GetWebFlowNodeDataByPiectID(piece_id);
-            return Json(response_entity, JsonRequestBehavior.AllowGet);
+            BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
+            Entity.Flow entity = bll.GetModel(p => p.ID == flow_id);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "流程不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            entity.Title = new_title;
+            bll.Modify(entity, "Title");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
         }
+
+        ///// <summary>
+        ///// 修改流程的节点
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult SaveFlow()
+        //{
+        //    var sr = new StreamReader(Request.InputStream);
+        //    var stream = sr.ReadToEnd();
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    //BLL.Model.WebSaveFlow flow_info = null;
+        //    //try
+        //    //{
+        //    //    flow_info = js.Deserialize<BLL.Model.WebSaveFlow>(stream);
+        //    //}
+        //    //catch
+        //    //{
+        //    //    WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //    //    return Json(WorkContext.AjaxStringEntity);
+        //    //}
+        //    //if (flow_info == null)
+        //    //{
+        //    //    WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //    //    return Json(WorkContext.AjaxStringEntity);
+        //    //}
+        //    string msg = "";
+        //    //if (BLL.BLLFlow.WebSaveFlowData(flow_info, out msg))
+        //    //    WorkContext.AjaxStringEntity.msg = 1;
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
+
+        ///// <summary>
+        ///// 修改某个流程节点
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult SaveFlowNode()
+        //{
+        //    var sr = new StreamReader(Request.InputStream);
+        //    var stream = sr.ReadToEnd();
+        //    JavaScriptSerializer js = new JavaScriptSerializer();
+        //    //BLL.Model.WebSaveFlowNode flow_node_info = null;
+        //    //try
+        //    //{
+        //    //    flow_node_info = js.Deserialize<BLL.Model.WebSaveFlowNode>(stream);
+        //    //}
+        //    //catch
+        //    //{
+        //    //    WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //    //    return Json(WorkContext.AjaxStringEntity);
+        //    //}
+        //    //if (flow_node_info == null)
+        //    //{
+        //    //    WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+        //    //    return Json(WorkContext.AjaxStringEntity);
+        //    //}
+        //    string msg = "";
+        //    //if (BLL.BLLFlow.WebSaveFlowNodeData(flow_node_info, out msg))
+        //    //{
+        //    //    WorkContext.AjaxStringEntity.msg = 1;
+        //    //    WorkContext.AjaxStringEntity.msgbox = "ok";
+        //    //}
+        //    WorkContext.AjaxStringEntity.msgbox = msg;
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
         #endregion
-        
+
     }
-    
+
 }

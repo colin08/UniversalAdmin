@@ -33,7 +33,7 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.Flow> bll = new BLL.BaseBLL<Entity.Flow>();
             int rowCount = 0;
-            List<Entity.Flow> list = bll.GetPagedList(page_index, page_size, ref rowCount, p=>p.FlowType == Entity.FlowType.basic, "LastUpdateTime desc");
+            List<Entity.Flow> list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.FlowType == Entity.FlowType.basic, "LastUpdateTime desc");
             WebAjaxEntity<List<Entity.Flow>> result = new WebAjaxEntity<List<Entity.Flow>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
@@ -54,9 +54,16 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return Json(WorkContext.AjaxStringEntity);
             }
-            BLL.BLLFlow.Del(id);
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "删除成功";
+            bool isOK = BLL.BLLFlow.Del(id);
+            if (isOK)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "删除成功";
+
+            }else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "删除失败，可能该流程已被项目使用.";
+            }
             return Json(WorkContext.AjaxStringEntity);
 
         }
@@ -99,6 +106,17 @@ namespace Universal.Web.Controllers
             }
             return View();
         }
-        
+
+        /// <summary>
+        /// 流程演示
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Compact(int id)
+        {
+            ViewData["flow_id"] = id;
+            return View();
+        }
+
     }
 }
