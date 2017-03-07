@@ -18,18 +18,21 @@ namespace Universal.BLL
         /// <param name="flow_id"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static List<Model.AllNode> GetFlowSelectNode(int flow_id,bool is_factor)
+        public static List<Model.AllNode> GetFlowSelectNode(int flow_id, bool is_factor)
         {
             List<BLL.Model.AllNode> result = new List<Model.AllNode>();
             var db = new DataCore.EFDBContext();
-            var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
-            if(entity_flow == null)
+            if (flow_id != -1)
             {
-                db.Dispose();
-                return result;
+                var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
+                if (entity_flow == null)
+                {
+                    db.Dispose();
+                    return result;
+                }
             }
 
-            var category_list = db.NodeCategorys.AsNoTracking().OrderByDescending(p=>p.AddTime).ToList();            
+            var category_list = db.NodeCategorys.AsNoTracking().OrderByDescending(p => p.AddTime).ToList();
             foreach (var category in category_list)
             {
                 BLL.Model.AllNode model_category = new Model.AllNode();
@@ -61,14 +64,14 @@ namespace Universal.BLL
         public static Entity.Node GetMode(int id)
         {
             Entity.Node entity = null;
-            using (var db =new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
-                entity = db.Nodes.Include(p => p.NodeUsers.Select(s=>s.CusUser)).Include(p=>p.NodeCategory).Include(p => p.NodeFiles).Where(p => p.ID == id).FirstOrDefault();
+                entity = db.Nodes.Include(p => p.NodeUsers.Select(s => s.CusUser)).Include(p => p.NodeCategory).Include(p => p.NodeFiles).Where(p => p.ID == id).FirstOrDefault();
             }
 
             return entity;
         }
- 
+
         /// <summary>
         /// 添加节点数据
         /// </summary>
@@ -109,7 +112,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static bool Modify(Entity.Node model, string ids)
         {
-            if(model == null)
+            if (model == null)
                 return false;
             if (model.ID <= 0)
                 return false;
@@ -153,7 +156,7 @@ namespace Universal.BLL
             return true;
 
         }
-        
+
 
         /// <summary>
         /// 获取所有的节点分类
@@ -161,7 +164,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static List<Entity.NodeCategory> GetNodeCategory()
         {
-            using (var db =new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 return db.NodeCategorys.OrderBy(p => p.ID).AsNoTracking().ToList();
             }

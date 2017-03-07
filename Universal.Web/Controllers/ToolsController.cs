@@ -356,9 +356,9 @@ namespace Universal.Web.Controllers
         /// <param name="node_id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult DelFlowNode(int node_id)
+        public JsonResult DelFlowNode(int flow_id,int node_id)
         {
-            var isOK = BLL.BLLFlow.DelFlowNode(node_id);
+            var isOK = BLL.BLLFlow.DelFlowNode(flow_id,node_id);
             WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = "";
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);

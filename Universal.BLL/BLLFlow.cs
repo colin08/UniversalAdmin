@@ -51,7 +51,7 @@ namespace Universal.BLL
         {
             using (var db = new DataCore.EFDBContext())
             {
-                return db.Flows.Where(p=>p.FlowType == Entity.FlowType.basic).AsNoTracking().ToList();
+                return db.Flows.Where(p => p.FlowType == Entity.FlowType.basic).AsNoTracking().ToList();
             }
         }
 
@@ -93,11 +93,14 @@ namespace Universal.BLL
         {
             List<Model.FlowNode> result = new List<Model.FlowNode>();
             var db = new DataCore.EFDBContext();
-            var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
-            if (entity_flow == null)
+            if (flow_id != -1)
             {
-                db.Dispose();
-                return result;
+                var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
+                if (entity_flow == null)
+                {
+                    db.Dispose();
+                    return result;
+                }
             }
             var category_list = db.NodeCategorys.AsNoTracking().OrderByDescending(p => p.AddTime).ToList();
             foreach (var category in category_list)
@@ -113,14 +116,17 @@ namespace Universal.BLL
                     model_node.node_id = node.ID;
                     model_node.node_name = node.Title;
                     List<Model.FlowPNodeList> p_node_list = new List<Model.FlowPNodeList>();
-                    string sql = "SELECT * FROM [dbo].[Node] where charindex(','+rtrim(ID)+',', (select top 1 ISNULL(Pids, '') as pids from dbo.FlowNode where FlowID = " + flow_id.ToString() + " and NodeID = " + node.ID.ToString() + "))>0";
-                    var db_p_node_list = db.Nodes.SqlQuery(sql).ToList();
-                    foreach (var p_node in db_p_node_list)
+                    if (flow_id != -1)
                     {
-                        Model.FlowPNodeList model_p_node = new Model.FlowPNodeList();
-                        model_p_node.p_node_id = p_node.ID;
-                        model_p_node.p_node_name = p_node.Title;
-                        p_node_list.Add(model_p_node);
+                        string sql = "SELECT * FROM [dbo].[Node] where charindex(','+rtrim(ID)+',', (select top 1 ISNULL(Pids, '') as pids from dbo.FlowNode where FlowID = " + flow_id.ToString() + " and NodeID = " + node.ID.ToString() + "))>0";
+                        var db_p_node_list = db.Nodes.SqlQuery(sql).ToList();
+                        foreach (var p_node in db_p_node_list)
+                        {
+                            Model.FlowPNodeList model_p_node = new Model.FlowPNodeList();
+                            model_p_node.p_node_id = p_node.ID;
+                            model_p_node.p_node_name = p_node.Title;
+                            p_node_list.Add(model_p_node);
+                        }
                     }
                     model_node.p_node_list = p_node_list;
                     node_list.Add(model_node);
@@ -230,11 +236,11 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="node_id"></param>
         /// <returns></returns>
-        public static bool DelFlowNode(int node_id)
+        public static bool DelFlowNode(int flow_id, int node_id)
         {
             using (var db = new DataCore.EFDBContext())
             {
-                var entity = db.FlowNodes.Find(node_id);
+                var entity = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
                 if (entity != null)
                 {
                     db.FlowNodes.Remove(entity);
@@ -319,7 +325,7 @@ namespace Universal.BLL
             db.Dispose();
             return true;
         }
-        
+
         /// <summary>
         /// 获取演示的流程信息
         /// </summary>
