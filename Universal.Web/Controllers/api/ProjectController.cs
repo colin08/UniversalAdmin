@@ -340,6 +340,21 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
+        /// 项目审批
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/project/approve")]
+        public WebAjaxEntity<string> ProjectApprove([FromBody]Models.Request.ProjectApprove req)
+        {
+            string msg = "";
+            bool isOK = BLL.BLLProject.Approve(req.user_id, req.id, req.status, req.remark, out msg);
+            WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
         /// 修改项目的基本信息
         /// </summary>
         /// <returns></returns>
@@ -430,7 +445,7 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = msg;
             return WorkContext.AjaxStringEntity;
         }
-
+        
 
         /// <summary>
         /// 修改项目的项目信息
@@ -945,7 +960,7 @@ namespace Universal.Web.Controllers.api
             Models.Response.SelectUser model = new Models.Response.SelectUser();
             model.user_id = entity.ID;
             model.telphone = entity.Telphone;
-            model.nickname = entity.NickName;
+            model.nick_name = entity.NickName;
             model.short_num = entity.ShorNum;
             model.avatar = GetSiteUrl() + entity.Avatar;
             return model;

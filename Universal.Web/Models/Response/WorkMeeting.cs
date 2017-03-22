@@ -28,6 +28,11 @@ namespace Universal.Web.Models.Response
         public string title { get; set; }
 
         /// <summary>
+        /// 是否可以点击确认参会
+        /// </summary>
+        public bool can_join { get; set; }
+
+        /// <summary>
         /// 议程
         /// </summary>
         public string content { get; set; }

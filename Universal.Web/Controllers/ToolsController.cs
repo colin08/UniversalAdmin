@@ -333,13 +333,13 @@ namespace Universal.Web.Controllers
         /// <param name="flow_id">为-1时为顶级</param>
         /// <param name="title">流程标题</param>
         /// <param name="node_id"></param>
-        /// <param name="pids">父级id，逗号分割</param>
+        /// <param name="cids">父级id，逗号分割</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SetNodePids(int flow_id, string title, int node_id, string pids)
+        public JsonResult SetNodeCids(int flow_id, string title, int node_id, string cids)
         {
             string msg = "";
-            var ids = BLL.BLLFlow.SetNodePids(WorkContext.UserInfo.ID, flow_id, title, node_id, pids, out msg);
+            var ids = BLL.BLLFlow.SetNodeCids(WorkContext.UserInfo.ID, flow_id, title, node_id, cids, out msg);
             if (TypeHelper.ObjectToInt(ids[0]) != -1)
             {
                 WorkContext.AjaxStringEntity.msg = 1;
@@ -364,20 +364,20 @@ namespace Universal.Web.Controllers
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 生成流程图插件所需节点数据
-        /// </summary>
-        /// <param name="flow_id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult GenerateFlowNodeCompact(int flow_id)
-        {
-            WebAjaxEntity<string> result = new WebAjaxEntity<string>();
-            var isOK = BLL.BLLFlow.GenerateFlowNodeCompact(flow_id);
-            result.msg = isOK ? 1 : 0;
-            result.msgbox = "";
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
+        ///// <summary>
+        ///// 生成流程图插件所需节点数据
+        ///// </summary>
+        ///// <param name="flow_id"></param>
+        ///// <returns></returns>
+        //[HttpGet]
+        //public JsonResult GenerateFlowNodeCompact(int flow_id)
+        //{
+        //    WebAjaxEntity<string> result = new WebAjaxEntity<string>();
+        //    var isOK = BLL.BLLFlow.GenerateFlowNodeCompact(flow_id);
+        //    result.msg = isOK ? 1 : 0;
+        //    result.msgbox = "";
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
 
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace Universal.Web.Controllers
         public JsonResult GetFlowCompact(int flow_id)
         {
             WebAjaxEntity<List<BLL.Model.ProjectFlowNode>> result = new WebAjaxEntity<List<BLL.Model.ProjectFlowNode>>();
-            result.data = BLL.BLLFlow.GetFlowCompact(flow_id);
+            result.data = BLL.BLLFlow.GetFlowData(flow_id);
             result.msg = 1;
             result.msgbox = "ok";
             return Json(result, JsonRequestBehavior.AllowGet);

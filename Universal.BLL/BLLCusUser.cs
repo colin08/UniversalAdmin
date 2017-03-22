@@ -369,12 +369,21 @@ namespace Universal.BLL
         {
             using (var db =new DataCore.EFDBContext())
             {
+                List<Entity.CusUserMessageType> msg_type = new List<Entity.CusUserMessageType>();
+                msg_type.Add(Entity.CusUserMessageType.approveproject);
+                msg_type.Add(Entity.CusUserMessageType.appproveok);
+                msg_type.Add(Entity.CusUserMessageType.appproveno);
+                msg_type.Add(Entity.CusUserMessageType.confrimjoinmeeting);
+                msg_type.Add(Entity.CusUserMessageType.meetingcancel);
+                msg_type.Add(Entity.CusUserMessageType.meetingchangedate);
+                msg_type.Add(Entity.CusUserMessageType.waitmeeting);
+                msg_type.Add(Entity.CusUserMessageType.waitjobdone);
+                msg_type.Add(Entity.CusUserMessageType.waitapproveplan);
+                msg_type.Add(Entity.CusUserMessageType.planapproveok);
+
                 //使用拓展框架
                 var q = db.CusUserMessages.Where(p => p.CusUserID == user_id && p.IsDone == false
-                            && p.Type == Entity.CusUserMessageType.approveproject 
-                            && p.Type == Entity.CusUserMessageType.waitmeeting 
-                            && p.Type == Entity.CusUserMessageType.waitjobdone 
-                            && p.Type == Entity.CusUserMessageType.waitapproveplan
+                            && msg_type.Contains(p.Type)
                             );
                 var q1 = q.FutureCount();
                 var q3 = q.OrderByDescending(p=>p.AddTime).Skip((page_index - 1) * page_size).Take(page_size).AsNoTracking().Future();
@@ -383,5 +392,47 @@ namespace Universal.BLL
             }
         }
 
+        /// <summary>
+        /// 获取用户消息列表
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="user_id"></param>
+        /// <param name="total"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUserMessage> GetUseMessagePageList(int page_size, int page_index, int user_id,int msg_type,string searh_word, out int total)
+        {
+            int rowCount = 0;
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("CusUserID", user_id.ToString(), BLL.FilterSearchContract.等于));
+            switch (msg_type)
+            {
+                case 1://未读
+                    filter.Add(new BLL.FilterSearch("IsRead", "0", BLL.FilterSearchContract.等于));
+                    break;
+                case 2://已读
+                    filter.Add(new BLL.FilterSearch("IsRead", "1", BLL.FilterSearchContract.等于));
+                    break;
+                default:
+                    break;
+            }
+            if (!string.IsNullOrWhiteSpace(searh_word))
+                filter.Add(new BLL.FilterSearch("Content", searh_word, BLL.FilterSearchContract.like));
+
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.approveproject).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.appproveok).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.appproveno).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.confrimjoinmeeting).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.meetingcancel).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.meetingchangedate).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.waitmeeting).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.waitjobdone).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.waitapproveplan).ToString(), FilterSearchContract.不等于));
+            filter.Add(new BLL.FilterSearch("Type", ((int)Entity.CusUserMessageType.planapproveok).ToString(), FilterSearchContract.不等于));
+            var db_list = new BLL.BaseBLL<Entity.CusUserMessage>().GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc");
+
+            total = rowCount;
+            return db_list;
+        }
     }
 }

@@ -940,6 +940,8 @@
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
+    <Compile Include="Areas\h5\Controllers\MobileController.cs" />
+    <Compile Include="Areas\h5\h5AreaRegistration.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -1011,6 +1013,7 @@
     <Compile Include="Models\Request\EditProject.cs" />
     <Compile Include="Models\Request\MessageList.cs" />
     <Compile Include="Models\Request\ModelUserLogin.cs" />
+    <Compile Include="Models\Request\ProjectApprove.cs" />
     <Compile Include="Models\Request\ProjectFav.cs" />
     <Compile Include="Models\Request\ProjectInfoPro.cs" />
     <Compile Include="Models\Request\ProjectList.cs" />
@@ -1160,6 +1163,8 @@
     <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Areas\h5\Views\web.config" />
+    <Content Include="Areas\h5\Views\Mobile\Flow.cshtml" />
     <None Include="Properties\PublishProfiles\HBL_NEW.pubxml" />
     <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\Statctics\Domain.cshtml" />
@@ -1216,7 +1221,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Areas\h5\Models\" />
+    <Folder Include="Areas\h5\Views\Shared\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
       <Project>{d291ef55-3d6d-4c5a-be18-25875b78342e}</Project>

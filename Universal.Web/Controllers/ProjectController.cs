@@ -638,6 +638,20 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 设置节点开启/关闭
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APISetStatus(int project_flow_node_id)
+        {
+            string msg = "";
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetStatus(project_flow_node_id, out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// 设置条件节点选中
         /// </summary>
         /// <param name="project_flow_node_id"></param>

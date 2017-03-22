@@ -31,18 +31,23 @@ namespace Universal.BLL.Model
         public string node_name { get; set; }
 
         /// <summary>
-        /// 父级ID
+        /// 当前节点在此流程里是否存在
         /// </summary>
-        public List<FlowPNodeList> p_node_list { get; set; }
+        public bool exists { get; set; }
+
+        /// <summary>
+        /// 子级ID
+        /// </summary>
+        public List<FlowCNodeList> c_node_list { get; set; }
     }
 
-    public class FlowPNodeList
+    public class FlowCNodeList
     {
-        public int p_node_id { get; set; }
+        public int c_node_id { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string p_node_name { get; set; }
+        public string c_node_name { get; set; }
     }
 }

@@ -273,16 +273,16 @@ namespace Universal.BLL
         /// <param name="project_id"></param>
         /// <param name="is_clear"></param>
         /// <param name="flow_id"></param>
-        private static void CopyFlowNodeFromCompact(DataCore.EFDBContext db,int project_id,bool is_clear,int flow_id)
+        public static void CopyFlowNodeFromCompact(DataCore.EFDBContext db,int project_id,bool is_clear,int flow_id)
         {
             if (db == null)
                 db = new DataCore.EFDBContext();
             if (is_clear)
                 db.ProjectFlowNodes.Where(p => p.ProjectID == project_id).ToList().ForEach(p => db.ProjectFlowNodes.Remove(p));
-            if(!db.FlowNodeCompacts.Any(p=>p.FlowID == flow_id))
+            if(!db.FlowNodes.Any(p=>p.FlowID == flow_id))
                 return;
 
-            var db_flow_node_compact_list = db.FlowNodeCompacts.Where(p => p.FlowID == flow_id).AsNoTracking().ToList();
+            var db_flow_node_compact_list = db.FlowNodes.Where(p => p.FlowID == flow_id).AsNoTracking().ToList();
             //旧的父子关系对应
             List<FlowP> old_list = new List<FlowP>();
             //新旧id对应
@@ -305,6 +305,10 @@ namespace Universal.BLL
                 p.cids = list_c;
                 old_list.Add(p);
 
+                //查询是否顶级
+                var sql = "select count(1) from FlowNode where charindex('," + flow_node.ID.ToString() + ",',','+ProcessTo+',')> 0";
+                bool is_frist = db.Database.SqlQuery<int>(sql).ToList()[0] == 0 ? true : false;                
+
                 Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
                 entity_node.Color = flow_node.Color;
                 entity_node.ICON = flow_node.ICON;
@@ -314,7 +318,7 @@ namespace Universal.BLL
                 entity_node.ProjectID = project_id;
                 entity_node.Status = true;
                 entity_node.Top = flow_node.Top;
-                entity_node.IsFrist = flow_node.IsFrist;
+                entity_node.IsFrist = is_frist;
                 db.ProjectFlowNodes.Add(entity_node);
                 db.SaveChanges();
                 //旧的的id对应新的id

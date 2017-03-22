@@ -115,20 +115,21 @@ namespace Universal.BLL
                     Model.FlowNodeList model_node = new Model.FlowNodeList();
                     model_node.node_id = node.ID;
                     model_node.node_name = node.Title;
-                    List<Model.FlowPNodeList> p_node_list = new List<Model.FlowPNodeList>();
-                    if (flow_id != -1)
+                    model_node.exists = db.FlowNodes.Any(p => p.FlowID == flow_id && p.NodeID == node.ID);
+                    List<Model.FlowCNodeList> c_node_list = new List<Model.FlowCNodeList>();
+                    if (flow_id != -1 && model_node.exists)
                     {
-                        string sql = "SELECT * FROM [dbo].[Node] where charindex(','+rtrim(ID)+',', (select top 1 ISNULL(Pids, '') as pids from dbo.FlowNode where FlowID = " + flow_id.ToString() + " and NodeID = " + node.ID.ToString() + "))>0";
+                        string sql = "SELECT * from dbo.Node where ID in(SELECT NodeID FROM [dbo].[FlowNode] where charindex(','+rtrim(ID)+',', (select top 1 ','+ISNULL(ProcessTo, '')+',' as ProcessTo from dbo.FlowNode where FlowID = " + flow_id.ToString() + " and NodeID = " + node.ID.ToString() + "))>0)";
                         var db_p_node_list = db.Nodes.SqlQuery(sql).ToList();
                         foreach (var p_node in db_p_node_list)
                         {
-                            Model.FlowPNodeList model_p_node = new Model.FlowPNodeList();
-                            model_p_node.p_node_id = p_node.ID;
-                            model_p_node.p_node_name = p_node.Title;
-                            p_node_list.Add(model_p_node);
+                            Model.FlowCNodeList model_p_node = new Model.FlowCNodeList();
+                            model_p_node.c_node_id = p_node.ID;
+                            model_p_node.c_node_name = p_node.Title;
+                            c_node_list.Add(model_p_node);
                         }
                     }
-                    model_node.p_node_list = p_node_list;
+                    model_node.c_node_list = c_node_list;
                     node_list.Add(model_node);
                 }
                 model.node_list = node_list;
@@ -139,16 +140,16 @@ namespace Universal.BLL
         }
 
         /// <summary>
-        /// 设置节点父级信息
+        /// 设置节点子级信息
         /// </summary>
         /// <param name="user_id"></param>
         /// <param name="flow_id"></param>
         /// <param name="title"></param>
         /// <param name="node_id"></param>
-        /// <param name="pids"></param>
+        /// <param name="cids"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static int[] SetNodePids(int user_id, int flow_id, string title, int node_id, string pids, out string msg)
+        public static int[] SetNodeCids(int user_id, int flow_id, string title, int node_id, string cids, out string msg)
         {
             int[] result = new int[2];
             result[0] = -1;
@@ -164,14 +165,16 @@ namespace Universal.BLL
                 msg = "添加流程时必须传入标题";
                 return result;
             }
-            if (pids.Trim().Length > 0)
-            {
-                if (!pids.StartsWith(","))
-                    pids = "," + pids;
+            if (string.IsNullOrWhiteSpace(cids))
+                cids = "";
+            //if (cids.Trim().Length > 0)
+            //{
+            //    if (!cids.StartsWith(","))
+            //        cids = "," + cids;
 
-                if (!pids.EndsWith(","))
-                    pids = pids + ",";
-            }
+            //    if (!cids.EndsWith(","))
+            //        cids = cids + ",";
+            //}
 
 
             var db = new DataCore.EFDBContext();
@@ -210,19 +213,48 @@ namespace Universal.BLL
                 db.SaveChanges();
                 flow_id = entity_flow.ID;
             }
+            StringBuilder str_cids = new StringBuilder();
+            //处理子id
+            foreach (var item in cids.Split(','))
+            {
+                int c_node_id = Tools.TypeHelper.ObjectToInt(item);
+                if (c_node_id == node_id)
+                    continue;
+
+                if (!db.Nodes.Any(p => p.ID == c_node_id))
+                    continue;
+
+                var entity_temp = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == c_node_id).AsNoTracking().FirstOrDefault();
+                if(entity_temp == null)
+                {
+                    entity_temp = new Entity.FlowNode();
+                    entity_temp.FlowID = flow_id;
+                    entity_temp.NodeID = c_node_id;
+                    entity_temp.ProcessTo = "";
+                    entity_temp.Left = 100;
+                    entity_temp.Top = 100;
+                    db.FlowNodes.Add(entity_temp);
+                    db.SaveChanges();
+                }
+                str_cids.Append(entity_temp.ID.ToString()+",");
+            }
+            if (str_cids.Length > 0)
+                str_cids.Remove(str_cids.Length - 1, 1);
 
             var entity_flow_node = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
             if (entity_flow_node == null)
             {
                 entity_flow_node = new Entity.FlowNode();
                 entity_flow_node.FlowID = flow_id;
-                entity_flow_node.PIds = pids;
+                entity_flow_node.ProcessTo = str_cids.ToString();
                 entity_flow_node.NodeID = entity_node.ID;
+                entity_flow_node.Left = 100;
+                entity_flow_node.Top = 100;
                 db.FlowNodes.Add(entity_flow_node);
             }
             else
             {
-                entity_flow_node.PIds = pids;
+                entity_flow_node.ProcessTo = str_cids.ToString();
             }
             db.SaveChanges();
             db.Dispose();
@@ -252,85 +284,86 @@ namespace Universal.BLL
             }
         }
 
+        ///// <summary>
+        ///// 生成插件所需流程节点数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public static bool GenerateFlowNodeCompact(int flow_id)
+        //{
+        //    var db = new DataCore.EFDBContext();
+        //    var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
+        //    if (entity_flow == null)
+        //        return false;
+
+        //    db.FlowNodeCompacts.Where(p => p.FlowID == flow_id).ToList().ForEach(p => db.FlowNodeCompacts.Remove(p));
+
+        //    //先获取所有用到的节点id
+        //    string sql = "SELECT (Pids + Cast(NodeID as nvarchar(10))) as ids  FROM [dbo].[FlowNode] where FlowID = " + flow_id.ToString() + ";";
+        //    var all_use_node_ids = db.Database.SqlQuery<string>(sql).ToList();
+        //    List<int> use_node_id_list = new List<int>();
+        //    foreach (var node_ids in all_use_node_ids)
+        //    {
+        //        foreach (var node in node_ids.Split(','))
+        //        {
+        //            int val = Tools.TypeHelper.ObjectToInt(node, -1);
+        //            if (val != -1)
+        //            {
+        //                if (!use_node_id_list.Contains(val))
+        //                    use_node_id_list.Add(val);
+        //            }
+        //        }
+        //    }
+        //    //新表，节点对应数据ID
+        //    Hashtable new_tab = new Hashtable();
+        //    //将用到的节点id全部添加到compact表里
+        //    foreach (var node_id in use_node_id_list)
+        //    {
+        //        //判断是否是顶级ID
+        //        var entity_node = db.FlowNodes.Where(p => p.NodeID == node_id).AsNoTracking().FirstOrDefault();
+        //        bool is_frist = true;
+        //        if (entity_node != null)
+        //        {
+        //            if (!string.IsNullOrWhiteSpace(entity_node.PIds))
+        //                is_frist = false;
+        //        }
+
+        //        var entity_flow_node_compact = new Entity.FlowNodeCompact();
+        //        entity_flow_node_compact.FlowID = flow_id;
+        //        entity_flow_node_compact.IsFrist = is_frist;
+        //        entity_flow_node_compact.NodeID = node_id;
+        //        entity_flow_node_compact.ProcessTo = "";
+        //        db.FlowNodeCompacts.Add(entity_flow_node_compact);
+        //        db.SaveChanges();
+        //        new_tab.Add(node_id, entity_flow_node_compact.ID);
+        //    }
+        //    //修改对应关系
+        //    foreach (var item in new_tab.Keys)
+        //    {
+        //        int node_id = Tools.TypeHelper.ObjectToInt(item);
+        //        //查找改节点在映射表里的子节点
+        //        var child_list = db.FlowNodes.SqlQuery("SELECT * FROM [dbo].[FlowNode] where FlowID = 59 and CHARINDEX('," + node_id.ToString() + ",',PIds) > 0 ").AsNoTracking().ToList();
+        //        StringBuilder str_process = new StringBuilder();
+        //        foreach (var flow_node in child_list)
+        //        {
+        //            str_process.Append(new_tab[flow_node.NodeID].ToString() + ",");
+        //        }
+        //        if (str_process.Length > 0)
+        //        {
+        //            str_process.Remove(str_process.Length - 1, 1);
+        //            db.Database.ExecuteSqlCommand("update [dbo].[FlowNodeCompact] set ProcessTo = '" + str_process.ToString() + "' where FlowID = " + flow_id.ToString() + " and NodeID = " + node_id.ToString());
+        //        }
+
+        //    }
+        //    db.Dispose();
+        //    return true;
+        //}
+
+
         /// <summary>
-        /// 生成插件所需流程节点数据
+        /// 获取的流程信息
         /// </summary>
         /// <returns></returns>
-        public static bool GenerateFlowNodeCompact(int flow_id)
-        {
-            var db = new DataCore.EFDBContext();
-            var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
-            if (entity_flow == null)
-                return false;
-
-            db.FlowNodeCompacts.Where(p => p.FlowID == flow_id).ToList().ForEach(p => db.FlowNodeCompacts.Remove(p));
-
-            //先获取所有用到的节点id
-            string sql = "SELECT (Pids + Cast(NodeID as nvarchar(10))) as ids  FROM [dbo].[FlowNode] where FlowID = " + flow_id.ToString() + ";";
-            var all_use_node_ids = db.Database.SqlQuery<string>(sql).ToList();
-            List<int> use_node_id_list = new List<int>();
-            foreach (var node_ids in all_use_node_ids)
-            {
-                foreach (var node in node_ids.Split(','))
-                {
-                    int val = Tools.TypeHelper.ObjectToInt(node, -1);
-                    if (val != -1)
-                    {
-                        if (!use_node_id_list.Contains(val))
-                            use_node_id_list.Add(val);
-                    }
-                }
-            }
-            //新表，节点对应数据ID
-            Hashtable new_tab = new Hashtable();
-            //将用到的节点id全部添加到compact表里
-            foreach (var node_id in use_node_id_list)
-            {
-                //判断是否是顶级ID
-                var entity_node = db.FlowNodes.Where(p => p.NodeID == node_id).AsNoTracking().FirstOrDefault();
-                bool is_frist = true;
-                if (entity_node != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(entity_node.PIds))
-                        is_frist = false;
-                }
-
-                var entity_flow_node_compact = new Entity.FlowNodeCompact();
-                entity_flow_node_compact.FlowID = flow_id;
-                entity_flow_node_compact.IsFrist = is_frist;
-                entity_flow_node_compact.NodeID = node_id;
-                entity_flow_node_compact.ProcessTo = "";
-                db.FlowNodeCompacts.Add(entity_flow_node_compact);
-                db.SaveChanges();
-                new_tab.Add(node_id, entity_flow_node_compact.ID);
-            }
-            //修改对应关系
-            foreach (var item in new_tab.Keys)
-            {
-                int node_id = Tools.TypeHelper.ObjectToInt(item);
-                //查找改节点在映射表里的子节点
-                var child_list = db.FlowNodes.SqlQuery("SELECT * FROM [dbo].[FlowNode] where FlowID = 59 and CHARINDEX('," + node_id.ToString() + ",',PIds) > 0 ").AsNoTracking().ToList();
-                StringBuilder str_process = new StringBuilder();
-                foreach (var flow_node in child_list)
-                {
-                    str_process.Append(new_tab[flow_node.NodeID].ToString() + ",");
-                }
-                if (str_process.Length > 0)
-                {
-                    str_process.Remove(str_process.Length - 1, 1);
-                    db.Database.ExecuteSqlCommand("update [dbo].[FlowNodeCompact] set ProcessTo = '" + str_process.ToString() + "' where FlowID = " + flow_id.ToString() + " and NodeID = " + node_id.ToString());
-                }
-
-            }
-            db.Dispose();
-            return true;
-        }
-
-        /// <summary>
-        /// 获取演示的流程信息
-        /// </summary>
-        /// <returns></returns>
-        public static List<Model.ProjectFlowNode> GetFlowCompact(int flow_id)
+        public static List<Model.ProjectFlowNode> GetFlowData(int flow_id)
         {
             List<Model.ProjectFlowNode> response_entity = new List<Model.ProjectFlowNode>();
 
@@ -340,7 +373,7 @@ namespace Universal.BLL
             var entity_flow = db.Flows.Where(p => p.ID == flow_id).AsNoTracking().FirstOrDefault();
             if (entity_flow == null)
                 return response_entity;
-            var flow_node_list = db.FlowNodeCompacts.AsNoTracking().Include(p => p.Node).Where(p => p.FlowID == flow_id).ToList();
+            var flow_node_list = db.FlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.FlowID == flow_id).ToList();
             foreach (var item in flow_node_list)
             {
                 Model.ProjectFlowNode model = new Model.ProjectFlowNode();
@@ -370,7 +403,7 @@ namespace Universal.BLL
             {
                 foreach (var model in list_model)
                 {
-                    var entity = db.FlowNodeCompacts.Find(model.project_flow_node_id);
+                    var entity = db.FlowNodes.Find(model.project_flow_node_id);
                     if (entity == null)
                         continue;
 

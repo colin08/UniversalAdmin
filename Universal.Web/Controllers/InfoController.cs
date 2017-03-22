@@ -133,7 +133,7 @@ namespace Universal.Web.Controllers
             ViewData["CanJoin"] = 0;
             foreach (var item in entity.WorkJobUsers.ToList())
             {
-                if (item.CusUserID == WorkContext.UserInfo.ID && item.IsConfirm)
+                if (item.CusUserID == WorkContext.UserInfo.ID && !item.IsConfirm)
                     ViewData["CanJoin"] = 1;
             }
             return View(entity);
@@ -154,11 +154,16 @@ namespace Universal.Web.Controllers
             Entity.WorkPlan entity = BLL.BLLWorkPlan.GetModel(id);
             if (entity == null)
                 return View("NotFound");
-            ViewData["ApproveUser"] = BLL.BLLCusUser.GetUserDepartmentAdminText(entity.CusUserID);
 
-            BLL.BaseBLL<Entity.CusDepartmentAdmin> bll_admin = new BLL.BaseBLL<Entity.CusDepartmentAdmin>();
-            bool isAdmin = bll_admin.Exists(p => p.CusUserID == WorkContext.UserInfo.ID);
-            ViewData["IsDepartmentAdmin"] = isAdmin;
+            Entity.CusUser approver_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == entity.ApproveUserID);
+            if(approver_user == null)
+            {
+                return View("审核人员不存在");
+            }
+
+            ViewData["ApproveUser"] = approver_user.NickName;
+;
+            ViewData["IsDepartmentAdmin"] = approver_user.ID == WorkContext.UserInfo.ID;
 
             SetMsgRead(msg);
 

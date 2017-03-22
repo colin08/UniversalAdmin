@@ -52,6 +52,8 @@ namespace Universal.BLL.Model
 
         public string process_to { get; set; }
 
+        public bool status { get; set; }
+
         /// <summary>
         /// 所属块
         /// </summary>

@@ -23,7 +23,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 昵称
         /// </summary>
-        public string nickname { get; set; }
+        public string nick_name { get; set; }
 
         /// <summary>
         /// 头像

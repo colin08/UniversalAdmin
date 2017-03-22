@@ -230,7 +230,7 @@ namespace Universal.BLL
         public static bool PushMsg(int user_id, Entity.CusUserMessageType type, string content, int link_id)
         {
             BLL.BaseBLL<Entity.CusUser> bll_user = new BaseBLL<Entity.CusUser>();
-            if (bll_user.Exists(p => p.ID == user_id))
+            if (!bll_user.Exists(p => p.ID == user_id))
                 return false;
             BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BaseBLL<Entity.CusUserMessage>();
             Entity.CusUserMessage entity = new Entity.CusUserMessage();

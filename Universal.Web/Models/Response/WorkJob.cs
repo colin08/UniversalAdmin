@@ -27,6 +27,14 @@ namespace Universal.Web.Models.Response
         }
 
         /// <summary>
+        /// 是否可以点击完成
+        /// </summary>
+        public bool is_comp
+        {
+            get;set;
+        }
+
+        /// <summary>
         /// 创建者用户id
         /// </summary>
         public int create_user_id { get; set; }

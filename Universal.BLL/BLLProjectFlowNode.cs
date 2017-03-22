@@ -26,15 +26,19 @@ namespace Universal.BLL
             if (entity_project == null)
                 return response_entity;
 
+            bool is_join = true;
+            string last_end_process = "";
             //先获取is_end为true的节点
-            var is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsEnd == true).ToList();
+            var is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsEnd == true).OrderBy(p=>p.EndTime).ToList();
             if (is_end_list.Count == 0)
             {
+                is_join = false;
                 //如果没有为true的，则查找frist节点
                 is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsFrist).ToList();
             }
             foreach (var item in is_end_list)
             {
+                last_end_process = item.ProcessTo;
                 Model.ProjectFlowNode model = new Model.ProjectFlowNode();
                 model.icon = item.ICON;
                 model.piece = item.Piece;
@@ -47,7 +51,33 @@ namespace Universal.BLL
                 model.top = item.Top;
                 model.is_end = item.IsEnd;
                 model.project_flow_node_id = item.ID;
+                model.status = item.Status;
                 response_entity.Add(model);
+            }
+            if(is_join)
+            {
+                //将下级节点一并查找出来
+                var next_list = db.ProjectFlowNodes.SqlQuery("SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',','," + last_end_process + ",') > 0").AsNoTracking().ToList();
+                foreach (var item in next_list)
+                {
+                    var entity_node = db.Nodes.Where(p => p.ID == item.NodeID).AsNoTracking().FirstOrDefault();
+                    if (entity_node == null)
+                        continue;
+                    Model.ProjectFlowNode model = new Model.ProjectFlowNode();
+                    model.icon = item.ICON;
+                    model.piece = item.Piece;
+                    model.process_to = item.ProcessTo;
+                    model.node_id = item.NodeID;
+                    model.node_title = entity_node.Title;
+                    model.node_is_fator = entity_node.IsFactor;
+                    model.color = item.Color;
+                    model.left = item.Left;
+                    model.top = item.Top;
+                    model.is_end = item.IsEnd;
+                    model.project_flow_node_id = item.ID;
+                    model.status = item.Status;
+                    response_entity.Add(model);
+                }
             }
             db.Dispose();
             return response_entity;
@@ -93,6 +123,7 @@ namespace Universal.BLL
                 model.top = item.Top;
                 model.is_end = item.IsEnd;
                 model.project_flow_node_id = item.ID;
+                model.status = item.Status;
                 response_entity.Add(model);
             }
             return response_entity;
@@ -122,6 +153,7 @@ namespace Universal.BLL
             response_entity.top = entity_flow_node.Top;
             response_entity.is_end = entity_flow_node.IsEnd;
             response_entity.project_flow_node_id = entity_flow_node.ID;
+            response_entity.status = entity_flow_node.Status;
             db.Dispose();
             return response_entity;
         }
@@ -170,6 +202,35 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 开启/关闭节点
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        public static bool SetStatus(int project_flow_node_id,out string msg)
+        {
+            msg = "";
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity = db.ProjectFlowNodes.Find(project_flow_node_id);
+                if (entity == null)
+                    return false;
+                if(entity.Status)
+                {
+                    entity.Status = false;
+                    entity.IsEnd = true;
+                    entity.EndTime = DateTime.Now;
+                    msg = "关闭成功";
+                }else
+                {
+                    entity.Status = true;
+                    msg = "开启成功";
+                }
+                db.SaveChanges();
+                return true;
+            }
+        }
+
+        /// <summary>
         /// 设置条件节点选中
         /// </summary>
         /// <param name="project_flow_node_id"></param>
@@ -201,6 +262,8 @@ namespace Universal.BLL
                     }
                 }
                 //条件都满足
+                entity.IsEnd = true;
+                entity.EndTime = DateTime.Now;
                 entity.IsSelect = true;
                 db.SaveChanges();
                 return true;

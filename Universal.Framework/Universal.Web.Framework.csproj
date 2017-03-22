@@ -108,6 +108,7 @@
     <Compile Include="Attribute\CustomAPIExceptionAttribute.cs" />
     <Compile Include="Attribute\AdminPermissionAttribute.cs" />
     <Compile Include="Attribute\CustomWebExceptionAttribute.cs" />
+    <Compile Include="Controllers\BaseHBLMobileController.cs" />
     <Compile Include="Controllers\BaseHBLController.cs" />
     <Compile Include="ExceptionInDB.cs" />
     <Compile Include="PromptModel.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ReadApkPackInfo.cs" />
     <Compile Include="UploadHelper.cs" />
     <Compile Include="ViewPages\AdminViewPage.cs" />
+    <Compile Include="ViewPages\HBLMobileViewPage.cs" />
     <Compile Include="ViewPages\HBLViewPage.cs" />
     <Compile Include="WebAjaxEntity.cs" />
     <Compile Include="WebApiMonitorLog.cs" />

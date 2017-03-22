@@ -16,10 +16,25 @@ namespace Universal.Tests
         public void Testxzz()
         {
             string msg = "";
-            int[] tes = BLL.BLLFlow.SetNodePids(1, 59, "正经的标题", 21, "22,20", out msg);
+            int total = 0;
+
+            Tools.SMSHelper.SendVer("17688700150", "测试");
+
+            //BLL.BLLCusUser.GetJobTaskPageList(5, 1, 26, out total);
+
+            //BLL.BLLProjectFlowNode.SetEnd(189);
+
+            //var ss = BLL.BLLProjectFlowNode.GetProjectFlow(33);
+
+            //BLL.BLLProject.CopyFlowNodeFromCompact(null, 33, true, 68);
+
+            //int[] tes = BLL.BLLFlow.SetNodeCids(1, 59, "正经的标题", 2, "17", out msg);
 
             //var isOK=  BLL.BLLFlow.GenerateFlowNodeCompact(59);
 
+            //var ss = BLL.BLLFlow.GetUIFlowNode(59);
+
+            //var ss = BLL.BLLFlow.GetFlowData(59);
 
             var a = 1;
             //复制节点
