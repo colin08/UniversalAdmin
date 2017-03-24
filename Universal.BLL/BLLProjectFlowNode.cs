@@ -252,7 +252,8 @@ namespace Universal.BLL
                     return false;
                 }
                 //获取同级条件节点
-                var tj_list =  db.ProjectFlowNodes.SqlQuery("SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ProcessTo)+',','," + entity.ProcessTo + ",') > 0").AsNoTracking().ToList();
+                string sql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',',(SELECT ','+ProcessTo+',' FROM [dbo].[ProjectFlowNode] where charindex(',"+project_flow_node_id.ToString()+",',','+ltrim(ProcessTo)+',') > 0)) > 0";
+                var tj_list =  db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList();
                 foreach (var item in tj_list)
                 {
                     if(item.ID != project_flow_node_id && item.IsSelect)

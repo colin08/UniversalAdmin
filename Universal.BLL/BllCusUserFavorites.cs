@@ -197,10 +197,10 @@ namespace Universal.BLL
                 var entity_node = new Entity.ProjectFlowNodeDoing();
                 if (!item.Status)
                 {
-                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[Index] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     if (entity_node == null)
                     {
-                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[Index] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     }
 
                 }

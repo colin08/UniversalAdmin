@@ -35,5 +35,10 @@ namespace Universal.Web.Models.Response
         /// </summary>
         public string short_num { get; set; }
 
+        /// <summary>
+        /// 会议/是否参会
+        /// </summary>
+        public bool is_join { get; set; }
+
     }
 }

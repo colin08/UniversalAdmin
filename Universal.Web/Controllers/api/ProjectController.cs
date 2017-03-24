@@ -229,6 +229,8 @@ namespace Universal.Web.Controllers.api
                 response_model.user_telphone = entity.CusUser.Telphone;
                 response_model.approve_id = TypeHelper.ObjectToInt(entity.ApproveUserID,0);
                 response_model.approve_name = entity.ApproveUser == null ? "" : entity.ApproveUser.NickName;
+                response_model.approve_status = entity.ApproveStatus;
+                response_model.approve_remark = entity.ApproveRemark;
 
                 response_model.post_see = entity.See;
 
@@ -337,6 +339,30 @@ namespace Universal.Web.Controllers.api
             response_entity.msg = 1;
             response_entity.msgbox = "ok";
             return response_entity;
+        }
+
+        /// <summary>
+        /// 获取项目的审批状态
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/project/info/approve")]
+        public WebAjaxEntity<int> ProjectApproveStatus(int project_id)
+        {
+            WebAjaxEntity<int> result = new WebAjaxEntity<int>();
+
+            BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
+            var entity = bll.GetModel(p => p.ID == project_id);
+            if(entity == null)
+            {
+                result.msgbox = "项目不存在";
+                return result;
+            }
+            result.msg = 1;
+            result.data = (int)entity.ApproveStatus;
+            result.msgbox = entity.ApproveUserID == null ? "0" : entity.ApproveUserID.ToString();
+            return result;
         }
 
         /// <summary>

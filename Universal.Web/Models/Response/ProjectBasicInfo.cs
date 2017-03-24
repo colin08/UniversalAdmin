@@ -108,6 +108,16 @@ namespace Universal.Web.Models.Response
         public string approve_name { get; set; }
 
         /// <summary>
+        /// 审批状态
+        /// </summary>
+        public Entity.ApproveStatusType approve_status { get; set; }
+
+        /// <summary>
+        /// 审批备注
+        /// </summary>
+        public string approve_remark { get; set; }
+
+        /// <summary>
         /// 项目标题
         /// </summary>
         public string title { get; set; }

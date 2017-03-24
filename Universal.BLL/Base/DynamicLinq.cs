@@ -92,6 +92,7 @@ namespace Universal.BLL
                     filter = Expression.Equal(left, right);
                     break;
                 case FilterSearchContract.不等于:
+                    filter = Expression.NotEqual(left, right);
                     break;
                 case FilterSearchContract.大于:
                     filter = Expression.GreaterThan(left, right);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -128,16 +129,20 @@ namespace Universal.BLL
                 if (entity_project == null)
                     return;
                 List<int> user_list = db.Database.SqlQuery<int>("SELECT CusUserID FROM CusUserProjectFavorites WHERE ProjectID = " + project_id.ToString()).ToList();
+                string content = string.Format(BLLMsgTemplate.FavProjectUpdate, entity_project.Title);
                 foreach (var item in user_list)
                 {
                     Entity.CusUserMessage entity = new Entity.CusUserMessage();
-                    entity.Content = string.Format(BLLMsgTemplate.FavProjectUpdate, entity_project.Title);
+                    entity.Content = content;
                     entity.CusUserID = item;
                     entity.Type = Entity.CusUserMessageType.favprojectupdate;
                     entity.LinkID = project_id.ToString();
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
+                string ids = string.Join(",", user_list.ToArray());
+                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
             }
         }
 
@@ -154,16 +159,20 @@ namespace Universal.BLL
                 if (entity_doc == null)
                     return;
                 List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from CusUserDocFavorites where DocPostID = " + doc_id.ToString()).ToList();
+                string content= string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
                 foreach (var item in user_list)
                 {
                     Entity.CusUserMessage entity = new Entity.CusUserMessage();
-                    entity.Content = string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
+                    entity.Content = content;
                     entity.CusUserID = item;
                     entity.Type = Entity.CusUserMessageType.favdocupdate;
                     entity.LinkID = doc_id.ToString();
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
+                string ids = string.Join(",", user_list.ToArray());
+                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
             }
         }
 
@@ -189,6 +198,9 @@ namespace Universal.BLL
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
+                string ids = string.Join(",", user_list.ToArray());
+                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
 
@@ -216,6 +228,9 @@ namespace Universal.BLL
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
+                string ids = string.Join(",", id_list);
+                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
 
@@ -230,7 +245,8 @@ namespace Universal.BLL
         public static bool PushMsg(int user_id, Entity.CusUserMessageType type, string content, int link_id)
         {
             BLL.BaseBLL<Entity.CusUser> bll_user = new BaseBLL<Entity.CusUser>();
-            if (!bll_user.Exists(p => p.ID == user_id))
+            var entity_user = bll_user.GetModel(p => p.ID == user_id);
+            if (entity_user ==null)
                 return false;
             BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BaseBLL<Entity.CusUserMessage>();
             Entity.CusUserMessage entity = new Entity.CusUserMessage();
@@ -239,8 +255,9 @@ namespace Universal.BLL
             entity.Type = type;
             entity.LinkID = link_id.ToString();
             bll_msg.Add(entity);
+            Tools.JPush.PushALl(entity_user.Telphone, content, (int)type, link_id.ToString());
             return entity.ID > 0;
         }
-
+        
     }
 }

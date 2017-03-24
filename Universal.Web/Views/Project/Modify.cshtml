@@ -305,7 +305,7 @@
     });
     var pics=[];
     function initPics()
-    { 
+    {
         pics=[];
     	$('.album li').each(function()
     	{
@@ -315,7 +315,7 @@
     	});
         $('#albums').val(pics.join('|'));
     }
-    initPics();
+    //initPics();
     function removePic(obj){
     	var li=$(obj).parent();
     	li.remove();

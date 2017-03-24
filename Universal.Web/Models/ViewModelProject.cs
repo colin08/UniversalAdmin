@@ -172,7 +172,7 @@ namespace Universal.Web.Models
                 if (item.Type == Entity.ProjectFileType.file)
                 {
                     file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
-                    files.Append(item.FilePath + "," + item.FileName + "," + item.FileSize + "|");
+                    files.Append(item.FilePath + "," + item.FileName + "," + item.FileSize + ",1|");
                 }
                 else
                 {
