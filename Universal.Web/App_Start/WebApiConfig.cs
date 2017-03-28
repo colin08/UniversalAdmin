@@ -13,6 +13,7 @@ namespace Universal.Web
             // Web API 配置和服务
             //异常过滤器
             config.Filters.Add(new Framework.CustomAPIExceptionAttribute());
+            //接口日志过滤器
             config.Filters.Add(new Framework.CustomApiTrackerAttribute());
             
             //更改返回类型为json

@@ -34,16 +34,14 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("api/test/upload")]
+        [HttpPost]
         public async Task<HttpResponseMessage> UpdateUserAvatar()
         {
-            HttpResponseMessage response = new HttpResponseMessage();
-            response = Request.CreateResponse(HttpStatusCode.OK);
             // 检查是否是 multipart/form-data 
             if (!Request.Content.IsMimeMultipartContent("form-data"))
             {
                 WorkContext.AjaxStringEntity.msgbox = "缺少 enctype='multipart/form-data";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
+                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
             }
             //文件保存目录路径 
             string SaveTempPath = "/uploads/Users/Avatar";
@@ -61,8 +59,7 @@ namespace Universal.Web.Controllers
             if (provider.FileData.Count != 1)
             {
                 WorkContext.AjaxStringEntity.msgbox = "一次只能上传一个文件";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
+                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
             }
 
             string file_type = provider.FileData[0].Headers.ContentType.MediaType.ToString(); //image/png
@@ -70,8 +67,7 @@ namespace Universal.Web.Controllers
             if (file_type_list[0].ToLower() != "image")
             {
                 WorkContext.AjaxStringEntity.msgbox = "只能上传图片";
-                response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-                return response;
+                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
             }
 
             FileInfo fileinfo = new FileInfo(provider.FileData[0].LocalFileName);
@@ -89,8 +85,7 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             WorkContext.AjaxStringEntity.data = GetSiteUrl() + server_path;
-            response.Content = new StringContent(JsonConvert.SerializeObject(WorkContext.AjaxStringEntity), Encoding.GetEncoding("UTF-8"), "application/json");
-            return response;
+            return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
         }
 
 

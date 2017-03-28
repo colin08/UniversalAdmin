@@ -14,7 +14,7 @@ namespace Universal.Tools
     /// </summary>
     public enum ConfigFileEnum
     {
-        [Description("/App_Data/WebSite.config")]
+        [Description("~/App_Data/WebSite.config")]
         SiteConfig = 1
     }
 
@@ -90,12 +90,22 @@ namespace Universal.Tools
         /// 站点URL
         /// </summary>
         public string SiteUrl { get; set; }
+        
+        /// <summary>
+        /// Web API接口验证是否开启
+        /// </summary>
+        public bool WebAPIAuthentication { get; set; }
 
         /// <summary>
-        /// 是否启用页面耗时统计
+        /// Web页面耗时统计是否开启
         /// </summary>
-        public bool TimingEnabled { get; set; }
-        
+        public bool WebExecutionTime { get; set; }
+
+        /// <summary>
+        /// 是否启用WebAPI接口信息跟踪
+        /// </summary>
+        public bool WebAPITracker { get; set; }
+
         /// <summary>
         /// 操作日志是否入库
         /// </summary>
@@ -104,12 +114,7 @@ namespace Universal.Tools
         /// <summary>
         /// 异常日志是否入库
         /// </summary>
-        public bool LogExceptionInDB { get; set; }
-
-        /// <summary>
-        /// 启用接口日志
-        /// </summary>
-        public bool EnableAPILog { get; set; }
+        public bool LogExceptionInDB { get; set; }        
 
         /// <summary>
         /// 邮件-发送账户

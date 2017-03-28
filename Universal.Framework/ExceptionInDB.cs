@@ -26,8 +26,12 @@ namespace Universal.Web.Framework
                 StackTrace = ex.StackTrace
             };
 
-            BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
-            bll.Add(entity);
+            new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
+            {
+                BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
+                bll.Add(entity);
+            }));
+
         }
     }
 }

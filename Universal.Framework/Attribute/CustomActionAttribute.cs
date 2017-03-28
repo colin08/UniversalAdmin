@@ -31,7 +31,7 @@ namespace Universal.Web.Framework
         {
             base.OnActionExecuting(filterContext);
             //filterContext.HttpContext.Response.Write("1. OnActionExecuting  \r\n");
-            if(SiteConfig.TimingEnabled)
+            if(SiteConfig.WebExecutionTime)
             {
                 this.timer = new Stopwatch();
                 this.timer.Start();
@@ -46,11 +46,11 @@ namespace Universal.Web.Framework
         {
             base.OnActionExecuted(filterContext);
             //filterContext.HttpContext.Response.Write("2. OnActionExecuted \r\n");
-            if(SiteConfig.TimingEnabled)
+            if(SiteConfig.WebExecutionTime)
             {
                 this.timer.Stop();
                 long milli = this.timer.ElapsedMilliseconds;
-                Trace.WriteLine(string.Format("执行时间：{0}ms", milli.ToString()));
+                //Trace.WriteLine(string.Format("执行时间：{0}ms", milli.ToString()));
                 if (filterContext.Result is ViewResult)
                 {
                     ((ViewResult)filterContext.Result).ViewData["ExecutionTime"] = this.timer.ElapsedMilliseconds;

@@ -12,13 +12,13 @@ namespace Universal.Web.Framework
     /// <summary>
     /// Web API2 自定义异常过滤
     /// </summary>
-    public class CustomAPIExceptionAttribute: ExceptionFilterAttribute
+    public class CustomAPIExceptionAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
             //异常信息
             string error_msg = actionExecutedContext.Exception.Message;
-            
+
             ExceptionInDB.ToInDB(actionExecutedContext.Exception);
 
             WebAjaxEntity<string> model = new WebAjaxEntity<string>();

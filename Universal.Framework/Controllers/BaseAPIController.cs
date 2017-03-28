@@ -36,27 +36,13 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 用于通过WEB API上传文件同一返回请求
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="message"></param>
+        /// <param name="result">返回对象</param>
         /// <returns></returns>
-        protected HttpResponseMessage APIUploadReturnMsg(HttpRequestMessage request, string msgbox, string data)
+        protected HttpResponseMessage APIFileUploadResponse(HttpRequestMessage request, object result)
         {
-            string json = string.Empty;
-            if (data == null)
-            {
-                json = "{\"data\":null,\"msgbox\":\"" + msgbox + "\",\"msg\":0}";
-            }
-            else
-            {
-                if (data.StartsWith("{")) //如果是对象类型
-                    json = "{\"data\":" + data + ",\"msgbox\":\"" + msgbox + "\",\"msg\":1}";
-                else
-                    json = "{\"data\":\"" + data + "\",\"msgbox\":\"" + msgbox + "\",\"msg\":1}";
-            }
-
             HttpResponseMessage response = new HttpResponseMessage();
-            response = request.CreateResponse(HttpStatusCode.BadRequest);
-            response.Content = new StringContent(json, Encoding.GetEncoding("UTF-8"), "application/json");
+            response = request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(Tools.JsonHelper.ToJson(result), Encoding.GetEncoding("UTF-8"), "application/json");
             response.StatusCode = HttpStatusCode.OK;
             return response;
         }

@@ -205,7 +205,7 @@ namespace Universal.Tools
             }
             catch (Exception ex)
             {
-                IOHelper.WriteLogs("保存BASE64位数据错误，错误原因：" + ex.Message);
+                System.Diagnostics.Trace.WriteLine("保存BASE64位数据错误，错误原因：" + ex.Message);
                 return null;
             }
         }
@@ -288,7 +288,6 @@ namespace Universal.Tools
             }
 
             bool is_hander = true;
-            IOHelper.WriteLogs("orientation:" + orientation.ToString());
             switch (orientation)
             {
                 case 2:
@@ -470,30 +469,7 @@ namespace Universal.Tools
                 return unZipDir + fileName;
             }
         }
-
-
-        #region 打印日志
-        /// <summary>
-        /// 打印日志
-        /// </summary>
-        /// <param name="content">日志内容</param>
-        /// <param name="path">路径</param>
-        public static void WriteLogs(string content, string path = "")
-        {
-            string file_name = "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            string server_path = "~/logs/" + path;
-            string wl_path = HttpContext.Current.Server.MapPath(server_path);
-            if (!Directory.Exists(wl_path))
-                Directory.CreateDirectory(wl_path); //如果没有该目录，则创建
-            StreamWriter sw = new StreamWriter(wl_path + file_name, true, Encoding.UTF8);
-            DateTime dt = DateTime.Now;
-            sw.WriteLine("**************************" + dt.ToString() + " begin **************************");
-            sw.WriteLine(content);
-            sw.WriteLine("/*************************" + dt.ToString() + " end **************************/");
-            sw.Close();
-        }
-        #endregion
-        
+                
         /// <summary>
         ///     获取文件流
         /// </summary>
@@ -510,6 +486,49 @@ namespace Universal.Tools
                     name = s;
             }
             return String.IsNullOrEmpty(name) ? null : assembly.GetManifestResourceStream(name);
+        }
+
+        /// <summary>
+        /// 计算文件大小函数(保留两位小数),Size为字节大小
+        /// </summary>
+        /// <param name="size">初始文件大小</param>
+        /// <returns></returns>
+        public static string ToFileSize(long size)
+        {
+            string m_strSize = "";
+            long FactSize = 0;
+            FactSize = size;
+            if (FactSize < 1024.00)
+                m_strSize = FactSize.ToString("F2") + " 字节";
+            else if (FactSize >= 1024.00 && FactSize < 1048576)
+                m_strSize = (FactSize / 1024.00).ToString("F2") + " KB";
+            else if (FactSize >= 1048576 && FactSize < 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00).ToString("F2") + " MB";
+            else if (FactSize >= 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00 / 1024.00).ToString("F2") + " GB";
+            return m_strSize;
+        }
+
+        /// <summary>
+        /// 计算文件大小函数(保留两位小数),Size为字节大小
+        /// </summary>
+        /// <param name="_filepath">文件相对路径</param>
+        /// <returns></returns>
+        public static string ToFileSize(string _filepath)
+        {
+            long size = GetFileSizeByte(_filepath);
+            string m_strSize = "";
+            long FactSize = 0;
+            FactSize = size;
+            if (FactSize < 1024.00)
+                m_strSize = FactSize.ToString("F2") + " 字节";
+            else if (FactSize >= 1024.00 && FactSize < 1048576)
+                m_strSize = (FactSize / 1024.00).ToString("F2") + " KB";
+            else if (FactSize >= 1048576 && FactSize < 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00).ToString("F2") + " MB";
+            else if (FactSize >= 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00 / 1024.00).ToString("F2") + " GB";
+            return m_strSize;
         }
 
         /// <summary>

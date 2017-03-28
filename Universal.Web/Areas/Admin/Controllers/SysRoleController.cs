@@ -250,7 +250,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             }
 
-            ViewData["Tree"] = Newtonsoft.Json.JsonConvert.SerializeObject(list).Replace("is_checked", "checked");
+            ViewData["Tree"] = JsonHelper.ToJson(list).Replace("is_checked", "checked");
         }
 
     }

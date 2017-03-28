@@ -101,7 +101,7 @@ namespace Universal.Tools
                 wc.DownloadFile(pic_url, io_path + file_name);
             }
         }
-        
+
         ///// <summary>
         ///// 根据经纬度获取城市区名字
         ///// </summary>
@@ -128,7 +128,7 @@ namespace Universal.Tools
         //    return dic;
 
         //}
-
+        
         /// <summary>
         /// 时间戳转为C#格式时间
         /// <param name="defTime">如果转换失败，则返回的默认的时间</param>

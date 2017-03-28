@@ -22,8 +22,12 @@ namespace Universal.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //TODO 接口校验处于关闭状态
-            //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
+            //清除系统监听器
+            System.Diagnostics.Trace.Listeners.Clear();
+            //添加自定义监听器
+            System.Diagnostics.Trace.Listeners.Add(new Tools.CustomTraceListener());
+
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
 
         }
 

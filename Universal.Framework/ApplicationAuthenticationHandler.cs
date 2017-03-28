@@ -39,6 +39,7 @@ namespace Universal.Web.Framework
 
         protected override System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
+            WebAjaxEntity<bool> result = new WebAjaxEntity<bool>();
             IEnumerable<string> monsterApiKeyHeaderValues = null;
 
             //验证HTTP报文头
@@ -88,59 +89,38 @@ namespace Universal.Web.Framework
                             //    }
                             //    else
                             //    {
-                            //        return requestCancel(request, cancellationToken, "{\"_data\":null,\"_msgbox\":\"超时\",\"_msg\":0}");
+                            //          result.msgbox = "超时";
+                            //          return requestCancel(request, cancellationToken, result);
                             //    }
                             //}
                             //else
                             //{
-                            //    return requestCancel(request, cancellationToken, "{\"_data\":null,\"_msgbox\":\"授权数据错误2\",\"_msg\":0}");
+                            //    result.msgbox = "授权数据错误2";
+                            //    return requestCancel(request, cancellationToken, result);
                             //}
                         }
                         else
                         {
-                            return requestCancel(request, cancellationToken, "{\"data\":\"\",\"msgbox\":\"授权数据错误1\",\"msg\":0}");
+                            result.msgbox = "授权数据错误1";
+                            return requestCancel(request, cancellationToken, result);
                         }
                     }
                     else
                     {
-                        return requestCancel(request, cancellationToken, "{\"data\":\"\",\"msgbox\":\"授权格式错误\",\"msg\":0}");
+                        result.msgbox = "授权格式错误";
+                        return requestCancel(request, cancellationToken, result);
                     }
                 }
                 else
                 {
-                    return requestCancel(request, cancellationToken, "{\"data\":\"\",\"msgbox\":\"缺少授权参数\",\"msg\":0}");
+                    result.msgbox = "缺少授权参数";
+                    return requestCancel(request, cancellationToken, result);
                 }
-                //if (apiKeyHeaderValue.Length == 2)
-                //{
-                //    var appID = apiKeyHeaderValue[0];
-                //    var AppKey = apiKeyHeaderValue[1];
-                //    if (appID.Equals("test") && AppKey.Equals("123"))
-                //    {
-                //        var userNameClaim = new Claim(ClaimTypes.Name, appID);
-                //        var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
-                //        var principal = new ClaimsPrincipal(identity);
-                //        Thread.CurrentPrincipal = principal;
-
-                //        if (System.Web.HttpContext.Current != null)
-                //        {
-                //            System.Web.HttpContext.Current.User = principal;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        //Web请求取消原因应用程序键是无效的
-                //        return requestCancel(request, cancellationToken, "{\"msg\":0,\"msgbox\":\"AppID或AppKey有误\"}");
-                //    }
-                //}
-                //else
-                //{
-                //    //Web请求取消原因丢失钥匙或应用程序ID
-                //    return requestCancel(request, cancellationToken, "{\"msg\":0,\"msgbox\":\"丢失的用户信息参数\"}");
-                //}
             }
             else
             {
-                return requestCancel(request, cancellationToken, "{\"data\":\"\",\"msgbox\":\"未经授权\",\"msg\":0}");
+                result.msgbox = "Unauthorized";
+                return requestCancel(request, cancellationToken, result);
             }
 
             return base.SendAsync(request, cancellationToken);
@@ -153,14 +133,14 @@ namespace Universal.Web.Framework
         /// <param name="cancellationToken"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private System.Threading.Tasks.Task<HttpResponseMessage> requestCancel(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken, string message)
+        private Task<HttpResponseMessage> requestCancel(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken, WebAjaxEntity<bool> result)
         {
             CancellationTokenSource _tokenSource = new CancellationTokenSource();
             cancellationToken = _tokenSource.Token;
             _tokenSource.Cancel();
             HttpResponseMessage response = new HttpResponseMessage();
-            response = request.CreateResponse(HttpStatusCode.BadRequest);
-            response.Content = new StringContent(message, Encoding.GetEncoding("UTF-8"), "application/json");
+            response = request.CreateResponse(HttpStatusCode.Unauthorized);
+            response.Content = new StringContent(Tools.JsonHelper.ToJson(result), Encoding.GetEncoding("UTF-8"), "application/json");
             return base.SendAsync(request, cancellationToken).ContinueWith(task =>
             {
                 return response;
