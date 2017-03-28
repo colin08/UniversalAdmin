@@ -17,6 +17,7 @@ namespace Universal.Web.Controllers
     /// </summary>
     public class APIController : BaseAPIController
     {
+
         /// <summary>
         /// 测试接口
         /// </summary>
@@ -89,5 +90,18 @@ namespace Universal.Web.Controllers
         }
 
 
+    }
+
+    /// <summary>
+    /// Web API 自定义404错误消息
+    /// </summary>
+    public class ErrorController : BaseAPIController
+    {
+        [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions, AcceptVerbs("PATCH")]
+        public WebAjaxEntity<string> Handle404()
+        {
+            WorkContext.AjaxStringEntity.msgbox = "404";
+            return WorkContext.AjaxStringEntity;
+        }
     }
 }

@@ -28,6 +28,16 @@ namespace Universal.Web
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "Error404",
+                routeTemplate: "{*url}",
+                defaults: new { controller = "Error", action = "Handle404" }
+            );
+
+            //处理Web API 404错误
+            config.Services.Replace(typeof(System.Web.Http.Dispatcher.IHttpControllerSelector), new HttpNotFoundAwareDefaultHttpControllerSelector(config));
+            config.Services.Replace(typeof(System.Web.Http.Controllers.IHttpActionSelector), new HttpNotFoundAwareControllerActionSelector());
         }
     }
 }
