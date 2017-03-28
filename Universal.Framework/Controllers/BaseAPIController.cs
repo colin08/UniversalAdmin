@@ -32,20 +32,6 @@ namespace Universal.Web.Framework
         {
             return "http://" + Request.RequestUri.Authority;
         }
-
-        /// <summary>
-        /// 用于通过WEB API上传文件同一返回请求
-        /// </summary>
-        /// <param name="result">返回对象</param>
-        /// <returns></returns>
-        protected HttpResponseMessage APIFileUploadResponse(HttpRequestMessage request, object result)
-        {
-            HttpResponseMessage response = new HttpResponseMessage();
-            response = request.CreateResponse(HttpStatusCode.OK);
-            response.Content = new StringContent(Tools.JsonHelper.ToJson(result), Encoding.GetEncoding("UTF-8"), "application/json");
-            response.StatusCode = HttpStatusCode.OK;
-            return response;
-        }
     }
 
     /// <summary>

@@ -30,18 +30,18 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 修改用户头像，From表单中头像标识：user_id
+        /// 测试上传
         /// </summary>
         /// <returns></returns>
-        [Route("api/test/upload")]
         [HttpPost]
-        public async Task<HttpResponseMessage> UpdateUserAvatar()
+        [Route("api/test/upload")]
+        public async Task<WebAjaxEntity<string>> UpdateUserAvatar()
         {
             // 检查是否是 multipart/form-data 
             if (!Request.Content.IsMimeMultipartContent("form-data"))
             {
                 WorkContext.AjaxStringEntity.msgbox = "缺少 enctype='multipart/form-data";
-                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
+                return WorkContext.AjaxStringEntity;
             }
             //文件保存目录路径 
             string SaveTempPath = "/uploads/Users/Avatar";
@@ -59,7 +59,7 @@ namespace Universal.Web.Controllers
             if (provider.FileData.Count != 1)
             {
                 WorkContext.AjaxStringEntity.msgbox = "一次只能上传一个文件";
-                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
+                return WorkContext.AjaxStringEntity;
             }
 
             string file_type = provider.FileData[0].Headers.ContentType.MediaType.ToString(); //image/png
@@ -67,7 +67,7 @@ namespace Universal.Web.Controllers
             if (file_type_list[0].ToLower() != "image")
             {
                 WorkContext.AjaxStringEntity.msgbox = "只能上传图片";
-                return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
+                return WorkContext.AjaxStringEntity;
             }
 
             FileInfo fileinfo = new FileInfo(provider.FileData[0].LocalFileName);
@@ -76,7 +76,7 @@ namespace Universal.Web.Controllers
             string new_path = dirTempPath + "/" + md5 + "." + file_type_list[1];
             string server_path = (SaveTempPath + "/" + md5 + "." + file_type_list[1]).Replace(" ", "");
             if (System.IO.File.Exists(new_path))
-                System.IO.File.Delete(io_path); //把刚刚上传的给删掉，只用原有的文件
+                System.IO.File.Delete(io_path);
             else //不存在，改名为md5值保存
                 System.IO.File.Move(io_path, dirTempPath + "/" + md5 + "." + file_type_list[1]); //给文件改名}
 
@@ -85,7 +85,7 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
             WorkContext.AjaxStringEntity.data = GetSiteUrl() + server_path;
-            return APIFileUploadResponse(Request, WorkContext.AjaxStringEntity);
+            return WorkContext.AjaxStringEntity;
         }
 
 

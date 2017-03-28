@@ -97,6 +97,16 @@ namespace Universal.Tools
         public bool WebAPIAuthentication { get; set; }
 
         /// <summary>
+        /// Web API token的KEY名
+        /// </summary>
+        public string WebAPITokenKey { get; set; }
+
+        /// <summary>
+        /// Web API混淆字符串
+        /// </summary>
+        public string WebAPIMixer { get; set; }
+
+        /// <summary>
         /// Web页面耗时统计是否开启
         /// </summary>
         public bool WebExecutionTime { get; set; }
