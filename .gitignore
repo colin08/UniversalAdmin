@@ -243,9 +243,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-/Universal.Web/uploads/avatar
-/Universal.Web/uploads/demo
-/Universal.Web/uploads/apk
-/Universal.Web/uploads/ipa
-/Universal.Web/uploads/area
 /Universal.Web/uploads
+/Universal.Web/logs
