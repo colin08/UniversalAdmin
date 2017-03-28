@@ -22,6 +22,16 @@ namespace Universal.BLL
         notlike
     }
 
+    /// <summary>
+    /// and 还是or
+    /// </summary>
+    public enum FilterRelate
+    {
+        AndAlso,
+        And,
+        Or
+    }
+
     public class FilterSearch
     {
         /// <summary>
@@ -39,21 +49,23 @@ namespace Universal.BLL
         /// </summary>
         public FilterSearchContract Contract { get; set; }
 
-        //public FilterSearch()
-        //{
+        /// <summary>
+        /// 关联and或or查询
+        /// </summary>
+        public FilterRelate Relate { get; set; }
 
-        //}
 
         public FilterSearch()
         {
 
         }
 
-        public FilterSearch(string key,string value, FilterSearchContract contract)
+        public FilterSearch(string key,string value, FilterSearchContract contract,FilterRelate relate = FilterRelate.AndAlso)
         {
             this.Key = key;
             this.Value = value;
             this.Contract = contract;
+            this.Relate = relate;
         }
 
     }

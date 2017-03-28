@@ -19,7 +19,7 @@ namespace Universal.BLL
             return Expression.Parameter(typeof(T), name);
         }
 
-        public static Expression<Func<T,object>> GenerateSingleLambda<T>(string property)
+        public static Expression<Func<T, object>> GenerateSingleLambda<T>(string property)
         {
             var parameter = Expression.Parameter(typeof(T), "t");
             var express = Expression.Lambda<Func<T, object>>(Expression.Convert(Expression.Property(parameter, property), typeof(object)), parameter);
@@ -50,7 +50,7 @@ namespace Universal.BLL
             Expression left = Expression.Property(param, property);
             //组装右边  
             Expression right = null;
- 
+
             if (property.PropertyType == typeof(int))
             {
                 right = Expression.Constant(int.Parse(filterObj.Value));
@@ -84,7 +84,7 @@ namespace Universal.BLL
             {
                 throw new Exception("暂不能解析该Key的类型");
             }
-            
+
             Expression filter = Expression.Equal(left, right);
             switch (filterObj.Contract)
             {
@@ -114,7 +114,7 @@ namespace Universal.BLL
                     filter = Expression.Not(Expression.Call(left, typeof(string).GetMethod("Contains", new[] { typeof(string) }),
                                  Expression.Constant(filterObj.Value)));
                     break;
-                    
+
                 default:
                     filter = Expression.Equal(left, right);
                     break;
@@ -152,7 +152,7 @@ namespace Universal.BLL
         {
             return Expression.And(expression, expressionRight);
         }
-        
+
     }
 
     public static class DynamicExtention
@@ -170,7 +170,21 @@ namespace Universal.BLL
             Expression body = Expression.Constant(true); //初始默认一个true  
             foreach (var filter in filters)
             {
-                body = body.AndAlso(param.GenerateBody<T>(filter)); //这里可以根据需要自由组合  
+                switch (filter.Relate)
+                {
+                    case FilterRelate.AndAlso:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.And:
+                        body = body.And(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.Or:
+                        body = body.Or(param.GenerateBody<T>(filter));
+                        break;
+                    default:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                }
             }
             var lambda = param.GenerateTypeLambda<T>(body); //最终组成lambda  
             return query.Where(lambda);
@@ -189,7 +203,21 @@ namespace Universal.BLL
             Expression body = Expression.Constant(true); //初始默认一个true  
             foreach (var filter in filters)
             {
-                body = body.AndAlso(param.GenerateBody<T>(filter)); //这里可以根据需要自由组合  
+                switch (filter.Relate)
+                {
+                    case FilterRelate.AndAlso:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.And:
+                        body = body.And(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.Or:
+                        body = body.Or(param.GenerateBody<T>(filter));
+                        break;
+                    default:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                }
             }
             var lambda = param.GenerateTypeLambda<T>(body); //最终组成lambda  
             return query.Count(lambda);
@@ -208,7 +236,21 @@ namespace Universal.BLL
             Expression body = Expression.Constant(true); //初始默认一个true  
             foreach (var filter in filters)
             {
-                body = body.AndAlso(param.GenerateBody<T>(filter)); //这里可以根据需要自由组合  
+                switch (filter.Relate)
+                {
+                    case FilterRelate.AndAlso:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.And:
+                        body = body.And(param.GenerateBody<T>(filter));
+                        break;
+                    case FilterRelate.Or:
+                        body = body.Or(param.GenerateBody<T>(filter));
+                        break;
+                    default:
+                        body = body.AndAlso(param.GenerateBody<T>(filter));
+                        break;
+                }                
             }
             var lambda = param.GenerateTypeLambda<T>(body); //最终组成lambda  
             return query.Any(lambda);
@@ -228,7 +270,35 @@ namespace Universal.BLL
                 throw new ArgumentException("query is null");
             return DynamicQueryable.OrderBy(query, ordering, values);
         }
-        
+
+        /// <summary>
+        /// 扩展Between 操作符
+        /// 使用 var query = db.People.Between(person => person.Age, 18, 21);
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="low"></param>
+        /// <param name="high"></param>
+        /// <returns></returns>
+        public static IQueryable<TSource> BetweenCustom<TSource, TKey>
+            (this IQueryable<TSource> source,
+                Expression<Func<TSource, TKey>> keySelector,
+                TKey low, TKey high) where TKey : IComparable<TKey>
+        {
+            Expression key = Expression.Invoke(keySelector,
+                keySelector.Parameters.ToArray());
+            Expression lowerBound = Expression.GreaterThanOrEqual
+                (key, Expression.Constant(low));
+            Expression upperBound = Expression.LessThanOrEqual
+                (key, Expression.Constant(high));
+            Expression and = Expression.AndAlso(lowerBound, upperBound);
+            Expression<Func<TSource, bool>> lambda =
+                Expression.Lambda<Func<TSource, bool>>(and, keySelector.Parameters);
+            return source.Where(lambda);
+        }
+
     }
 
 }
