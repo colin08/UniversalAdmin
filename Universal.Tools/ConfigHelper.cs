@@ -26,6 +26,15 @@ namespace Universal.Tools
         private static object lockHelper = new object();
 
         /// <summary>
+        /// 获取站点配置文件
+        /// </summary>
+        /// <returns></returns>
+        public static WebSiteModel GetSiteModel()
+        {
+            return LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+        }
+
+        /// <summary>
         /// 加载配置文件
         /// </summary>
         /// <param name="configPath">配置文件相对路径</param>
@@ -115,6 +124,11 @@ namespace Universal.Tools
         /// 是否启用WebAPI接口信息跟踪
         /// </summary>
         public bool WebAPITracker { get; set; }
+
+        /// <summary>
+        /// 数据库备份目录
+        /// </summary>
+        public string DbBackPath { get; set; }
 
         /// <summary>
         /// 操作日志是否入库

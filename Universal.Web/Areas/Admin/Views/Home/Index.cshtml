@@ -116,6 +116,13 @@
                         <a class="J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
                     </li>
 
+                    @if (CheckAdminPower("SysDbBack/Index", false))
+                    {
+                    <li>
+                        <a class="J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a>
+                    </li>
+                    }
+
                 </ul>
             </div>
         </nav>

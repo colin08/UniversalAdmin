@@ -1,0 +1,141 @@
+﻿@model Universal.Entity.SysDbBack
+@{
+    ViewBag.Title = "备份详情 - " + Model.BackName;
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+
+<!--头部脚本 end-->
+<!--路径导航-->
+@section nav
+{
+    <div class="col-sm-4">
+        <h2>备份详情</h2>
+        <ol class="breadcrumb">
+            <li>主页</li>
+            <li><a href="@Url.Action("Index", "CusCategory", new { Area = "Admin" })">备份列表</a></li>
+            <li><strong>备份详情</strong></li>
+        </ol>
+    </div>
+    <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
+}
+<!--路径导航 end-->
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal">
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.DbName)</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.DbName</label>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.BackName)</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.BackName</label>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.BackType)</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.TypeStr</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Remark)</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.Remark</label>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.FilePath)</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.FilePath</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>  
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">文件大小</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@(Universal.Tools.IOHelper.ToIOFileSize(Model.FilePath))</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>  
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">备份者</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.AddUser.NickName</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">备份时间</label>
+
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.AddTime</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-download"></i><span class="bold"> 下载备份</span></button>&nbsp;
+                    <button class="btn" type="button"><i class="fa fa-repeat"></i><span class="bold"> 还原备份</span></button>&nbsp;
+                    <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+
+    </script>
+}
+<!--底部脚本 end-->

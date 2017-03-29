@@ -1,0 +1,112 @@
+﻿@model Universal.Entity.SysDbBack
+@{
+    ViewBag.Title = "新增备份";
+}
+
+<!--头部脚本-->
+@section head
+{
+<link href="~/Assets/css/plugins/chosen/chosen.css" rel="stylesheet" />
+}
+
+<!--头部脚本 end-->
+<!--路径导航-->
+@section nav
+{
+    <div class="col-sm-4">
+        <h2>新增备份</h2>
+        <ol class="breadcrumb">
+            <li>主页</li>
+            <li><a href="@Url.Action("Index", "CusCategory", new { Area = "Admin" })">备份列表</a></li>
+            <li><strong>新增备份</strong></li>
+        </ol>
+    </div>
+    <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
+}
+<!--路径导航 end-->
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p => p.AddTime)
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.DbName)</label>
+
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.DbName, ViewData["dbList"] as List<SelectListItem>, new { @class = "chosen-select",style= "width: 200px;", tabindex="2" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.DbName)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.BackName)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.BackName, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.BackName)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.BackType)</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.BackType, ViewData["TypeList"] as List<SelectListItem>, new { @class = "form-control" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.BackType)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Remark)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.Remark, new { @class = "form-control", placeholder = "说明", style = "height:100px" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Remark)</label>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+                        {
+                            @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Assets/js/plugins/chosen/chosen.jquery.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $('.chosen-select').chosen();
+                                @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

@@ -532,6 +532,28 @@ namespace Universal.Tools
         }
 
         /// <summary>
+        /// 计算文件大小函数(保留两位小数),Size为字节大小
+        /// </summary>
+        /// <param name="_filepath">文件绝对路径</param>
+        /// <returns></returns>
+        public static string ToIOFileSize(string _filepath)
+        {
+            long size = GetIOFileSizeByte(_filepath);
+            string m_strSize = "";
+            long FactSize = 0;
+            FactSize = size;
+            if (FactSize < 1024.00)
+                m_strSize = FactSize.ToString("F2") + " 字节";
+            else if (FactSize >= 1024.00 && FactSize < 1048576)
+                m_strSize = (FactSize / 1024.00).ToString("F2") + " KB";
+            else if (FactSize >= 1048576 && FactSize < 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00).ToString("F2") + " MB";
+            else if (FactSize >= 1073741824)
+                m_strSize = (FactSize / 1024.00 / 1024.00 / 1024.00).ToString("F2") + " GB";
+            return m_strSize;
+        }
+
+        /// <summary>
         /// 返回文件大小KB
         /// </summary>
         /// <param name="_filepath">文件相对路径</param>
@@ -566,6 +588,25 @@ namespace Universal.Tools
             if (File.Exists(fullpath))
             {
                 FileInfo fileInfo = new FileInfo(fullpath);
+                return fileInfo.Length;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 返回文件大小Byte
+        /// </summary>
+        /// <param name="_filepath">文件绝对路径</param>
+        /// <returns>int</returns>
+        public static long GetIOFileSizeByte(string _filepath)
+        {
+            if (string.IsNullOrEmpty(_filepath))
+            {
+                return 0;
+            }
+            if (File.Exists(_filepath))
+            {
+                FileInfo fileInfo = new FileInfo(_filepath);
                 return fileInfo.Length;
             }
             return 0;

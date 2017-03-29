@@ -83,6 +83,11 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.CusCategory> CusCategorys { get; set; }
 
+        /// <summary>
+        /// 数据库备份
+        /// </summary>
+        public  DbSet<Entity.SysDbBack> SysDbBacks { get; set; }
+
 
         /// <summary>
         /// 

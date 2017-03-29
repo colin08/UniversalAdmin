@@ -150,6 +150,8 @@
     <Content Include="Assets\css\patterns\header-profile-skin-3.png" />
     <Content Include="Assets\css\patterns\header-profile.png" />
     <Content Include="Assets\css\patterns\shattered.png" />
+    <Content Include="Assets\css\plugins\chosen\chosen-sprite%402x.png" />
+    <Content Include="Assets\css\plugins\chosen\chosen.css" />
     <Content Include="Assets\css\plugins\markdown\bootstrap-markdown.min.css" />
     <Content Include="Assets\css\plugins\perfect-scrollbar\perfect-scrollbar.css" />
     <Content Include="Assets\css\plugins\perfect-scrollbar\perfect-scrollbar.min.css" />
@@ -167,6 +169,7 @@
     <Content Include="Assets\js\jquery-ui-1.10.4.min.js" />
     <Content Include="Assets\js\jquery-ui.custom.min.js" />
     <Content Include="Assets\js\jquery.min.js" />
+    <Content Include="Assets\js\plugins\chosen\chosen.jquery.js" />
     <Content Include="Assets\js\plugins\layer\layer.min.js" />
     <Content Include="Assets\js\plugins\layer\laypage\laypage.js" />
     <Content Include="Assets\js\plugins\layer\laypage\skin\laypage.css" />
@@ -263,6 +266,7 @@
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SysDbBackController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
@@ -270,6 +274,7 @@
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelAppVersion.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelSysDbBack.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
@@ -379,6 +384,9 @@
     <Content Include="Areas\Admin\Views\Shared\_SysInfo.cshtml" />
     <Content Include="Areas\Admin\Views\CusCategory\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CusCategory\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SysDbBack\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SysDbBack\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\SysDbBack\Info.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
