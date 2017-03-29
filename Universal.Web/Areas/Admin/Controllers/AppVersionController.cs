@@ -70,7 +70,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (num != 0)
             {
                 BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
-                entity = bll.GetModel(p => p.ID == num);
+                entity = bll.GetModel(p => p.ID == num,null);
                 if (entity == null)
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 if (entity.Platforms != Entity.APPVersionPlatforms.Android)
@@ -141,7 +141,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             if (num != 0)
             {
-                entity = bll.GetModel(p => p.ID == num);
+                entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                     return PromptView("/admin/AppVersion", "404", "Not Found", "信息不存在或已被删除", 5);
                 if (entity.Platforms != Entity.APPVersionPlatforms.IOS)

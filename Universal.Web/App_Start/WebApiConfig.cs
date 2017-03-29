@@ -31,7 +31,7 @@ namespace Universal.Web
 
             config.Routes.MapHttpRoute(
                 name: "Error404",
-                routeTemplate: "{*url}",
+                routeTemplate: "api/*",
                 defaults: new { controller = "Error", action = "Handle404" }
             );
 

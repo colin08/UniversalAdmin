@@ -35,7 +35,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
                     filters.Add(new BLL.FilterSearch("ID", uid.ToString(), BLL.FilterSearchContract.等于));
                     filters.Add(new BLL.FilterSearch("Password", upwd, BLL.FilterSearchContract.等于));
-                    Entity.SysUser model = bll.GetModel(filters, p => p.SysRole.SysRoleRoutes.Select(t => t.SysRoute));
+                    Entity.SysUser model = bll.GetModel(filters,null, "SysRole.SysRoleRoutes.SysRoute");
                     if (model != null)
                     {
                         if (model.Status)
@@ -82,7 +82,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
                 filters.Add(new BLL.FilterSearch("UserName", viewModelLogin.user_name, BLL.FilterSearchContract.等于));
                 filters.Add(new BLL.FilterSearch("Password", passworld, BLL.FilterSearchContract.等于));
-                Entity.SysUser model = bll.GetModel(filters, s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute));
+                Entity.SysUser model = bll.GetModel(filters,null, "SysRole.SysRoleRoutes.SysRoute");
                 if (model == null)
                 {
                     ModelState.AddModelError("user_name", "用户名或密码错误");

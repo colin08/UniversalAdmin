@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL.Tests
 {
@@ -12,105 +13,23 @@ namespace Universal.BLL.Tests
     public class BaseBLLTests
     {
         [TestMethod()]
-        public void AddTest()
+        public void BaseBLLTest()
         {
-            Assert.Fail();
-        }
+            //BaseBLL<Entity.Demo> bll = new BaseBLL<Entity.Demo>();
+            //List<BLL.FilterSearch> filter = new List<FilterSearch>();
+            //filter.Add(new FilterSearch("ID", "1", FilterSearchContract.等于));
+            //var entity = bll.GetModel(filter, null, "AddUser.SysRole");
 
-        [TestMethod()]
-        public void AddReturnModelTest()
-        {
-            Assert.Fail();
-        }
+            BaseBLL<Entity.SysUser> bll = new BaseBLL<Entity.SysUser>();
+            List<FilterSearch> filters = new List<FilterSearch>();
+            filters.Add(new FilterSearch("ID","1", FilterSearchContract.等于));
+            //var entity = bll.GetModel(filters, null, "SysRole.SysRoleRoutes.SysRoute");
+            var total = 0;
+            //var list = bll.GetPagedList(1, 10, ref total, filters, "RegTime desc", "SysRole");
+            var list = bll.GetPagedList(1, 10, ref total, filters, "RegTime desc", "SysRole");
 
-        [TestMethod()]
-        public void DelTest()
-        {
-            Assert.Fail();
+            Assert.AreEqual(total, 1);
         }
-
-        [TestMethod()]
-        public void DelByTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ModifyTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ModifyTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ModifyByTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetModelTest()
-        {
-            Assert.AreEqual(1,1);
-        }
-
-        [TestMethod()]
-        public void GetModelTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetListByTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetListByTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetListByTest2()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetListByTest3()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetListByTest4()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetPagedListTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetPagedListTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void GetPagedListTest2()
-        {
-            Assert.Fail();
-        }
+        
     }
 }

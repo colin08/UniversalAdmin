@@ -258,7 +258,7 @@ namespace Universal.Web.Framework
                     List<FilterSearch> filters = new List<FilterSearch>();
                     filters.Add(new FilterSearch("ID", uid.ToString(), FilterSearchContract.等于));
                     filters.Add(new FilterSearch("Password", upwd, FilterSearchContract.等于));
-                    Entity.SysUser model = bll.GetModel(filters, s => s.SysRole.SysRoleRoutes.Select(y => y.SysRoute));
+                    Entity.SysUser model = bll.GetModel(filters, null, "SysRole.SysRoleRoutes.SysRoute");
                     if(model != null)
                     {
                         if (model.Status)

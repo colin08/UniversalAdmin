@@ -51,7 +51,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysLogMethod> bll = new BLL.BaseBLL<Entity.SysLogMethod>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "AddTime desc", p => p.SysUser);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "AddTime desc","SysUser");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);

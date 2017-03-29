@@ -101,7 +101,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             foreach (var item in route_list)
             {
-                var entity = bll.GetModel(p => p.IsPost == item.IsPost && p.Route == item.Route);
+                var entity = bll.GetModel(p => p.IsPost == item.IsPost && p.Route == item.Route, null);
                 if (entity == null)
                 {
                     var route = new Entity.SysRoute();
@@ -133,7 +133,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             int num = TypeHelper.ObjectToInt(id, 0);
             if (num != 0)
             {
-                entity = bll.GetModel(p => p.ID == num);
+                entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                 {
                     return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 5);
@@ -163,7 +163,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 if (bll.Exists(p => p.ID == entity.ID))
                     return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
 
-                var old_entity = bll.GetModel(p => p.ID == entity.ID);
+                var old_entity = bll.GetModel(p => p.ID == entity.ID, null);
                 //验证组名是否存在
                 if (old_entity.RoleName != entity.RoleName)
                 {
@@ -222,7 +222,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             BLL.BaseBLL<Entity.SysRoleRoute> bll_role_route = new BLL.BaseBLL<Entity.SysRoleRoute>();
             Entity.SysRole role = null;
             if (id != 0)
-                role = bll_route.GetModel(p => p.ID == id);
+                role = bll_route.GetModel(p => p.ID == id, null);
 
             List<Models.ViewModelTree> list = new List<Models.ViewModelTree>();
             var route_group = new BLL.BLLSysRoute().GetListGroupByTag();

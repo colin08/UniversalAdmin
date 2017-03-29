@@ -43,7 +43,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "RegTime desc", p => p.SysRole);
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "RegTime desc","SysRole");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -64,7 +64,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             int num = TypeHelper.ObjectToInt(id, 0);
             if (num != 0)
             {
-                entity = bll.GetModel(p => p.ID == num);
+                entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                 {
                     return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
@@ -126,7 +126,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 }
                 else //修改
                 {
-                    var user = bll.GetModel(p => p.ID == entity.ID);
+                    var user = bll.GetModel(p => p.ID == entity.ID, null);
                     if (entity.Password != "litdev")
                         user.Password = SecureHelper.MD5(entity.Password);
                     user.NickName = entity.NickName;

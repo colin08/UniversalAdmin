@@ -231,69 +231,49 @@ namespace Universal.BLL
 
 
         //查，查单个model
-        #region 4.0 根据条件查询单个model + T GetModel(List<FilterSearch> where,string orderby="")
+        #region 4.0 根据条件查询单个model + T GetModel(List<FilterSearch> where,string orderby, params string [] includePath)
         /// <summary>
         /// 4.0 根据条件查询单个model
         /// </summary>
         /// <param name="where">Where条件</param>
         /// <param name="orderby">排序</param>
+        /// <param name="includePath">InClude路径，对象名</param>
         /// <returns></returns>
-        public T GetModel(List<FilterSearch> where, string orderby = "")
+        public T GetModel(List<FilterSearch> where, string orderby, params string [] includePath)
         {
+            var query = db.Set<T>().WhereCustom(where);
+            foreach (var path in includePath)
+            {
+                if(!string.IsNullOrWhiteSpace(path))
+                    query = query.Include(path);
+            }
             if (string.IsNullOrWhiteSpace(orderby))
-                return db.Set<T>().WhereCustom(where).AsNoTracking().FirstOrDefault();
+                return query.AsNoTracking().FirstOrDefault();
             else
-                return db.Set<T>().WhereCustom(where).OrderByCustom(orderby).AsNoTracking().FirstOrDefault();
+                return query.OrderByCustom(orderby).AsNoTracking().FirstOrDefault();
         }
         #endregion
 
-        #region 4.1 根据条件查询单个model + T GetModel(Expression<Func<T, bool>> whereLambda, string orderby = "")
+        #region 4.1 根据条件查询单个model + T GetModel(Expression<Func<T, bool>> whereLambda, string orderby, params string [] includePath)
         /// <summary>
         /// 4.1 根据条件查询单个model
         /// </summary>
         /// <param name="whereLambda">Where条件</param>
         /// <param name="orderby">排序</param>
+        /// <param name="includePath">InClude路径，对象名</param>
         /// <returns></returns>
-        public T GetModel(Expression<Func<T, bool>> whereLambda, string orderby = "")
+        public T GetModel(Expression<Func<T, bool>> whereLambda, string orderby, params string[] includePath)
         {
+            var query = db.Set<T>().Where(whereLambda);
+            foreach (var path in includePath)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    query = query.Include(path);
+            }
             if (string.IsNullOrWhiteSpace(orderby))
-                return db.Set<T>().Where(whereLambda).AsNoTracking().FirstOrDefault();
+                return query.AsNoTracking().FirstOrDefault();
             else
-                return db.Set<T>().Where(whereLambda).OrderByCustom(orderby).AsNoTracking().FirstOrDefault();
-        }
-        #endregion
-
-        #region 4.2 根据条件查询单个model，使用Incloud + T GetModel<TKey>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, string orderby = "")
-        /// <summary>
-        /// 4.2 根据条件查询单个model，使用Incloud
-        /// </summary>
-        /// <param name="where">Where条件</param>
-        /// <param name="incloudLambda">包含条件</param>
-        /// <param name="orderby">排序</param>
-        /// <returns></returns>
-        public T GetModel<TKey>(List<FilterSearch> where, Expression<Func<T, TKey>> incloudLambda, string orderby = "")
-        {
-            if (string.IsNullOrWhiteSpace(orderby))
-                return db.Set<T>().WhereCustom(where).Include(incloudLambda).AsNoTracking().FirstOrDefault();
-            else
-                return db.Set<T>().WhereCustom(where).Include(incloudLambda).OrderByCustom(orderby).AsNoTracking().FirstOrDefault();
-        }
-        #endregion
-
-        #region 4.3 根据条件查询单个model，使用Incloud + T GetModel<TKey>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda, string ordery = "")
-        /// <summary>
-        /// 4.3 根据条件查询单个model，使用Incloud
-        /// </summary>
-        /// <param name="whereLambda">Where条件</param>
-        /// <param name="incloudLambda">包含条件</param>
-        /// <param name="orderby">排序</param>
-        /// <returns></returns>
-        public T GetModel<TKey>(Expression<Func<T, bool>> whereLambda, Expression<Func<T, TKey>> incloudLambda, string ordery = "")
-        {
-            if (string.IsNullOrWhiteSpace(ordery))
-                return db.Set<T>().Where(whereLambda).Include(incloudLambda).AsNoTracking().FirstOrDefault();
-            else
-                return db.Set<T>().Where(whereLambda).Include(incloudLambda).OrderByCustom(ordery).AsNoTracking().FirstOrDefault();
+                return query.OrderByCustom(orderby).AsNoTracking().FirstOrDefault();
         }
         #endregion
 
@@ -445,9 +425,9 @@ namespace Universal.BLL
         #endregion
 
         //查，带分页查询
-        #region 6.0分页查询 不带InCloud +List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby)
+        #region 6.0分页查询 +List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby, params string [] includePath)
         /// <summary>
-        /// 分页查询 不带InCloud
+        /// 分页查询
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="pageIndex"></param>
@@ -456,73 +436,37 @@ namespace Universal.BLL
         /// <param name="where"></param>
         /// <param name="orderby"></param>
         /// <returns></returns>
-        public List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby)
+        public List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby, params string[] includePath)
         {
-            //使用拓展框架
-            var q = db.Set<T>().WhereCustom(where);
-            var q1 = q.FutureCount();
-            var q3 = q.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
-            rowCount = q1.Value;
-            return q3.ToList();
-        }
+            //使用拓展框架 !不能使用，Include和AsNoTracking冲突
+            //var q = db.Set<T>().WhereCustom(where);
+            //var q1 = q.FutureCount();
+            //var q3 = q;
+            //foreach (var path in includePath)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(path))
+            //        q3 = q3.Include(path);
+            //}
+            //var q4 = q3.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            //rowCount = q1.Value;
+            //return q4.ToList();
 
-
-        #endregion
-
-        #region 6.1分页查询 不带InCloud +List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby)
-        /// <summary>
-        /// 分页查询 不带InCloud
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="rowCount"></param>
-        /// <param name="whereLambda"></param>
-        /// <param name="orderby"></param>
-        /// <returns></returns>
-        public List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby)
-        {
-            //使用拓展框架
-            var q = db.Set<T>().Where(whereLambda);
-            var q1 = q.FutureCount();
-            var q3 = q.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
-            rowCount = q1.Value;
-            return q3.ToList();
-
-        }
-
-
-        #endregion
-
-        #region 6.2分页查询 带InCloud +List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby, Expression<Func<T, TKey>> incloudLambda)
-        /// <summary>
-        /// 分页查询 带InCloud
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="rowCount"></param>
-        /// <param name="where"></param>
-        /// <param name="orderby"></param>
-        /// <param name="incloudLambda"></param>
-        /// <returns></returns>
-        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, List<FilterSearch> where, string orderby, Expression<Func<T, TKey>> incloudLambda)
-        {
             rowCount = db.Set<T>().WhereCustom(where).Count();
-
-            if (incloudLambda != null)
-                return db.Set<T>().OrderByCustom(orderby).Include(incloudLambda).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            else
-                return db.Set<T>().OrderByCustom(orderby).WhereCustom(where).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-
+            var query = db.Set<T>().WhereCustom(where);
+            foreach (var path in includePath)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    query = query.Include(path);
+            }
+            return query.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
         }
-
-
+        
         #endregion
 
-        #region 6.3分页查询 带InCloud +List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby, Expression<Func<T, TKey>> incloudLambda)
+        //查，带分页查询
+        #region 6.1分页查询 +List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby, params string[] includePath)
         /// <summary>
-        /// 分页查询 带InCloud
+        /// 分页查询
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="pageIndex"></param>
@@ -530,18 +474,32 @@ namespace Universal.BLL
         /// <param name="rowCount"></param>
         /// <param name="whereLambda"></param>
         /// <param name="orderby"></param>
-        /// <param name="incloudLambda"></param>
         /// <returns></returns>
-        public List<T> GetPagedList<TKey>(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby, Expression<Func<T, TKey>> incloudLambda)
+        public List<T> GetPagedList(int pageIndex, int pageSize, ref int rowCount, Expression<Func<T, bool>> whereLambda, string orderby, params string[] includePath)
         {
+            //使用拓展框架 !不能使用，Include和AsNoTracking冲突
+            //var q = db.Set<T>().Where(whereLambda);
+            //var q1 = q.FutureCount();
+            //var q3 = q;
+            //foreach (var path in includePath)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(path))
+            //        q3 = q3.Include(path);
+            //}
+            //var q4 = q3.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().Future();
+            //rowCount = q1.Value;
+            //return q4.ToList();
             rowCount = db.Set<T>().Where(whereLambda).Count();
-
-            if (incloudLambda != null)
-                return db.Set<T>().OrderByCustom(orderby).Include(incloudLambda).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
-            else
-                return db.Set<T>().OrderByCustom(orderby).Where(whereLambda).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            var query = db.Set<T>().Where(whereLambda);
+            foreach (var path in includePath)
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    query = query.Include(path);
+            }
+            return query.OrderByCustom(orderby).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
         }
 
         #endregion
+
     }
 }

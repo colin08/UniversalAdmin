@@ -63,7 +63,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             int num = TypeHelper.ObjectToInt(id, 0);
             if (num != 0)
             {
-                entity = bll.GetModel(p => p.ID == num);
+                entity = bll.GetModel(p => p.ID == num,null);
                 if (entity == null)
                 {
                     return PromptView("/admin/CusCategory", "404", "Not Found", "信息不存在或已被删除", 5);
