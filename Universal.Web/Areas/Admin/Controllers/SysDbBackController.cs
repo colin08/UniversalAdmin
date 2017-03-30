@@ -164,7 +164,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         private void LoadType()
         {
             List<SelectListItem> typeList = new List<SelectListItem>();
-            typeList.Add(new SelectListItem() { Text = "所有类别", Value = "0" });
+            //typeList.Add(new SelectListItem() { Text = "所有类别", Value = "0" });
             foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.SysDbBackType)))
             {
                 string text = EnumHelper.GetDescription((Entity.SysDbBackType)item.Key);

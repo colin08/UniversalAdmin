@@ -120,8 +120,8 @@
 
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-download"></i><span class="bold"> 下载备份</span></button>&nbsp;
-                    <button class="btn" type="button"><i class="fa fa-repeat"></i><span class="bold"> 还原备份</span></button>&nbsp;
+                    <button class="btn btn-primary" type="button" onclick="FileDown('@Model.FilePath','')"><i class="fa fa-download"></i><span class="bold"> 下载备份</span></button>&nbsp;
+                    <button class="btn" type="button" onclick="Restore()"><i class="fa fa-repeat"></i><span class="bold"> 还原备份</span></button>&nbsp;
                     <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
                 </div>
             </div>
@@ -134,8 +134,34 @@
 @section foot
 {
     <script type="text/javascript">
-
-
+        function Restore() {
+            layer.confirm('即将恢复数据库备份，是否继续？', { icon: 7 }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    url: "/admin/SysDbBack/Restore",
+                    data: { "id": @Model.ID },
+                    async: false,
+                    beforeSend: function () {
+                        layer.load(2);
+                    },
+                    complete: function () {
+                        layer.closeAll('loading');
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("success", { icon: 1 });
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+            });
+        }
     </script>
 }
 <!--底部脚本 end-->

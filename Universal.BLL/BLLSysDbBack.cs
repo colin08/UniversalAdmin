@@ -86,16 +86,16 @@ namespace Universal.BLL
                     msg = "创建数据库备份目录失败：" + ex.Message;
                 }
             }
-            using (var db =new DataCore.EFDBContext())
+            string is_diff = entity.BackType == Entity.SysDbBackType.diff ? " WITH DIFFERENTIAL " : "";
+            string back_path = site_config.DbBackPath + entity.DbName + "_" + entity.BackName + ".bak";
+            string backSql = string.Format("BACKUP DATABASE {0} to DISK = '{1}' {2};", entity.DbName, back_path, is_diff);
+            BLL.BaseBLL<Entity.SysDbBack> bll = new BaseBLL<Entity.SysDbBack>();
+            entity.AddTime = DateTime.Now;
+            entity.FilePath = back_path;
+            bll.Add(entity);
+            using (var db = new DataCore.EFDBContext())
             {
-                string is_diff = entity.BackType == Entity.SysDbBackType.diff ? " WITH DIFFERENTIAL " : "";
-                string back_path = site_config.DbBackPath + entity.DbName + "_" + entity.BackName + ".bak";
-                string backSql = string.Format("BACKUP DATABASE {0} to DISK = '{1}' {2};", entity.DbName, back_path, is_diff);
                 db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, backSql);
-                entity.AddTime = DateTime.Now;
-                entity.FilePath = back_path;
-                db.SysDbBacks.Add(entity);
-                db.SaveChanges();
             }
             return true;
         }
@@ -118,10 +118,7 @@ namespace Universal.BLL
             {
                 using (var db = new DataCore.EFDBContext())
                 {
-                    string kill_conn_sql = String.Format("EXEC sp_KillThread @dbname='{0}'", entity.DbName);
-                    db.Database.ExecuteSqlCommand(kill_conn_sql);
-
-                    string restore_sql = string.Format("RESTORE DATABASE {0} FROM DISK='{1}'WITH replace", entity.DbName, entity.FilePath);
+                    string restore_sql = string.Format("use master;  ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE;RESTORE DATABASE {1} FROM DISK='{2}'WITH replace", entity.DbName, entity.DbName, entity.FilePath);
                     db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, restore_sql);
                 }
             }
