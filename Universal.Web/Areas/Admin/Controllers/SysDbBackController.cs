@@ -104,7 +104,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                 entity.LastUpdateUserID = WorkContext.UserInfo.ID;
                 bool is_ok = bll.BackDb(entity, out msg);
                 if (is_ok)
+                {
+                    AddAdminLogs(Entity.SysLogMethodType.Add, "新增备份的数据库：" + entity.FilePath);
                     return PromptView("/admin/SysDbBack", "OK", "Success", "备份成功", 5);
+                }
                 else
                     return PromptView("/admin/SysDbBack", "404", "Error", msg, 10);
 
@@ -147,6 +150,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 bool is_ok = new BLL.BLLSysDbBack().RestoreDb(entity, out msg);
                 if (is_ok)
                 {
+                    AddAdminLogs(Entity.SysLogMethodType.Resotre, "还原数据库：" + entity.FilePath);
                     WorkContext.AjaxStringEntity.msg = 1;
                     WorkContext.AjaxStringEntity.msgbox = "还原成功";
                 }

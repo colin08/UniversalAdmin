@@ -13,6 +13,12 @@ namespace Universal.Web.Areas.Admin.Controllers
 {
     public class SysLogController : BaseAdminController
     {
+        [AdminPermission("日志","侧栏显示系统日志")]
+        public ActionResult Log()
+        {
+            return Content("没有返回值");
+        }
+
         [AdminPermission("日志", "系统异常日志列表")]
         public ActionResult LogException()
         {

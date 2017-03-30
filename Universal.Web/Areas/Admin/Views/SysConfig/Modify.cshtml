@@ -1,0 +1,305 @@
+﻿@model Universal.Tools.WebSiteModel
+@{
+    ViewBag.Title = "系统配置文件";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+
+<!--头部脚本 end-->
+<!--路径导航-->
+@section nav
+{
+    <div class="col-sm-4">
+        <h2>系统配置文件</h2>
+        <ol class="breadcrumb">
+            <li>主页</li>
+            <li><strong>编辑系统配置文件</strong></li>
+        </ol>
+    </div>
+    <div class="pull-right" style="margin-right:15px;">
+        @if (CheckAdminPower("sysconfig/apppoolrecycle", true))
+        {
+            <a class="btn btn-primary" style="margin-right:50px;" onclick="AppPoolRecycle()" id="a_recycle_pool">回收应用程序池</a>
+        }
+    <button type="button" class="btn pull-right" onclick="javascript: location.href = '/admin/sysconfig/modify' "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+</div>
+}
+<!--路径导航 end-->
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">站点配置</a></li>
+        <li><a data-toggle="tab" href="#tab-2">接口配置</a></li>
+        <li><a data-toggle="tab" href="#tab-3">邮件配置</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p=>p.SiteUrl)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.SiteUrl, (object)new { @class = "form-control",placeholder = "不超过30个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.SiteUrl)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AppPoolName)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.AppPoolName, (object)new { @class = "form-control", placeholder = "不超过15个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.AppPoolName)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.DbBackPath)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.DbBackPath, (object)new { @class = "form-control", placeholder = "不超过100个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.DbBackPath)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebExecutionTime)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p=>p.WebExecutionTime)
+                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.WebExecutionTime?"checked":"")  id="ck_WebExecutionTime" onchange="CKTap(this, 'WebExecutionTime')" alt="页面请求耗时统计">
+                                <label class="onoffswitch-label" for="ck_WebExecutionTime">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.LogMethodInDB)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p => p.LogMethodInDB)
+                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.LogMethodInDB ? "checked":"") id="ck_LogMethodInDB" onchange="CKTap(this, 'LogMethodInDB')" alt="操作日志是否入库">
+                                <label class="onoffswitch-label" for="ck_LogMethodInDB">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.LogExceptionInDB)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p => p.LogExceptionInDB)
+                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.LogExceptionInDB ? "checked":"") id="ck_LogExceptionInDB" onchange="CKTap(this, 'LogExceptionInDB')" alt="异常日志是否入库">
+                                <label class="onoffswitch-label" for="ck_LogExceptionInDB">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPIAuthentication)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p => p.WebAPIAuthentication)
+                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.WebAPIAuthentication ? "checked":"") id="ck_WebAPIAuthentication" onchange="CKTap(this, 'WebAPIAuthentication')" alt="安全验证是否开启">
+                                <label class="onoffswitch-label" for="ck_WebAPIAuthentication">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITracker)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p => p.WebAPITracker)
+                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.WebAPITracker ? "checked":"") id="ck_WebAPITracker" onchange="CKTap(this, 'WebAPITracker')" alt="是否启用请求信息记录">
+                                <label class="onoffswitch-label" for="ck_WebAPITracker">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITokenKey)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.WebAPITokenKey, (object)new { @class = "form-control", placeholder = "不超过50个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPITokenKey)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPIMixer)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.WebAPIMixer, (object)new { @class = "form-control", placeholder = "不超过50个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPIMixer)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+            </div>
+
+            <div id="tab-3" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailHost)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.EmailHost, (object)new { @class = "form-control", placeholder = "不超过100个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.EmailHost)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailPort)</label>
+                    <div class="col-sm-1">
+                        @Html.TextBoxFor(p => p.EmailPort, (object)new { @class = "form-control", placeholder = "端口" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.EmailPort)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailEnableSsl)</label>
+                    <div class="col-sm-3">
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                @Html.HiddenFor(p => p.EmailEnableSsl)
+                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.EmailEnableSsl ? "checked":"") id="ck_EmailEnableSsl" onchange="CKTap(this, 'EmailEnableSsl')" alt="是否启用SSL">
+                                <label class="onoffswitch-label" for="ck_EmailEnableSsl">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailFrom)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.EmailFrom, (object)new { @class = "form-control", placeholder = "不超过50个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.EmailFrom)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailPwd)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.EmailPwd, (object)new { @class = "form-control", placeholder = "不超过255个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.EmailPwd)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存变更</button>&nbsp;
+                    <button class="btn btn-white" onclick="javascript: location.href='/admin/sysconfig/modify'"><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        @if (CheckAdminPower("sysconfig/apppoolrecycle", true))
+        {
+            <text>
+            function AppPoolRecycle()
+            {
+                $("#a_recycle_pool").attr('disabled', "true");
+                $("#a_recycle_pool").text("回收中....");
+                $.post("/admin/SysConfig/AppPoolRecycle", { "a": 1 }, function (result) {
+                    $("#a_recycle_pool").removeAttr("disabled");
+                    if(result.msg == 1)
+                    {
+                        $("#a_recycle_pool").text("回收完毕");
+                    }
+                    else
+                    {
+                        $("#a_recycle_pool").text("回收失败");
+                    }
+                
+                });
+            }
+            </text>
+        }
+
+        function CKTap(obj,hid_id)
+        {
+            if ($(obj).is(":checked"))
+                $("#"+hid_id).val("true");
+            else
+                $("#" + hid_id).val("false");
+
+        }
+
+        $(function () {
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

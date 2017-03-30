@@ -18,7 +18,9 @@ namespace Universal.Entity
         [Description("删除")]
         Delete = 3,
         [Description("登录")]
-        Login = 4
+        Login = 4,
+        [Description("还原")]
+        Resotre
     }
 
     /// <summary>

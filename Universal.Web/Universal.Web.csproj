@@ -266,6 +266,7 @@
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysDbBackController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
@@ -388,6 +389,7 @@
     <Content Include="Areas\Admin\Views\SysDbBack\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SysDbBack\Add.cshtml" />
     <Content Include="Areas\Admin\Views\SysDbBack\Info.cshtml" />
+    <Content Include="Areas\Admin\Views\SysConfig\Modify.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -51,78 +51,85 @@
                     </li>
                      @if (CheckAdminPower("Sysuser/Index", false))
                      {
-                     <text>
-                    <li>
-                        <a href="#"><i class="fa fa-users"></i> <span class="nav-label">后台用户</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            @if (CheckAdminPower("SysUser/Index", false))
-                            {
-                            @:<li><a class="J_menuItem" href="/Admin/SysUser/Index">用户管理</a></li>
-                            }
-                             @if (CheckAdminPower("SysRole/Index", false))
-                             {
-                            @:<li><a class="J_menuItem" href="/Admin/SysRole/Index">用户组管理</a></li>
-                             }
-                        </ul>
-                    </li>
-                    </text>
+                        <li>
+                            <a href="#"><i class="fa fa-users"></i> <span class="nav-label">后台用户</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                @if (CheckAdminPower("SysUser/Index", false))
+                                {
+                                    <li><a class="J_menuItem" href="/Admin/SysUser/Index">用户管理</a></li>
+                                }
+                                 @if (CheckAdminPower("SysRole/Index", false))
+                                 {
+                                    <li><a class="J_menuItem" href="/Admin/SysRole/Index">用户组管理</a></li>
+                                 }
+                            </ul>
+                        </li>
                      }
 
                     @if (CheckAdminPower("CusCategory/Index", false))
                      {
-                     <text>
-                    <li>
-                        <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            @if (CheckAdminPower("CusCategory/Index", false))
-                            {
-                            @:<li><a class="J_menuItem" href="/Admin/CusCategory/Index">分类管理</a></li>
-                            }
-                        </ul>
-                    </li>
-                    </text>
-                     }
-
-                    @if (CheckAdminPower("SysLog/LogMethod", false))
-                     {
-                     <text>
-                    <li>
-                        <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">系统日志</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            @if (CheckAdminPower("SysLog/LogMethod", false))
-                            {
-                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
-                            }
-                             @if (CheckAdminPower("SysLog/LogException", false))
-                             {
-                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
-                             }
-                             @if (CheckAdminPower("SysLog/LogApiAction", false))
-                             {
-                            @:<li><a class="J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
-                             }
-                        </ul>
-                    </li>
-                    </text>
+                        <li>
+                            <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                @if (CheckAdminPower("CusCategory/Index", false))
+                                {
+                                    <li><a class="J_menuItem" href="/Admin/CusCategory/Index">分类管理</a></li>
+                                }
+                            </ul>
+                        </li>
                      }
 
                     @if (CheckAdminPower("AppVersion/Index", false))
                     {
-                    <li>
-                        <a class="J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
-                    </li>
+                        <li>
+                            <a class="J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
+                        </li>
                     }
                     <li>
                         <a class="J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
                     </li>
 
-                    @if (CheckAdminPower("SysDbBack/Index", false))
+                    @if(CheckAdminPower("SysConfig/Sys", false))
                     {
-                    <li>
-                        <a class="J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a>
-                    </li>
-                    }
+                        <li>
+                            <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">系统操作</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
 
+                                @if (CheckAdminPower("SysLog/Log", false))
+                                {
+                                    <li>
+                                        <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">系统日志</span><span class="fa arrow"></span></a>
+                                        <ul class="nav nav-third-level">
+                                            @if (CheckAdminPower("SysLog/LogMethod", false))
+                                            {
+                                                <li><a class="J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
+                                            }
+                                            @if (CheckAdminPower("SysLog/LogException", false))
+                                            {
+                                                <li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
+                                            }
+                                            @if (CheckAdminPower("SysLog/LogApiAction", false))
+                                             {
+                                                 <li><a class="J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
+                                             }
+                                        </ul>
+                                    </li>
+                                }
+
+                                @if (CheckAdminPower("SysDbBack/Index", false))
+                                {
+                                    <li><a class="J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a></li>
+                                }
+
+                                @if (CheckAdminPower("SysConfig/Modify", false))
+                                {
+                                    <li><a class="J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
+                                }
+
+                            </ul>
+                         </li>
+                    }
+                   
                 </ul>
             </div>
         </nav>
