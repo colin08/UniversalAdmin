@@ -21,7 +21,7 @@ namespace Universal.Web.Framework
 
             ExceptionInDB.ToInDB(actionExecutedContext.Exception);
 
-            WebAjaxEntity<string> model = new WebAjaxEntity<string>();
+            UnifiedResultEntity<string> model = new UnifiedResultEntity<string>();
             model.msgbox = error_msg;
             actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.OK, model);
             base.OnException(actionExecutedContext);

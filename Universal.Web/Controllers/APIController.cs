@@ -24,7 +24,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/test/a")]
-        public WebAjaxEntity<string> Test()
+        public UnifiedResultEntity<string> Test()
         {
             WorkContext.AjaxStringEntity.msgbox = "消息";
             return WorkContext.AjaxStringEntity;
@@ -36,7 +36,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("api/test/upload")]
-        public async Task<WebAjaxEntity<string>> UpdateUserAvatar()
+        public async Task<UnifiedResultEntity<string>> UpdateUserAvatar()
         {
             // 检查是否是 multipart/form-data 
             if (!Request.Content.IsMimeMultipartContent("form-data"))
@@ -98,7 +98,7 @@ namespace Universal.Web.Controllers
     public class ErrorController : BaseAPIController
     {
         [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions, AcceptVerbs("PATCH")]
-        public WebAjaxEntity<string> Handle404()
+        public UnifiedResultEntity<string> Handle404()
         {
             WorkContext.AjaxStringEntity.msgbox = "404";
             return WorkContext.AjaxStringEntity;

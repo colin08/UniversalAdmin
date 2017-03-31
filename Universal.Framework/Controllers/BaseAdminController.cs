@@ -37,7 +37,7 @@ namespace Universal.Web.Framework
             WorkContext.IP = WebHelper.GetIP();
             WorkContext.Url = WebHelper.GetUrl();
             WorkContext.UrlReferrer = WebHelper.GetUrlReferrer();
-            WorkContext.AjaxStringEntity = new WebAjaxEntity<string>();
+            WorkContext.AjaxStringEntity = new UnifiedResultEntity<string>();
             WorkContext.AjaxStringEntity.msg = 0; //默认错误
             WorkContext.AjaxStringEntity.total = 0;
             //设置当前控制器类名

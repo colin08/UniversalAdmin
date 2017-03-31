@@ -113,7 +113,7 @@ namespace Universal.Web.Framework
         /// <returns></returns>
         private Task<HttpResponseMessage> requestCancel(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken, string message)
         {
-            WebAjaxEntity<bool> result = new WebAjaxEntity<bool>();
+            UnifiedResultEntity<bool> result = new UnifiedResultEntity<bool>();
             result.msgbox = message;
 
             CancellationTokenSource _tokenSource = new CancellationTokenSource();

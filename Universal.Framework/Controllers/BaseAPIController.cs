@@ -17,7 +17,7 @@ namespace Universal.Web.Framework
 
         protected override void Initialize(System.Web.Http.Controllers.HttpControllerContext controllerContext)
         {
-            WorkContext.AjaxStringEntity = new WebAjaxEntity<string>();
+            WorkContext.AjaxStringEntity = new UnifiedResultEntity<string>();
             WorkContext.AjaxStringEntity.msg = 0;
             WorkContext.AjaxStringEntity.data = "";
             base.Initialize(controllerContext);
@@ -41,7 +41,7 @@ namespace Universal.Web.Framework
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            WebAjaxEntity<string> model = new WebAjaxEntity<string>();
+            UnifiedResultEntity<string> model = new UnifiedResultEntity<string>();
             model.msg = 0;
             model.msgbox = actionExecutedContext.Exception.Message;
             model.data = "";

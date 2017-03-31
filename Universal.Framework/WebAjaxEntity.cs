@@ -1,9 +1,9 @@
 ﻿namespace Universal.Web.Framework
 {
     /// <summary>
-    /// 前端ajax调用统一返回参数格式
+    /// 统一返回参数格式
     /// </summary>
-    public class WebAjaxEntity<T>
+    public class UnifiedResultEntity<T>
     {
         /// <summary>
         /// 

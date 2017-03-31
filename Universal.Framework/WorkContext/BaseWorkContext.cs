@@ -56,7 +56,7 @@ namespace Universal.Web.Framework
         /// <summary>
         /// Ajax请求一般操作返回json实体对象，一般不需要data字段
         /// </summary>
-        public WebAjaxEntity<string> AjaxStringEntity;
+        public UnifiedResultEntity<string> AjaxStringEntity;
 
     }
 }

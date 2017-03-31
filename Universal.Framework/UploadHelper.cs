@@ -22,9 +22,9 @@ namespace Universal.Web.Framework
         /// <param name="base64"></param>
         /// <param name="save_path"></param>
         /// <returns></returns>
-        public WebAjaxEntity<string> Upload_For_Base64Data(string base64, string ServerPath)
+        public UnifiedResultEntity<string> Upload_For_Base64Data(string base64, string ServerPath)
         {
-            WebAjaxEntity<string> response_entity = new WebAjaxEntity<string>();
+            UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();
             response_entity.msg = 0;
 
             if (string.IsNullOrWhiteSpace(base64) || string.IsNullOrWhiteSpace(ServerPath))
@@ -84,10 +84,10 @@ namespace Universal.Web.Framework
         /// <param name="ServerPath">保存的文件地址相对路径</param>
         /// <param name="IsThumb">是否生成缩略图</param>
         /// <returns></returns>
-        public WebAjaxEntity<String> Upload(HttpPostedFileBase fileData, string ServerPath, bool IsThumb = true)
+        public UnifiedResultEntity<String> Upload(HttpPostedFileBase fileData, string ServerPath, bool IsThumb = true)
         {
 
-            WebAjaxEntity<string> response_entity = new WebAjaxEntity<string>();
+            UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();
             response_entity.msg = 0;
 
             if (fileData == null)
@@ -184,9 +184,9 @@ namespace Universal.Web.Framework
         /// <param name="fileData"></param>
         /// <param name="ServerPath"></param>
         /// <returns></returns>
-        public WebAjaxEntity<string> Upload_Zip(HttpPostedFileBase fileData, string ServerPath)
+        public UnifiedResultEntity<string> Upload_Zip(HttpPostedFileBase fileData, string ServerPath)
         {
-            WebAjaxEntity<string> response_entity = new WebAjaxEntity<string>();
+            UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();
             response_entity.msg = 0;
 
             if (fileData == null)
