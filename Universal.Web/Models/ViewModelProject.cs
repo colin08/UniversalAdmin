@@ -193,7 +193,8 @@ namespace Universal.Web.Models
         /// <summary>
         /// 改造性质
         /// </summary>
-        public Entity.ProjectGaiZao GaiZaoXingZhi { get; set; }
+        [MaxLength(100,ErrorMessage ="不能超过100个字符")]
+        public string GaiZaoXingZhi { get; set; }
 
         /// <summary>
         /// 用地性质、宗地号

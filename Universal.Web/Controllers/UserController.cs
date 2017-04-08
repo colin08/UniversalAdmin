@@ -528,6 +528,31 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 分页数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UserData(int page_size, int page_index, string keyword)
+        {
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            int rowCount = 0;
+            List<Entity.CusUser> list = new List<Entity.CusUser>();
+            if (!string.IsNullOrWhiteSpace(keyword))
+                list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.NickName.Contains(keyword) || p.Telphone.Contains(keyword), "RegTime desc", p => p.CusUserJob);
+            else
+                list = bll.GetPagedList(page_index, page_size, ref rowCount, new List<BLL.FilterSearch>(), "RegTime desc", p => p.CusUserJob);
+            WebAjaxEntity<List<Entity.CusUser>> result = new WebAjaxEntity<List<Entity.CusUser>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+            return Json(result);
+        }
+
+        /// <summary>
         /// 删除收藏
         /// </summary>
         /// <param name="ids"></param>

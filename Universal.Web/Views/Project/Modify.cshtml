@@ -51,7 +51,7 @@
                                 {
                                     <span class="red">*</span>
                                 }
-                                审批人
+                                项目负责人
                             </label>
                             @Html.HiddenFor(p=>p.approve_user_id)
                             <input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
@@ -67,7 +67,7 @@
                             @Html.ValidationMessageFor(p => p.flow_id)
                         </li>
                         <li>
-                        	<label style="float:left" for="" class="lab1"><span class="red">*</span>项目联系人</label>
+                        	<label style="float:left" for="" class="lab1"><span class="red">*</span>项目成员</label>
                         	<div class="lab2">
                         	<span><a href="javascript:" onclick="selUser(this,'user_list1','#user_ids')" title="添加成员"><i class="i-circleP"></i>添加成员</a></span>
                                 <div class="user_list_box" id="user_list1">
@@ -162,7 +162,7 @@
 
                         <li>
                             <label >改造性质</label>
-                            @Html.DropDownListFor(p => p.GaiZaoXingZhi, ViewData["GZXZList"] as List<SelectListItem>, new { @class = "select-input" })
+                            @Html.TextBoxFor(p => p.GaiZaoXingZhi, new { @class = "add-input" })
                             @Html.ValidationMessageFor(p => p.GaiZaoXingZhi)
                         </li>
                         
@@ -463,6 +463,10 @@
                 }else if(Model.Msg == 3)
                 {
                     @:alert("数据验证失败");
+                }else if(Model.Msg == 4)
+                {
+                    @:alert("没有权限编辑");
+                    @:location.href = "/Project/Index";
                 }
 
         });

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "搜索结果-公告";
+    ViewBag.Title = "搜索结果-用户";
     ViewData["tabTop"] = "null";
 }
 
@@ -19,10 +19,10 @@
             <ul class="new-tab clearfix">
                 <li><a href="javascript:;" onclick="tab_click('Project')">项目</a></li>
                 <li><a href="javascript:;" onclick="tab_click('Document')">秘籍</a></li>
-                <li class="current"><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
-                <li><a href="javascript:;" onclick="tab_click('User')">同事</a></li>
+                <li><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
+                <li class="current"><a href="javascript:;" onclick="tab_click('User')">同事</a></li>
             </ul>
-            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的公告，共<strong class="red" id="show_search_total">0</strong>个结果</span>
+            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的同事，共<strong class="red" id="show_search_total">0</strong>个结果</span>
         </div>
     </div>
 </div>
@@ -31,11 +31,8 @@
     <table border="0" cellspacing="0" cellpadding="0" class="table1 search-border">
        <thead>
            <tr>
-               <th width="20%">通知标题</th>
-               <th width="30%">通知内容</th>
-               <th width="10%">通知范围</th>
-               <th width="10%">发布人</th>
-               <th width="15%">添加时间</th>
+               <th width="10%">头像</th>
+               <th width="20%">用户名</th>
                @*<th width="10%">操作</th>*@
            </tr>
        </thead>
@@ -80,7 +77,7 @@
         function pageData(page_index) {
             $.ajax({
                 type: "post",
-                url: "/Tools/NoticeData",
+                url: "/User/UserData",
                 data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
                 async: false, //同步请求
                 datatype: "json",
@@ -95,11 +92,8 @@
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
                         dataHtml += "<tr>";
-                        dataHtml += "<td><a href=\"/Notice/Modify?id=" + item.ID + "\">" + CutString(item.Title, 15) + "</a></td>";
-                        dataHtml += "<td><span class=\"tfe\">" + CutString(item.Content, 48) + "</span></td>";
-                        dataHtml += "<td>" + item.NoticeStr + "</td>";
-                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
-                        dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "") + "</td>";
+                        dataHtml += "<td><a href=\"/Info/User?id=" + item.ID + "\"><img src='" + item.Avatar + "' width='60px' /></a></td>"
+                        dataHtml += "<td><a href=\"/Info/User?id=" + item.ID + "\">" + CutString(item.NickName, 15) + "</a></td>";
                         //dataHtml += "<td><div class=\"tbOpare\"><a href=\"javascript:;\" class=\"alook\"><i class=\"i-look\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });

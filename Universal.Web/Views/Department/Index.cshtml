@@ -328,7 +328,7 @@ document.write(typeof sessionStorage.lastname1);
             		data:{id:id},
             		type:'post',
             		error:function(data){
-            			alert('删除失败,有下级部门时请先删除所有下级部门');
+            			alert('删除失败,请先删除属于该部门的用户或下级部门');
             		},
             		success:function(data){
             			console.log(JSON.stringify(data));

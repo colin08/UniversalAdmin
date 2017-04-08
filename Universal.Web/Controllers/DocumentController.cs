@@ -15,12 +15,16 @@ namespace Universal.Web.Controllers
     [BasicAdminAuth]
     public class DocumentController : BaseHBLController
     {
-        public ActionResult Index()
+        public ActionResult Index(string doc_id)
         {
+            int category_id = Tools.TypeHelper.ObjectToInt(doc_id, -1);
             int default_id = 0;
             string data = BLL.BLLDocCategory.CreateDocCategoryTreeData(out default_id);
             ViewData["TreeData"] = data;
-            ViewData["DefaultID"] = default_id;
+            if(category_id == -1)
+                ViewData["DefaultID"] = default_id;
+            else
+                ViewData["DefaultID"] = category_id;
             return View();
         }
 

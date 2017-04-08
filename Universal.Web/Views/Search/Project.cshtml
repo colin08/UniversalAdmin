@@ -18,9 +18,8 @@
             <ul class="new-tab clearfix">
                 <li class="current"><a href="javascript:;" onclick="tab_click('Project')">项目</a></li>
                 <li><a href="javascript:;" onclick="tab_click('Document')">秘籍</a></li>
-                <li><a href="javascript:;" onclick="tab_click('Node')">节点</a></li>
                 <li><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
-                <li><a href="javascript:;">同事</a></li>
+                <li><a href="javascript:;" onclick="tab_click('User')">同事</a></li>
             </ul>
             <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的项目，共<strong class="red" id="show_search_total">0</strong>个结果</span>
         </div>
@@ -77,7 +76,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/PageData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": false, "keyword": $("#txt_search").val(), "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null ,"is_admin":false },
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": false, "keyword": $("#txt_search").val(), "status": 0, "node_category_id": 0, "begin_time": null, "end_time": null ,"is_admin":false },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -101,7 +100,7 @@
                             }
                             dataHtml += "<tr>";
                             dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
-                            dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
+                            dataHtml += "<td><a href='/Project/FlowInfo?id=" + item.ID + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
                             dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
                             dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";

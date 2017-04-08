@@ -14,6 +14,55 @@ namespace Universal.Web.Controllers
     public class ToolsController : BaseHBLController
     {
         /// <summary>
+        /// 附件下载
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult FileDownload()
+        {
+            string req_path = WebHelper.GetFormString("uri");
+            string down_name = WebHelper.GetFormString("name");//下载的文件名
+            if (string.IsNullOrWhiteSpace(req_path))
+                return Content("<script>alert('不明确的文件');window.history.back();</script>");
+
+            string io_path = req_path;
+            if (req_path.StartsWith("/")) //相对路径
+                io_path = Tools.IOHelper.GetMapPath(req_path);
+            if (!System.IO.File.Exists(io_path))
+                return Content("<script>alert('文件不存在');window.history.back();</script>");
+            if (string.IsNullOrWhiteSpace(down_name))
+                down_name = io_path.Substring(io_path.LastIndexOf(@"\") + 1);
+
+            return File(io_path, "application/octet-stream", down_name);
+        }
+
+        /// <summary>
+        /// 分页数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult NoticeData(int page_size, int page_index, string keyword)
+        {
+            BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
+            int rowCount = 0;
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
+            if (!string.IsNullOrWhiteSpace(keyword))
+                filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
+            List<Entity.CusNotice> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc", p => p.CusUser);
+            WebAjaxEntity<List<Entity.CusNotice>> result = new WebAjaxEntity<List<Entity.CusNotice>>();
+            result.msg = 1;
+            result.msgbox = CalculatePage(rowCount, page_size).ToString();
+            result.data = list;
+            result.total = rowCount;
+
+            return Json(result);
+        }
+
+        /// <summary>
         /// 发送验证码
         /// </summary>
         /// <returns></returns>
@@ -516,6 +565,19 @@ namespace Universal.Web.Controllers
             }
             entity.Title = new_title;
             bll.Modify(entity, "Title");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 设置所有的消息已读
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SetAllMsgRead()
+        {
+            BLL.BLLCusUserMessage.SetAllRead(WorkContext.UserInfo.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);

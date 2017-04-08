@@ -75,9 +75,9 @@ namespace Universal.Web.Controllers
 
         private void LoadSelect()
         {
-            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
-            ViewData["NodeList"] = list;
+            BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
+            List<Entity.NodeCategory> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
+            ViewData["NodeCategoryList"] = list;
         }
     }
 }

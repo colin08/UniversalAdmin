@@ -513,6 +513,21 @@ namespace Universal.Tools
         }
 
         /// <summary>
+        /// 创建文件夹
+        /// </summary>
+        /// <param name="path">虚拟路径</param>
+        /// <returns></returns>
+        public static bool CreateDirectory(string path)
+        {
+            string io_path = GetMapPath(path);
+            if(!Directory.Exists(io_path))
+            {
+                Directory.CreateDirectory(io_path);
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 返回文件大小字节
         /// </summary>
         /// <param name="_filepath">文件相对路径</param>

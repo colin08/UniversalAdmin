@@ -35,10 +35,10 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 节点
+        /// 用户
         /// </summary>
         /// <returns></returns>
-        public ActionResult Node(string word)
+        public ActionResult User(string word)
         {
             ViewData["word"] = word;
             return View();

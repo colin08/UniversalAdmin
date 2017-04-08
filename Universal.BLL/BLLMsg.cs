@@ -28,19 +28,19 @@ namespace Universal.BLL
         public static readonly string FileShare = "待定";
 
         /// <summary>
-        /// 待审核项目 {0}创建了新的项目【{1}】，需要您的审核
+        /// 待审核项目 项目【{0}】，需要您的审核
         /// </summary>
-        public static readonly string ApproveProject = "{0}了新的项目【{1}】，需要您的审核";
+        public static readonly string ApproveProject = "【{0}】，需要您的审核";
 
         /// <summary>
         /// 项目审核通过 您的项目【{0}】审核已经通过
         /// </summary>
-        public static readonly string AppproveOK = "您的项目【{0}】审核已经通过";
+        public static readonly string AppproveOK = "【{0}】审核已经通过";
 
         /// <summary>
         /// 项目审核未通过 您的项目【{0}】审核未通过，未通过原因：{1}
         /// </summary>
-        public static readonly string AppproveNo = "您的项目【{0}】审核未通过，未通过原因：{1}";
+        public static readonly string AppproveNo = "【{0}】审核未通过，未通过原因：{1}";
 
         /// <summary>
         /// 待参加会议 {0}创建了一个会议，议题：【{1}】，等待您的参加
@@ -83,9 +83,9 @@ namespace Universal.BLL
         public static readonly string WaitApprovePlan = "{0}添加了一个工作计划，等待您的审批";
 
         /// <summary>
-        /// 计划审核通过 您的工作计划已被{0}审核通过
+        /// 计划审核通过 {0}审核通过
         /// </summary>
-        public static readonly string PlanApproveOK = "您的工作计划已被{0}审核通过";
+        public static readonly string PlanApproveOK = "【{0}】审核通过";
 
         /// <summary>
         /// 计划审核未通过 您的工作计划审核未通过，原因：{1}

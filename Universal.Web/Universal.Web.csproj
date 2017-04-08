@@ -59,6 +59,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Glimpse.Ado, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Glimpse.Ado.1.7.3\lib\net45\Glimpse.Ado.dll</HintPath>
       <Private>True</Private>
@@ -304,6 +308,7 @@
     <Content Include="Assets\css\plugins\simditor\simditor-markdown.css" />
     <Content Include="Assets\css\plugins\simditor\simditor.css" />
     <Content Include="Assets\css\plugins\toastr\toastr.min.css" />
+    <Content Include="Assets\css\plugins\zoom\zoom.css" />
     <Content Include="Assets\css\prettify.css" />
     <Content Include="Assets\css\style.min.css" />
     <Content Include="Assets\error\ie.html" />
@@ -680,6 +685,7 @@
     <Content Include="Assets\js\plugins\validate\jquery.validate.min.js" />
     <Content Include="Assets\js\plugins\validate\jquery.validate.unobtrusive.min.js" />
     <Content Include="Assets\js\plugins\validate\messages_zh.min.js" />
+    <Content Include="Assets\js\plugins\zoom\zoom.js" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\awesome.css" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\img\loading.gif" />
     <Content Include="Assets\js\plugins\ztree\css\metroStyle\img\line_conn.png" />
@@ -856,6 +862,7 @@
     <Content Include="Assets\theme\images\chart2.png" />
     <Content Include="Assets\theme\images\find_pw_icon.gif" />
     <Content Include="Assets\theme\images\find_pw_icon2.gif" />
+    <Content Include="Assets\theme\images\icon-doc.png" />
     <Content Include="Assets\theme\images\img1.jpg" />
     <Content Include="Assets\theme\images\img10.jpg" />
     <Content Include="Assets\theme\images\img11.jpg" />
@@ -977,6 +984,7 @@
     <Compile Include="Controllers\AppVersionController.cs" />
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\NodeCategoryController.cs" />
+    <Compile Include="Controllers\ShareController.cs" />
     <Compile Include="Controllers\WorkMeetingController.cs" />
     <Compile Include="Controllers\WorkJobController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -1159,6 +1167,7 @@
     <Content Include="Assets\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Areas\h5\Views\web.config" />
     <Content Include="Areas\h5\Views\Mobile\Flow.cshtml" />
+    <Content Include="App_Data\WorkPlanTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\HBL_NEW.pubxml" />
     <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\Statctics\Domain.cshtml" />
@@ -1170,7 +1179,6 @@
     <Content Include="Views\Search\Project.cshtml" />
     <Content Include="Views\Search\Document.cshtml" />
     <Content Include="Views\Search\Notice.cshtml" />
-    <Content Include="Views\Search\Node.cshtml" />
     <Content Include="Views\Shool\Modify.cshtml" />
     <Content Include="Views\Project\Modify.cshtml" />
     <Content Include="Views\Node\Modify.cshtml" />
@@ -1208,6 +1216,9 @@
     <Content Include="Views\Shool\Flow.cshtml" />
     <Content Include="Views\Info\Doc.cshtml" />
     <Content Include="Views\Flow\Compact.cshtml" />
+    <Content Include="Views\Info\User.cshtml" />
+    <Content Include="Views\Search\User.cshtml" />
+    <Content Include="Views\Share\doc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

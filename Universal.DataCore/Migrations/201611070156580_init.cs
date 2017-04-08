@@ -772,14 +772,14 @@ namespace Universal.DataCore.Migrations
             Sql(sp_StatcticsDomain);
 
             string fn_ProjectHaveNode = @"
-                ---判断项目是否有某个节点
+                ---判断项目是否有某个节点分类
                 CREATE function [dbo].[fn_ProjectHaveNode](@project_id int,@node_id int)
                 RETURNS int
                 as
                 begin
 	                declare @total INT
 	                set @total =0
-	                select  @total=count(1) from Project as P left JOIN ProjectFlowNode as N on P.ID = N.ProjectID where P.ID = @project_id and N.NodeID = @node_id and N.IsEnd=1
+	                select @total=count(1) from ProjectFlowNode as P LEFT JOIN Node as N on P.NodeID = N.ID where P.ProjectID = @project_id and NodeCategoryID = @node_category_id
 	                return @total
                 end
 
@@ -793,7 +793,7 @@ namespace Universal.DataCore.Migrations
                         @jidu int,---季度参数
                         @area int,---区域参数
                         @gz int, ----改造性质
-                        @node_id int ---项目节点
+                        @node_category_id int ---项目节点分类
                         as
                         begin
 
@@ -853,9 +853,9 @@ namespace Universal.DataCore.Migrations
 	                        BEGIN
 		                        set @sqlWhere += ' and  GaiZaoXingZhi = '+ CAST(@gz as varchar(10))
 	                        END
-	                        if @node_id>0
+	                        if @node_category_id>0
 	                        BEGIN
-		                        set @sqlfild = ',(select dbo.fn_ProjectHaveNode(ID,'+cast(@node_id as varchar(10))+')) as NodeTotal'
+		                        set @sqlfild = ',(select dbo.fn_ProjectHaveNode(ID,'+cast(@node_category_id as varchar(10))+')) as NodeTotal'
 		                        set @sqlWhere += ' and  NodeTotal >0 '
 	                        END
 		

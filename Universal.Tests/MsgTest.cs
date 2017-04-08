@@ -10,8 +10,10 @@ namespace Universal.Tests
         public void TestMethod1()
         {
 
+            var str = Tools.TypeHelper.Baodate2ChineseSimple(DateTime.Now);
+
             string msg = "";
-            BLL.BLLProjectFlowNode.SetSelect(304, out msg);
+            //BLL.BLLProjectFlowNode.SetSelect(304, out msg);
 
             //Tools.JPush.PushALl("13714673949", "手动测试", 1, "2");
 

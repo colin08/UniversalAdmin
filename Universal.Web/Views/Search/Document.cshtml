@@ -19,11 +19,10 @@
             <ul class="new-tab clearfix">
                 <li><a href="javascript:;" onclick="tab_click('Project')">项目</a></li>
                 <li class="current"><a href="javascript:;" onclick="tab_click('Document')">秘籍</a></li>
-                <li><a href="javascript:;" onclick="tab_click('Node')">节点</a></li>
                 <li><a href="javascript:;" onclick="tab_click('Notice')">公告</a></li>
-                <li><a href="javascript:;">同事</a></li>
+                <li><a href="javascript:;" onclick="tab_click('User')">同事</a></li>
             </ul>
-            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的节点，共<strong class="red" id="show_search_total">0</strong>个结果</span>
+            <span class="fr f14">搜索 和 <strong class="red" id="show_search_word"></strong> 相关的秘籍，共<strong class="red" id="show_search_total">0</strong>个结果</span>
         </div>
     </div>
 </div>
@@ -31,13 +30,12 @@
     <table border="0" cellspacing="0" cellpadding="0" class="table1 search-border">
         <thead>
             <tr>
-                <th width="25%">标题</th>
+                <th width="30%">标题</th>
                 <th width="15%">一级分类</th>
-                <th width="10%">二级分类</th>
-                <th width="10%">上传者</th>
-                <th width="15%">更新时间</th>
-                <th width="10%">大小</th>
-                <th width="15%">操作</th>
+                <th width="15%">二级分类</th>
+                <th width="8%">上传者</th>
+                <th width="12%">更新时间</th>
+                <th width="5%">收藏</th>
             </tr>
         </thead>
         <tbody id="listData"></tbody>
@@ -95,18 +93,13 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
-                        var si = "";
-                        if (item.FileSize != null) {
-                            si = item.FileSize;
-                        }
                         dataHtml += "<tr>";
-                        dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
+                        dataHtml += "<td><a href='/Info/Doc?id="+item.ID+"&b=2'>" + CutString(item.Title, 28) + "</a></td>";
                         dataHtml += "<td>" + item.YiTxt + "</td>";
                         dataHtml += "<td>" + item.ErTxt + "</td>";
                         dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                        dataHtml += "<td>" + si + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"javascript:void(0);\" onclick=\"down('" + item.FilePath + "','" + item.Title + "')\" target=\"_blank\" class=\"alook\"><i class=\"i-downR\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.FavIcon + "\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.FavIcon + "\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {
@@ -151,7 +144,7 @@
 
             $.ajax({
                 type: "post",
-                url: "/Document/DocFavorites",
+                url: "/Shool/Fav",
                 data: { "id": id },
                 async: false,
                 beforeSend: function () {
@@ -162,7 +155,7 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
-                        data_search();
+                        pageData(1);
                     }
                     else {
                         alert(data.msgbox);

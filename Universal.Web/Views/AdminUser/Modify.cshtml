@@ -20,7 +20,7 @@
             <div class="tit1">
                 <div class="inner">
                     <a href="/AdminUser/Index" class="fl f16"><i class="i-back"></i>员工管理</a>
-                    <b class="tit1Txt fr">@(Model.id > 0 ? "修改" : "添加")员工员工</b>
+                    <b class="tit1Txt fr">@(Model.id > 0 ? "修改" : "添加")员工</b>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
                                 <div class="litip">@Html.ValidationMessageFor(p => p.job_id)</div>
                             </li>
                             <li>
-                                <div class="lilt">登录邮箱</div>
+                                <div class="lilt">邮箱</div>
                                 <div class="limd">
                                     @Html.TextBoxFor(p => p.email, new { @class = "usInput" })
                                 </div>

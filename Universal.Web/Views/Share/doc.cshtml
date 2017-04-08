@@ -1,0 +1,76 @@
+﻿@model Universal.Entity.DocPost
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>分享 - @Model.Title</title>
+    <style>
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote，th, td { margin: 0; padding: 0; }
+        table { border-collapse: collapse; border-spacing: 0; }
+        fieldset, img { border: 0; }
+        address, caption, cite, code, dfn, em, strong, th, var { font-style: normal; font-weight: normal; }
+        ol, ul { list-style: none; }
+        capation, th { text-align: left; }
+        q:before, q:after { content: ' '; }
+        a:link { text-decoration: none; color: black; }
+        a:visited { text-decoration: none; }
+        a:hover { text-decoration: none; }
+        a:active { text-decoration: none; }
+        abbr, acronym { border: 0; }
+
+        body { background: #F5F5F7; padding: 30px; font-size: 14px; font-family: "Microsoft YaHei"; }
+        .container { background: #FFFFFF; width: 100%; height: 100%; -webkit-box-shadow: #666 0px 0px 5px; -moz-box-shadow: #666 0px 0px 5px; box-shadow: #666 0px 0px 5px; }
+        .footer { color: #BCC3C8; width: 100%; text-align: center; margin-top: 50px; }
+        .top { text-align: center; width:100%;}
+        .desc {color: #BCC3C8;  }
+        .content { padding:20px;line-height:20px;margin-top:10px;}
+        .file { padding:20px;margin-top:10px;margin-bottom:80px;}
+        .icon_doc{background:url('/Assets/theme/images/icon-doc.png');background-repeat: no-repeat;background-position: center;background-size: cover;width: 18px;height: 18px;display: block; float:left;}
+        .file_list{padding:10px;}
+        .file_list li{display:block; height:30px; line-height:20px;float:left;margin-left:30px;}
+        .file_list li span{margin-left:5px;}
+        .share{margin-top:10px;}
+        .bds_more { display:none;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <div style="height:40px;"></div>
+            <h2>@Model.Title</h2>
+            <div style="height:18px;"></div>
+            <hr />
+            <div style="height:5px;"></div>
+            <label class="desc">发布者：@Model.CusUser.NickName &nbsp;发布时间：@Model.AddTime.ToShortDateString() &nbsp;分类：@Model.DocCategory.Title</label>
+        </div>
+        <div class="content">
+            @Html.Raw(Model.Content)
+
+        </div>
+        <hr />
+        <div class="file">
+            <label>附件：</label>
+            <ul class="file_list">
+                @foreach (var file in Model.FileList.ToList())
+                {
+                    <li><a href="@file.FilePath" target="_blank"><i class="icon_doc"></i><span>@file.FileName</span></a></li>
+                }
+                
+            </ul>
+        </div>
+    </div>
+    <div class="share">
+        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></div>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["tsina","weixin","sqq","qzone"],"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    </div>
+    <div class="footer">
+        <span>Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</span>
+        
+    </div>    
+</body>
+</html>

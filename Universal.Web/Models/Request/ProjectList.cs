@@ -26,14 +26,10 @@ namespace Universal.Web.Models.Request
         public int status { get; set; }
 
         /// <summary>
-        /// 节点ID，不筛选传0
+        /// 节点分类ID，不筛选传0
         /// </summary>
-        public int node_id { get; set; }
+        public int node_category_id { get; set; }
 
-        /// <summary>
-        /// 节点状态,0:所有；1：未开始；2：进行中；3：已结束
-        /// </summary>
-        public int node_status { get; set; }
 
         /// <summary>
         /// 开始时间，没有时间则传入null

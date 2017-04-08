@@ -228,7 +228,7 @@ namespace Universal.Entity
                     case CusUserMessageType.appproveok:
                     case CusUserMessageType.appproveno:
                     case CusUserMessageType.favprojectupdate:
-                        return "/Info/Project?id=" + this.LinkID + "msg=" + this.ID.ToString();
+                        return "/Info/Project?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitmeeting:
                     case CusUserMessageType.confrimjoinmeeting:
                     case CusUserMessageType.meetingcancel:

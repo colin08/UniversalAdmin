@@ -302,8 +302,7 @@ function selUserDialog(data) {
 		var a = $('<a></a>').appendTo(li).click(function() {
 			remove_user(item.id);
 		});
-		$('<span></span>').appendTo(a).html(
-				item.telphone + ' (' + item.nick_name + ')');
+		$('<span></span>').appendTo(a).html(item.nick_name);
 		$('<i class="i-mdel"></i>').appendTo(a);
 		data.count++;
 		set_count();
@@ -353,7 +352,7 @@ function selUserDialog(data) {
 
 	var smbSearch = $('<div class="smbSearch"></div>').appendTo(smbLt);
 	$(
-			'<input type="text" id="sel_user_box_key" name="key" placeholder="搜索电话号码或姓名" />')
+			'<input type="text" id="sel_user_box_key" name="key" placeholder="搜索姓名" />')
 			.appendTo(smbSearch).keypress(function() {
 				if (event.keyCode == 13) {
 					getList($('#sel_user_box_key').val());
@@ -577,6 +576,7 @@ function showDownDialog(obj,data) {
 		$('<i></i>').appendTo(a);
 		$('<span></span>').appendTo(a).html(this.FileName);
 		$('<label></label>').appendTo(a).html(this.FileSize);
+		$('<span></span>').appendTo(a).html("&nbsp;&nbsp;&nbsp;&nbsp;下载");
 	});
 	showDialog({title:'下载秘籍',html:div,fix:true});
 }
@@ -659,4 +659,9 @@ function accRound(arg, len) { //len 为保留小数点后几位
     }
     var arg3 = arg2.substr(0, l) + "." + arg2.substr(l, len);
     return arg3;
+}
+
+
+function SetAllMsgRead() {
+    $.post('/Tools/SetAllMsgRead', { "title": "" }, function (text, status) { location.reload() });
 }

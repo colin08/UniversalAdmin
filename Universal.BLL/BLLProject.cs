@@ -161,7 +161,7 @@ namespace Universal.BLL
             }
             db.Dispose();
             if (app_id != 0)
-                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID);
             return entity.ID;
         }
 
@@ -458,12 +458,10 @@ namespace Universal.BLL
         /// <param name="search_title">搜索标题</param>
         /// <param name="only_mine">是否只获取我的</param>
         /// <param name="status">项目进度，0：所有；1：完成；2：进行中</param>
-        /// <param name="node_id">查询某个节点</param>
-        /// <param name="node_status">某个节点状态,0所有；1：未开始；2：已开始；3：已结束</param>
-        /// <param name="node_begin">节点</param>
+        /// <param name="node_category_id">查询某个节点分类</param>
         /// <param name="is_admin">是否管理员</param>
         /// <returns></returns>
-        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title, bool only_mine, int status, int node_id, int node_status, DateTime? node_begin, DateTime? node_end, bool is_admin)
+        public static List<Entity.Project> GetPageData(int page_index, int page_size, ref int rowCount, int user_id, string search_title, bool only_mine, int status, int node_category_id, DateTime? begin_time, DateTime? end_time, bool is_admin)
         {
             rowCount = 0;
             List<Entity.Project> response_entity = new List<Entity.Project>();
@@ -489,87 +487,69 @@ namespace Universal.BLL
                 user_department_str = "," + user_department_id + ",";
                 user_id_str = "," + user_id + ",";
             }
-            string title_where = "";
-            string user_where = "";
-            string jindu_where = " where ID > 0"; //进度
-            string node_where = ""; //节点状态搜索
-            //只获取我的项目
-            if (only_mine)
-                user_where = " where CusUserID = " + user_id;
-            else
+            //string title_where = "";
+            //string jindu_where = " where ID > 0"; //进度
+            //string node_where = ""; //节点状态搜索
+            //string only_mine_str = "";//只获取我的
+
+            string inner_select = ""; //查询字段
+            string auth_where = " where I.ID>0";//权限条件
+            string inner_where = " where ID > 0";//字段判断
+            string time_where = ""; //筛选时间
+
+            if(only_mine)
             {
+                inner_select += ",(select count(1) from ProjectUser where ProjectID = P.ID and CusUserID = " + user_id.ToString() + ") as IsMine";
+                inner_where += " and IsMine >0";
+            }else
+            {
+                //权限
                 if (!is_admin)
-                    user_where = " where See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0";
+                    auth_where += " and (See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0)";
             }
+
+            //筛选时间
+            if (begin_time != null)
+            {
+                string dt_begin = Tools.TypeHelper.ObjectToDateTime(begin_time).ToString("yyyy-MM-dd");
+                time_where = " and AddTime between '" + dt_begin + " 00:00:00' and '" + dt_begin + " 23:59:59'";
+            }
+            if (begin_time != null && end_time != null)
+            {
+                string dt_begin = Tools.TypeHelper.ObjectToDateTime(begin_time).ToString("yyyy-MM-dd");
+                string dt_end = Tools.TypeHelper.ObjectToDateTime(begin_time).ToString("yyyy-MM-dd");
+                time_where = " and AddTime between '" + dt_begin + " 00:00:00' and '" + dt_end + " 23:59:59'";
+            }
+            inner_where += time_where;
+
+            //项目筛选/用户
             if (!string.IsNullOrWhiteSpace(search_title))
             {
-                title_where = " where (CHARINDEX('" + search_title + "',I.Title)>0 or CHARINDEX('" + search_title + "',U.Telphone)>0 or CHARINDEX('" + search_title + "',U.NickName)>0)";
+                auth_where += " and (CHARINDEX('" + search_title + "',I.Title)>0 or CHARINDEX('" + search_title + "',U.Telphone)>0 or CHARINDEX('" + search_title + "',U.NickName)>0)";
             }
+
+            //状态筛选
+            if (status != 0)
+                inner_select += ",(select count(1) as total from ProjectFlowNode where ProjectID = P.ID and IsEnd =0) as NodeNoCompTotal";
             switch (status)
             {
                 case 1:
-                    jindu_where += " and Status = 1";
+                    inner_where += " and NodeNoCompTotal =0";
                     break;
                 case 2:
-                    jindu_where += " and Status = 0";
-                    break;
-                default:
+                    inner_where += " and NodeNoCompTotal != 0";
                     break;
             }
-            if (node_id > 0)
+
+            //节点分类筛选
+            if(node_category_id > 0)
             {
-                node_where = "and NodeID = " + node_id.ToString();
-                switch (node_status)
-                {
-                    //未开始
-                    case 1:
-                        node_where += " and IsStart = 0 and IsEnd = 0";
-                        break;
-                    //已开始
-                    case 2:
-                        node_where += " and IsStart = 1";
-                        //筛选开始时间
-                        if (node_begin != null)
-                        {
-                            string dt_begin = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            node_where += " and BeginTime between '" + dt_begin + " 00:00:00' and '" + dt_begin + " 23:59:59'";
-                        }
-                        if (node_begin != null && node_end != null)
-                        {
-                            string dt_begin = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            string dt_end = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            node_where += " and BeginTime between '" + dt_begin + " 00:00:00' and '" + dt_end + " 23:59:59'";
-                        }
-                        break;
-                    //已结束
-                    case 3:
-                        node_where += " and IsEnd = 1";
-                        //筛选结束时间
-                        if (node_begin != null)
-                        {
-                            string dt_begin = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            node_where += " and EndTime between '" + dt_begin + " 00:00:00' and '" + dt_begin + " 23:59:59'";
-                        }
-                        if (node_begin != null && node_end != null)
-                        {
-                            string dt_begin = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            string dt_end = Tools.TypeHelper.ObjectToDateTime(node_begin).ToString("yyyy-MM-dd");
-                            node_where += " and EndTime between '" + dt_begin + " 00:00:00' and '" + dt_end + " 23:59:59'";
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                jindu_where += " and NodeTotal>0 ";
-
+                inner_select += ",(select dbo.fn_ProjectHaveNode(P.Id," + node_category_id.ToString() + ")) as HaveNodeCategory";
+                inner_where += " and HaveNodeCategory > 0";
             }
-
-
-
-
-            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from(select S.* FROM (select (select count(1) as total from ProjectFlowNode where ProjectID = P.ID and Status =1 " + node_where + ") as NodeTotal, ISNULL((select top 1 IsEnd from ProjectFlowNode where ProjectID = P.ID  order by[BeginTime] ASC), 0) as Status,*from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID " + title_where + " ) as P " + user_where + ") AS S " + jindu_where + ")as T) as Z  where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-            sql_total = "select count(1) FROM (select (select count(1) as total from ProjectFlowNode where ProjectID = P.ID and Status =1 " + node_where + ") as NodeTotal, ISNULL((select top 1 IsEnd from ProjectFlowNode where ProjectID = P.ID order by[BeginTime] ASC), 0) as Status,*from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID " + title_where + " ) as P " + user_where + ") AS S " + jindu_where;
+            
+            sql = "select * from ( select ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from (select * "+ inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID "+ auth_where + ") as P ) as S "+inner_where+") as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) from (select *"+ inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID "+ auth_where + ") as P) as S " + inner_where + ";";
 
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();
@@ -587,14 +567,20 @@ namespace Universal.BLL
                 //获取当前进行的节点信息
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.ProjectFlowNodeDoing();
-                if (!item.Status)
+
+                if (db.Database.SqlQuery<int>("select count(1) from ProjectFlowNode where ProjectID = " + item.ID + " and IsEnd = 0").ToList()[0] > 0)
                 {
-                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status = 1 and IsStart = 1 order by[BeginTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     if (entity_node == null)
                     {
-                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " order by[BeginTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and IsFrist =1 order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     }
-
+                }
+                else
+                {
+                    entity_node.flow_node_id = -1;
+                    entity_node.node_title = "全部节点已完成";
+                    entity_node.flow_node_remark = "";
                 }
                 if (entity_node == null)
                 {

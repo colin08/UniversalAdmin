@@ -61,7 +61,7 @@ namespace Universal.Web.Models.Request
         /// <summary>
         /// 改造性质
         /// </summary>
-        public Entity.ProjectGaiZao GaiZaoXingZhi { get; set; }
+        public string GaiZaoXingZhi { get; set; }
 
         /// <summary>
         /// 用地性质、宗地号

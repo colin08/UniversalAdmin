@@ -40,6 +40,17 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult User(int id)
+        {
+            var entity = BLL.BLLCusUser.GetModel(id);
+            return View(entity);
+        }
+
+        /// <summary>
         /// 公告信息
         /// </summary>
         /// <param name="id"></param>
@@ -218,8 +229,21 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Doc(int id)
+        public ActionResult Doc(int id,string b)
         {
+            switch (TypeHelper.ObjectToInt(b,0))
+            {
+                case 1:
+                    ViewData["BackUrl"] = "/";
+                    break;
+                case 2:
+                    ViewData["BackUrl"] = "javascript: window.history.back();";
+                    break;
+                default:
+                    ViewData["BackUrl"] = "/Shool/Index";
+                    break;
+            }
+
             var entity = BLL.BLLDocument.GetModel(id);
             if (entity == null)
                 return View("NotFound");

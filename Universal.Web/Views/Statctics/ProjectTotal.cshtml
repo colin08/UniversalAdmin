@@ -37,18 +37,9 @@
             </select>
         </li>
         <li>
-            <select id="select_gz" onchange="loadData()">
-                <option value="0">全部改造性质</option>
-                @foreach (var item in Universal.Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectGaiZao)))
-                {
-                    <option value="@item.Key">@item.Value</option>
-                }
-            </select>
-        </li>
-        <li>
             <select id="select_node" onchange="loadData()">
-                <option value="0">全部节点</option>
-                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+                <option value="0">全部节点分类</option>
+                @foreach (var item in (List<Universal.Entity.NodeCategory>)ViewData["NodeCategoryList"])
                 {
                     <option value="@item.ID">@item.Title</option>
                 }
@@ -75,7 +66,7 @@
         });
 
         function loadData() {
-            var url = "/Statctics/ProjectTotalCharts?jidu=" + $("#select_jidu").val() + "&area=" + $("#select_area").val() + "&gz=" + $("#select_gz").val() + "&node_id=" + $("#select_node").val();
+            var url = "/Statctics/ProjectTotalCharts?jidu=" + $("#select_jidu").val() + "&area=" + $("#select_area").val() + "&gz=0&node_id=" + $("#select_node").val();
             $.get(url, function (result) {
                 $("#charts_content").html(result);
             });

@@ -8,19 +8,19 @@
 <!--头部脚本-->
 @section head
 {
-<link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
+    <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
     <style>
-        .limd table{margin-top:5px;}
-        .limd td{padding:5px;}
-        .limd td input[type='text'] { width:80px;}
-        .addMember{float:left;font-size:10px;line-height:26px;padding:0 10px;display: inline-block;background: #e22d3e;color: #fff;font-weight: normal;border-radius: 4px;}
+        .limd table { margin-top: 5px; }
+        .limd td { padding: 5px; }
+            .limd td input[type='text'] { width: 80px; }
+        .addMember { float: left; font-size: 10px; line-height: 26px; padding: 0 10px; display: inline-block; background: #e22d3e; color: #fff; font-weight: normal; border-radius: 4px; }
     </style>
 }
 <!--头部脚本 end-->
 
 <div class="wapper">
     @Html.Partial("_MenuLeft", this.ViewData)
-        
+
     <div class="rightBox">
         <div class="container">
             <div class="tit1">
@@ -65,14 +65,15 @@
                         </li>
                         <li>
                             <div class="lilt">
-                            @if((bool)ViewData["RequieAPPID"])
-                            {
-                                <span class="red">*</span>
-                            }
-                            审批人</div>
+                                @if ((bool)ViewData["RequieAPPID"])
+                                {
+                                    <span class="red">*</span>
+                                }
+                                审批人
+                            </div>
                             <div class="limd" style="position: relative">
                                 @Html.HiddenFor(p => p.approve_user_id)
-								<input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
+                                <input type="text" value="@Model.approve_user_name" id="approve_user_name" class="add-input" />
                                 <a href="javascript:;" onclick="selapprove_user(this)" class="btn-peo" style="left: 290px;">选择成员</a>
                             </div>
                             <div class="litip">&nbsp;</div>
@@ -96,20 +97,20 @@
                                         </tr>
                                     </thead>
                                     <tbody id="workitem">
-                                        
+
                                         @for (int i = 0; i < Model.plan_item.Count; i++)
                                         {
                                             <tr>
                                                 <td><a href="javascript:;" class="btn-add uploadBtnBox" onclick="DeleteBtn(this)"><i class="i-barrel"></i></a></td>
-                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Title, new { @class = "usInput",@style="width:150px;" })</td>
+                                                <td>@Html.TextBoxFor(p => p.plan_item[i].Title, new { @class = "usInput", @style = "width:150px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].Content, new { @class = "usInput", @style = "width:200px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].WantTaget, new { @class = "usInput", @style = "width:120px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].DoneTime, new { @class = "usInput" })</td>
-                                                <td @show_sty>@Html.DropDownListFor(p => p.plan_item[i].Status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select"})</td>
+                                                <td @show_sty>@Html.DropDownListFor(p => p.plan_item[i].Status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select" })</td>
                                                 <td @show_sty>@Html.TextBoxFor(p => p.plan_item[i].Remark, new { @class = "usInput" })</td>
                                             </tr>
                                         }
-                                        
+
                                         <tr>
                                             <td colspan="5">
                                                 <a href="javascript:;" class="addMember" onclick="AddBtn()"> + 添加分项</a>
@@ -123,13 +124,12 @@
                         </li>
                         <li>
                             <div class="lilt">&nbsp;</div>
-                            <div class="limd"><button type="submit"  onClick="return beforConfrim()"  class="btn1">发布</button> <button type="button" onclick="    location.href = '/WorkPlan/Index';" class="btn1 grey">取消</button></div>
+                            <div class="limd"><button type="submit" onClick="return beforConfrim()" class="btn1">发布</button> <button type="button" onclick=" location.href='/WorkPlan/Index' ;" class="btn1 grey">取消</button></div>
                         </li>
                     </ul>
                 </form>
             </div>
         </div>
-
         <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
     </div>
 
@@ -139,38 +139,42 @@
 @section foot
 {
     <script type="text/javascript">
-    function selapprove_user(obj)
-	{
-		selUserDialog({max:1,callback:function(data){
-			$(data).each(function(){
-				$('#approve_user_id').val(this.id);
-				$('#approve_user_name').val(this.nick_name);
-			});
-		}});
-	}
+
+
+
+        function selapprove_user(obj) {
+            selUserDialog({
+                max: 1, callback: function (data) {
+                    $(data).each(function () {
+                        $('#approve_user_id').val(this.id);
+                        $('#approve_user_name').val(this.nick_name);
+                    });
+                }
+            });
+        }
 
 
 
 
         $(document).ready(function (e) {
-               @if(Model.Msg == 1)
+            @if(Model.Msg == 1)
                {
                    @: location.href = "/WorkPlan/Index";
-               }else if(Model.Msg == 2)
+                           }else if(Model.Msg == 2)
                {
                    @:alert("数据不存在");
-               }else if(Model.Msg == 3)
+                           }else if(Model.Msg == 3)
                {
                    @:alert("数据验证失败");
-               }else if(Model.Msg == 4)
+                           }else if(Model.Msg == 4)
                {
                    @:alert("已经审批的不可再编辑");
-                   @: location.href = "/WorkPlan/Index";
-               }
+                               @: location.href = "/WorkPlan/Index";
+                           }
         });
 
         function DeleteBtn(obj) {
-            
+
             var memberCount = $(".uploadBtnBox").length;
 
             if (memberCount <= 1) {
@@ -189,8 +193,8 @@
                 var txts = $(this).find("input[type='text']");
                 txts.each(function () {
                     // 修改属性中的数字的值， 当前员工下标 -1
-                    $(this).attr("id",$(this).attr("id").replace(/\d+/, i));
-                    $(this).attr("name",$(this).attr("name").replace(/\d+/, i));
+                    $(this).attr("id", $(this).attr("id").replace(/\d+/, i));
+                    $(this).attr("name", $(this).attr("name").replace(/\d+/, i));
                 })
                 var select_id = $(this).find('.tb_select').attr("id");
                 if (select_id != undefined) {
@@ -226,19 +230,16 @@
 
             var select_id = parent.find('.tb_select').attr("id");
             var select_name = parent.find('.tb_select').attr("name");
-            parent.find('.tb_select').attr("id", select_id.replace(/\d+/, index +1));
-            parent.find('.tb_select').attr("name", select_name.replace(/\d+/, index+1));
+            parent.find('.tb_select').attr("id", select_id.replace(/\d+/, index + 1));
+            parent.find('.tb_select').attr("name", select_name.replace(/\d+/, index + 1));
 
         }
 
-        function beforConfrim()
-        {
+        function beforConfrim() {
             var isOK = true;
             $("#workitem tr").find("input[type='text']").each(function () {
-                if ($(this).attr("id").indexOf("Title") != -1 || $(this).attr("id").indexOf("Content") != -1)
-                {
-                    if($(this).val().length == 0)
-                    {
+                if ($(this).attr("id").indexOf("Title") != -1 || $(this).attr("id").indexOf("Content") != -1) {
+                    if ($(this).val().length == 0) {
                         isOK = false;
                         alert("工作分项名称或工作内容必填");
                     }
@@ -249,108 +250,107 @@
 
     </script>
 
-<script type="text/javascript">
-            function YYYYMMDDstart() {
-                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    <script type="text/javascript">
+        function YYYYMMDDstart() {
+            MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-                //先给年下拉框赋内容
-                var y = new Date().getFullYear();
-                for (var i = y ; i < (y + 10) ; i++) //以今年为准，前30年，后30年
-                {
-                    document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
-                    document.form1.YYYY2.options.add(new Option(" " + i + " 年", i));
-                }
-                //赋月份的下拉框
-                for (var i = 1; i < 13; i++)
-                {
-                    document.form1.MM.options.add(new Option(" " + i + " 月", i));
-                    document.form1.MM2.options.add(new Option(" " + i + " 月", i));
-                }
-
-                document.form1.YYYY.value = $("#year").val();
-                document.form1.YYYY2.value = $("#year2").val();
-
-                //document.form1.MM.value = new Date().getMonth() + 1;
-                document.form1.MM.value = $("#month").val();
-                document.form1.MM2.value = $("#month2").val();
-                var n = MonHead[new Date().getMonth()];
-                if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n); //赋日期下拉框Author:meizz
-                writeDay2(n); //赋日期下拉框Author:meizz
-                //document.form1.DD.value = new Date().getDate();
-                document.form1.DD.value = $("#day").val();
-                document.form1.DD2.value = $("#day2").val();
-            }
-            if (document.attachEvent)
-                window.attachEvent("onload", YYYYMMDDstart);
-            else
-                window.addEventListener('load', YYYYMMDDstart, false);
-
-            function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
+            //先给年下拉框赋内容
+            var y = new Date().getFullYear();
+            for (var i = y ; i < (y + 10) ; i++) //以今年为准，前30年，后30年
             {
-                var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
-                $("#year").val(str);
-                if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[MMvalue - 1];
-                if (MMvalue == 2 && IsPinYear(str)) n++;
-                writeDay(n)
+                document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
+                document.form1.YYYY2.options.add(new Option(" " + i + " 年", i));
             }
-            function MMDD(str)   //月发生变化时日期联动
-            {
-                var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
-                $("#month").val(str);
-                if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[str - 1];
-                if (str == 2 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n)
-            }
-            function DDChan(str) {
-                $("#day").val(str);
+            //赋月份的下拉框
+            for (var i = 1; i < 13; i++) {
+                document.form1.MM.options.add(new Option(" " + i + " 月", i));
+                document.form1.MM2.options.add(new Option(" " + i + " 月", i));
             }
 
-            function YYYYDD2(str) //年发生变化时日期发生变化(主要是判断闰平年)
-            {
-                var MMvalue = document.form1.MM2.options[document.form1.MM2.selectedIndex].value;
-                $("#year2").val(str);
-                if (MMvalue == "") { var e = document.form1.DD2; optionsClear(e); return; }
-                var n = MonHead[MMvalue - 1];
-                if (MMvalue == 2 && IsPinYear(str)) n++;
-                writeDay2(n)
-            }
-            function MMDD2(str)   //月发生变化时日期联动
-            {
-                var YYYYvalue = document.form1.YYYY2.options[document.form1.YYYY2.selectedIndex].value;
-                $("#month2").val(str);
-                if (YYYYvalue == "") { var e = document.form1.DD2; optionsClear(e); return; }
-                var n = MonHead[str - 1];
-                if (str == 2 && IsPinYear(YYYYvalue)) n++;
-                writeDay2(n)
-            }
-            function DDChan2(str) {
-                $("#day2").val(str);
-            }
+            document.form1.YYYY.value = $("#year").val();
+            document.form1.YYYY2.value = $("#year2").val();
 
-            function writeDay(n)   //据条件写日期的下拉框
-            {
-                var e = document.form1.DD; optionsClear(e);
-                for (var i = 1; i < (n + 1) ; i++)
-                    e.options.add(new Option(" " + i + " 日", i));
-            }
-            function writeDay2(n)   //据条件写日期的下拉框
-            {
-                var e = document.form1.DD2; optionsClear(e);
-                for (var i = 1; i < (n + 1) ; i++)
-                    e.options.add(new Option(" " + i + " 日", i));
-            }
-            function IsPinYear(year)//判断是否闰平年
-            {
-                return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
-            }
-            function optionsClear(e) {
-                e.options.length = 1;
-            }
+            //document.form1.MM.value = new Date().getMonth() + 1;
+            document.form1.MM.value = $("#month").val();
+            document.form1.MM2.value = $("#month2").val();
+            var n = MonHead[new Date().getMonth()];
+            if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+            writeDay(n); //赋日期下拉框Author:meizz
+            writeDay2(n); //赋日期下拉框Author:meizz
+            //document.form1.DD.value = new Date().getDate();
+            document.form1.DD.value = $("#day").val();
+            document.form1.DD2.value = $("#day2").val();
+        }
+        if (document.attachEvent)
+            window.attachEvent("onload", YYYYMMDDstart);
+        else
+            window.addEventListener('load', YYYYMMDDstart, false);
 
-</script>
+        function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
+        {
+            var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
+            $("#year").val(str);
+            if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+            var n = MonHead[MMvalue - 1];
+            if (MMvalue == 2 && IsPinYear(str)) n++;
+            writeDay(n)
+        }
+        function MMDD(str)   //月发生变化时日期联动
+        {
+            var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
+            $("#month").val(str);
+            if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
+            var n = MonHead[str - 1];
+            if (str == 2 && IsPinYear(YYYYvalue)) n++;
+            writeDay(n)
+        }
+        function DDChan(str) {
+            $("#day").val(str);
+        }
+
+        function YYYYDD2(str) //年发生变化时日期发生变化(主要是判断闰平年)
+        {
+            var MMvalue = document.form1.MM2.options[document.form1.MM2.selectedIndex].value;
+            $("#year2").val(str);
+            if (MMvalue == "") { var e = document.form1.DD2; optionsClear(e); return; }
+            var n = MonHead[MMvalue - 1];
+            if (MMvalue == 2 && IsPinYear(str)) n++;
+            writeDay2(n)
+        }
+        function MMDD2(str)   //月发生变化时日期联动
+        {
+            var YYYYvalue = document.form1.YYYY2.options[document.form1.YYYY2.selectedIndex].value;
+            $("#month2").val(str);
+            if (YYYYvalue == "") { var e = document.form1.DD2; optionsClear(e); return; }
+            var n = MonHead[str - 1];
+            if (str == 2 && IsPinYear(YYYYvalue)) n++;
+            writeDay2(n)
+        }
+        function DDChan2(str) {
+            $("#day2").val(str);
+        }
+
+        function writeDay(n)   //据条件写日期的下拉框
+        {
+            var e = document.form1.DD; optionsClear(e);
+            for (var i = 1; i < (n + 1) ; i++)
+                e.options.add(new Option(" " + i + " 日", i));
+        }
+        function writeDay2(n)   //据条件写日期的下拉框
+        {
+            var e = document.form1.DD2; optionsClear(e);
+            for (var i = 1; i < (n + 1) ; i++)
+                e.options.add(new Option(" " + i + " 日", i));
+        }
+        function IsPinYear(year)//判断是否闰平年
+        {
+            return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+        }
+        function optionsClear(e) {
+            e.options.length = 1;
+        }
+
+    </script>
 
 }
 <!--底部脚本 end-->

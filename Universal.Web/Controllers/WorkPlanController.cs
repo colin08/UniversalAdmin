@@ -1,10 +1,16 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Table;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Universal.Tools;
 using Universal.Web.Framework;
+
+
 
 namespace Universal.Web.Controllers
 {
@@ -18,6 +24,38 @@ namespace Universal.Web.Controllers
             bool isAdmin = bll.Exists(p => p.CusUserID == WorkContext.UserInfo.ID);
             ViewData["IsDepartmentAdmin"] = isAdmin;
             return View();
+        }
+
+        /// <summary>
+        /// 生成工作计划Excel文件
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult CreateExcel(string ids)
+        {
+            BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
+            System.Text.StringBuilder str_path = new System.Text.StringBuilder();
+            foreach (var item in ids.Split(','))
+            {
+                int id = TypeHelper.ObjectToInt(item);
+                var entity = bll.GetModel(p => p.ID == id);
+                if (entity == null)
+                    continue;
+                string msg = "";
+                string folder = "/uploads/excel/";
+                string file_name = entity.WeekText + "-工作计划考核表" + id.ToString();
+                string server_path = string.Format("{0}{1}.xlsx", folder, file_name);
+                IOHelper.CreateDirectory(folder);
+                bool is_ok = BLL.BLLWorkPlan.ImportToExcel(IOHelper.GetMapPath(server_path), id, out msg);
+                if (is_ok)
+                    str_path.Append(server_path + ",");
+            }
+            if (str_path.Length > 0)
+                str_path.Remove(str_path.Length - 1, 1);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "";
+            WorkContext.AjaxStringEntity.data = str_path.ToString();
+            return Json(WorkContext.AjaxStringEntity);
         }
 
         /// <summary>
@@ -117,7 +155,7 @@ namespace Universal.Web.Controllers
         {
             //判断审核人是否必填
             ViewData["RequieAPPID"] = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
-
+            //ViewData["ShowSave"] = false;
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelWorkPlan entity = new Models.ViewModelWorkPlan();
             LoadStatus();
@@ -130,35 +168,27 @@ namespace Universal.Web.Controllers
                 }
                 else
                 {
-                    if (model.IsApprove)
-                    {
-                        //审批过的不能再编辑
-                        entity.Msg = 4;
-                    }
-                    else
-                    {
-                        entity.approve_status = model.IsApprove;
-                        //LoadPlatform(model.WeekText);
-                        entity.id = model.ID;
-                        entity.week_text = model.WeekText;
-                        DateTime dt = TypeHelper.ObjectToDateTime(model.BeginTime);
-                        entity.year = dt.Year.ToString();
-                        entity.month = dt.Month.ToString();
-                        entity.day = dt.Day.ToString();
+                    //ViewData["ShowSave"] = !model.IsApprove;
+                    entity.approve_status = model.IsApprove;
+                    //LoadPlatform(model.WeekText);
+                    entity.id = model.ID;
+                    entity.week_text = model.WeekText;
+                    DateTime dt = TypeHelper.ObjectToDateTime(model.BeginTime);
+                    entity.year = dt.Year.ToString();
+                    entity.month = dt.Month.ToString();
+                    entity.day = dt.Day.ToString();
 
-                        DateTime dt2 = TypeHelper.ObjectToDateTime(model.EndTime);
-                        entity.year2 = dt2.Year.ToString();
-                        entity.month2 = dt2.Month.ToString();
-                        entity.day2 = dt2.Day.ToString();
-                        entity.approve_user_id = TypeHelper.ObjectToInt(model.ApproveUserID, 0);
-                        entity.approve_user_name = model.ApproveUser == null ? "" : model.ApproveUser.NickName;
-                        var item_list = model.WorkPlanItemList.ToList();
-                        if (item_list.Count > 0)
-                        {
-                            entity.plan_item.Clear();
-                            entity.plan_item = item_list;
-                        }
-
+                    DateTime dt2 = TypeHelper.ObjectToDateTime(model.EndTime);
+                    entity.year2 = dt2.Year.ToString();
+                    entity.month2 = dt2.Month.ToString();
+                    entity.day2 = dt2.Day.ToString();
+                    entity.approve_user_id = TypeHelper.ObjectToInt(model.ApproveUserID, 0);
+                    entity.approve_user_name = model.ApproveUser == null ? "" : model.ApproveUser.NickName;
+                    var item_list = model.WorkPlanItemList.ToList();
+                    if (item_list.Count > 0)
+                    {
+                        entity.plan_item.Clear();
+                        entity.plan_item = item_list;
                     }
                 }
 
@@ -177,7 +207,7 @@ namespace Universal.Web.Controllers
             ViewData["RequieAPPID"] = requie_approve;
             var isAdd = entity.id == 0 ? true : false;
             LoadStatus();
-            
+
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
             if (!isAdd)
             {
@@ -186,13 +216,13 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("week_text", "信息不存在");
                 }
-                if (bll.GetModel(p => p.ID == entity.id).IsApprove)
-                {
-                    //审批过的不能再编辑
-                    entity.Msg = 4;
-                }
+                //if (bll.GetModel(p => p.ID == entity.id).IsApprove)
+                //{
+                //    //审批过的不能再编辑
+                //    entity.Msg = 4;
+                //}
             }
-            
+
             if (requie_approve && app_id == 0)
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
@@ -241,7 +271,7 @@ namespace Universal.Web.Controllers
                 {
                     model.SetApproveStatus();
                     bll.Add(model);
-                    if(app_id >0)
+                    if (app_id > 0)
                         BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName), model.ID);
                 }
                 else

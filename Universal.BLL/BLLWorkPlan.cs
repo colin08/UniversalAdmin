@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using OfficeOpenXml;
+using System.IO;
 
 namespace Universal.BLL
 {
@@ -94,6 +96,65 @@ namespace Universal.BLL
 
         }
 
+
+        /// <summary>
+        /// 导出数据导Excel
+        /// </summary>
+        /// <param name="file_name">导出的文件，绝对路径，包含文件名和后缀</param>
+        /// <param name="workplan_id">工作计划ID</param>
+        /// <returns></returns>
+        public static bool ImportToExcel(string file_path,int workplan_id,out string msg)
+        {
+            msg = "ok";
+            if (string.IsNullOrWhiteSpace(file_path) || workplan_id <= 0)
+            {
+                msg = "非法参数";
+                return false;
+            }
+            string template_path = Tools.IOHelper.GetMapPath("~/App_Data/WorkPlanTemplate.xlsx");
+            var entity_plan = GetModel(workplan_id);
+            if (entity_plan == null)
+            {
+                msg = "工作计划不存在";
+                return false;
+            }
+            string excel_title = Tools.TypeHelper.Baodate2ChineseSimple(DateTime.Now) + "工作计划考核表";
+            string excel_time = string.Format("提交时间：  {0}月  {1}  日   ", entity_plan.AddTime.Month.ToString(), entity_plan.AddTime.Day.ToString());
+            string sheets_name = "9.1";
+            try
+            {
+                FileInfo file = new FileInfo(file_path);
+                FileInfo template = new FileInfo(template_path);
+                using (ExcelPackage ep = new ExcelPackage(file, template))
+                {
+                    ExcelWorksheet ws = ep.Workbook.Worksheets[sheets_name];
+                    ws.Cells[1, 1].Value = excel_title;
+                    ws.Cells[2, 2].Value = entity_plan.CusUser.NickName;
+                    ws.Cells[2, 4].Value = excel_time;
+
+                    int begin_index = 5;
+                    foreach (var item in entity_plan.WorkPlanItemList)
+                    {
+                        ws.Cells[begin_index, 2].Value = item.Title;
+                        ws.Cells[begin_index, 3].Value = item.Content;
+                        ws.Cells[begin_index, 4].Value = item.WantTaget;
+                        ws.Cells[begin_index, 5].Value = item.DoneTime;
+                        ws.Cells[begin_index, 6].Value = item.StatusText;
+                        ws.Cells[begin_index, 7].Value = item.Remark;
+                        begin_index++;
+                    }
+                    ep.Save();
+                    return true;
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                msg = ex.Message;
+                return false;
+            }
+            
+        }
+
         /// <summary>
         /// app获取计划列表
         /// </summary>
@@ -150,7 +211,7 @@ namespace Universal.BLL
             if (bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
             {
                 msg = "审批成功";
-                BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity_user.NickName), entity.ID);
+                BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity.WeekText), entity.ID);
                 return true;
             }
             else
@@ -181,7 +242,7 @@ namespace Universal.BLL
             entity.WorkPlanItemList.Clear();
             entity.SetApproveStatus();
             var ss = db.Entry<Entity.WorkPlan>(entity);
-            ss.State = System.Data.Entity.EntityState.Modified;
+            ss.State = EntityState.Modified;
             int row = db.SaveChanges();
             db.Dispose();
             return row > 0;

@@ -37,7 +37,7 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             int rowCount = 0;
-            List<Entity.CusUser> list = new List<Entity.CusUser>();//
+            List<Entity.CusUser> list = new List<Entity.CusUser>();
             if(!string.IsNullOrWhiteSpace(keyword))
                list = bll.GetPagedList(page_index, page_size, ref rowCount, p=>p.CusDepartmentID == department_id && p.NickName.Contains(keyword) || p.Telphone.Contains(keyword), "RegTime desc", p => p.CusUserJob);
             else
@@ -53,7 +53,7 @@ namespace Universal.Web.Controllers
             result.total = rowCount;
             return Json(result);
         }
-
+        
         /// <summary>
         /// 删除
         /// </summary>
@@ -136,7 +136,7 @@ namespace Universal.Web.Controllers
                     entity.avatar = model.Avatar;
                     entity.department_id = model.CusDepartmentID;
                     entity.department_title = model.CusDepartment.Title;
-                    entity.email = model.Email;
+                    entity.email = model.Email == null ? "" : model.Email.ToLower();
                     entity.gender = model.Gender;
                     entity.id = model.ID;
                     entity.job_id = model.CusUserJobID;
@@ -231,7 +231,7 @@ namespace Universal.Web.Controllers
                 model.Avatar = entity.avatar;
                 model.CusDepartmentID = entity.department_id;
                 model.CusUserJobID = entity.job_id;
-                model.Email = entity.email;
+                model.Email = entity.email.ToLower();
                 model.Gender = entity.gender;
                 model.IsAdmin = string.IsNullOrWhiteSpace(entity.user_route_str) ? false : true;
                 model.NickName = entity.nick_name;

@@ -153,7 +153,13 @@ namespace Universal.Web.Framework
             //判断是否登陆
             if (WorkContext.UserInfo == null)
             {
-                if (WorkContext.PageKey.ToLower() != "/account/login" && WorkContext.PageKey.ToLower() != "/account/resetpwd" && WorkContext.PageKey.ToLower() != "/account/resetsuc" && WorkContext.PageKey.ToLower() != "/account/sendcode")
+                List<string> path_list = new List<string>();
+                path_list.Add("/account/login");
+                path_list.Add("/account/resetpwd");
+                path_list.Add("/account/resetsuc");
+                path_list.Add("/account/sendcode");
+                path_list.Add("/share/doc");
+                if (!path_list.Contains(WorkContext.PageKey.ToLower()))
                 {
                     if (WebHelper.IsAjax())
                     {

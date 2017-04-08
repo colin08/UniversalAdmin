@@ -1,0 +1,105 @@
+﻿@model Universal.Entity.CusUser
+@{
+    ViewBag.Title = "用户信息";
+    ViewData["tabTop"] = "sms";
+}
+
+<!--头部脚本-->
+@section head
+{
+}
+<!--头部脚本 end-->
+
+<div class="container">
+    <div class="tit1">
+        <div class="inner">
+            <a href="javascript:;" onclick="javascript: window.history.back();" class="fl f16"><i class="i-back"></i>返回</a>
+        </div>
+    </div>
+
+    <div class="userInfo sysIn" style="margin:0;">
+        <ul>
+            <li>
+                <div class="lilt">姓名</div>
+                <div class="limd">
+                    <span>@Model.NickName</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">手机号</div>
+                <div class="limd">
+                    <span>@Model.Telphone</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">部门</div>
+                <div class="limd">
+                    <span>@Model.CusDepartment.Title</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">职位</div>
+                <div class="limd">
+                    <span>@Model.CusUserJob.Title</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">邮箱</div>
+                <div class="limd">
+                    <span>@Model.Email</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">头像</div>
+                <div class="limd">
+                    <img src="@Model.Avatar" width="200px" />
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">性别</div>
+                <div class="limd">
+                    <span>@(Model.Gender == Universal.Entity.CusUserGender.male ?"男":"女")</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">生日</div>
+                <div class="limd">
+                    <span>@(Model.Brithday == null ? "/" : Universal.Tools.TypeHelper.ObjectToDateTime(Model.Brithday).ToString("yyyy-MM-dd"))</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">短号</div>
+                <div class="limd">
+                    <span>@Model.ShorNum</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+            <li>
+                <div class="lilt">个人简介</div>
+                <div class="limd">
+                    <span>@Html.Raw(Model.AboutMe)</span>
+                </div>
+                <div class="litip"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+    </script>
+}
+<!--底部脚本 end-->

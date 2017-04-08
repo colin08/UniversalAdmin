@@ -7,14 +7,14 @@
 <!--头部脚本-->
 @section head
 {
-
+<link href="~/Assets/css/plugins/zoom/zoom.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
 
 <!--wrapper [[-->
 <div class="container">
     <div class="new-head mb-40 clearfix">
-        <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
+        <a href="@ViewData["BackUrl"]" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
         <b class="f20">项目详情</b>
         <span class="fr">
             <a href="javascript:;" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
@@ -31,10 +31,10 @@
         <div class="fl">
             <ul>
                 <li><label for="" class="lab5">项目名称：</label><span>@Model.Title</span></li>
-                <li><label for="" class="lab5">审批人：</label><span>@(Model.ApproveUser==null?"":Model.ApproveUser.NickName)</span></li>
+                <li><label for="" class="lab5">项目负责人：</label><span>@(Model.ApproveUser==null?"":Model.ApproveUser.NickName)</span></li>
                 <li><label for="" class="lab5">项目流程：</label><span>@ViewData["FlowName"]</span></li>
                 <li>
-                    <label for="" class="lab5">项目联系人：</label>
+                    <label for="" class="lab5">项目成员：</label>
                     <div class="scrollbox">
                         @foreach (var item in (List<Universal.Web.Models.ViewModelDocumentCategory>)ViewData["UserList"])
                         {
@@ -58,7 +58,7 @@
                     <ul style="float:right;width:50%;">
                         @foreach (var item in Model.ProjectFiles.Where(p=>p.Type == Universal.Entity.ProjectFileType.album))
                         {
-                            <li><img src="@item.FilePath" style="width:100px;" /></li>
+                            <li><img src="@item.FilePath" style="width:100px;" data-action="zoom" /></li>
 
                         }
                     </ul>
@@ -78,6 +78,7 @@
 <!--底部脚本-->
 @section foot
 {
+    <script src="~/Assets/js/plugins/zoom/zoom.js"></script>
     <script type="text/javascript">
 
     </script>

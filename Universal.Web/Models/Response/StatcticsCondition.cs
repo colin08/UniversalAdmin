@@ -18,8 +18,6 @@ namespace Universal.Web.Models.Response
             this.jidu.Add(new SimpleEntity(0, "所有季度"));
             this.area = new List<SimpleEntity>();
             this.area.Add(new SimpleEntity(0, "所有区域"));
-            this.gz = new List<SimpleEntity>();
-            this.gz.Add(new SimpleEntity(0, "所有性质"));
         }
 
         /// <summary>
@@ -36,11 +34,7 @@ namespace Universal.Web.Models.Response
         /// 区域
         /// </summary>
         public List<SimpleEntity> area { get; set; }
-
-        /// <summary>
-        /// 改造性质
-        /// </summary>
-        public List<SimpleEntity> gz { get; set; }
+        
         
     }
 

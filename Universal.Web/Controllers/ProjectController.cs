@@ -19,7 +19,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
-            LoadNodes();
+            LoadNodeCategory();
             return View();
         }
 
@@ -31,13 +31,13 @@ namespace Universal.Web.Controllers
         /// <param name="keyword">搜索关键字</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword, int status, int node_id, int node_status, DateTime? begin_time, DateTime? end_time, bool is_admin)
+        public JsonResult PageData(int page_size, int page_index, bool only_mine, string keyword, int status, int node_category_id, DateTime? begin_time, DateTime? end_time, bool is_admin)
         {
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
 
             int rowCount = 0;
-            var list = BLL.BLLProject.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, only_mine, status, node_id, node_status, begin_time, end_time, is_admin);
+            var list = BLL.BLLProject.GetPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, only_mine, status, node_category_id, begin_time, end_time, is_admin);
             foreach (var item in list)
             {
                 item.IsFavorites = bll_fav.Exists(p => p.CusUserID == WorkContext.UserInfo.ID && p.ProjectID == item.ID);
@@ -104,8 +104,13 @@ namespace Universal.Web.Controllers
         /// 项目基本信息
         /// </summary>
         /// <returns></returns>
-        public ActionResult BasicInfo(int id)
+        public ActionResult BasicInfo(int id,string b)
         {
+            if (TypeHelper.ObjectToInt(b, 0) != 0)
+                ViewData["BackUrl"] = "/";
+            else
+                ViewData["BackUrl"] = "/Project/Index";
+
             ViewData["FlowName"] = "";
             if (id <= 0)
                 return Content("项目不存在");
@@ -256,6 +261,14 @@ namespace Universal.Web.Controllers
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
+                if(entity.ApproveUserID != null)
+                {
+                    if(TypeHelper.ObjectToInt(entity.ApproveUserID,-1) != WorkContext.UserInfo.ID)
+                    {
+                        model.Msg = 4;
+                        return View(model);
+                    }
+                }
                 if (entity != null)
                 {
                     model.title = entity.Title;
@@ -359,7 +372,7 @@ namespace Universal.Web.Controllers
             int app_id = TypeHelper.ObjectToInt(entity.approve_user_id, 0);
             var isAdd = entity.id == 0 ? true : false;
             LoadFlow();
-
+            
             //判断审核人是否必填
             var requie_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
             ViewData["RequieAPPID"] = requie_approve;
@@ -438,6 +451,16 @@ namespace Universal.Web.Controllers
                 else
                     model = bll.GetModel(p => p.ID == entity.id);
 
+                //判断有没有权限编辑
+                if (model.ApproveUserID != null)
+                {
+                    if (TypeHelper.ObjectToInt(model.ApproveUserID, -1) != WorkContext.UserInfo.ID)
+                    {
+                        entity.Msg = 4;
+                        return View(entity);
+                    }
+                }
+
                 model.ApproveUserID = entity.approve_user_id;
 
                 if (entity.flow_id == 0)
@@ -502,12 +525,12 @@ namespace Universal.Web.Controllers
             return View(entity);
         }
 
-        public void LoadNodes()
+        public void LoadNodeCategory()
         {
-            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
+            BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
+            List<Entity.NodeCategory> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
 
-            ViewData["NodeList"] = list;
+            ViewData["NodeCategoryList"] = list;
         }
 
         /// <summary>
@@ -532,14 +555,6 @@ namespace Universal.Web.Controllers
                 typeList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });
             }
             ViewData["AreaList"] = typeList;
-
-            List<SelectListItem> GZXZList = new List<SelectListItem>();
-            foreach (var item in EnumHelper.EnumToDictionary(typeof(Entity.ProjectGaiZao)))
-            {
-                GZXZList.Add(new SelectListItem() { Text = item.Value, Value = item.Key.ToString() });
-            }
-            ViewData["GZXZList"] = GZXZList;
-
         }
 
         #region 前端流程接口

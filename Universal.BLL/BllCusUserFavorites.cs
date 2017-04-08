@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Universal.BLL
 {
@@ -32,7 +33,7 @@ namespace Universal.BLL
                     return false;
                 }
                 var entity_fav = db.CusUserDocFavorites.Where(p => p.CusUserID == user_id && p.DocPostID == id).FirstOrDefault();
-                if(entity_fav == null)
+                if (entity_fav == null)
                 {
                     //添加
                     msg = "收藏成功";
@@ -46,7 +47,7 @@ namespace Universal.BLL
                     //删除
                     msg = "取消收藏成功";
                     db.CusUserDocFavorites.Remove(entity_fav);
-                }                
+                }
                 db.SaveChanges();
 
             };
@@ -82,11 +83,12 @@ namespace Universal.BLL
                     entity.CusUserID = user_id;
                     entity.ProjectID = id;
                     db.CusUserProjectFavorites.Add(entity);
-                }else
+                }
+                else
                 {
                     msg = "取消收藏成功";
                     db.CusUserProjectFavorites.Remove(entity_fav);
-                }                
+                }
                 db.SaveChanges();
 
             };
@@ -138,12 +140,16 @@ namespace Universal.BLL
             response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();
             foreach (var item in response_entity)
             {
-                var entity = db.CusUsers.Find(item.CusUserID);
-                if (entity == null)
-                {
-                    entity = new Entity.CusUser();
-                }
-                item.CusUser = entity;
+                var entity_user = db.CusUsers.Where(p => p.ID == item.CusUserID).AsNoTracking().FirstOrDefault();
+                if (entity_user == null)
+                    entity_user = new Entity.CusUser();
+                else
+                    item.CusUser = entity_user;
+                var entity_category = db.DocCategorys.Where(p => p.ID == item.DocCategoryID).AsNoTracking().FirstOrDefault();
+                if (entity_category == null)
+                    entity_category = new Entity.DocCategory();
+                else
+                    item.CategoryName = entity_category.Title;
             }
             db.Dispose();
             return response_entity;
@@ -176,7 +182,8 @@ namespace Universal.BLL
             {
                 sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row, *from( select W.*, U.NickName, u.Telphone from(select pro.*, fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID = u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%') AS Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID = " + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T where T.NickName like '%" + search_title + "%' or T.Title like '%" + search_title + "%'";
-            }else
+            }
+            else
             {
                 sql = "select * from (select ROW_NUMBER() OVER(ORDER BY FavTime DESC) as row,* from (select W.*,U.NickName,u.Telphone from (select pro.*,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T) as Z where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
                 sql_total = "select count(1) from (select W.*,U.NickName,u.Telphone from (select pro.Title,pro.CusUserID,pro.ApproveUserID,See,TOID,pro.AddTime,LastUpdateTime,fav.AddTime as FavTime from CusUserProjectFavorites as fav left join Project as pro on fav.ProjectID = pro.ID where fav.CusUserID =" + user_id + ") as W LEFT JOIN CusUser as U on W.CusUserID =u.ID) as T";
@@ -217,6 +224,6 @@ namespace Universal.BLL
             db.Dispose();
             return response_entity;
         }
-        
+
     }
 }

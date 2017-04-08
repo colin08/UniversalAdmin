@@ -19,7 +19,7 @@
 <div class="container">
     <div class="tit1">
         <b>项目列表</b>
-        <div class="search"><input type="text" id="txt_search" placeholder="请输入项目名称/联系人" /><input type="button" onclick="pageData(1)" /></div>
+        <div class="search"><input type="text" id="txt_search" placeholder="搜索项目名称/创建人/手机号" /><input type="button" onclick="pageData(1)" /></div>
 
     </div>
     <div class="itemOp">
@@ -31,15 +31,10 @@
         <div class="itemOpRt">
             <select id="select_node" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
                 <option value="0">所有节点</option>
-                @foreach (var item in (List<Universal.Entity.Node>)ViewData["NodeList"])
+                @foreach (var item in (List<Universal.Entity.NodeCategory>)ViewData["NodeCategoryList"])
                 {
                     <option value="@item.ID">@item.Title</option>
                 }
-            </select>
-            <select id="select_node_status" onchange="pageData(1)" class="select-input valid" style="width: 120px;">
-                <option value="0">所有状态</option>
-                <option value="2">进行中</option>
-                <option value="3">已结束</option>
             </select>
             &nbsp;
             <input type="hidden" name="time_range" id="time_range" />
@@ -57,7 +52,7 @@
                     <th width="20%">项目名称</th>
                     <th width="20%">当前节点</th>
                     <th width="20%">节点描述</th>
-                    <th width="10%">责任人</th>
+                    <th width="10%">操作人</th>
                     <th width="20%">更新时间</th>
                     <th width="10%">操作</th>
                 </tr>
@@ -88,7 +83,7 @@
                 <div id="pager"></div>
             </div>
 
-            <b><input type="checkbox" class="dik mr_10" id="ck_onle_mine" /><label for="ck_onle_mine">只显示我的项目</label></b>
+            <b><input type="checkbox" class="dik mr_10" id="ck_onle_mine" /><label for="ck_onle_mine">&nbsp;只显示我的项目</label></b>
 
             @*<a href="javascript:;" onclick="del(0)" title="批量删除"><i class="i-barrel"></i> 批量删除</a>*@
         </div>
@@ -128,7 +123,7 @@
                 $.ajax({
                     type: "post",
                     url: "/Project/PageData",
-                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val(), "status": $(".itemOpLt").children("a[class='act']").attr("did"), "node_id": $("#select_node").val(), "node_status": $("#select_node_status").val(), "begin_time": null, "end_time": null,"is_admin":true },
+                    data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "only_mine": $("#ck_onle_mine").is(':checked'), "keyword": $("#txt_search").val(), "status": $(".itemOpLt").children("a[class='act']").attr("did"), "node_category_id": $("#select_node").val(), "begin_time": null, "end_time": null, "is_admin": true },
                     async: false, //同步请求
                     datatype: "json",
                     beforeSend: function () {
@@ -152,7 +147,7 @@
 							}
 							dataHtml += "<tr>";
 							dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
-							dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
+							dataHtml += "<td><a href='/Project/FlowInfo?id="+item.ID+"'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
 							dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
 							dataHtml += "<td>" + item.CusUser.NickName + "</td>";
 							dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";

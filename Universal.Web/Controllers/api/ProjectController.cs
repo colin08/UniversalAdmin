@@ -45,6 +45,54 @@ namespace Universal.Web.Controllers.api
         }
 
         /// <summary>
+        /// 流程指引
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/flow/menu/list")]
+        public WebAjaxEntity<List<Models.Response.NodeInfo>> GetFlowMenu()
+        {
+            WebAjaxEntity<List<Models.Response.NodeInfo>> response_entity = new WebAjaxEntity<List<Models.Response.NodeInfo>>();
+            List<Models.Response.NodeInfo> response_list = new List<Models.Response.NodeInfo>();
+            var db_list = BLL.BLLFlow.GetAllFlow();
+            foreach (var item in db_list)
+            {
+                Models.Response.NodeInfo model = new Models.Response.NodeInfo();
+                model.node_id = item.ID;
+                model.title = item.Title;
+                response_list.Add(model);
+            }
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.data = response_list;
+            return response_entity;
+        }
+
+        /// <summary>
+        /// 获取所有节点分类
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/node/category/all")]
+        public WebAjaxEntity<List<Models.Response.NodeInfo>> GetAllNodeCategory()
+        {
+            WebAjaxEntity<List<Models.Response.NodeInfo>> response_entity = new WebAjaxEntity<List<Models.Response.NodeInfo>>();
+            List<Models.Response.NodeInfo> response_list = new List<Models.Response.NodeInfo>();
+            var db_list = new BLL.BaseBLL<Entity.NodeCategory>().GetListBy(0, new List<BLL.FilterSearch>(), "AddTime ASC");
+            foreach (var item in db_list)
+            {
+                Models.Response.NodeInfo model = new Models.Response.NodeInfo();
+                model.node_id = item.ID;
+                model.title = item.Title;
+                response_list.Add(model);
+            }
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            response_entity.data = response_list;
+            return response_entity;
+        }
+
+        /// <summary>
         /// 获取所有项目流程，供添加项目选择时使用
         /// </summary>
         /// <returns></returns>
@@ -81,7 +129,7 @@ namespace Universal.Web.Controllers.api
             List<Models.Response.ProjectListInfo> response_list = new List<Models.Response.ProjectListInfo>();
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
             int rowCount = 0;
-            var db_list = BLL.BLLProject.GetPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.keyword, req.only_mine, req.status, req.node_id, req.node_status, req.begin_time, req.end_time, false);
+            var db_list = BLL.BLLProject.GetPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.keyword, req.only_mine, req.status, req.node_category_id, req.begin_time, req.end_time, false);
             foreach (var item in db_list)
             {
                 Models.Response.ProjectListInfo model = new Models.Response.ProjectListInfo();
@@ -227,7 +275,7 @@ namespace Universal.Web.Controllers.api
                 response_model.user_id = entity.CusUserID;
                 response_model.user_name = entity.CusUser.NickName;
                 response_model.user_telphone = entity.CusUser.Telphone;
-                response_model.approve_id = TypeHelper.ObjectToInt(entity.ApproveUserID,0);
+                response_model.approve_id = TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
                 response_model.approve_name = entity.ApproveUser == null ? "" : entity.ApproveUser.NickName;
                 response_model.approve_status = entity.ApproveStatus;
                 response_model.approve_remark = entity.ApproveRemark;
@@ -354,7 +402,7 @@ namespace Universal.Web.Controllers.api
 
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             var entity = bll.GetModel(p => p.ID == project_id);
-            if(entity == null)
+            if (entity == null)
             {
                 result.msgbox = "项目不存在";
                 return result;
@@ -471,7 +519,7 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = msg;
             return WorkContext.AjaxStringEntity;
         }
-        
+
 
         /// <summary>
         /// 修改项目的项目信息
@@ -825,11 +873,11 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/statctics/count")]
-        public WebAjaxEntity<Models.Response.HighCharts> GetStatctisCount(int jidu, int area, int gz, int node_id)
+        public WebAjaxEntity<Models.Response.HighCharts> GetStatctisCount(int jidu, int area, int node_id)
         {
             WebAjaxEntity<Models.Response.HighCharts> response_entity = new WebAjaxEntity<Models.Response.HighCharts>();
             Models.Response.HighCharts model = new Models.Response.HighCharts();
-            BLL.Model.Statctics result = BLL.BLLStatctics.ProjectTotal(jidu, area, gz, node_id);
+            BLL.Model.Statctics result = BLL.BLLStatctics.ProjectTotal(jidu, area,0,node_id);
             model.x_data = result.x_data;
             model.y_data = result.y_data;
             response_entity.msg = 1;
@@ -862,11 +910,7 @@ namespace Universal.Web.Controllers.api
             //区域
             foreach (var item in Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectArea)))
                 result.area.Add(new Models.Response.SimpleEntity(item.Key, item.Value));
-
-            //改造性质
-            foreach (var item in Tools.EnumHelper.EnumToDictionary(typeof(Universal.Entity.ProjectGaiZao)))
-                result.gz.Add(new Models.Response.SimpleEntity(item.Key, item.Value));
-
+            
             response_entity.data = result;
             response_entity.msg = 1;
             response_entity.msgbox = "ok";
@@ -879,11 +923,11 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/statctics/domain/searchproject")]
-        public WebAjaxEntity<List<Models.Response.SimpleEntity>> GetDomainCon(int year, int jidu, int area, int gz, int node_id)
+        public WebAjaxEntity<List<Models.Response.SimpleEntity>> GetDomainCon(int year, int jidu, int area, int node_id)
         {
             WebAjaxEntity<List<Models.Response.SimpleEntity>> response_entity = new WebAjaxEntity<List<Models.Response.SimpleEntity>>();
             List<Models.Response.SimpleEntity> response_list = new List<Models.Response.SimpleEntity>();
-            var db_list = BLL.BLLProject.GetProjectTitle(year, jidu, area, gz, node_id);
+            var db_list = BLL.BLLProject.GetProjectTitle(year, jidu, area,0, node_id);
             foreach (var item in db_list)
                 response_list.Add(new Models.Response.SimpleEntity(item.id, item.title));
 

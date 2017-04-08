@@ -132,17 +132,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
-            if (BLL.BLLDepartment.Del(id))
-            {
-                WorkContext.AjaxStringEntity.msg = 1;
-                WorkContext.AjaxStringEntity.msgbox = "删除成功";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            else
-            {
-                WorkContext.AjaxStringEntity.msgbox = "删除失败";
-                return Json(WorkContext.AjaxStringEntity);
-            }
+            string msg = "";
+            bool is_ok = BLL.BLLDepartment.Del(id, out msg);
+            WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
         }
 
     }

@@ -138,14 +138,27 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static bool Del(int id)
+        public static bool Del(int id,out string msg)
         {
+            msg = "删除成功";
             if (id <= 0)
+            {
+                msg = "非法参数";
                 return false;
+            }
             var db = new DataCore.EFDBContext();
             var entity = db.CusDepartments.Find(id);
             if (entity == null)
+            {
+                msg = "部门不存在";
                 return false;
+            }
+            int user_total = db.CusUsers.Count(p => p.CusDepartmentID == id);
+            if (user_total != 0)
+            {
+                msg = "请先删除该部门下的用户";
+                return false;
+            }
             List<Entity.CusDepartment> child_list = GetList(false, id);
             foreach (var item in child_list)
                 db.CusDepartments.Remove(db.CusDepartments.Find(item.ID));

@@ -8,8 +8,6 @@
 @section head
 {
     <link href="~/Assets/theme/css/home.css" rel="stylesheet" />
-    <script type="text/javascript">
-    	</script>
 }
 <!--头部脚本 end-->
 
@@ -64,12 +62,12 @@
                         @foreach (var item in Model.DocumentList)
                         {
                             <tr>
-                                <td><a href="/Info/Doc?id=@item.ID">@Universal.Tools.StringHelper.CutString(item.Title, 25)</a></td>
-                                <td><a href="/DocCategory/Index">@Universal.Tools.StringHelper.CutString(item.CategoryName, 6)</a></td>
+                                <td><a href="/Info/Doc?id=@item.ID&b=1">@Universal.Tools.StringHelper.CutString(item.Title, 25)</a></td>
+                                <td><a href="/Document/Index?doc_id=@item.DocCategoryID">@Universal.Tools.StringHelper.CutString(item.CategoryName, 6)</a></td>
                                 <td>@item.CusUser.NickName</td>
                                 <td>@item.LastUpdateTime.ToString("yy-MM-dd HH:mm")</td>
                                 <td id="doc_@item.ID">
-                                <a href="javascript:;"><i class="i-share"></i></a>
+                                <a href="/share/doc?id=@item.ID &b=1" target="_blank"><i class="i-share"></i></a>
                                 <a href="javascript:;" onclick="fav(@item.ID)">
                                 <i id="i_fav_@item.ID" class="@item.FavIcon" style="margin:0"></i></a>
                                 
@@ -137,7 +135,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/PageData",
-                data: { "page_size": 6, "page_index": 1, "only_mine": false, "keyword": "", "status": 0, "node_id": 0, "node_status": 0, "begin_time": null, "end_time": null, "is_admin": false },
+                data: { "page_size": 6, "page_index": 1, "only_mine": false, "keyword": "", "status": 0, "node_category_id": 0, "begin_time": null, "end_time": null, "is_admin": false },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -154,7 +152,8 @@
                         var node_link = "javascript:;";
                         if (item.ProjectFlowNodeDoing.flow_node_id != -1)
                         {
-                            node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
+                            //node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
+                            node_link="/Project/FlowInfo?id="+item.ID;
                         }
 						var user_name = "暂无";
                         if (item.LastUpdateUserName != null)
@@ -162,7 +161,7 @@
                             user_name = item.LastUpdateUserName;
                         }
                         dataHtml += "<tr>";
-                        dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "\">" + CutString(item.Title, 10) + "</a></td>";
+                        dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "&b=1\">" + CutString(item.Title, 10) + "</a></td>";
                         dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
                         dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</a></td>";
                         dataHtml += "<td>" + user_name + "</td>";
@@ -182,41 +181,7 @@
             })
         }
         /*******************列表 end *************************/
-
-        //截取字符串
-        function CutString(str, len) {
-			if (str == null || str == undefined)
-            {
-                return "";
-            }
-            if (str.length > len) {
-                return str.substring(0, len) + "...";
-            } else {
-                return str;
-            }
-        }
-        function ChangeDateFormat(cellval, format) {            
-            try {
-                var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var Second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-                switch (format) {
-                    case "yyyy-MM-dd":
-                        return date.getFullYear() + "-" + month + "-" + currentDate;
-                    case "yyyy-MM-dd HH:mm:ss":
-                        return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + Minute + ":" + Second;
-                    default:
-                        return date.getFullYear().toString().substring(2) + "-" + month + "-" + currentDate + " " + hour + ":" + Minute;
-                }
-            }
-            catch (e) {
-                return "";
-            }
-        }
-
+        
         function down(linkstr, title) {
             if (linkstr.length > 0) {
                 $.post('/Home/AddDownLog', { "title": title }, function (text, status) { window.open(linkstr) });

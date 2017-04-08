@@ -35,24 +35,24 @@ namespace Universal.Entity
         DaPing
     }
 
-    /// <summary>
-    /// 项目改造性质
-    /// </summary>
-    public enum ProjectGaiZao
-    {
-        [Description("其他")]
-        QiTa ,
-        [Description("工改工")]
-        GongGaiGong,
-        [Description("工改商")]
-        GongGaiShang,
-        [Description("工改居")]
-        GongGaiJu,
-        [Description("商改居")]
-        ShangGaiJu,
-        [Description("居改居")]
-        JuGaiJu
-    }
+    ///// <summary>
+    ///// 项目改造性质
+    ///// </summary>
+    //public enum ProjectGaiZao
+    //{
+    //    [Description("其他")]
+    //    QiTa ,
+    //    [Description("工改工")]
+    //    GongGaiGong,
+    //    [Description("工改商")]
+    //    GongGaiShang,
+    //    [Description("工改居")]
+    //    GongGaiJu,
+    //    [Description("商改居")]
+    //    ShangGaiJu,
+    //    [Description("居改居")]
+    //    JuGaiJu
+    //}
 
     /// <summary>
     /// 审核状态
@@ -201,7 +201,8 @@ namespace Universal.Entity
         /// <summary>
         /// 改造性质
         /// </summary>
-        public ProjectGaiZao GaiZaoXingZhi { get; set; }
+        [MaxLength(100)]
+        public string GaiZaoXingZhi { get; set; }
 
         /// <summary>
         /// 用地性质、宗地号
