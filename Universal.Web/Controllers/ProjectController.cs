@@ -192,7 +192,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult FlowNodeInfo(int id)
         {
-            Entity.ProjectFlowNode model_flow = new BLL.BaseBLL<Entity.ProjectFlowNode>().GetModel(p => p.ID == id, p => p.Node);
+            Entity.ProjectFlowNode model_flow = BLL.BLLProjectFlowNode.GetModel(id);
             if (model_flow == null)
                 return Content("流程节点不存在");
             Entity.Node node_info = BLL.BLLNode.GetMode(model_flow.NodeID);
@@ -207,6 +207,7 @@ namespace Universal.Web.Controllers
                 entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
 
             entity.BuildViewModelListFile(node_info.NodeFiles.ToList());
+            entity.BuildViewModelNodeListFile(model_flow.ProjectFlowNodeFiles.ToList());
 
             return View(entity);
         }
@@ -216,21 +217,15 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <param name="id">流程节点的id，不是项目id，也不是节点id</param>
         /// <param name="remark"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveFlowNodeRemark(int id, string remark)
+        public JsonResult SaveFlowNodeRemark(int id, string remark,string files)
         {
-            BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
-            var entity = bll.GetModel(p => p.ID == id);
-            if (entity == null)
-            {
-                WorkContext.AjaxStringEntity.msgbox = "流程节点不存在";
-                return Json(WorkContext.AjaxStringEntity);
-            }
-            entity.Remark = remark;
-            bll.Modify(entity, "Remark");
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "保存成功";
+            string msg = "";
+            var is_ok = BLL.BLLProjectFlowNode.ModifyRemarkFile(id, WorkContext.UserInfo.ID,remark, files, out msg);
+            WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
         }
 
@@ -261,13 +256,10 @@ namespace Universal.Web.Controllers
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
-                if(entity.ApproveUserID != null)
+                if (TypeHelper.ObjectToInt(entity.CusUserID, -1) != WorkContext.UserInfo.ID)
                 {
-                    if(TypeHelper.ObjectToInt(entity.ApproveUserID,-1) != WorkContext.UserInfo.ID)
-                    {
-                        model.Msg = 4;
-                        return View(model);
-                    }
+                    model.Msg = 4;
+                    return View(model);
                 }
                 if (entity != null)
                 {
@@ -452,13 +444,10 @@ namespace Universal.Web.Controllers
                     model = bll.GetModel(p => p.ID == entity.id);
 
                 //判断有没有权限编辑
-                if (model.ApproveUserID != null)
+                if (TypeHelper.ObjectToInt(model.CusUserID, -1) != WorkContext.UserInfo.ID)
                 {
-                    if (TypeHelper.ObjectToInt(model.ApproveUserID, -1) != WorkContext.UserInfo.ID)
-                    {
-                        entity.Msg = 4;
-                        return View(entity);
-                    }
+                    entity.Msg = 4;
+                    return View(model);
                 }
 
                 model.ApproveUserID = entity.approve_user_id;
@@ -606,6 +595,64 @@ namespace Universal.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 保存备注
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult APISaveRemark(int project_flow_node_id,string remark)
+        {
+            BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
+            var entity = bll.GetModel(p => p.ID == project_flow_node_id);
+            if(entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "节点不存在";
+                return Json(WorkContext.AjaxStringEntity,JsonRequestBehavior.AllowGet);
+            }
+            entity.Remark = remark;
+            bll.Modify(entity, "Remark");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 保存节点附件
+        /// </summary>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult APISaveFile(int project_flow_node_id)
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            List<BLL.Model.ProjectFlowNodeFile> data = null;
+            try
+            {
+                data = js.Deserialize<List<BLL.Model.ProjectFlowNodeFile>>(stream);
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "json序列化失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            bool is_ok = BLL.BLLProjectFlowNode.SaveFile(project_flow_node_id, data);
+            if (is_ok)
+            {
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "保存成功";
+            }
+            else
+                WorkContext.AjaxStringEntity.msgbox = "保存失败";
+
+            return Json(WorkContext.AjaxStringEntity);
+        }
 
         /// <summary>
         /// 保存修改的节点位置信息
@@ -633,7 +680,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
-            BLL.BLLProjectFlowNode.SaveLocation(data);
+            BLL.BLLProjectFlowNode.SaveLocation(data, WorkContext.UserInfo.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);
@@ -647,7 +694,7 @@ namespace Universal.Web.Controllers
         [HttpGet]
         public JsonResult APISetEnd(int project_flow_node_id)
         {
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetEnd(project_flow_node_id) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetEnd(project_flow_node_id,WorkContext.UserInfo.ID) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
@@ -661,7 +708,7 @@ namespace Universal.Web.Controllers
         public JsonResult APISetStatus(int project_flow_node_id)
         {
             string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetStatus(project_flow_node_id, out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetStatus(project_flow_node_id,WorkContext.UserInfo.ID, out msg) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
@@ -675,7 +722,7 @@ namespace Universal.Web.Controllers
         public JsonResult APISetSelect(int project_flow_node_id)
         {
             string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetSelect(project_flow_node_id,out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetSelect(project_flow_node_id,WorkContext.UserInfo.ID,out msg) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }

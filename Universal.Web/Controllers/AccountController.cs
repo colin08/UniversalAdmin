@@ -149,6 +149,7 @@ namespace Universal.Web.Controllers
                         bll.Modify(model, new string[] { "Password" });
                     }
                     TempData["Telphone"] = req.telphone;
+                    TempData["DefaultPwd"] = WebSite.ResetPwd;
                     return RedirectToAction("ResetSuc", "Account");
                 }
             }

@@ -54,6 +54,12 @@ namespace Universal.BLL.Model
 
         public bool status { get; set; }
 
+        public string user_name { get; set; }
+
+        public string remark { get; set; }
+
+        public string last_update_time { get; set; }
+
         /// <summary>
         /// 所属块
         /// </summary>
@@ -62,11 +68,45 @@ namespace Universal.BLL.Model
         public int left { get; set; }
 
         public int top { get; set; }
-        
+
         public string color { get; set; }
-        
+
         public string icon { get; set; }
 
         public bool is_end { get; set; }
+
+        public List<ProjectFlowNodeFile> files { get; set; }
+
+        public void BuildFileList(List<Entity.ProjectFlowNodeFile> list)
+        {
+            if (list == null)
+                return;
+            if (files == null)
+                files = new List<ProjectFlowNodeFile>();
+
+            foreach (var item in list)
+            {
+                files.Add(new ProjectFlowNodeFile(item.FileName, item.FilePath, item.FileSize));
+            }
+        }
     }
+
+    public class ProjectFlowNodeFile
+    {
+        public ProjectFlowNodeFile() { }
+
+        public ProjectFlowNodeFile(string file_name,string file_path,string file_size)
+        {
+            this.file_name = file_name;
+            this.file_path = file_path;
+            this.file_size = file_size;
+        }
+
+        public string file_name { get; set; }
+
+        public string file_path { get; set; }
+
+        public string file_size { get; set; }
+    }
+
 }

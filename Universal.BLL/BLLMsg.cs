@@ -107,6 +107,11 @@ namespace Universal.BLL
         /// </summary>
         public static readonly string FlowUpdate = "流程【{0}】于{1}被{2}更新了";
 
+        /// <summary>
+        /// 项目流程节点完成提醒，项目流程:{0}已完成
+        /// </summary>
+        public static readonly string ProjectFlowDone = "项目流程:{0}已完成";
+
         
     }
 

@@ -13,6 +13,19 @@ namespace Universal.BLL
     public class BLLProjectFlowNode
     {
         /// <summary>
+        /// 获取节点实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Entity.ProjectFlowNode GetModel(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.ProjectFlowNodes.Include(p => p.ProjectFlowNodeFiles).Include(p => p.EditUser).Include(p => p.Node).Where(p => p.ID == id).AsNoTracking().FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// 获取当前项目进行的的流程信息
         /// </summary>
         /// <returns></returns>
@@ -29,19 +42,22 @@ namespace Universal.BLL
             bool is_join = true;
             string last_end_process = "";
             //先获取is_end为true的节点
-            var is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsEnd == true).OrderBy(p=>p.EndTime).ToList();
+            var is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.ProjectFlowNodeFiles).Include(p => p.Node).Include(p => p.EditUser).Where(p => p.ProjectID == project_id && p.IsEnd == true).OrderBy(p => p.EndTime).ToList();
             if (is_end_list.Count == 0)
             {
                 is_join = false;
                 //如果没有为true的，则查找frist节点
-                is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.Node).Where(p => p.ProjectID == project_id && p.IsFrist).ToList();
+                is_end_list = db.ProjectFlowNodes.AsNoTracking().Include(p => p.ProjectFlowNodeFiles).Include(p => p.Node).Include(p => p.EditUser).Where(p => p.ProjectID == project_id && p.IsFrist).ToList();
             }
             foreach (var item in is_end_list)
             {
                 last_end_process = item.ProcessTo;
                 Model.ProjectFlowNode model = new Model.ProjectFlowNode();
                 model.icon = item.ICON;
+                model.remark = Tools.WebHelper.UrlDecode(item.Remark == null ? "" : item.Remark);
+                model.user_name = item.EditUser.NickName;
                 model.piece = item.Piece;
+                model.last_update_time = item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 model.process_to = item.ProcessTo;
                 model.node_id = item.NodeID;
                 model.node_title = item.Node.Title;
@@ -52,9 +68,10 @@ namespace Universal.BLL
                 model.is_end = item.IsEnd;
                 model.project_flow_node_id = item.ID;
                 model.status = item.Status;
+                model.BuildFileList(item.ProjectFlowNodeFiles.ToList());
                 response_entity.Add(model);
             }
-            if(is_join)
+            if (is_join)
             {
                 //将下级节点一并查找出来
                 var next_list = db.ProjectFlowNodes.SqlQuery("SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',','," + last_end_process + ",') > 0").AsNoTracking().ToList();
@@ -63,11 +80,19 @@ namespace Universal.BLL
                     var entity_node = db.Nodes.Where(p => p.ID == item.NodeID).AsNoTracking().FirstOrDefault();
                     if (entity_node == null)
                         continue;
+                    var entity_user = db.CusUsers.Where(p => p.ID == item.EditUserId).AsNoTracking().FirstOrDefault();
+                    if (entity_user == null)
+                        continue;
+                    var node_file_list = db.ProjectFlowNodeFiles.Where(p => p.ProjectFlowNodeID == item.ID).AsNoTracking().ToList();
+
                     Model.ProjectFlowNode model = new Model.ProjectFlowNode();
                     model.icon = item.ICON;
                     model.piece = item.Piece;
                     model.process_to = item.ProcessTo;
                     model.node_id = item.NodeID;
+                    model.remark = Tools.WebHelper.UrlDecode(item.Remark == null ? "" : item.Remark);
+                    model.user_name = entity_user.NickName;
+                    model.last_update_time = item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
                     model.node_title = entity_node.Title;
                     model.node_is_fator = entity_node.IsFactor;
                     model.color = item.Color;
@@ -76,6 +101,7 @@ namespace Universal.BLL
                     model.is_end = item.IsEnd;
                     model.project_flow_node_id = item.ID;
                     model.status = item.Status;
+                    model.BuildFileList(node_file_list);
                     response_entity.Add(model);
                 }
             }
@@ -111,19 +137,28 @@ namespace Universal.BLL
                 var entity_node = db.Nodes.Where(p => p.ID == item.NodeID).AsNoTracking().FirstOrDefault();
                 if (entity_node == null)
                     continue;
+                var entity_user = db.CusUsers.Where(p => p.ID == item.EditUserId).AsNoTracking().FirstOrDefault();
+                if (entity_user == null)
+                    continue;
+                var node_file_list = db.ProjectFlowNodeFiles.Where(p => p.ProjectFlowNodeID == item.ID).AsNoTracking().ToList();
+
                 Model.ProjectFlowNode model = new Model.ProjectFlowNode();
                 model.icon = item.ICON;
                 model.piece = item.Piece;
                 model.process_to = item.ProcessTo;
                 model.node_id = item.NodeID;
+                model.last_update_time = item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 model.node_title = entity_node.Title;
                 model.node_is_fator = entity_node.IsFactor;
                 model.color = item.Color;
+                model.remark = Tools.WebHelper.UrlDecode(item.Remark == null ? "" : item.Remark);
+                model.user_name = entity_user.NickName;
                 model.left = item.Left;
                 model.top = item.Top;
                 model.is_end = item.IsEnd;
                 model.project_flow_node_id = item.ID;
                 model.status = item.Status;
+                model.BuildFileList(node_file_list);
                 response_entity.Add(model);
             }
             return response_entity;
@@ -139,21 +174,25 @@ namespace Universal.BLL
             if (project_flow_node_id <= 0)
                 return response_entity;
             var db = new DataCore.EFDBContext();
-            var entity_flow_node = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).AsNoTracking().FirstOrDefault();
+            var entity_flow_node = db.ProjectFlowNodes.Include(p => p.Node).Include(p => p.ProjectFlowNodeFiles).Include(p => p.EditUser).Where(p => p.ID == project_flow_node_id).AsNoTracking().FirstOrDefault();
             if (entity_flow_node == null)
                 return response_entity;
             response_entity.icon = entity_flow_node.ICON;
             response_entity.piece = entity_flow_node.Piece;
             response_entity.process_to = entity_flow_node.ProcessTo;
             response_entity.node_id = entity_flow_node.NodeID;
+            response_entity.remark = Tools.WebHelper.UrlDecode(entity_flow_node.Remark == null ? "" : entity_flow_node.Remark);
+            response_entity.user_name = entity_flow_node.EditUser.NickName;
             response_entity.node_title = entity_flow_node.Node.Title;
             response_entity.node_is_fator = entity_flow_node.Node.IsFactor;
             response_entity.color = entity_flow_node.Color;
             response_entity.left = entity_flow_node.Left;
+            response_entity.last_update_time = entity_flow_node.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
             response_entity.top = entity_flow_node.Top;
             response_entity.is_end = entity_flow_node.IsEnd;
             response_entity.project_flow_node_id = entity_flow_node.ID;
             response_entity.status = entity_flow_node.Status;
+            response_entity.BuildFileList(entity_flow_node.ProjectFlowNodeFiles.ToList());
             db.Dispose();
             return response_entity;
         }
@@ -162,7 +201,7 @@ namespace Universal.BLL
         /// 保存节点位置信息
         /// </summary>
         /// <returns></returns>
-        public static bool SaveLocation(List<Model.ProjectFlowNode> list_model)
+        public static bool SaveLocation(List<Model.ProjectFlowNode> list_model, int user_id)
         {
             using (var db = new DataCore.EFDBContext())
             {
@@ -172,6 +211,8 @@ namespace Universal.BLL
                     if (entity == null)
                         continue;
 
+                    entity.LastUpdateTime = DateTime.Now;
+                    entity.EditUserId = user_id;
                     entity.Color = model.color;
                     entity.ICON = model.icon;
                     entity.Left = model.left;
@@ -187,16 +228,34 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="project_flow_node_id"></param>
         /// <returns></returns>
-        public static bool SetEnd(int project_flow_node_id)
+        public static bool SetEnd(int project_flow_node_id, int user_id)
         {
             using (var db = new DataCore.EFDBContext())
             {
-                var entity = db.ProjectFlowNodes.Find(project_flow_node_id);
+                var entity = db.ProjectFlowNodes.Include(p=>p.Node).Where(p=>p.ID == project_flow_node_id).FirstOrDefault();
                 if (entity == null)
                     return false;
+                entity.EditUserId = user_id;
                 entity.IsEnd = true;
+                entity.LastUpdateTime = DateTime.Now;
                 entity.EndTime = DateTime.Now;
+
+                //发送消息提醒
+                List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from ProjectUser where ProjectID = " + entity.ProjectID.ToString()).ToList();
+                string content = string.Format(BLLMsgTemplate.ProjectFlowDone, entity.Node.Title);
+                foreach (var item in user_list)
+                {
+                    Entity.CusUserMessage entity_msg = new Entity.CusUserMessage();
+                    entity_msg.Content = content;
+                    entity_msg.CusUserID = item;
+                    entity_msg.Type = Entity.CusUserMessageType.projectflowdone;
+                    entity_msg.LinkID = entity.ProjectID.ToString();
+                    db.CusUserMessages.Add(entity_msg);
+                }
                 db.SaveChanges();
+                string ids = string.Join(",", user_list.ToArray());
+                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, entity.ProjectID.ToString());
                 return true;
             }
         }
@@ -206,7 +265,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="project_flow_node_id"></param>
         /// <returns></returns>
-        public static bool SetStatus(int project_flow_node_id,out string msg)
+        public static bool SetStatus(int project_flow_node_id, int user_id, out string msg)
         {
             msg = "";
             using (var db = new DataCore.EFDBContext())
@@ -214,17 +273,20 @@ namespace Universal.BLL
                 var entity = db.ProjectFlowNodes.Find(project_flow_node_id);
                 if (entity == null)
                     return false;
-                if(entity.Status)
+                if (entity.Status)
                 {
                     entity.Status = false;
                     entity.IsEnd = true;
                     entity.EndTime = DateTime.Now;
                     msg = "关闭成功";
-                }else
+                }
+                else
                 {
                     entity.Status = true;
                     msg = "开启成功";
                 }
+                entity.LastUpdateTime = DateTime.Now;
+                entity.EditUserId = user_id;
                 db.SaveChanges();
                 return true;
             }
@@ -235,7 +297,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="project_flow_node_id"></param>
         /// <returns></returns>
-        public static bool SetSelect(int project_flow_node_id,out string msg)
+        public static bool SetSelect(int project_flow_node_id, int user_id, out string msg)
         {
             msg = "ok";
             using (var db = new DataCore.EFDBContext())
@@ -246,31 +308,111 @@ namespace Universal.BLL
                     msg = "项目流程节点不存在";
                     return false;
                 }
-                if(!entity.Node.IsFactor)
+                if (!entity.Node.IsFactor)
                 {
                     msg = "该节点不是条件节点";
                     return false;
                 }
                 //获取同级条件节点
-                string sql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',',(SELECT ','+ProcessTo+',' FROM [dbo].[ProjectFlowNode] where charindex(',"+project_flow_node_id.ToString()+",',','+ltrim(ProcessTo)+',') > 0)) > 0";
-                var tj_list =  db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList();
+                string sql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',',(SELECT ','+ProcessTo+',' FROM [dbo].[ProjectFlowNode] where charindex('," + project_flow_node_id.ToString() + ",',','+ltrim(ProcessTo)+',') > 0)) > 0";
+                var tj_list = db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList();
                 foreach (var item in tj_list)
                 {
-                    if(item.ID != project_flow_node_id && item.IsSelect)
+                    if (item.ID != project_flow_node_id && item.IsSelect)
                     {
                         msg = "已有其他条件节点设置为选中状态";
                         return false;
                     }
                 }
                 //条件都满足
+                entity.EditUserId = user_id;
                 entity.IsEnd = true;
+                entity.LastUpdateTime = DateTime.Now;
                 entity.EndTime = DateTime.Now;
                 entity.IsSelect = true;
                 db.SaveChanges();
                 return true;
             }
         }
-        
+
+        /// <summary>
+        /// 修改节点的备注和附件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="remark"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public static bool ModifyRemarkFile(int id, int user_id, string remark, string files, out string msg)
+        {
+            msg = "保存成功";
+            files = files == null ? "" : files;
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity = db.ProjectFlowNodes.Find(id);
+                if (entity == null)
+                {
+                    msg = "节点不存在";
+                    return false;
+                }
+                if (!db.CusUsers.Any(p => p.ID == user_id))
+                {
+                    msg = "用户不存在";
+                    return false;
+                }
+
+                db.ProjectFlowNodeFiles.Where(p => p.ProjectFlowNodeID == id).ToList().ForEach(p => db.ProjectFlowNodeFiles.Remove(p));
+
+                entity.LastUpdateTime = DateTime.Now;
+                entity.EditUserId = user_id;
+                entity.Remark = remark;
+
+                foreach (var item in files.Split('|'))
+                {
+                    if (string.IsNullOrWhiteSpace(item))
+                        continue;
+
+                    var file = item.Split(',');
+                    if (file.Length != 3)
+                        continue;
+                    Entity.ProjectFlowNodeFile entity_file = new Entity.ProjectFlowNodeFile();
+                    entity_file.FilePath = file[0];
+                    entity_file.FileName = file[1];
+                    entity_file.FileSize = file[2];
+                    entity_file.ProjectFlowNodeID = id;
+                    db.ProjectFlowNodeFiles.Add(entity_file);
+                }
+                db.SaveChanges();
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// 保存节点附件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static bool SaveFile(int id, List<Model.ProjectFlowNodeFile> list)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                if (!db.ProjectFlowNodes.Any(p => p.ID == id))
+                    return false;
+
+                db.ProjectFlowNodeFiles.Where(p => p.ProjectFlowNodeID == id).ToList().ForEach(p => db.ProjectFlowNodeFiles.Remove(p));
+                foreach (var item in list)
+                {
+                    Entity.ProjectFlowNodeFile entity = new Entity.ProjectFlowNodeFile();
+                    entity.FileName = item.file_name;
+                    entity.FilePath = item.file_path;
+                    entity.FileSize = item.file_size;
+                    entity.ProjectFlowNodeID = id;
+                    db.ProjectFlowNodeFiles.Add(entity);
+                }
+                db.SaveChanges();
+                return true;
+            }
+        }
 
         ///// <summary>
         ///// 前端：删除某个流程节点信息

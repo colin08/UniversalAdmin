@@ -11,6 +11,12 @@ namespace Universal.Entity
     /// </summary>
     public class ProjectFlowNode
     {
+        public ProjectFlowNode()
+        {
+            this.LastUpdateTime = DateTime.Now;
+            this.ProjectFlowNodeFiles = new List<ProjectFlowNodeFile>();
+        }
+
         public int ID { get; set; }
 
         /// <summary>
@@ -103,6 +109,21 @@ namespace Universal.Entity
         /// 结束时间
         /// </summary>
         public DateTime? EndTime { get; set; }
+
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        public int EditUserId { get; set; }
+
+        [ForeignKey("EditUserId")]
+        public virtual CusUser EditUser { get; set; }
+
+        /// <summary>
+        /// 最后操作时间
+        /// </summary>
+        public DateTime LastUpdateTime { get; set; }
+
+        public virtual ICollection<ProjectFlowNodeFile> ProjectFlowNodeFiles { get; set; }
 
     }
 }

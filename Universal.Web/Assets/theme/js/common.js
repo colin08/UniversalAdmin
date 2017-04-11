@@ -660,8 +660,3 @@ function accRound(arg, len) { //len 为保留小数点后几位
     var arg3 = arg2.substr(0, l) + "." + arg2.substr(l, len);
     return arg3;
 }
-
-
-function SetAllMsgRead() {
-    $.post('/Tools/SetAllMsgRead', { "title": "" }, function (text, status) { location.reload() });
-}

@@ -175,6 +175,11 @@
     
     @RenderSection("foot", required: false)
     <script type="text/javascript">
+
+        function SetAllMsgRead() {
+            $.post('/Tools/SetAllMsgRead', { "title": "" }, function (text, status) { location.reload() });
+        }
+
         $(function () {
             $(".top-msg").hide();
             $(".a-msg").hover(function () {

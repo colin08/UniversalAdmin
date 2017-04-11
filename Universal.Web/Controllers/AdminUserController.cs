@@ -231,7 +231,7 @@ namespace Universal.Web.Controllers
                 model.Avatar = entity.avatar;
                 model.CusDepartmentID = entity.department_id;
                 model.CusUserJobID = entity.job_id;
-                model.Email = entity.email.ToLower();
+                model.Email = entity.email == null ? null : entity.email.ToLower();
                 model.Gender = entity.gender;
                 model.IsAdmin = string.IsNullOrWhiteSpace(entity.user_route_str) ? false : true;
                 model.NickName = entity.nick_name;

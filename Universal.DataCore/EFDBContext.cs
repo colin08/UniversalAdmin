@@ -226,6 +226,11 @@ namespace Universal.DataCore
         public DbSet<Entity.ProjectFlowNode> ProjectFlowNodes { get; set; }
 
         /// <summary>
+        /// 项目流程的节点信息的附件
+        /// </summary>
+        public DbSet<Entity.ProjectFlowNodeFile> ProjectFlowNodeFiles { get; set; }
+
+        /// <summary>
         /// 用户项目收藏
         /// </summary>
         public DbSet<Entity.CusUserProjectFavorites> CusUserProjectFavorites { get; set; }

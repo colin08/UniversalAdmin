@@ -14,6 +14,7 @@ namespace Universal.Web.Models
         {
             this.file_list = new List<ViewModelListFile>();
             this.users_entity = new List<ViewModelDocumentCategory>();
+            this.node_file_list = new List<ViewModelListFile>();
         }
 
         public Entity.ProjectFlowNode flow_info { get; set; }
@@ -49,6 +50,34 @@ namespace Universal.Web.Models
 
                 file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
             }
+        }
+
+        public string node_files { get; set; }
+
+        /// <summary>
+        /// 节点附件信息
+        /// </summary>
+        public List<ViewModelListFile> node_file_list { get; set; }
+
+        /// <summary>
+        /// 构造前端展示所需数据
+        /// </summary>
+        /// <param name="entity"></param>
+        public void BuildViewModelNodeListFile(List<Entity.ProjectFlowNodeFile> entity)
+        {
+            if (entity == null)
+                return;
+            System.Text.StringBuilder files = new System.Text.StringBuilder();
+            foreach (var item in entity)
+            {
+                if (this.node_file_list == null)
+                    this.node_file_list = new List<ViewModelListFile>();
+
+                node_file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
+                files.Append(item.FilePath + "," + item.FileName + "," + item.FileSize + "|");
+
+            }
+            this.node_files = files.ToString();
         }
 
     }

@@ -77,6 +77,7 @@
     <Compile Include="Node\NodeCategory.cs" />
     <Compile Include="ProjectFlowNodeDoing.cs" />
     <Compile Include="Project\ProjectFlowNode.cs" />
+    <Compile Include="Project\ProjectFlowNodeFile.cs" />
     <Compile Include="Project\ProjectStageFile.cs" />
     <Compile Include="Project\ProjectStage.cs" />
     <Compile Include="Flow\Flow.cs" />
