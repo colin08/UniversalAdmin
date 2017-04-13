@@ -118,7 +118,7 @@ namespace Universal.BLL
                 msg = "工作计划不存在";
                 return false;
             }
-            string excel_title = Tools.TypeHelper.Baodate2ChineseSimple(DateTime.Now) + "工作计划考核表";
+            string excel_title = entity_plan.WeekText;// Tools.TypeHelper.Baodate2ChineseSimple(DateTime.Now) + "工作计划考核表";
             string excel_time = string.Format("提交时间：  {0}月  {1}  日   ", entity_plan.AddTime.Month.ToString(), entity_plan.AddTime.Day.ToString());
             string sheets_name = "9.1";
             try

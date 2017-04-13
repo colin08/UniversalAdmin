@@ -103,7 +103,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in entity.WorkJobUsers)
                     {
                         str_ids.Append(item.ID.ToString() + ",");
-                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
                     }
                     if (str_ids.Length > 0)
                     {
@@ -144,7 +144,7 @@ namespace Universal.Web.Controllers
             foreach (var item in BLL.BLLCusUser.GetListByIds(entity.user_ids))
             {
                 str_ids.Append(item.ID.ToString() + ",");
-                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
             }
             string final_ids = "";
             if (str_ids.Length > 0)

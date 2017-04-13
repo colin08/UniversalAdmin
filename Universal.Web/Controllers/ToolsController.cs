@@ -357,7 +357,7 @@ namespace Universal.Web.Controllers
                 foreach (var item in entity.NodeUsers)
                 {
                     str_ids.Append(item.ID.ToString() + ",");
-                    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
                 }
                 if (str_ids.Length > 0)
                 {

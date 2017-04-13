@@ -78,7 +78,7 @@ namespace Universal.BLL
             db.WorkMeetings.Add(entity);
             db.SaveChanges();
             db.Dispose();
-            BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.WaitMeeting, entity_cus_user.NickName, entity.Title), entity.ID);
+            BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.WaitMeeting, entity.Title), entity.ID);
             return entity.ID;
         }
 

@@ -18,9 +18,9 @@ namespace Universal.Web.Models
             this.avatar = "/uploads/avatar.jpg";
             this.user_route = new List<BLL.Model.AdminUserRoute>();
             this.MsgBox = "success";
-            this.year = DateTime.Now.Year.ToString();
-            this.month = DateTime.Now.Month.ToString();
-            this.day = DateTime.Now.Day.ToString();
+            //this.year = DateTime.Now.Year.ToString();
+            //this.month = DateTime.Now.Month.ToString();
+            //this.day = DateTime.Now.Day.ToString();
         }
 
         /// <summary>

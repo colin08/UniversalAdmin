@@ -24,11 +24,13 @@ namespace Universal.Web.Controllers
             model.short_num = WorkContext.UserInfo.ShorNum;
             DateTime dt = DateTime.Now;
             if (WorkContext.UserInfo.Brithday != null)
+            {
                 dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
+                model.year = dt.Year.ToString();
+                model.month = dt.Month.ToString();
+                model.day = dt.Day.ToString();
+            }
 
-            model.year = dt.Year.ToString();
-            model.month = dt.Month.ToString();
-            model.day = dt.Day.ToString();
 
             return View(model);
         }
@@ -681,7 +683,7 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.CusUserMessage> bll = new BLL.BaseBLL<Entity.CusUserMessage>();
-            if(id == -1)
+            if (id == -1)
             {
                 //将所有消息置为已读
                 BLL.BLLCusUserMessage.SetAllRead(WorkContext.UserInfo.ID);

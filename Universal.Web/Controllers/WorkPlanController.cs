@@ -168,7 +168,7 @@ namespace Universal.Web.Controllers
                 }
                 else
                 {
-                    //ViewData["ShowSave"] = !model.IsApprove;
+                    ViewData["ShowSave"] = !model.IsApprove;
                     entity.approve_status = model.IsApprove;
                     //LoadPlatform(model.WeekText);
                     entity.id = model.ID;
@@ -216,11 +216,11 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("week_text", "信息不存在");
                 }
-                //if (bll.GetModel(p => p.ID == entity.id).IsApprove)
-                //{
-                //    //审批过的不能再编辑
-                //    entity.Msg = 4;
-                //}
+                if (bll.GetModel(p => p.ID == entity.id).IsApprove)
+                {
+                    //审批过的不能再编辑
+                    entity.Msg = 4;
+                }
             }
 
             if (requie_approve && app_id == 0)
@@ -272,7 +272,7 @@ namespace Universal.Web.Controllers
                     model.SetApproveStatus();
                     bll.Add(model);
                     if (app_id > 0)
-                        BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName), model.ID);
+                        BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName, entity.week_text), model.ID);
                 }
                 else
                     BLL.BLLWorkPlan.Modify(model);

@@ -26,7 +26,7 @@
             <div class="tit1">
                 <div class="inner">
                     <a href="/WorkPlan/Index" class="fl f16"><i class="i-back"></i>工作计划</a>
-                    <b class="tit1Txt fr">添加计划</b>
+                    <b class="tit1Txt fr">@(Model.id==0? "添加":"修改")计划</b>
                 </div>
             </div>
 
@@ -124,7 +124,14 @@
                         </li>
                         <li>
                             <div class="lilt">&nbsp;</div>
+                            @if(Universal.Tools.TypeHelper.ObjectToBool(ViewData["ShowSave"]))
+                            {
+
                             <div class="limd"><button type="submit" onClick="return beforConfrim()" class="btn1">发布</button> <button type="button" onclick=" location.href='/WorkPlan/Index' ;" class="btn1 grey">取消</button></div>
+                            }else
+                            {
+                                <div class="limd"><span>已审核的不可再修改</span></div>
+                            }
                         </li>
                     </ul>
                 </form>

@@ -18,9 +18,9 @@ namespace Universal.BLL
         public static readonly string AppUpdate = "APP{0}有新版本发布啦";
 
         /// <summary>
-        /// 发布公告 {0}发布了新的公告
+        /// 发布公告 {0}
         /// </summary>
-        public static readonly string Notice = "{0}发布了新的公告";
+        public static readonly string Notice = "{0}";
 
         /// <summary>
         /// 文件分享 待定
@@ -43,14 +43,14 @@ namespace Universal.BLL
         public static readonly string AppproveNo = "【{0}】审核未通过，未通过原因：{1}";
 
         /// <summary>
-        /// 待参加会议 {0}创建了一个会议，议题：【{1}】，等待您的参加
+        /// 待参加会议 会议【{0}】等待您的参加
         /// </summary>
-        public static readonly string WaitMeeting = "{0}创建了一个会议，议题：【{1}】，等待您的参加";
+        public static readonly string WaitMeeting = "会议【{0}】等待您的参加";
 
         /// <summary>
-        /// 确认参加会议 {0}已确认参加主题为：【{1}】的会议
+        /// 确认参加会议 {0}已确认参加【{1}】会议
         /// </summary>
-        public static readonly string ConfrimJoinMeeting = "{0}已确认参加主题为：【{1}】的会议";
+        public static readonly string ConfrimJoinMeeting = "{0}已确认参加【{1}】会议";
 
         /// <summary>
         /// 会议取消提醒 {0}已取消会议【{1}】
@@ -78,9 +78,9 @@ namespace Universal.BLL
         public static readonly string ConfrimDoneJob = "{0}确认完成【{1}】任务";
 
         /// <summary>
-        /// 待审核计划 {0}添加了一个工作计划，等待您的审批
+        /// 待审核计划 {0}添加了{1}需要您的审批
         /// </summary>
-        public static readonly string WaitApprovePlan = "{0}添加了一个工作计划，等待您的审批";
+        public static readonly string WaitApprovePlan = "{0}添加了{1}需要您的审批";
 
         /// <summary>
         /// 计划审核通过 {0}审核通过
@@ -112,6 +112,10 @@ namespace Universal.BLL
         /// </summary>
         public static readonly string ProjectFlowDone = "项目流程:{0}已完成";
 
+        /// <summary>
+        /// 项目更新提醒 项目【{0}】被更新了
+        /// </summary>
+        public static readonly string ProjectUpdate = "项目【{0}】被更新了";
         
     }
 

@@ -13,9 +13,9 @@ namespace Universal.Web.Models
     {
         public ViewModelUserBasic()
         {
-            this.year = DateTime.Now.Year.ToString();
-            this.month = DateTime.Now.Month.ToString();
-            this.day = DateTime.Now.Day.ToString();
+            //this.year = DateTime.Now.Year.ToString();
+            //this.month = DateTime.Now.Month.ToString();
+            //this.day = DateTime.Now.Day.ToString();
         }
 
         /// <summary>

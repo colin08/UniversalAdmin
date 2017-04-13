@@ -262,7 +262,9 @@ namespace Universal.BLL
                 CopyFlowNodeFromCompact(db, entity.ID, true, flow_entity.ID);
             db.Dispose();
             if (app_id != 0)
-                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity_user.NickName, entity.Title), entity.ID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID);
+            //项目更新提醒
+            BLLMsg.PushSomeUser(user_ids, Entity.CusUserMessageType.projectupdate, string.Format(BLLMsgTemplate.ProjectUpdate, entity.Title), entity.ID);
             return entity.ID;
         }
 

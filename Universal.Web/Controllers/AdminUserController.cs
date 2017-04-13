@@ -38,8 +38,8 @@ namespace Universal.Web.Controllers
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             int rowCount = 0;
             List<Entity.CusUser> list = new List<Entity.CusUser>();
-            if(!string.IsNullOrWhiteSpace(keyword))
-               list = bll.GetPagedList(page_index, page_size, ref rowCount, p=>p.CusDepartmentID == department_id && p.NickName.Contains(keyword) || p.Telphone.Contains(keyword), "RegTime desc", p => p.CusUserJob);
+            if (!string.IsNullOrWhiteSpace(keyword))
+                list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.CusDepartmentID == department_id && p.NickName.Contains(keyword) || p.Telphone.Contains(keyword), "RegTime desc", p => p.CusUserJob);
             else
                 list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.CusDepartmentID == department_id, "RegTime desc", p => p.CusUserJob);
             WebAjaxEntity<List<Entity.CusUser>> result = new WebAjaxEntity<List<Entity.CusUser>>();
@@ -53,7 +53,7 @@ namespace Universal.Web.Controllers
             result.total = rowCount;
             return Json(result);
         }
-        
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -131,7 +131,6 @@ namespace Universal.Web.Controllers
                 Entity.CusUser model = BLL.BLLCusUser.GetModel(user_id);
                 if (model != null)
                 {
-                    dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
                     entity.about_me = model.AboutMe;
                     entity.avatar = model.Avatar;
                     entity.department_id = model.CusDepartmentID;
@@ -145,9 +144,14 @@ namespace Universal.Web.Controllers
                     entity.password = "litdev";
                     entity.short_num = model.ShorNum;
                     entity.telphone = model.Telphone;
-                    entity.year = dt.Year.ToString();
-                    entity.month = dt.Month.ToString();
-                    entity.day = dt.Day.ToString();
+                    if (model.Brithday != null)
+                    {
+                        dt = TypeHelper.ObjectToDateTime(model.Brithday);
+                        entity.year = dt.Year.ToString();
+                        entity.month = dt.Month.ToString();
+                        entity.day = dt.Day.ToString();
+
+                    }
                 }
                 else
                 {
@@ -184,7 +188,7 @@ namespace Universal.Web.Controllers
                     ModelState.AddModelError("Telphone", "该手机号已存在");
                 }
 
-                if(!string.IsNullOrWhiteSpace(entity.email))
+                if (!string.IsNullOrWhiteSpace(entity.email))
                 {
                     if (bll.Exists(p => p.Email == entity.email))
                     {
@@ -192,11 +196,11 @@ namespace Universal.Web.Controllers
                     }
                 }
             }
-            if(entity.department_id ==0)
+            if (entity.department_id == 0)
             {
                 ModelState.AddModelError("department_id", "请选择部门");
             }
-            if(entity.job_id == 0)
+            if (entity.job_id == 0)
             {
                 ModelState.AddModelError("job_id", "请选择职位");
             }
@@ -238,7 +242,7 @@ namespace Universal.Web.Controllers
                 model.ShorNum = entity.short_num;
                 model.Status = true;
                 model.Telphone = entity.telphone;
-                if (!string.IsNullOrWhiteSpace(entity.year) && !string.IsNullOrWhiteSpace(entity.month) && !string.IsNullOrWhiteSpace(entity.day))
+                if (!string.IsNullOrWhiteSpace(entity.year) && entity.year != "0")
                     model.Brithday = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
                 else
                     model.Brithday = null;
@@ -246,7 +250,13 @@ namespace Universal.Web.Controllers
                 if (isAdd)
                     BLL.BLLCusUser.Modify(model, entity.user_route_str);
                 else
+                {
                     BLL.BLLCusUser.Modify(model, entity.user_route_str);
+                    if (model.ID == WorkContext.UserInfo.ID)
+                    {
+                        BLL.BLLCusUser.ModifySession(BLL.BLLCusUser.GetModel(model.ID));
+                    }
+                }
 
                 entity.Msg = 1;
             }
@@ -254,7 +264,7 @@ namespace Universal.Web.Controllers
             {
                 entity.Msg = 3;
             }
-            
+
             return View(entity);
         }
 

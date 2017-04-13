@@ -97,7 +97,7 @@ namespace Universal.Web.Controllers
                             foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
                             {
                                 str_ids.Append(item.ID.ToString() + ",");
-                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                             }
                             break;
                         default:
@@ -155,7 +155,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
                     {
                         str_ids.Append(item.ID.ToString() + ",");
-                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID,item.NickName));
                     }
                     break;
                 default:
@@ -192,12 +192,12 @@ namespace Universal.Web.Controllers
                     switch (model.See)
                     {
                         case Entity.DocPostSee.everyone:
-                            BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, WorkContext.UserInfo.NickName), model.ID);
+                            BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID);
                             break;
                         case Entity.DocPostSee.department:
                             break;
                         case Entity.DocPostSee.user:
-                            BLL.BLLMsg.PushSomeUser(final_ids, Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, WorkContext.UserInfo.NickName), model.ID);
+                            BLL.BLLMsg.PushSomeUser(final_ids, Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID);
                             break;
                         default:
                             break;

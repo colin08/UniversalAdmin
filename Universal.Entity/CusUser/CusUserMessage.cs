@@ -123,7 +123,13 @@ namespace Universal.Entity
         /// 项目流程完成提醒
         /// </summary>
         [Description("项目流程完成提醒")]
-        projectflowdone
+        projectflowdone,
+
+        /// <summary>
+        /// 项目更新提醒
+        /// </summary>
+        [Description("项目更新提醒")]
+        projectupdate
     }
 
     /// <summary>
@@ -234,6 +240,7 @@ namespace Universal.Entity
                     case CusUserMessageType.appproveno:
                     case CusUserMessageType.favprojectupdate:
                     case CusUserMessageType.projectflowdone:
+                    case CusUserMessageType.projectupdate:
                         return "/Info/Project?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitmeeting:
                     case CusUserMessageType.confrimjoinmeeting:
@@ -245,9 +252,8 @@ namespace Universal.Entity
                     case CusUserMessageType.confrimdonejob:
                         return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitapproveplan:
-                        return "/Info/Plan?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.planapproveok:
-                        return "";
+                        return "/Info/Plan?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.favdocupdate:
                         return "/Info/Document?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.flowupdate:

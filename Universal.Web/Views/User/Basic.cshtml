@@ -113,10 +113,12 @@
                 MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
                 //先给年下拉框赋内容
+                document.form1.YYYY.options.add(new Option("", 0));
                 var y = new Date().getFullYear();
                 for (var i = (y - 50) ; i < (y + 1) ; i++) //以今年为准，前30年，后30年
                     document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
                 //赋月份的下拉框
+                document.form1.MM.options.add(new Option("", 0));
                 for (var i = 1; i < 13; i++)
                     document.form1.MM.options.add(new Option(" " + i + " 月", i));
 

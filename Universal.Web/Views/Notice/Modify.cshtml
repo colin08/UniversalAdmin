@@ -37,10 +37,6 @@
                                     @Html.RadioButtonFor(x => x.post_see, "0", (int)Model.post_see == 0 ? (object)new { id = Universal.Entity.DocPostSee.everyone, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.everyone })
                                     <span>所有人</span>
                                 </label>
-                                <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.department">
-                                    @Html.RadioButtonFor(x => x.post_see, "1", (int)Model.post_see == 1 ? (object)new { id = Universal.Entity.DocPostSee.department, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.department })
-                                    <span>同事分组</span>
-                                </label>
                                 <label class="lab pub_lab" for="@Universal.Entity.DocPostSee.user">
                                     @Html.RadioButtonFor(x => x.post_see, "2", (int)Model.post_see == 2 ? (object)new { id = Universal.Entity.DocPostSee.user, @checked = true } : (object)new { id = Universal.Entity.DocPostSee.user })
                                     <span>自定义</span>
@@ -111,7 +107,7 @@
     	        		var id=$(this).attr('data-id');
     	        		moveId(id);
     	        	});
-    				$('<span></span>').appendTo(a).html(this.telphone+' ('+this.nick_name+')');
+    				$('<span></span>').appendTo(a).html(this.nick_name);
     				$('<i class="i-mdel"></i>').appendTo(a);
     				ids.push(this.id);
     			});

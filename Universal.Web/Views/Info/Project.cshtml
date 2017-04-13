@@ -137,7 +137,8 @@
                 success: function (data) {
                     if (data.msg == 1) {
                         alert("审批成功");
-                        window.location.reload();
+                        window.location.href="/Project/Index";
+                        //window.location.reload();
                     }
                     else {
                         alert(data.msgbox);

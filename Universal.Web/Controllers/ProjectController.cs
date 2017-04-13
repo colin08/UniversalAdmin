@@ -123,7 +123,7 @@ namespace Universal.Web.Controllers
             List<Models.ViewModelDocumentCategory> users_list = new List<Models.ViewModelDocumentCategory>();
             foreach (var item in entity.ProjectUsers)
             {
-                users_list.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                users_list.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
             }
             ViewData["UserList"] = users_list;
 
@@ -204,7 +204,7 @@ namespace Universal.Web.Controllers
             entity.node_info = node_info;
 
             foreach (var item in node_info.NodeUsers)
-                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
 
             entity.BuildViewModelListFile(node_info.NodeFiles.ToList());
             entity.BuildViewModelNodeListFile(model_flow.ProjectFlowNodeFiles.ToList());
@@ -256,11 +256,12 @@ namespace Universal.Web.Controllers
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
-                if (TypeHelper.ObjectToInt(entity.CusUserID, -1) != WorkContext.UserInfo.ID)
+                if(entity.ProjectUsers.ToList().Count(p=>p.CusUserID == WorkContext.UserInfo.ID) == 0)
                 {
                     model.Msg = 4;
                     return View(model);
                 }
+
                 if (entity != null)
                 {
                     model.title = entity.Title;
@@ -312,7 +313,7 @@ namespace Universal.Web.Controllers
                             foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
                             {
                                 str_see_ids.Append(item.ID.ToString() + ",");
-                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                             }
                             break;
                         default:
@@ -332,7 +333,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in entity.ProjectUsers)
                     {
                         str_ids.Append(item.ID.ToString() + ",");
-                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.Telphone + "(" + item.CusUser.NickName + ")"));
+                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
                     }
                     if (str_ids.Length > 0)
                     {
@@ -392,7 +393,7 @@ namespace Universal.Web.Controllers
             foreach (var item in BLL.BLLCusUser.GetListByIds(entity.user_ids))
             {
                 str_user_ids.Append(item.ID.ToString() + ",");
-                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
             }
             string final_user_ids = "";
             if (str_user_ids.Length > 0)
@@ -419,7 +420,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
                     {
                         str_see_ids.Append(item.ID.ToString() + ",");
-                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                     }
                     break;
                 default:
@@ -444,7 +445,7 @@ namespace Universal.Web.Controllers
                     model = bll.GetModel(p => p.ID == entity.id);
 
                 //判断有没有权限编辑
-                if (TypeHelper.ObjectToInt(model.CusUserID, -1) != WorkContext.UserInfo.ID)
+                if (model.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
                 {
                     entity.Msg = 4;
                     return View(model);

@@ -591,7 +591,7 @@ namespace Universal.Web.Controllers.api
                 bll.Add(entity);
             }
             if (req.approve_user_id > 0)
-                BLL.BLLMsg.PushMsg(req.approve_user_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName), entity.ID);
+                BLL.BLLMsg.PushMsg(req.approve_user_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;

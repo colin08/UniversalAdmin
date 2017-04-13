@@ -123,7 +123,7 @@ namespace Universal.Web.Controllers
                             foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
                             {
                                 str_ids.Append(item.ID.ToString() + ",");
-                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                                model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                             }
                             break;
                         default:
@@ -203,7 +203,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
                     {
                         str_ids.Append(item.ID.ToString() + ",");
-                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Telphone + "(" + item.NickName + ")"));
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                     }
                     break;
                 default:
