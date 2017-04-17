@@ -18,9 +18,6 @@ namespace Universal.Web.Models
             this.avatar = "/uploads/avatar.jpg";
             this.user_route = new List<BLL.Model.AdminUserRoute>();
             this.MsgBox = "success";
-            //this.year = DateTime.Now.Year.ToString();
-            //this.month = DateTime.Now.Month.ToString();
-            //this.day = DateTime.Now.Day.ToString();
         }
 
         /// <summary>
@@ -87,19 +84,10 @@ namespace Universal.Web.Models
         public Entity.CusUserGender gender { get; set; }
 
         /// <summary>
-        /// 年
+        /// 生日
         /// </summary>
-        public string year { get; set; }
-
-        /// <summary>
-        /// 月
-        /// </summary>
-        public string month { get; set; }
-
-        /// <summary>
-        /// 日
-        /// </summary>
-        public string day { get; set; }
+        [Display(Name ="生日")]
+        public DateTime? brithday { get; set; }
 
         [Display(Name = "短号"), MaxLength(20, ErrorMessage = "不能超过20位")]
         public string short_num { get; set; }

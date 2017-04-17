@@ -108,6 +108,11 @@ namespace Universal.Tools
         /// </summary>
         public static readonly string Web_Login_UserPassword = "wp";
 
+        /// <summary>
+        /// 默认审核的用户Cookie
+        /// </summary>
+        public static readonly string Default_Approve_User = "def_approve";
+
     }
 
 

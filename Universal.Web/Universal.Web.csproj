@@ -1219,6 +1219,7 @@
     <Content Include="Views\Info\User.cshtml" />
     <Content Include="Views\Search\User.cshtml" />
     <Content Include="Views\Share\doc.cshtml" />
+    <Content Include="Views\WorkPlan\Info.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

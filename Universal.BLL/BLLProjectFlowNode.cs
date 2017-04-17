@@ -165,6 +165,81 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 导出项目附件
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <returns></returns>
+        public static bool ImportProject(int project_id, out string zip_path)
+        {
+            zip_path = "";
+            var project_entity = new BLL.BaseBLL<Entity.Project>().GetModel(p => p.ID == project_id);
+            if (project_entity == null)
+                return false;
+            var frist_entity = new BLL.BaseBLL<Entity.ProjectFlowNode>().GetModel(p => p.ProjectID == project_id && p.IsFrist, p => p.ProjectFlowNodeFiles);
+            if (frist_entity == null)
+                return false;
+            var entity_node = new BLL.BaseBLL<Entity.Node>().GetModel(p => p.ID == frist_entity.NodeID);
+            if (entity_node == null)
+                return false;
+            List<Model.ProjectFlowNode> out_list = new List<Model.ProjectFlowNode>();
+            //拼装第一个
+            Model.ProjectFlowNode model = new Model.ProjectFlowNode();
+            model.project_flow_node_id = frist_entity.ID;
+            model.node_id = entity_node.ID;
+            model.node_is_fator = entity_node.IsFactor;
+            model.node_title = entity_node.Title;
+            model.BuildFileList(frist_entity.ProjectFlowNodeFiles.ToList());
+            out_list.Add(model);
+            RecursiveGetNext(project_id, model.project_flow_node_id, out_list);
+
+            #region  生成ZIP
+            string temp_base_floder = "/uploads/temp/";
+            string project_floder_name = Tools.IOHelper.FileNameFilter(project_entity.Title);
+            string temp_floder_path = temp_base_floder + project_floder_name + "/";
+            Tools.IOHelper.CreateDirectory(temp_floder_path);
+
+            for (int i = 0; i < out_list.Count; i++)
+            {
+                if (!out_list[i].node_is_fator)
+                {
+                    //子目录名称
+                    string child_floder_name = (i + 1).ToString() + "-" + out_list[i].node_title + "/";
+                    //子目录相对路径
+                    string temp_child_floder = temp_floder_path + child_floder_name;
+                    Tools.IOHelper.CreateDirectory(temp_child_floder);
+                    //循环复制当前节点的附件到临时目录
+                    foreach (var node_files in out_list[i].files)
+                    {
+                        string new_file_name = Tools.IOHelper.GetIOFileName(node_files.file_name);
+                        Tools.IOHelper.CopyFile(node_files.file_path, temp_child_floder + new_file_name);
+                    }
+
+                }
+            }
+            zip_path = "/uploads/zip/" + project_floder_name + ".zip";
+            //return Tools.ZipHelper.Zip(Tools.IOHelper.GetMapPath(temp_floder_path), Tools.IOHelper.GetMapPath(zip_path));
+            var is_ok = Tools.WebHelper.ToZip(Tools.IOHelper.GetMapPath(zip_path), Tools.IOHelper.GetMapPath(temp_floder_path));
+            Tools.IOHelper.DeleteDirectory(temp_floder_path);
+            return is_ok;
+            #endregion
+        }
+
+        private static void RecursiveGetNext(int project_id, int project_flow_node_id, List<Model.ProjectFlowNode> out_list)
+        {
+            if (out_list == null) out_list = new List<Model.ProjectFlowNode>();
+            var db_list = GetNextFlowNode(project_id, project_flow_node_id);
+            if (db_list.Count != 0)
+            {
+                var node_list = db_list.Where(p => p.is_end == true);
+                if (node_list.Count()!= 0)
+                {
+                    out_list.Add(node_list.First());
+                    RecursiveGetNext(project_id, node_list.FirstOrDefault().project_flow_node_id, out_list);
+                }
+            }
+        }
+
+        /// <summary>
         /// 获取项目的单个流程信息
         /// </summary>
         /// <returns></returns>
@@ -232,7 +307,7 @@ namespace Universal.BLL
         {
             using (var db = new DataCore.EFDBContext())
             {
-                var entity = db.ProjectFlowNodes.Include(p=>p.Node).Where(p=>p.ID == project_flow_node_id).FirstOrDefault();
+                var entity = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).FirstOrDefault();
                 if (entity == null)
                     return false;
                 entity.EditUserId = user_id;

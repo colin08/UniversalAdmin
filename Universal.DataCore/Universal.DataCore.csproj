@@ -210,6 +210,10 @@
     <Compile Include="Migrations\201704110209263_add_project_node_file.Designer.cs">
       <DependentUpon>201704110209263_add_project_node_file.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704130845364_modify_node_user.cs" />
+    <Compile Include="Migrations\201704130845364_modify_node_user.Designer.cs">
+      <DependentUpon>201704130845364_modify_node_user.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -347,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704110209263_add_project_node_file.resx">
       <DependentUpon>201704110209263_add_project_node_file.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704130845364_modify_node_user.resx">
+      <DependentUpon>201704130845364_modify_node_user.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

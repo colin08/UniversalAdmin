@@ -105,15 +105,17 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
+                        var link = "/WorkPlan/Modify?id=" + item.ID + "";
                         var app_text = "未审批";
                         if (item.IsApprove) {
                             app_text = "已审批";
+                            link = "/WorkPlan/info?id=" + item.ID + "";
                         }
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>" + item.WeekText + "</td>";
                         dataHtml += "<td>" + app_text + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkPlan/Modify?id="+item.ID+"\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"" + link + "\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });
                     if (data.data.length == 0) {

@@ -13,9 +13,6 @@ namespace Universal.Web.Models
     {
         public ViewModelUserBasic()
         {
-            //this.year = DateTime.Now.Year.ToString();
-            //this.month = DateTime.Now.Month.ToString();
-            //this.day = DateTime.Now.Day.ToString();
         }
 
         /// <summary>
@@ -29,20 +26,7 @@ namespace Universal.Web.Models
         /// </summary>
         public Entity.CusUserGender gender { get; set; }
 
-        /// <summary>
-        /// 年
-        /// </summary>
-        public string year { get; set; }
-
-        /// <summary>
-        /// 月
-        /// </summary>
-        public string month { get; set; }
-
-        /// <summary>
-        /// 日
-        /// </summary>
-        public string day { get; set; }
+        public DateTime? brithday { get; set; }
 
         /// <summary>
         /// 短号

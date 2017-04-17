@@ -13,9 +13,9 @@ namespace Universal.Entity
     {
         public Node()
         {
+            ContactsUsers = "";
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
-            this.NodeUsers = new List<NodeUser>();
             this.NodeFiles = new List<NodeFile>();
         }
 
@@ -63,11 +63,12 @@ namespace Universal.Entity
         /// 更新时间
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
-
+        
         /// <summary>
-        /// 联系人员
+        /// 项目联系人，手动输入
         /// </summary>
-        public virtual ICollection<NodeUser> NodeUsers { get; set; }
+        [MaxLength(500)]
+        public string ContactsUsers { get; set; }
 
         /// <summary>
         /// 节点附件

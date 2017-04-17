@@ -102,6 +102,23 @@ namespace Universal.Web.Controllers
 
         }
 
+        public ActionResult Info(int id)
+        {
+            Entity.WorkPlan entity = BLL.BLLWorkPlan.GetModel(id);
+            if (entity == null)
+                return View("NotFound");
+
+            Entity.CusUser approver_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == entity.ApproveUserID);
+            if (approver_user == null)
+            {
+                return View("审核人员不存在");
+            }
+
+            ViewData["ApproveUser"] = approver_user.NickName;
+
+            return View(entity);
+        }
+
         /// <summary>
         /// 计划审批
         /// </summary>
@@ -154,7 +171,9 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(int? id)
         {
             //判断审核人是否必填
-            ViewData["RequieAPPID"] = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            var req_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            ViewData["RequieAPPID"] = req_approve;
+
             //ViewData["ShowSave"] = false;
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelWorkPlan entity = new Models.ViewModelWorkPlan();
@@ -192,6 +211,17 @@ namespace Universal.Web.Controllers
                     }
                 }
 
+            }else
+            {
+                ViewData["ShowSave"] = true;
+                //默认审核用户
+                string nick_name = "";
+                int user_id = BLL.BLLCusUser.GetDefaultApproveUser(out nick_name);
+                if (user_id != 0)
+                {
+                    entity.approve_user_id = user_id;
+                    entity.approve_user_name = nick_name;
+                }
             }
             return View(entity);
         }
@@ -226,6 +256,10 @@ namespace Universal.Web.Controllers
             if (requie_approve && app_id == 0)
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
+            }
+            if(app_id != 0)
+            {
+                entity.approve_user_name = BLL.BLLCusUser.GetNickName(app_id);
             }
 
             DateTime BeginTime = DateTime.Now;
@@ -263,6 +297,12 @@ namespace Universal.Web.Controllers
                     model.ApproveUserID = null;
                 else
                     model.ApproveUserID = app_id;
+
+                //设置默认审核用户
+                if (app_id != 0)
+                    BLL.BLLCusUser.SetDefaultApproveUser(app_id);
+
+
                 model.BeginTime = BeginTime;
                 model.EndTime = EndTime;
                 model.WeekText = entity.week_text;

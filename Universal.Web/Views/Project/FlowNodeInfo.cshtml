@@ -45,12 +45,7 @@
             <li>
                 <div class="lilt">联系人</div>
                 <div class="limd">
-                    <ul>
-                        @foreach (var item in Model.users_entity)
-                        {
-                            <li><span>@item.title</span></li>
-                        }
-                    </ul>
+                    <span>@Model.node_info.ContactsUsers</span>
                 </div>
                 <div class="litip"></div>
             </li>

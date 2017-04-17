@@ -1,0 +1,101 @@
+﻿@model Universal.Entity.WorkPlan
+@{
+    ViewBag.Title = "查看工作计划";
+    ViewData["tabLeft"] = "gzjh";
+    ViewData["tabTop"] = "manager";
+}
+
+<!--头部脚本-->
+@section head
+{
+    <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_MenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="tit1">
+                <div class="inner">
+                    <a href="/WorkPlan/Index" class="fl f16"><i class="i-back"></i>工作计划</a>
+                    <b class="tit1Txt fr">查看计划</b>
+                </div>
+            </div>
+
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">计划名称</div>
+                        <div class="limd">
+                            <span>@Model.WeekText</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划者</div>
+                        <div class="limd">
+                            <span>@Model.CusUser.NickName</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">审批人</div>
+                        <div class="limd"><span>@ViewData["ApproveUser"]</span></div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">计划项</div>
+                        <div class="limd">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>工作分项名称</td>
+                                        <td>工作内容</td>
+                                        <td>预期达成目标</td>
+                                        <td>完成最后时限</td>
+                                        <td>完成情况</td>
+                                        <td>备注</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="workitem">
+                                    @foreach (var item in Model.WorkPlanItemList)
+                                    {
+                                        <tr>
+                                            <td><span>@item.Title</span></td>
+                                            <td><span>@item.Content</span></td>
+                                            <td><span>@item.WantTaget</span></td>
+                                            <td><span>@item.DoneTime</span></td>
+                                            <td><span>@item.StatusText</span></td>
+                                            <td><span>@item.Remark</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            <button type="button" onclick="location.href = '/WorkPlan/Index';" class="btn1 grey">返回</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+        
+    </script>
+
+}
+<!--底部脚本 end-->

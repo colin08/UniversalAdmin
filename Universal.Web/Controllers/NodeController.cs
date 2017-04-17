@@ -95,18 +95,19 @@ namespace Universal.Web.Controllers
                     model.location = entity.Location;
                     model.id = ids;
                     model.is_factor = entity.IsFactor;
+                    model.contacts_user = entity.ContactsUsers;
                     model.category_id = entity.NodeCategoryID;
-                    System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
-                    foreach (var item in entity.NodeUsers)
-                    {
-                        str_ids.Append(item.ID.ToString() + ",");
-                        model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
-                    }
-                    if (str_ids.Length > 0)
-                    {
-                        str_ids = str_ids.Remove(str_ids.Length - 1, 1);
-                    }
-                    model.user_ids = str_ids.ToString();
+                    //System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                    //foreach (var item in entity.NodeUsers)
+                    //{
+                    //    str_ids.Append(item.ID.ToString() + ",");
+                    //    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
+                    //}
+                    //if (str_ids.Length > 0)
+                    //{
+                    //    str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                    //}
+                    //model.user_ids = str_ids.ToString();
                     
                     model.BuildViewModelListFile(entity.NodeFiles.ToList());
                 }
@@ -141,20 +142,20 @@ namespace Universal.Web.Controllers
                 ModelState.AddModelError("category_id", "分类必选");
             }
 
-            #region 处理用户ID
-            System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
-            entity.users_entity = new List<Models.ViewModelDocumentCategory>();
-            foreach (var item in BLL.BLLCusUser.GetListByIds(entity.user_ids))
-            {
-                str_ids.Append(item.ID.ToString() + ",");
-                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID,item.NickName));
-            }
-            string final_ids = "";
-            if (str_ids.Length > 0)
-            {
-                final_ids = str_ids.Remove(str_ids.Length - 1, 1).ToString();
-            }
-            #endregion
+            //#region 处理用户ID
+            //System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+            //entity.users_entity = new List<Models.ViewModelDocumentCategory>();
+            //foreach (var item in BLL.BLLCusUser.GetListByIds(entity.user_ids))
+            //{
+            //    str_ids.Append(item.ID.ToString() + ",");
+            //    entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.ID,item.NickName));
+            //}
+            //string final_ids = "";
+            //if (str_ids.Length > 0)
+            //{
+            //    final_ids = str_ids.Remove(str_ids.Length - 1, 1).ToString();
+            //}
+            //#endregion
             
             if (ModelState.IsValid)
             {
@@ -173,13 +174,14 @@ namespace Universal.Web.Controllers
                 model.Title = entity.title;
                 model.IsFactor = entity.is_factor;
                 model.Location = entity.location;
+                model.ContactsUsers = entity.contacts_user;
                 model.NodeCategoryID = entity.category_id;
                 model.NodeFiles = entity.BuildFileList(WorkContext.UserInfo.ID);
 
                 if (isAdd)
-                    BLL.BLLNode.Add(model, final_ids);
+                    BLL.BLLNode.Add(model);
                 else
-                    BLL.BLLNode.Modify(model, final_ids);
+                    BLL.BLLNode.Modify(model);
 
                 entity.Msg = 1;
             }

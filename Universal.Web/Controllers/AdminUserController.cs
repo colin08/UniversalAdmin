@@ -125,7 +125,6 @@ namespace Universal.Web.Controllers
             int user_id = Tools.TypeHelper.ObjectToInt(id);
             Models.ViewModelAdminUser entity = new Models.ViewModelAdminUser();
             entity.user_route = BLL.BLLCusRoute.GetRouteExists(user_id);
-            DateTime dt = DateTime.Now;
             if (user_id > 0)
             {
                 Entity.CusUser model = BLL.BLLCusUser.GetModel(user_id);
@@ -144,14 +143,7 @@ namespace Universal.Web.Controllers
                     entity.password = "litdev";
                     entity.short_num = model.ShorNum;
                     entity.telphone = model.Telphone;
-                    if (model.Brithday != null)
-                    {
-                        dt = TypeHelper.ObjectToDateTime(model.Brithday);
-                        entity.year = dt.Year.ToString();
-                        entity.month = dt.Month.ToString();
-                        entity.day = dt.Day.ToString();
-
-                    }
+                    entity.brithday = model.Brithday;
                 }
                 else
                 {
@@ -242,11 +234,7 @@ namespace Universal.Web.Controllers
                 model.ShorNum = entity.short_num;
                 model.Status = true;
                 model.Telphone = entity.telphone;
-                if (!string.IsNullOrWhiteSpace(entity.year) && entity.year != "0")
-                    model.Brithday = TypeHelper.ObjectToDateTime(entity.year + "/" + entity.month + "/" + entity.day);
-                else
-                    model.Brithday = null;
-
+                model.Brithday = entity.brithday;
                 if (isAdd)
                     BLL.BLLCusUser.Modify(model, entity.user_route_str);
                 else

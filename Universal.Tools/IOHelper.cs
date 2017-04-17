@@ -25,6 +25,15 @@ namespace Universal.Tools
         //当前系统安装的JPEG编码解码器
         private static ImageCodecInfo _jpegcodec = null;
 
+        /// <summary>
+        /// 过滤非法文件名
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string FileNameFilter(string str)
+        {
+            return str == null ? null : Regex.Replace(str, "[\\\\/:*?\" <>|]", "");
+        }
 
         /// <summary>
         /// 获取图片的宽高,返回HashTable，宽的键:w,高的键:h
@@ -528,6 +537,46 @@ namespace Universal.Tools
         }
 
         /// <summary>
+        /// 递归删除文件夹
+        /// </summary>
+        /// <param name="path">虚拟路径</param>
+        /// <returns></returns>
+        public static bool DeleteDirectory(string path)
+        {
+            string io_path = GetMapPath(path);
+            try
+            {
+                Directory.Delete(io_path,true);
+            }
+            catch (Exception ex)
+            {
+                WriteLogs("递归删除文件夹失败："+ex.Message);
+            }
+           
+            return true;
+        }
+
+        /// <summary>
+        /// 复制文件
+        /// </summary>
+        /// <param name="sourcePath">源文件相对路径</param>
+        /// <param name="targetPath">目标文件相对路径</param>
+        /// <returns></returns>
+        public static void CopyFile(string sourcePath,string targetPath)
+        {
+            try
+            {
+                string io_sourcePath = GetMapPath(sourcePath);
+                string io_targetPath = GetMapPath(targetPath);
+                File.Copy(io_sourcePath, io_targetPath, true);//true=覆盖已存在的同名文件,false则反之
+            }
+            catch (Exception ex)
+            {
+                WriteLogs("文件复制出错："+ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 返回文件大小字节
         /// </summary>
         /// <param name="_filepath">文件相对路径</param>
@@ -621,6 +670,15 @@ namespace Universal.Tools
         public static string GetFileName(string _filepath)
         {
             return _filepath.Substring(_filepath.LastIndexOf(@"/") + 1);
+        }
+        /// <summary>
+        /// 返回文件名，不含路径
+        /// </summary>
+        /// <param name="_filepath">文件绝对路径</param>
+        /// <returns>string</returns>
+        public static string GetIOFileName(string _filepath)
+        {
+            return _filepath.Substring(_filepath.LastIndexOf("\\") + 1);
         }
 
         /// <summary>

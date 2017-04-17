@@ -75,6 +75,7 @@
     <Compile Include="WaterMark.cs" />
     <Compile Include="ConfigHelper.cs" />
     <Compile Include="WebHelper.cs" />
+    <Compile Include="ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -107,6 +107,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static int Add(Entity.Project entity, string user_ids, out string msg)
         {
+
             msg = "";
 
             int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
@@ -157,7 +158,7 @@ namespace Universal.BLL
             if (flow_entity != null)
             {
                 //复制节点
-                CopyFlowNodeFromCompact(db, entity.ID, false, flow_entity.ID);
+                CopyFlowNodeFromCompact(db, entity.ID, false, flow_entity.ID, entity.CusUserID);
             }
             db.Dispose();
             if (app_id != 0)
@@ -171,7 +172,7 @@ namespace Universal.BLL
         /// <param name="entity"></param>
         /// <param name="user_ids">项目联系人</param>
         /// <returns></returns>
-        public static int Modify(Entity.Project entity, string user_ids, out string msg)
+        public static int Modify(Entity.Project entity, string user_ids, int login_user_id, out string msg)
         {
             msg = "";
             int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
@@ -259,7 +260,7 @@ namespace Universal.BLL
             db.SaveChanges();
             //复制节点
             if (is_copy)
-                CopyFlowNodeFromCompact(db, entity.ID, true, flow_entity.ID);
+                CopyFlowNodeFromCompact(db, entity.ID, true, flow_entity.ID, login_user_id);
             db.Dispose();
             if (app_id != 0)
                 BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID);
@@ -275,13 +276,13 @@ namespace Universal.BLL
         /// <param name="project_id"></param>
         /// <param name="is_clear"></param>
         /// <param name="flow_id"></param>
-        public static void CopyFlowNodeFromCompact(DataCore.EFDBContext db,int project_id,bool is_clear,int flow_id)
+        public static void CopyFlowNodeFromCompact(DataCore.EFDBContext db, int project_id, bool is_clear, int flow_id, int login_user_id)
         {
             if (db == null)
                 db = new DataCore.EFDBContext();
             if (is_clear)
                 db.ProjectFlowNodes.Where(p => p.ProjectID == project_id).ToList().ForEach(p => db.ProjectFlowNodes.Remove(p));
-            if(!db.FlowNodes.Any(p=>p.FlowID == flow_id))
+            if (!db.FlowNodes.Any(p => p.FlowID == flow_id))
                 return;
 
             var db_flow_node_compact_list = db.FlowNodes.Where(p => p.FlowID == flow_id).AsNoTracking().ToList();
@@ -297,7 +298,7 @@ namespace Universal.BLL
                 foreach (var item in flow_node.ProcessTo.Split(','))
                 {
                     int old_id = Tools.TypeHelper.ObjectToInt(item, -1);
-                    if(old_id != -1)
+                    if (old_id != -1)
                     {
                         FlowC c = new FlowC();
                         c.id = old_id;
@@ -309,7 +310,7 @@ namespace Universal.BLL
 
                 //查询是否顶级
                 var sql = "select count(1) from FlowNode where charindex('," + flow_node.ID.ToString() + ",',','+ProcessTo+',')> 0";
-                bool is_frist = db.Database.SqlQuery<int>(sql).ToList()[0] == 0 ? true : false;                
+                bool is_frist = db.Database.SqlQuery<int>(sql).ToList()[0] == 0 ? true : false;
 
                 Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
                 entity_node.Color = flow_node.Color;
@@ -319,6 +320,8 @@ namespace Universal.BLL
                 entity_node.ProcessTo = "";
                 entity_node.ProjectID = project_id;
                 entity_node.Status = true;
+                entity_node.EditUserId = login_user_id;
+                entity_node.LastUpdateTime = DateTime.Now;
                 entity_node.Top = flow_node.Top;
                 entity_node.IsFrist = is_frist;
                 db.ProjectFlowNodes.Add(entity_node);
@@ -353,7 +356,7 @@ namespace Universal.BLL
 
             var db_flow_node_list = db.FlowNodes.Where(p => p.FlowID == flow_id).ToList();
             List<int> frist_node = db.Database.SqlQuery<int>("SELECT ID FROM [dbo].[FlowNode] where Pids = '' or Pids is NULL;").ToList();
-            if(frist_node.Count ==0)
+            if (frist_node.Count == 0)
                 return;
 
             //旧的父子关系对应
@@ -375,7 +378,7 @@ namespace Universal.BLL
                 }
                 p.cids = list_c;
                 old_list.Add(p);
-                
+
                 Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
                 entity_node.Color = flow_node.Color;
                 entity_node.ICON = flow_node.ICON;
@@ -499,11 +502,12 @@ namespace Universal.BLL
             string inner_where = " where ID > 0";//字段判断
             string time_where = ""; //筛选时间
 
-            if(only_mine)
+            if (only_mine)
             {
                 inner_select += ",(select count(1) from ProjectUser where ProjectID = P.ID and CusUserID = " + user_id.ToString() + ") as IsMine";
                 inner_where += " and IsMine >0";
-            }else
+            }
+            else
             {
                 //权限
                 if (!is_admin)
@@ -544,38 +548,38 @@ namespace Universal.BLL
             }
 
             //节点分类筛选
-            if(node_category_id > 0)
+            if (node_category_id > 0)
             {
                 inner_select += ",(select dbo.fn_ProjectHaveNode(P.Id," + node_category_id.ToString() + ")) as HaveNodeCategory";
                 inner_where += " and HaveNodeCategory > 0";
             }
-            
-            sql = "select * from ( select ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from (select * "+ inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID "+ auth_where + ") as P ) as S "+inner_where+") as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-            sql_total = "select count(1) from (select *"+ inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID "+ auth_where + ") as P) as S " + inner_where + ";";
+
+            sql = "select * from ( select ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from (select * " + inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID " + auth_where + ") as P ) as S " + inner_where + ") as T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) from (select *" + inner_select + " from( select I.*, U.Telphone, U.NickName from Project as I left JOIN CusUser as U on I.CusUserID = U.ID " + auth_where + ") as P) as S " + inner_where + ";";
 
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.Project>(sql).ToList();
             foreach (var item in response_entity)
             {
-                var entity = db.CusUsers.AsNoTracking().Where(p => p.ID == item.CusUserID).FirstOrDefault();
-                if (entity == null)
-                {
-                    entity = new Entity.CusUser();
-                }
-                item.CusUser = entity;
+                //var entity = db.CusUsers.AsNoTracking().Where(p => p.ID == item.CusUserID).FirstOrDefault();
+                //if (entity == null)
+                //{
+                //    entity = new Entity.CusUser();
+                //}
+                //item.CusUser = entity;
 
                 item.ProjectFiles = db.ProjectFiles.AsNoTracking().Where(p => p.ProjectID == item.ID).ToList();
 
                 //获取当前进行的节点信息
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.ProjectFlowNodeDoing();
-
+                var entity_action_user = new Entity.CusUser();
                 if (db.Database.SqlQuery<int>("select count(1) from ProjectFlowNode where ProjectID = " + item.ID + " and IsEnd = 0").ToList()[0] > 0)
                 {
-                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     if (entity_node == null)
                     {
-                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and IsFrist =1 order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and IsFrist =1 order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
                     }
                 }
                 else
@@ -591,7 +595,15 @@ namespace Universal.BLL
                     entity_node.node_title = "无节点";
                     entity_node.flow_node_remark = "无备注";
                 }
-
+                if (entity_node.edit_id != 0)
+                {
+                    entity_action_user = db.CusUsers.Where(p => p.ID == entity_node.edit_id).AsNoTracking().FirstOrDefault();
+                }
+                if (entity_action_user.ID == 0)
+                {
+                    entity_action_user.NickName = "";
+                }
+                item.CusUser = entity_action_user;
                 item.ProjectFlowNodeDoing = entity_node;
 
             }

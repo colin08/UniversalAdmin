@@ -19,9 +19,6 @@
             <div class="userInfo">
                 <form method="post" name="form1">
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(p=>p.year)
-                    @Html.HiddenFor(p=>p.month)
-                    @Html.HiddenFor(p=>p.day)
                     <ul>
                         <li>
                             <div class="lilt">部门岗位</div>
@@ -49,12 +46,8 @@
                         </li>
                         <li>
                             <div class="lilt">生日</div>
-                            <div class="limd">
-                                <select name="YYYY" onChange="YYYYDD(this.value)" class="tb_select"></select>
-                                <select name="MM" onChange="MMDD(this.value)" class="tb_select"></select>
-                                <select name="DD" onchange="DDChan(this.value)" class="tb_select"></select>
-                            </div>
-                            <div class="litip">@Html.ValidationMessageFor(p => p.year)</div>
+                            <div class="limd">@Html.TextBoxFor(p => p.brithday, String.Format("{0:d}", Model.brithday).Replace("/", "-"), new { @class = "usInput", placeholder = "生日", @onclick = "laydate({ format: 'YYYY-MM-DD'})" })</div>
+                            <div class="litip">@Html.ValidationMessageFor(p => p.brithday)</div>
                         </li>
                         <li>
                             <div class="lilt">短号</div>
@@ -84,6 +77,7 @@
 {
         @Scripts.Render("~/bundles/jqueryval")
         @Scripts.Render("~/bundles/textareacounter")
+<script src="/assets/laydate/laydate.js"></script>
         <script type="text/javascript">
             $(document).ready(function (e) {
                 $("#about_me").textAreaCount({ maxlength: 500, speed: 256 });
@@ -105,72 +99,6 @@
 
             });
 
-
-        </script>
-
-        <script type="text/javascript">
-            function YYYYMMDDstart() {
-                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-                //先给年下拉框赋内容
-                document.form1.YYYY.options.add(new Option("", 0));
-                var y = new Date().getFullYear();
-                for (var i = (y - 50) ; i < (y + 1) ; i++) //以今年为准，前30年，后30年
-                    document.form1.YYYY.options.add(new Option(" " + i + " 年", i));
-                //赋月份的下拉框
-                document.form1.MM.options.add(new Option("", 0));
-                for (var i = 1; i < 13; i++)
-                    document.form1.MM.options.add(new Option(" " + i + " 月", i));
-
-                document.form1.YYYY.value = $("#year").val();
-
-                //document.form1.MM.value = new Date().getMonth() + 1;
-                document.form1.MM.value = $("#month").val();
-                var n = MonHead[new Date().getMonth()];
-                if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n); //赋日期下拉框Author:meizz
-                //document.form1.DD.value = new Date().getDate();
-                document.form1.DD.value = $("#day").val();
-            }
-            if (document.attachEvent)
-                window.attachEvent("onload", YYYYMMDDstart);
-            else
-                window.addEventListener('load', YYYYMMDDstart, false);
-
-            function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)
-            {
-                var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;
-                $("#year").val(str);
-                if (MMvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[MMvalue - 1];
-                if (MMvalue == 2 && IsPinYear(str)) n++;
-                writeDay(n)
-            }
-            function MMDD(str)   //月发生变化时日期联动
-            {
-                var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;
-                $("#month").val(str);
-                if (YYYYvalue == "") { var e = document.form1.DD; optionsClear(e); return; }
-                var n = MonHead[str - 1];
-                if (str == 2 && IsPinYear(YYYYvalue)) n++;
-                writeDay(n)
-            }
-            function DDChan(str) {
-                $("#day").val(str);
-            }
-            function writeDay(n)   //据条件写日期的下拉框
-            {
-                var e = document.form1.DD; optionsClear(e);
-                for (var i = 1; i < (n + 1) ; i++)
-                    e.options.add(new Option(" " + i + " 日", i));
-            }
-            function IsPinYear(year)//判断是否闰平年
-            {
-                return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
-            }
-            function optionsClear(e) {
-                e.options.length = 1;
-            }
 
         </script>
 

@@ -13,7 +13,7 @@ namespace Universal.Web.Models
         public ViewModelProjectFlowNode()
         {
             this.file_list = new List<ViewModelListFile>();
-            this.users_entity = new List<ViewModelDocumentCategory>();
+            //this.users_entity = new List<ViewModelDocumentCategory>();
             this.node_file_list = new List<ViewModelListFile>();
         }
 
@@ -27,7 +27,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 节点联系人员
         /// </summary>
-        public List<ViewModelDocumentCategory> users_entity { get; set; }
+        //public List<ViewModelDocumentCategory> users_entity { get; set; }
 
         /// <summary>
         /// 附件信息

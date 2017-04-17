@@ -79,7 +79,7 @@
                             <ul>
                                 @foreach (var item in Model.WorkMeetingUsers.Where(p=>p.IsConfirm==true).ToList())
                                 {
-                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                    <li><span>@item.CusUser.NickName</span></li>
                                 }
                             </ul>
                         </div>
@@ -91,7 +91,7 @@
                             <ul>
                                 @foreach (var item in Model.WorkMeetingUsers.Where(p=>p.IsConfirm==false).ToList())
                                 {
-                                    <li><span>@item.CusUser.NickName (@item.CusUser.Telphone)</span></li>
+                                    <li><span>@item.CusUser.NickName</span></li>
                                 }
                             </ul>
                         </div>

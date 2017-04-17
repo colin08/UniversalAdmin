@@ -20,6 +20,8 @@ namespace Universal.Entity
         /// </summary>
         public int flow_node_id { get; set; }
 
+        public int edit_id { get; set; }
+
         /// <summary>
         /// 节点名称
         /// </summary>

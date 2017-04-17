@@ -660,3 +660,57 @@ function accRound(arg, len) { //len 为保留小数点后几位
     var arg3 = arg2.substr(0, l) + "." + arg2.substr(l, len);
     return arg3;
 }
+
+//删除项目
+function delProject(id) {
+    $.ajax({
+        type: "post",
+        url: "/Project/Del",
+        data: { "id": id },
+        async: false,
+        beforeSend: function () {
+
+        },
+        complete: function () {
+
+        },
+        success: function (data) {
+            if (data.msg == 1) {
+                window.location.href = "/Project/Index";
+            }
+            else {
+                alert(data.msgbox);
+            }
+        },
+        error: function () {
+            alert("操作失败，请检查网络");
+        }
+    })
+}
+
+//导出项目
+function importProject(id) {
+    $.ajax({
+        type: "post",
+        url: "/Project/ImportFile",
+        data: { "id": id },
+        async: false,
+        beforeSend: function () {
+
+        },
+        complete: function () {
+
+        },
+        success: function (data) {
+            if (data.msg == 1) {
+                window.open(data.data);
+            }
+            else {
+                alert(data.msgbox);
+            }
+        },
+        error: function () {
+            alert("操作失败，请检查网络");
+        }
+    })
+}

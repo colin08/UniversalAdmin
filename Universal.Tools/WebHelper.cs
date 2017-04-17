@@ -10,6 +10,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 using System.Collections.Generic;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Universal.Tools
 {
@@ -59,6 +60,14 @@ namespace Universal.Tools
 
             double tian = xiaoshi / 24;
             return (int)tian + "天";
+        }
+
+        public static bool ToZip(string zip_path,string floder_path)
+        {
+            FastZip fastzip = new FastZip();
+            fastzip.CreateEmptyDirectories = true;
+            fastzip.CreateZip(zip_path, floder_path, true, "");
+            return true;
         }
 
         /// <summary>

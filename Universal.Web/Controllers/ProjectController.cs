@@ -52,6 +52,21 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 导出项目附件
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ImportFile(int id)
+        {
+            string msg = "";
+            var is_ok = BLL.BLLProjectFlowNode.ImportProject(id, out msg);
+            WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;
+            WorkContext.AjaxStringEntity.data = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="id"></param>
@@ -104,7 +119,7 @@ namespace Universal.Web.Controllers
         /// 项目基本信息
         /// </summary>
         /// <returns></returns>
-        public ActionResult BasicInfo(int id,string b)
+        public ActionResult BasicInfo(int id, string b)
         {
             if (TypeHelper.ObjectToInt(b, 0) != 0)
                 ViewData["BackUrl"] = "/";
@@ -203,8 +218,8 @@ namespace Universal.Web.Controllers
             entity.flow_info = model_flow;
             entity.node_info = node_info;
 
-            foreach (var item in node_info.NodeUsers)
-                entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
+            //foreach (var item in node_info.NodeUsers)
+            //    entity.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
 
             entity.BuildViewModelListFile(node_info.NodeFiles.ToList());
             entity.BuildViewModelNodeListFile(model_flow.ProjectFlowNodeFiles.ToList());
@@ -220,10 +235,10 @@ namespace Universal.Web.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult SaveFlowNodeRemark(int id, string remark,string files)
+        public JsonResult SaveFlowNodeRemark(int id, string remark, string files)
         {
             string msg = "";
-            var is_ok = BLL.BLLProjectFlowNode.ModifyRemarkFile(id, WorkContext.UserInfo.ID,remark, files, out msg);
+            var is_ok = BLL.BLLProjectFlowNode.ModifyRemarkFile(id, WorkContext.UserInfo.ID, remark, files, out msg);
             WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
@@ -249,14 +264,16 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(int? id)
         {
             //判断审核人是否必填
-            ViewData["RequieAPPID"] = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            var req_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
+            ViewData["RequieAPPID"] = req_approve;
+
             LoadFlow();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelProject model = new Models.ViewModelProject();
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
-                if(entity.ProjectUsers.ToList().Count(p=>p.CusUserID == WorkContext.UserInfo.ID) == 0)
+                if (entity.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
                 {
                     model.Msg = 4;
                     return View(model);
@@ -351,9 +368,14 @@ namespace Universal.Web.Controllers
             }
             else
             {
-                //默认
-                //model.approve_user_id = WorkContext.UserInfo.ID;
-                //model.approve_user_name = WorkContext.UserInfo.NickName;
+                //默认审核用户
+                string nick_name = "";
+                int user_id = BLL.BLLCusUser.GetDefaultApproveUser(out nick_name);
+                if (user_id != 0)
+                {
+                    model.approve_user_id = user_id;
+                    model.approve_user_name = nick_name;
+                }
             }
             return View(model);
         }
@@ -365,7 +387,7 @@ namespace Universal.Web.Controllers
             int app_id = TypeHelper.ObjectToInt(entity.approve_user_id, 0);
             var isAdd = entity.id == 0 ? true : false;
             LoadFlow();
-            
+
             //判断审核人是否必填
             var requie_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
             ViewData["RequieAPPID"] = requie_approve;
@@ -384,6 +406,17 @@ namespace Universal.Web.Controllers
             if (requie_approve && app_id == 0)
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
+            }
+            if(app_id != 0)
+            {
+                if(app_id == WorkContext.UserInfo.ID)
+                {
+                    entity.Msg = 5;
+                    entity.MsgBox = "不能自己审批自己的项目";
+                    ModelState.AddModelError("title", "不能自己审批自己的项目");
+                }
+
+                entity.approve_user_name = BLL.BLLCusUser.GetNickName(app_id);
             }
 
 
@@ -442,16 +475,21 @@ namespace Universal.Web.Controllers
                     model.CusUserID = WorkContext.UserInfo.ID;
                 }
                 else
-                    model = bll.GetModel(p => p.ID == entity.id);
-
-                //判断有没有权限编辑
-                if (model.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
                 {
-                    entity.Msg = 4;
-                    return View(model);
+                    model = bll.GetModel(p => p.ID == entity.id);
+                    //判断有没有权限编辑
+                    if (model.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
+                    {
+                        entity.Msg = 4;
+                        return View(entity);
+                    }
                 }
 
                 model.ApproveUserID = entity.approve_user_id;
+
+                //设置默认审核用户
+                if (app_id != 0)
+                    BLL.BLLCusUser.SetDefaultApproveUser(app_id);
 
                 if (entity.flow_id == 0)
                     model.FlowID = null;
@@ -494,12 +532,12 @@ namespace Universal.Web.Controllers
                 if (isAdd)
                     BLL.BLLProject.Add(model, final_user_ids, out msg);
                 else
-                    BLL.BLLProject.Modify(model, final_user_ids, out msg);
+                    BLL.BLLProject.Modify(model, final_user_ids, WorkContext.UserInfo.ID, out msg);
 
                 if (msg != "")
                 {
-                    entity.Msg = 2;
-                    entity.MsgBox = "保存失败";
+                    entity.Msg = 5;
+                    entity.MsgBox = msg;
                 }
                 else
                 {
@@ -601,20 +639,20 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult APISaveRemark(int project_flow_node_id,string remark)
+        public JsonResult APISaveRemark(int project_flow_node_id, string remark)
         {
             BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
             var entity = bll.GetModel(p => p.ID == project_flow_node_id);
-            if(entity == null)
+            if (entity == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "节点不存在";
-                return Json(WorkContext.AjaxStringEntity,JsonRequestBehavior.AllowGet);
+                return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
             }
             entity.Remark = remark;
             bll.Modify(entity, "Remark");
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
-            return Json(WorkContext.AjaxStringEntity,JsonRequestBehavior.AllowGet);
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -695,7 +733,7 @@ namespace Universal.Web.Controllers
         [HttpGet]
         public JsonResult APISetEnd(int project_flow_node_id)
         {
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetEnd(project_flow_node_id,WorkContext.UserInfo.ID) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetEnd(project_flow_node_id, WorkContext.UserInfo.ID) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
@@ -709,7 +747,7 @@ namespace Universal.Web.Controllers
         public JsonResult APISetStatus(int project_flow_node_id)
         {
             string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetStatus(project_flow_node_id,WorkContext.UserInfo.ID, out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetStatus(project_flow_node_id, WorkContext.UserInfo.ID, out msg) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
@@ -723,7 +761,7 @@ namespace Universal.Web.Controllers
         public JsonResult APISetSelect(int project_flow_node_id)
         {
             string msg = "";
-            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetSelect(project_flow_node_id,WorkContext.UserInfo.ID,out msg) ? 1 : 0;
+            WorkContext.AjaxStringEntity.msg = BLL.BLLProjectFlowNode.SetSelect(project_flow_node_id, WorkContext.UserInfo.ID, out msg) ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }

@@ -352,18 +352,19 @@ namespace Universal.Web.Controllers
                 model.location = entity.Location;
                 model.id = ids;
                 model.is_factor = entity.IsFactor;
+                model.contacts_user = entity.ContactsUsers;
                 model.category_id = entity.NodeCategoryID;
-                System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
-                foreach (var item in entity.NodeUsers)
-                {
-                    str_ids.Append(item.ID.ToString() + ",");
-                    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
-                }
-                if (str_ids.Length > 0)
-                {
-                    str_ids = str_ids.Remove(str_ids.Length - 1, 1);
-                }
-                model.user_ids = str_ids.ToString();
+                //System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                //foreach (var item in entity.NodeUsers)
+                //{
+                //    str_ids.Append(item.ID.ToString() + ",");
+                //    model.users_entity.Add(new Models.ViewModelDocumentCategory(item.CusUser.ID, item.CusUser.NickName));
+                //}
+                //if (str_ids.Length > 0)
+                //{
+                //    str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                //}
+                //model.user_ids = str_ids.ToString();
 
                 model.BuildViewModelListFile(entity.NodeFiles.ToList());
             }

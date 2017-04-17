@@ -513,7 +513,7 @@ namespace Universal.Web.Controllers.api
             }
             entity.ProjectFiles = file_list_entity;
             string msg = "";
-            int result = BLL.BLLProject.Modify(entity, final_user_ids, out msg);
+            int result = BLL.BLLProject.Modify(entity, final_user_ids,req.user_id, out msg);
 
             WorkContext.AjaxStringEntity.msg = result > 0 ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;

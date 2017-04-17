@@ -20,8 +20,8 @@
         <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
         <b class="f20">项目详情</b>
         <span class="fr">
-            <a href="javascript:;" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
-            <a href="javascript:;" title="删除"><i class="i-barrel"></i><span>删除项目</span></a>
+            <a href="javascript:;" onclick="importProject(@Model.ID)" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
+            <a href="javascript:;" onclick="delProject(@Model.ID)" title="删除"><i class="i-barrel"></i><span>删除项目</span></a>
         </span>
     </div>
     <ul class="new-tab mb-40 clearfix">

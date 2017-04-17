@@ -96,6 +96,36 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 设置默认的审核用户Cookie
+        /// </summary>
+        public static void SetDefaultApproveUser(int user_id)
+        {
+            var entity = GetSimpleModel(user_id);
+            if (entity == null)
+                return;
+
+            WebHelper.SetCookie(CookieKey.Default_Approve_User, user_id.ToString());
+        }
+
+        /// <summary>
+        /// 获取默认的审核用户Cookie
+        /// </summary>
+        /// <param name="nick_name"></param>
+        /// <returns></returns>
+        public static int GetDefaultApproveUser(out string nick_name)
+        {
+            nick_name = "";
+            int user_id = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Default_Approve_User),-1);
+            if(user_id == -1)
+                return 0;
+            var entity = GetSimpleModel(user_id);
+            if (entity == null)
+                return 0;
+            nick_name = entity.NickName;
+            return user_id;
+        }
+
+        /// <summary>
         /// 添加/修改用户
         /// </summary>
         /// <param name="entity"></param>
@@ -145,6 +175,32 @@ namespace Universal.BLL
             Entity.CusUser entity = db.CusUsers.Include(p => p.CusUserRoute.Select(s => s.CusRoute)).Include(p => p.CusDepartment).Include(p => p.CusUserJob).Where(p => p.ID == user_id).AsNoTracking().FirstOrDefault();
             db.Dispose();
             return entity;
+        }
+
+        /// <summary>
+        /// 获取用户简单的信息，不包含include
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static Entity.CusUser GetSimpleModel(int user_id)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.CusUsers.Where(p => p.ID == user_id).AsNoTracking().FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// 获取用户昵称
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static string GetNickName(int user_id)
+        {
+            var entity = GetSimpleModel(user_id);
+            if (entity == null)
+                return "";
+            return entity.NickName;
         }
 
         /// <summary>

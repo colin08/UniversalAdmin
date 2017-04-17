@@ -67,11 +67,15 @@
                                 <td>@item.CusUser.NickName</td>
                                 <td>@item.LastUpdateTime.ToString("yy-MM-dd HH:mm")</td>
                                 <td id="doc_@item.ID">
-                                <a href="/share/doc?id=@item.ID &b=1" target="_blank"><i class="i-share"></i></a>
+                                <a href="/share/doc?id=@item.ID&b=1" target="_blank"><i class="i-share"></i></a>
                                 <a href="javascript:;" onclick="fav(@item.ID)">
                                 <i id="i_fav_@item.ID" class="@item.FavIcon" style="margin:0"></i></a>
                                 
-                                @foreach (var file in item.FileList.ToList())
+                                @{ 
+                                    var str_json = Newtonsoft.Json.JsonConvert.SerializeObject(item.FileList.ToList());
+                                }
+
+                                @*@foreach (var file in item.FileList.ToList())
                                 {
                                 
                                 	<script>addDownUrl({id:@item.ID,FileName:'@file.FileName',FileSize:'@file.FileSize',FilePath:'@file.FilePath'})</script>
@@ -79,7 +83,7 @@
                                     //附件名：@file.FileName
                                     //下载地址：@file.FilePath
                                   
-                                }
+                                }*@
                                 </td>
                             </tr>
                         }
@@ -155,16 +159,12 @@
                             //node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
                             node_link="/Project/FlowInfo?id="+item.ID;
                         }
-						var user_name = "暂无";
-                        if (item.LastUpdateUserName != null)
-                        {
-                            user_name = item.LastUpdateUserName;
-                        }
+
                         dataHtml += "<tr>";
                         dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "&b=1\">" + CutString(item.Title, 10) + "</a></td>";
                         dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
                         dataHtml += "<td><a href='" + node_link + "'>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</a></td>";
-                        dataHtml += "<td>" + user_name + "</td>";
+                        dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
                         dataHtml += "<td style=\"text-align:center\"><a href=\"javascript:;\" onclick='fav_pro(" + item.ID + ")'><i id=\"i_project_" + item.ID + "\" class=\"" + item.FavIcon + "\"></i></a></td>";
                         dataHtml += "</tr>";

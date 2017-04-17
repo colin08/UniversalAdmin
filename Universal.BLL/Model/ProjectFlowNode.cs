@@ -30,6 +30,7 @@ namespace Universal.BLL.Model
     [Serializable]
     public class ProjectFlowNode
     {
+
         /// <summary>
         /// 当前流程节点在数据库保存的值
         /// </summary>

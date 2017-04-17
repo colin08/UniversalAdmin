@@ -22,14 +22,7 @@ namespace Universal.Web.Controllers
             model.gender = WorkContext.UserInfo.Gender;
             model.nick_name = WorkContext.UserInfo.NickName;
             model.short_num = WorkContext.UserInfo.ShorNum;
-            DateTime dt = DateTime.Now;
-            if (WorkContext.UserInfo.Brithday != null)
-            {
-                dt = TypeHelper.ObjectToDateTime(WorkContext.UserInfo.Brithday);
-                model.year = dt.Year.ToString();
-                model.month = dt.Month.ToString();
-                model.day = dt.Day.ToString();
-            }
+            model.brithday = WorkContext.UserInfo.Brithday;
 
 
             return View(model);
@@ -41,26 +34,18 @@ namespace Universal.Web.Controllers
         {
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
 
-            if (string.IsNullOrWhiteSpace(req.year) || string.IsNullOrWhiteSpace(req.month) || string.IsNullOrWhiteSpace(req.day))
-            {
-                ModelState.AddModelError("year", "请填写完整");
-            }
-
+           
             if (ModelState.IsValid)
             {
                 var model = bll.GetModel(p => p.ID == WorkContext.UserInfo.ID);
                 model.AboutMe = req.about_me;
                 model.Gender = req.gender;
-                model.NickName = req.nick_name;
                 model.ShorNum = req.short_num;
-                if (!string.IsNullOrWhiteSpace(req.year) && !string.IsNullOrWhiteSpace(req.month) && !string.IsNullOrWhiteSpace(req.day))
-                    model.Brithday = TypeHelper.ObjectToDateTime(req.year + "/" + req.month + "/" + req.day);
-                else
-                    model.Brithday = null;
-                bll.Modify(model, "AboutMe", "Gender", "NickName", "ShorNum", "Brithday");
+                model.Brithday = req.brithday;
+                bll.Modify(model, "AboutMe", "Gender", "ShorNum", "Brithday");
                 BLL.BLLCusUser.ModifySession(BLL.BLLCusUser.GetModel(WorkContext.UserInfo.ID));
 
-
+                req.nick_name = model.NickName;
                 req.State = true;
             }
 

@@ -13,8 +13,9 @@ namespace Universal.Web.Models
     {
         public ViewModelNode()
         {
-            this.user_ids = "";
-            this.users_entity = new List<ViewModelDocumentCategory>();
+            contacts_user = "";
+            //this.user_ids = "";
+            //this.users_entity = new List<ViewModelDocumentCategory>();
             this.file_list = new List<ViewModelListFile>();
         }
 
@@ -49,7 +50,13 @@ namespace Universal.Web.Models
         /// <summary>
         /// 参与用户
         /// </summary>
-        public string user_ids { get; set; }
+        [MaxLength(500,ErrorMessage ="不能超过500个字符")]
+        public string contacts_user { get; set; }
+
+        /// <summary>
+        /// 参与用户
+        /// </summary>
+        //public string user_ids { get; set; }
 
         /// <summary>
         /// 文件
@@ -60,7 +67,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 参与用户信息
         /// </summary>
-        public List<ViewModelDocumentCategory> users_entity { get; set; }
+        //public List<ViewModelDocumentCategory> users_entity { get; set; }
 
         /// <summary>
         /// 附件信息

@@ -183,7 +183,7 @@ namespace Universal.DataCore
         /// <summary>
         /// 节点联系人
         /// </summary>
-        public DbSet<Entity.NodeUser> NodeUsers { get; set; }
+        //public DbSet<Entity.NodeUser> NodeUsers { get; set; }
 
         /// <summary>
         /// 流程
