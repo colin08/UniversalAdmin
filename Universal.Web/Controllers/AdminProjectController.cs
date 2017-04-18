@@ -22,10 +22,10 @@ namespace Universal.Web.Controllers
 
         public void LoadNodes()
         {
-            BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
-            List<Entity.Node> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
+            BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
+            List<Entity.NodeCategory> list = bll.GetListBy(0, new List<BLL.FilterSearch>(), "ID ASC", true);
 
-            ViewData["NodeList"] = list;
+            ViewData["NodeCategoryList"] = list;
         }
     }
 }
