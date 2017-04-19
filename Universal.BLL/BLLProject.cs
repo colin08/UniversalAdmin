@@ -120,7 +120,12 @@ namespace Universal.BLL
                 }
             }
             else
+            {
                 entity.ApproveUserID = null;
+                //没有审核用户，那他就直接审核通过
+                entity.ApproveStatus = Entity.ApproveStatusType.yes;
+                entity.ApproveRemark = "无审核用户，直接通过";
+            }
 
 
             var db = new DataCore.EFDBContext();
@@ -248,7 +253,12 @@ namespace Universal.BLL
             }
 
             if (app_id == 0)
+            {
                 entity.ApproveUserID = null;
+                //没有审核用户，那他就直接审核通过
+                entity.ApproveStatus = Entity.ApproveStatusType.yes;
+                entity.ApproveRemark = "无审核用户，直接通过";
+            }
             else
                 entity.ApproveUserID = app_id;
             entity.SetApproveStatus();
@@ -511,7 +521,10 @@ namespace Universal.BLL
             {
                 //权限
                 if (!is_admin)
-                    auth_where += " and (See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0)";
+                {
+                    auth_where += " and (ApproveStatus =1 or CusUserID = "+user_id.ToString()+") and (See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0)";
+
+                }
             }
 
             //筛选时间
@@ -574,35 +587,56 @@ namespace Universal.BLL
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.ProjectFlowNodeDoing();
                 var entity_action_user = new Entity.CusUser();
-                if (db.Database.SqlQuery<int>("select count(1) from ProjectFlowNode where ProjectID = " + item.ID + " and IsEnd = 0").ToList()[0] > 0)
-                {
-                    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
-                    if (entity_node == null)
-                    {
-                        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and IsFrist =1 order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
-                    }
-                }
-                else
+                var flow_list =BLL.BLLProjectFlowNode.GetProjectFlow(item.ID);
+                if(flow_list.Count == 0)
                 {
                     entity_node.flow_node_id = -1;
                     entity_node.node_title = "全部节点已完成";
                     entity_node.flow_node_remark = "";
-                }
-                if (entity_node == null)
-                {
-                    entity_node = new Entity.ProjectFlowNodeDoing();
-                    entity_node.flow_node_id = -1;
-                    entity_node.node_title = "无节点";
-                    entity_node.flow_node_remark = "无备注";
-                }
-                if (entity_node.edit_id != 0)
-                {
-                    entity_action_user = db.CusUsers.Where(p => p.ID == entity_node.edit_id).AsNoTracking().FirstOrDefault();
-                }
-                if (entity_action_user.ID == 0)
-                {
+
                     entity_action_user.NickName = "";
                 }
+                else
+                {
+                    var temp_entity = flow_list[flow_list.Count -1];
+                    entity_node.edit_id = temp_entity.user_id;
+                    entity_node.flow_node_id = temp_entity.project_flow_node_id;
+                    entity_node.flow_node_remark = temp_entity.remark;
+                    entity_node.node_title = temp_entity.node_title;
+                    //设置用户
+                    entity_action_user.ID = temp_entity.user_id;
+                    entity_action_user.NickName = temp_entity.user_name;
+                }
+                //if (db.Database.SqlQuery<int>("select count(1) from ProjectFlowNode where ProjectID = " + item.ID + " and IsEnd = 0").ToList()[0] > 0)
+                //{
+                //    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                //    if (entity_node == null)
+                //    {
+                //        entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and IsFrist =1 order by[EndTime] ASC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
+                //    }
+                //}
+                //else
+                //{
+                //    entity_node.flow_node_id = -1;
+                //    entity_node.node_title = "全部节点已完成";
+                //    entity_node.flow_node_remark = "";
+                //}
+                //if (entity_node == null)
+                //{
+                //    entity_node = new Entity.ProjectFlowNodeDoing();
+                //    entity_node.flow_node_id = -1;
+                //    entity_node.node_title = "无节点";
+                //    entity_node.flow_node_remark = "无备注";
+                //}
+                //if (entity_node.edit_id != 0)
+                //{
+                //    entity_action_user = new Entity.CusUser();// db.CusUsers.Where(p => p.ID == entity_node.edit_id).AsNoTracking().FirstOrDefault();
+                    
+                //}
+                //if (entity_action_user.ID == 0)
+                //{
+                //    entity_action_user.NickName = "";
+                //}
                 item.CusUser = entity_action_user;
                 item.ProjectFlowNodeDoing = entity_node;
 

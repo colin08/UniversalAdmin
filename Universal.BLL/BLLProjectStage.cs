@@ -55,7 +55,11 @@ namespace Universal.BLL
             db.ProjectStageFiles.Where(p => p.ProjectStageID == entity.ID).ToList().ForEach(p => db.ProjectStageFiles.Remove(p));
 
             entity.Title = model.title;
-            entity.BeginTime = Tools.TypeHelper.ObjectToDateTime(model.begin_time);
+            //entity.BeginTime = string.IsNullOrWhiteSpace(model.begin_time) ? null ? typehe;
+            if (string.IsNullOrWhiteSpace(model.begin_time))
+                entity.BeginTime = null;
+            else
+                entity.BeginTime = Tools.TypeHelper.ObjectToDateTime(model.begin_time);
             entity.ChaiBuChangjinE = model.ChaiBuChangjinE;
             entity.ChaiBuChangMianJi = model.ChaiBuChangMianJi;
             entity.ChaiJianZhuMianJi = model.ChaiJianZhuMianJi;
@@ -128,7 +132,7 @@ namespace Universal.BLL
             Model.ProjectStage model = new Model.ProjectStage();
             model.stage_id = entity.ID;
             model.title = entity.Title;
-            model.begin_time = entity.BeginTime.ToString("yyyy-MM-dd");
+            model.begin_time = entity.BeginTime == null ? "" : Tools.TypeHelper.ObjectToDateTime(entity.BeginTime).ToString("yyyy-MM-dd");
             model.ChaiBuChangjinE = entity.ChaiBuChangjinE;
             model.ChaiBuChangMianJi = entity.ChaiBuChangMianJi;
             model.ChaiJianZhuMianJi = entity.ChaiJianZhuMianJi;
@@ -179,7 +183,10 @@ namespace Universal.BLL
             entity.ProjectID = project_id;
             entity.ID = model.stage_id;
             entity.Title = model.title;
-            entity.BeginTime = Tools.TypeHelper.ObjectToDateTime(model.begin_time);
+            if (string.IsNullOrWhiteSpace(model.begin_time))
+                entity.BeginTime = null;
+            else
+                entity.BeginTime = Tools.TypeHelper.ObjectToDateTime(model.begin_time);
             entity.ChaiBuChangjinE = model.ChaiBuChangjinE;
             entity.ChaiBuChangMianJi = model.ChaiBuChangMianJi;
             entity.ChaiJianZhuMianJi = model.ChaiJianZhuMianJi;

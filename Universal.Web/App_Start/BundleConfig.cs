@@ -35,7 +35,7 @@ namespace Universal.Web
 
             bundles.Add(new ScriptBundle("~/bundles/layer").Include(
                       "~/Assets/js/plugins/layer/layer.min.js"));
-
+            
             bundles.Add(new ScriptBundle("~/bundles/laypage").Include(
                       "~/Assets/js/plugins/layer/laypage/laypage.js"));
 

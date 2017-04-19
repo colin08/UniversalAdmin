@@ -138,7 +138,11 @@
 	                     		showDownDialog(this,item.FileList);
 	                     	});
                      	}
-                     	$('<a><i class="i-look"></i></a>').appendTo(div).attr('href','/Shool/Modify?id='+this.ID);
+                     	if(item.CanEdit)
+                     	{
+                     	    $('<a><i class="i-edt"></i></a>').appendTo(div).attr('href','/Shool/Modify?id='+this.ID);
+                     	}
+                     	$('<a><i class="i-look"></i></a>').appendTo(div).attr('href','/Shool/Info?id='+this.ID+'&b=1');
                      	$('<a href="javascript:;" onclick="fav('+item.ID+')" class="afav"><i class="'+item.FavIcon+'"></i></a>').appendTo(div).click(function(){
                      		fav(item.ID);
                      	});

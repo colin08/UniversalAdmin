@@ -116,7 +116,7 @@ namespace Universal.BLL
         /// 项目更新提醒 项目【{0}】被更新了
         /// </summary>
         public static readonly string ProjectUpdate = "项目【{0}】被更新了";
-        
+
     }
 
 
@@ -150,8 +150,11 @@ namespace Universal.BLL
                 }
                 db.SaveChanges();
                 string ids = string.Join(",", user_list.ToArray());
-                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
-                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
+                if (ids.Length > 0)
+                {
+                    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
+                }
             }
         }
 
@@ -168,7 +171,7 @@ namespace Universal.BLL
                 if (entity_doc == null)
                     return;
                 List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from CusUserDocFavorites where DocPostID = " + doc_id.ToString()).ToList();
-                string content= string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
+                string content = string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
                 foreach (var item in user_list)
                 {
                     Entity.CusUserMessage entity = new Entity.CusUserMessage();
@@ -180,8 +183,12 @@ namespace Universal.BLL
                 }
                 db.SaveChanges();
                 string ids = string.Join(",", user_list.ToArray());
-                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
-                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
+                if (ids.Length > 0)
+                {
+                    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
+
+                }
             }
         }
 
@@ -220,7 +227,7 @@ namespace Universal.BLL
         /// <param name="content"></param>
         /// <param name="link_id"></param>
         /// <returns></returns>
-        public static void PushSomeUser(string user_ids,Entity.CusUserMessageType type, string content, int link_id)
+        public static void PushSomeUser(string user_ids, Entity.CusUserMessageType type, string content, int link_id)
         {
             using (var db = new DataCore.EFDBContext())
             {
@@ -255,7 +262,7 @@ namespace Universal.BLL
         {
             BLL.BaseBLL<Entity.CusUser> bll_user = new BaseBLL<Entity.CusUser>();
             var entity_user = bll_user.GetModel(p => p.ID == user_id);
-            if (entity_user ==null)
+            if (entity_user == null)
                 return false;
             BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BaseBLL<Entity.CusUserMessage>();
             Entity.CusUserMessage entity = new Entity.CusUserMessage();
@@ -267,6 +274,6 @@ namespace Universal.BLL
             Tools.JPush.PushALl(entity_user.Telphone, content, (int)type, link_id.ToString());
             return entity.ID > 0;
         }
-        
+
     }
 }

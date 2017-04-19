@@ -50,6 +50,8 @@ namespace Universal.Web.Controllers
 
                 item.YiTxt = yi_txt;
                 item.ErTxt = er_txt;
+                if (!BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)||item.CusUserID == WorkContext.UserInfo.ID)
+                    item.CanEdit = true;
             }
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
@@ -82,6 +84,67 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
 
+        }
+
+        /// <summary>
+        /// 详情
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Info(int id, int b)
+        {
+            switch (b)
+            {
+                case 1:
+                    ViewData["BackUrl"] = "/Shool/index";
+                    break;
+                default:
+                    ViewData["BackUrl"] = "/Document/index";
+                    break;
+            }
+            Models.ViewModelDocument model = new Models.ViewModelDocument();
+            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
+            Entity.DocPost entity = bll.GetModel(p => p.ID == id, p => p.FileList);
+            if (entity != null)
+            {
+                model.category_id = entity.DocCategoryID;
+                model.category_name = "";
+                model.title = entity.Title;
+                model.content = entity.Content;
+                model.id = entity.ID;
+                model.post_see = entity.See;
+                System.Text.StringBuilder str_ids = new System.Text.StringBuilder();
+                switch (entity.See)
+                {
+                    case Entity.DocPostSee.everyone:
+                        break;
+                    case Entity.DocPostSee.department:
+                        foreach (var item in BLL.BLLDepartment.GetListByIds(entity.TOID))
+                        {
+                            str_ids.Append(item.ID.ToString() + ",");
+                            model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.Title));
+                        }
+                        break;
+                    case Entity.DocPostSee.user:
+                        foreach (var item in BLL.BLLCusUser.GetListByIds(entity.TOID))
+                        {
+                            str_ids.Append(item.ID.ToString() + ",");
+                            model.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (str_ids.Length > 0)
+                {
+                    str_ids = str_ids.Remove(str_ids.Length - 1, 1);
+                }
+                model.see_ids = str_ids.ToString();
+
+                model.BuildViewModelListFile(entity.FileList.ToList());
+            }
+            else
+                return Content("数据不存在或已被删除");
+            return View(model);
         }
 
         /// <summary>

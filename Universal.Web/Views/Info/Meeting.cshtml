@@ -133,6 +133,7 @@
 @section foot
 {
     <script type="text/javascript">
+        var msg_id = @ViewData["msg_id"];
         function joinme() {
             $.ajax({
                 type: "post",
@@ -147,6 +148,10 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
+                        if(msg_id != 0)
+                        {
+                            $.post("/Info/SetTaskDone",{"id":msg_id},function(result){});
+                        }
                         alert("参会成功");
                         window.location.reload();
                     }

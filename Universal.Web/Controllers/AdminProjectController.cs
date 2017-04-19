@@ -16,6 +16,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             LoadNodes();
             return View();
         }

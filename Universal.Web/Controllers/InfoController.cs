@@ -26,7 +26,7 @@ namespace Universal.Web.Controllers
         /// <param name="id">to id</param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult AppUpdate(int id,int? msg)
+        public ActionResult AppUpdate(int id, int? msg)
         {
             BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
             var entity = bll.GetModel(p => p.ID == id);
@@ -56,7 +56,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Notice(int id,int? msg)
+        public ActionResult Notice(int id, int? msg)
         {
             BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
             var entity = bll.GetModel(p => p.ID == id, p => p.CusUser);
@@ -74,7 +74,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult FileShare(int id,int? msg)
+        public ActionResult FileShare(int id, int? msg)
         {
             //TODO 详情展示-文件分享
             return View();
@@ -86,7 +86,7 @@ namespace Universal.Web.Controllers
         /// <param name="id"></param>
         /// <param name="msg">消息ID</param>
         /// <returns></returns>
-        public ActionResult Project(int id,int? msg)
+        public ActionResult Project(int id, int? msg)
         {
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
             var entity = bll.GetModel(p => p.ID == id, p => p.ApproveUser);
@@ -99,23 +99,28 @@ namespace Universal.Web.Controllers
 
             ViewData["ShowApprove"] = 0;
             //如果是项目添加者，则只显示项目审批状态
-            if(entity.CusUserID == WorkContext.UserInfo.ID)
+            if (entity.CusUserID == WorkContext.UserInfo.ID)
             {
                 ViewData["ShowApprove"] = 1;
             }
-            else if(entity.ApproveUserID == WorkContext.UserInfo.ID)
+            else if (entity.ApproveUserID == WorkContext.UserInfo.ID)
             {
                 //如果是审批人，则显示审批按钮和文本框
                 ViewData["ShowApprove"] = 2;
             }
             else
             {
-                
+
             }
+
+            if (msg != null)
+                ViewData["msg_id"] = msg;
+            else
+                ViewData["msg_id"] = 0;
 
             return View(entity);
         }
-        
+
         /// <summary>
         /// 任务
         /// </summary>
@@ -134,7 +139,7 @@ namespace Universal.Web.Controllers
                 return View("NotFound");
             }
             SetMsgRead(msg);
-            if(msg== null)
+            if (msg == null)
             {
                 ViewData["tabLeft"] = "workjob";
                 ViewData["BackUrl"] = "/WorkJob/Index";
@@ -147,6 +152,12 @@ namespace Universal.Web.Controllers
                 if (item.CusUserID == WorkContext.UserInfo.ID && !item.IsConfirm)
                     ViewData["CanJoin"] = 1;
             }
+
+            if (msg != null)
+                ViewData["msg_id"] = msg;
+            else
+                ViewData["msg_id"] = 0;
+
             return View(entity);
         }
 
@@ -167,13 +178,13 @@ namespace Universal.Web.Controllers
                 return View("NotFound");
 
             Entity.CusUser approver_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == entity.ApproveUserID);
-            if(approver_user == null)
+            if (approver_user == null)
             {
                 return View("审核人员不存在");
             }
 
             ViewData["ApproveUser"] = approver_user.NickName;
-;
+            ;
             ViewData["IsDepartmentAdmin"] = approver_user.ID == WorkContext.UserInfo.ID;
 
             SetMsgRead(msg);
@@ -184,9 +195,15 @@ namespace Universal.Web.Controllers
                 ViewData["tabLeft"] = "gzjh";
                 ViewData["BackUrl"] = "/WorkPlan/Approve";
             }
+
+            if (msg != null)
+                ViewData["msg_id"] = msg;
+            else
+                ViewData["msg_id"] = 0;
+
             return View(entity);
         }
-        
+
         /// <summary>
         /// 流程
         /// </summary>
@@ -215,7 +232,7 @@ namespace Universal.Web.Controllers
                 return View("NotFound");
             }
             SetMsgRead(msg);
-            if(msg ==null)
+            if (msg == null)
             {
                 ViewData["BackTitle"] = "秘籍收藏列表";
                 ViewData["tabLeft"] = "file";
@@ -229,9 +246,9 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Doc(int id,string b)
+        public ActionResult Doc(int id, string b)
         {
-            switch (TypeHelper.ObjectToInt(b,0))
+            switch (TypeHelper.ObjectToInt(b, 0))
             {
                 case 1:
                     ViewData["BackUrl"] = "/";
@@ -280,6 +297,10 @@ namespace Universal.Web.Controllers
                 if (item.CusUserID == WorkContext.UserInfo.ID && item.IsConfirm)
                     ViewData["CanJoin"] = 1;
             }
+            if (msg != null)
+                ViewData["msg_id"] = msg;
+            else
+                ViewData["msg_id"] = 0;
             return View(entity);
         }
 
@@ -289,22 +310,52 @@ namespace Universal.Web.Controllers
         /// </summary>
         private void SetMsgRead(int? msg_id)
         {
-            if(msg_id != null)
+            if (msg_id != null)
             {
+                List<Entity.CusUserMessageType> msg_type = new List<Entity.CusUserMessageType>();
+                msg_type.Add(Entity.CusUserMessageType.appproveok);
+                msg_type.Add(Entity.CusUserMessageType.appproveno);
+                msg_type.Add(Entity.CusUserMessageType.confrimjoinmeeting);
+                msg_type.Add(Entity.CusUserMessageType.meetingcancel);
+                msg_type.Add(Entity.CusUserMessageType.meetingchangedate);
+                msg_type.Add(Entity.CusUserMessageType.planapproveok);
+
                 int id = TypeHelper.ObjectToInt(msg_id);
                 BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BLL.BaseBLL<Entity.CusUserMessage>();
                 var entity_msg = bll_msg.GetModel(p => p.ID == id && p.CusUserID == WorkContext.UserInfo.ID);
                 if (entity_msg != null)
                 {
                     if (!entity_msg.IsRead)
-                    {
                         entity_msg.IsRead = true;
-                        bll_msg.Modify(entity_msg, "IsRead");
-                    }
+
+                    //如果包含，则直接置为已完成
+                    if (msg_type.Contains(entity_msg.Type))
+                        entity_msg.IsDone = true;
+
+                    bll_msg.Modify(entity_msg, "IsRead", "IsDone");
                 }
 
                 GetMessage();
             }
+        }
+
+        /// <summary>
+        /// 设置待办完成
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SetTaskDone(int id)
+        {
+            BLL.BaseBLL<Entity.CusUserMessage> bll_msg = new BLL.BaseBLL<Entity.CusUserMessage>();
+            var entity_msg = bll_msg.GetModel(p => p.ID == id && p.CusUserID == WorkContext.UserInfo.ID);
+            if (entity_msg != null)
+            {
+                entity_msg.IsDone = true;
+                bll_msg.Modify(entity_msg, "IsDone");
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
         }
 
     }

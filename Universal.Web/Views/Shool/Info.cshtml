@@ -1,0 +1,104 @@
+﻿@model Universal.Web.Models.ViewModelDocument
+@{
+    ViewBag.Title = "查看秘籍信息";
+    ViewData["tabTop"] = "school";
+    ViewData["tabLeft"] = "index";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+<div class="wapper">
+    @Html.Partial("_ShoolMenuLeft", this.ViewData)
+
+    <div class="rightBox">
+        <div class="container">
+            <div class="new-head mb-40 clearfix">
+                <a href="@ViewData["BackUrl"]" class="fl f16 go-prev"><i class="i-back"></i><span>秘籍列表</span></a>
+                <b class="f20">查看秘籍</b>
+            </div>
+            
+            <div class="userInfo sysIn">
+                <ul>
+                    <li>
+                        <div class="lilt">秘籍标题</div>
+                        <div class="limd">
+                            <span>@Model.title</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">所属分类</div>
+                        <div class="limd">
+                            <span>@Model.category_name</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">附件</div>
+                        <div class="limd">
+                            <ul>
+                                @foreach (var item in Model.file_list)
+                                {
+                                    <li><span>@item.file_name &nbsp; @item.file_size</span>&nbsp;&nbsp;&nbsp;<a href="/Tools/Down?path=@item.file_path&name=@item.file_name" target="_blank">下载</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">谁可以看</div>
+                        <div class="limd">
+                            @if(Model.post_see == Universal.Entity.DocPostSee.everyone)
+                            {
+                                <span>所有人</span>
+                            }else
+                            {
+                                <ul>
+                                    @foreach (var item in Model.see_entity)
+                                    {
+                                        <li><span>@item.title</span></li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">内容</div>
+                        <div class="limd">
+                            <span style="width:100%; max-height:500px; overflow:auto;">@Html.Raw(Model.content)</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    <li>
+                        <div class="lilt">&nbsp;</div>
+                        <div class="limd">
+                            <button type="button" onclick="location.href = '@ViewData["BackUrl"]';" class="btn1 grey">返回</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+    </div>
+
+</div>
+
+<!--底部脚本-->
+@section foot
+{
+    <script type="text/javascript">
+
+        
+
+    </script>
+
+}
+<!--底部脚本 end-->

@@ -19,6 +19,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            ViewData["IsAdmin"] =!(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             LoadNodeCategory();
             return View();
         }
@@ -74,6 +75,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
+            if((BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限删除项目";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -121,6 +127,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult BasicInfo(int id, string b)
         {
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             if (TypeHelper.ObjectToInt(b, 0) != 0)
                 ViewData["BackUrl"] = "/";
             else
@@ -174,6 +181,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Info(int id)
         {
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             if (id <= 0)
                 return Content("项目不存在");
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
@@ -190,13 +198,19 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult FlowInfo(int id)
         {
+            //是否可以编辑节点
+            ViewData["can_edit"] = false;
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             if (id <= 0)
                 return Content("项目不存在");
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
-            var entity = bll.GetModel(p => p.ID == id);
+            var entity = bll.GetModel(p => p.ID == id, p => p.ProjectUsers);
             if (entity == null)
                 return Content("项目不存在");
             ViewData["project_id"] = id;
+            if(entity.ProjectUsers.ToList().Any(p=>p.CusUserID == WorkContext.UserInfo.ID))
+                ViewData["can_edit"] = true;
+
             return View(entity);
         }
 
@@ -250,6 +264,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult StageInfo(int id)
         {
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             if (id <= 0)
                 return Content("项目不存在");
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();

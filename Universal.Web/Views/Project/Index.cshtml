@@ -95,8 +95,10 @@
 @section foot
 {
 @Scripts.Render("~/bundles/laypage")
+@Scripts.Render("~/bundles/layer")
 <script type="text/javascript" src="/assets/pickmeup/pickmeup.min.js"></script>
     <script type="text/javascript">
+        var is_admin = @ViewData["IsAdmin"].ToString().ToLower();
             $(document).ready(function (e) {
                 pageData(1);
             });
@@ -115,8 +117,8 @@
                         end_time = $("#hid_end").val();
                     }
                 }
-                console.log("---be:" + begin_time);
-                console.log("---end:" + end_time);
+                //console.log("---be:" + begin_time);
+                //console.log("---end:" + end_time);
                 $.ajax({
                     type: "post",
                     url: "/Project/PageData",
@@ -142,13 +144,18 @@
                             if (item.ProjectFlowNodeDoing.flow_node_id != -1) {
                                 node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
                             }
+                            var del_str = "";
+                            if(is_admin)
+                            {
+                                del_str="<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a>";
+                            }
                             dataHtml += "<tr>";
                             dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
                             dataHtml += "<td><a href='/Project/FlowInfo?id=" + item.ID + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
-                            dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 16) + "</td>";
+                            dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 55) + "</td>";
                             dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a>"+del_str+"</div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {
@@ -189,29 +196,33 @@
             }
 
             function del(id) {
-                $.ajax({
-                    type: "post",
-                    url: "/Project/Del",
-                    data: { "id": id },
-                    async: false,
-                    beforeSend: function () {
+                layer.confirm('删除项目后该项目内的备注、文件等资料也会一并删除，确定要删除吗？', { icon: 3 }, function (index) {
+                    layer.close(index);
 
-                    },
-                    complete: function () {
+                    $.ajax({
+                        type: "post",
+                        url: "/Project/Del",
+                        data: { "id": id },
+                        async: false,
+                        beforeSend: function () {
 
-                    },
-                    success: function (data) {
-                        if (data.msg == 1) {
-                            pageData(1);
+                        },
+                        complete: function () {
+
+                        },
+                        success: function (data) {
+                            if (data.msg == 1) {
+                                pageData(1);
+                            }
+                            else {
+                                alert(data.msgbox);
+                            }
+                        },
+                        error: function () {
+                            alert("操作失败，请检查网络");
                         }
-                        else {
-                            alert(data.msgbox);
-                        }
-                    },
-                    error: function () {
-                        alert("操作失败，请检查网络");
-                    }
-                })
+                    })
+                });
             }
 
             function fav(id) {

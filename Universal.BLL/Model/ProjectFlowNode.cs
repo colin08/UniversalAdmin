@@ -57,6 +57,8 @@ namespace Universal.BLL.Model
 
         public string user_name { get; set; }
 
+        public int user_id { get; set; }
+
         public string remark { get; set; }
 
         public string last_update_time { get; set; }

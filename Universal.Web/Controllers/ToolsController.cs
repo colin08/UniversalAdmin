@@ -27,9 +27,32 @@ namespace Universal.Web.Controllers
 
             string io_path = req_path;
             if (req_path.StartsWith("/")) //相对路径
-                io_path = Tools.IOHelper.GetMapPath(req_path);
+                io_path = IOHelper.GetMapPath(req_path);
             if (!System.IO.File.Exists(io_path))
                 return Content("<script>alert('文件不存在');window.history.back();</script>");
+            if (string.IsNullOrWhiteSpace(down_name))
+                down_name = io_path.Substring(io_path.LastIndexOf(@"\") + 1);
+
+            return File(io_path, "application/octet-stream", down_name);
+        }
+
+        /// <summary>
+        /// 附件下载
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Down(string path,string name)
+        {
+            string req_path = path;
+            string down_name = name;//下载的文件名
+            if (string.IsNullOrWhiteSpace(req_path))
+                return Content("不明确的文件");
+
+            string io_path = req_path;
+            if (req_path.StartsWith("/")) //相对路径
+                io_path = IOHelper.GetMapPath(req_path);
+            if (!System.IO.File.Exists(io_path))
+                return Content("文件不存在");
             if (string.IsNullOrWhiteSpace(down_name))
                 down_name = io_path.Substring(io_path.LastIndexOf(@"\") + 1);
 

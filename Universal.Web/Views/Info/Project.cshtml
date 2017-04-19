@@ -115,6 +115,7 @@
 @section foot
 {
     <script type="text/javascript">
+        var msg_id = @ViewData["msg_id"];
         function approve() {
             var remark = $("#txt_app_status_remark").val();
             var ck_val = $("input[name='ra_app_status']:checked").val();
@@ -126,7 +127,7 @@
             $.ajax({
                 type: "post",
                 url: "/Project/DoApprove",
-                data: { "project_id": @Model.ID,"status":1,"remark":remark },
+                data: { "project_id": @Model.ID,"status":ck_val,"remark":remark },
                 async: false,
                 beforeSend: function () {
 
@@ -136,6 +137,10 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
+                        if(msg_id != 0)
+                        {
+                            $.post("/Info/SetTaskDone",{"id":msg_id},function(result){});
+                        }
                         alert("审批成功");
                         window.location.href="/Project/Index";
                         //window.location.reload();

@@ -109,6 +109,7 @@
 @section foot
 {
     <script type="text/javascript">
+        var msg_id = @ViewData["msg_id"];
         function approve() {
             $.ajax({
                 type: "post",
@@ -123,6 +124,10 @@
                 },
                 success: function (data) {
                     if (data.msg == 1) {
+                        if(msg_id != 0)
+                        {
+                            $.post("/Info/SetTaskDone",{"id":msg_id},function(result){});
+                        }
                         alert("审批成功");
                         $("#btn_s").attr({"disabled":"disabled"});
                         $("#btn_s").attr({"style":"background:#ccc"});

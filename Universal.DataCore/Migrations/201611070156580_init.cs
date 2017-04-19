@@ -658,7 +658,7 @@ namespace Universal.DataCore.Migrations
                     begin
 
                     declare @y_data nvarchar(2000) ---x轴数据
-                    declare @x_data nvarchar(100) ----y轴数据
+                    declare @x_data nvarchar(1000) ----y轴数据
                     declare @mianji DECIMAL --临时面积变量
                     set @y_data = ''
                     set @x_data = ''
@@ -666,8 +666,8 @@ namespace Universal.DataCore.Migrations
 
                     Declare @i_mianji int ---循环面积临时表需要用的变量
                     Declare @count_mianji int  ---要循环面积分类的数量
-                    declare @title_mianji nvarchar(300)  ---循环面积的标题
-                    declare @field_mianji nvarchar(50) ---面积查询的字段
+                    declare @title_mianji nvarchar(1000)  ---循环面积的标题
+                    declare @field_mianji nvarchar(1000) ---面积查询的字段
                     declare @mianji_sql nvarchar(2000) ---面积查询的sql
                     set @count_mianji =0
                     set @title_mianji = ''

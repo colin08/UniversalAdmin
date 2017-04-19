@@ -70,20 +70,12 @@
                                 <a href="/share/doc?id=@item.ID&b=1" target="_blank"><i class="i-share"></i></a>
                                 <a href="javascript:;" onclick="fav(@item.ID)">
                                 <i id="i_fav_@item.ID" class="@item.FavIcon" style="margin:0"></i></a>
-                                
-                                @{ 
+                                @{
                                     var str_json = Newtonsoft.Json.JsonConvert.SerializeObject(item.FileList.ToList());
                                 }
-
-                                @*@foreach (var file in item.FileList.ToList())
-                                {
-                                
-                                	<script>addDownUrl({id:@item.ID,FileName:'@file.FileName',FileSize:'@file.FileSize',FilePath:'@file.FilePath'})</script>
-                                    //附件大小：@file.FileSize
-                                    //附件名：@file.FileName
-                                    //下载地址：@file.FilePath
-                                  
-                                }*@
+                                <script>
+                                    addDownUrlJJF('@item.ID',@Html.Raw(str_json));
+                                </script>
                                 </td>
                             </tr>
                         }
@@ -100,7 +92,7 @@
                         @foreach (var item in Model.JobTask)
                         {
                             <li>
-                                <a href="@item.LinkUrl" title="#">
+                                <a href="@item.LinkUrl" title="@item.Content">
                                     <em><i class="i-shareB"></i></em>
                                     <h4>@(Universal.Tools.StringHelper.CutString(item.Content, 14))</h4>
                                     <p>@item.TypeName  @item.AddTime</p>
@@ -132,7 +124,7 @@
         $(document).ready(function (e) {
             pageData();
         });
-	
+
         /*******************列表 end *************************/
         //分页方法
         function pageData() {
@@ -181,7 +173,7 @@
             })
         }
         /*******************列表 end *************************/
-        
+
         function down(linkstr, title) {
             if (linkstr.length > 0) {
                 $.post('/Home/AddDownLog', { "title": title }, function (text, status) { window.open(linkstr) });
@@ -250,7 +242,7 @@
                 }
             })
         }
-    </script>
+                                </script>
 }
 
 <!--底部脚本 end-->

@@ -56,6 +56,7 @@ namespace Universal.BLL
                 model.icon = item.ICON;
                 model.remark = Tools.WebHelper.UrlDecode(item.Remark == null ? "" : item.Remark);
                 model.user_name = item.EditUser.NickName;
+                model.user_id = item.EditUserId;
                 model.piece = item.Piece;
                 model.last_update_time = item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 model.process_to = item.ProcessTo;
@@ -429,6 +430,13 @@ namespace Universal.BLL
                     msg = "节点不存在";
                     return false;
                 }
+
+                if(!db.ProjectUsers.Any(p=>p.CusUserID == user_id && p.ProjectID == entity.ProjectID))
+                {
+                    msg = "没有权限操作该节点";
+                    return false;
+                }
+
                 if (!db.CusUsers.Any(p => p.ID == user_id))
                 {
                     msg = "用户不存在";

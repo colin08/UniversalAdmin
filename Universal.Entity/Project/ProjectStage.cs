@@ -38,7 +38,7 @@ namespace Universal.Entity
         /// <summary>
         /// 拆迁开始时间
         /// </summary>
-        public DateTime BeginTime { get; set; }
+        public DateTime? BeginTime { get; set; }
 
         /// <summary>
         /// 总户数

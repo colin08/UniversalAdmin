@@ -950,7 +950,7 @@ namespace Universal.Web.Controllers.api
             Models.Response.ProjectInfoStage model = new Models.Response.ProjectInfoStage();
             model.stage_id = entity.ID;
             model.title = entity.Title;
-            model.begin_time = entity.BeginTime.ToString("yyyy-MM-dd");
+            model.begin_time = entity.BeginTime;
             model.ChaiBuChangjinE = entity.ChaiBuChangjinE;
             model.ChaiBuChangMianJi = entity.ChaiBuChangMianJi;
             model.ChaiJianZhuMianJi = entity.ChaiJianZhuMianJi;
@@ -987,7 +987,7 @@ namespace Universal.Web.Controllers.api
         private BLL.Model.ProjectStage BuildAddProjectStage(Models.Response.ProjectInfoStage entity)
         {
             BLL.Model.ProjectStage model = new BLL.Model.ProjectStage();
-            model.begin_time = entity.begin_time;
+            model.begin_time = entity.begin_time == null ? "" : Tools.TypeHelper.ObjectToDateTime(entity.begin_time).ToString("yyyy-MM-dd");
             model.ChaiBuChangjinE = entity.ChaiBuChangjinE;
             model.ChaiBuChangMianJi = entity.ChaiBuChangMianJi;
             model.ChaiJianZhuMianJi = entity.ChaiJianZhuMianJi;

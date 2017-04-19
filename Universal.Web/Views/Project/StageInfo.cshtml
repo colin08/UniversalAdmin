@@ -155,6 +155,7 @@ float: left;
 text-align:left;
 color:red;}
 </style>
+@Scripts.Render("~/bundles/layer")
     <script type="text/javascript">
         var project_id = @ViewData["ProjectID"];
         function AddFile()
@@ -348,56 +349,56 @@ color:red;}
 	        	title:{
 	                required:true
 	            },
-	            begin_time:{required:true},
+	        	begin_time:{required:false,dateISO:true},
 	            ZongHuShu:{
-	                required:true,
+	                required:false,
 	                number:true,
 	                min:1
 	            },
 	            YiQYHuShu:{
-	                required:true,
+	                required:false,
 	                number:true,
 	                min:0
 	            },
 	            WeiQYHuShu:{
-	                required:true,
+	                required:false,
 	                number:true,
 	                min:0
 	            },
 	            ZhanDiMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            JiDiMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            KongDiMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            YiQYMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            WeiQYMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            ChaiZhanDiMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            ChaiJianZhuMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            ChaiBuChangMianJi:{
-	                required:true,
+	                required:false,
 	                number:true
 	            },
 	            ChaiBuChangjinE:{
-	                required:true,
+	                required:false,
 	                number:true
 	            }
 	            

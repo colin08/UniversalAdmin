@@ -305,7 +305,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 拆迁开始时间
         /// </summary>
-        public string begin_time { get; set; }
+        public DateTime? begin_time { get; set; }
 
         /// <summary>
         /// 总户数

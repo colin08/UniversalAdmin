@@ -542,6 +542,42 @@ function showSelectBox(data) {
 // {value:2,name:'女'}
 // ]});
 // });
+
+function addDownUrlJJF(itemId, data) {//首页修改下载弹框
+    // <a href="javascript:;" onclick="down('@file.FilePath','@item.Title
+    // @file.FileName')"><i class="i-downL"></i></a>
+    var box = $('#doc_' + itemId);
+    if (box.length < 1) {
+        return;
+    }
+    var a = box.find('.down_url');
+    if (data.length > 0) {
+        down_data[itemId] = [];
+        a = $('<a></a>').appendTo(box)
+		.attr('href', 'javascript:;')
+		.attr('data-id', itemId)
+		.click(function () {
+		    showDownDialogJJF(this, data);
+		});
+        $('<i class="i-downL"></i>').appendTo(a);
+    }
+}
+function showDownDialogJJF(obj, data) {//首页修改下载弹框
+    console.log(JSON.stringify(data));
+    var div = $('<div></div>').addClass('down_dialog');
+    var ul = $('<ul></ul>').appendTo(div);
+    $(data).each(function () {
+        var li = $('<li></li>').appendTo(ul);
+        var down_url = "/Tools/Down?path=" + this.FilePath + "&name=" + this.FileName;
+        var a = $('<a></a>').appendTo(li).attr('href', down_url).attr('target', '_blank');
+        $('<i></i>').appendTo(a);
+        $('<span></span>').appendTo(a).html(this.FileName);
+        $('<label></label>').appendTo(a).html(this.FileSize);
+        $('<span></span>').appendTo(a).html("&nbsp;&nbsp;&nbsp;&nbsp;下载");
+    });
+    showDialog({ title: '下载秘籍', html: div, fix: true });
+}
+
 function addDownUrl(data) {
 	// <a href="javascript:;" onclick="down('@file.FilePath','@item.Title
 	// @file.FileName')"><i class="i-downL"></i></a>
@@ -663,29 +699,33 @@ function accRound(arg, len) { //len 为保留小数点后几位
 
 //删除项目
 function delProject(id) {
-    $.ajax({
-        type: "post",
-        url: "/Project/Del",
-        data: { "id": id },
-        async: false,
-        beforeSend: function () {
+    layer.confirm('删除项目后该项目内的备注、文件等资料也会一并删除，确定要删除吗？', { icon: 3 }, function (index) {
+        layer.close(index);
 
-        },
-        complete: function () {
+        $.ajax({
+            type: "post",
+            url: "/Project/Del",
+            data: { "id": id },
+            async: false,
+            beforeSend: function () {
 
-        },
-        success: function (data) {
-            if (data.msg == 1) {
-                window.location.href = "/Project/Index";
+            },
+            complete: function () {
+
+            },
+            success: function (data) {
+                if (data.msg == 1) {
+                    window.location.href = "/Project/Index";
+                }
+                else {
+                    alert(data.msgbox);
+                }
+            },
+            error: function () {
+                alert("操作失败，请检查网络");
             }
-            else {
-                alert(data.msgbox);
-            }
-        },
-        error: function () {
-            alert("操作失败，请检查网络");
-        }
-    })
+        })
+    });
 }
 
 //导出项目

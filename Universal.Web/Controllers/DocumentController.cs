@@ -146,24 +146,7 @@ namespace Universal.Web.Controllers
             }
             return View(model);
         }
-
-        /// <summary>
-        /// 详情
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Info(int id)
-        {
-            Models.ViewModelDocument model = new Models.ViewModelDocument();
-            BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
-            Entity.DocPost entity = bll.GetModel(p => p.ID == id);
-            if (entity != null)
-            {
-                model.category_id = entity.DocCategoryID;
-                model.title = entity.Title;
-                model.id = entity.ID;
-            }
-            return View(model);
-        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken, ValidateInput(false)]

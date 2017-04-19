@@ -112,6 +112,12 @@ namespace Universal.Entity
         public string ErTxt { get; set; }
 
         /// <summary>
+        /// 是否有权限编辑
+        /// </summary>
+        [NotMapped]
+        public bool CanEdit { get; set; }
+
+        /// <summary>
         /// 所属顶级父类名字
         /// </summary>
         [NotMapped]
