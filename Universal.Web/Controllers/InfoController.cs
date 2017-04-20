@@ -120,6 +120,39 @@ namespace Universal.Web.Controllers
 
             return View(entity);
         }
+        
+        /// <summary>
+        /// 项目流程节点具体信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public ActionResult FlowNode(int id, int? msg)
+        {
+            BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
+            var entity = bll.GetModel(p => p.ID == id, p => p.Project);
+            if (entity == null)
+            {
+                return View("NotFound");
+            }
+            BLL.BaseBLL<Entity.Node> bll_node = new BLL.BaseBLL<Entity.Node>();
+            entity.Node = bll_node.GetModel(p => p.ID == entity.NodeID);
+            SetMsgRead(msg);
+            return View(entity);
+        }
+
+
+        /// <summary>
+        /// 流程
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg">消息ID</param>
+        /// <returns></returns>
+        public ActionResult Flow(int id, int? msg)
+        {
+            return View();
+        }
+
 
         /// <summary>
         /// 任务
@@ -204,16 +237,6 @@ namespace Universal.Web.Controllers
             return View(entity);
         }
 
-        /// <summary>
-        /// 流程
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="msg">消息ID</param>
-        /// <returns></returns>
-        public ActionResult Flow(int id, int? msg)
-        {
-            return View();
-        }
 
         /// <summary>
         /// 秘籍
@@ -294,7 +317,7 @@ namespace Universal.Web.Controllers
             ViewData["CanJoin"] = 0;
             foreach (var item in entity.WorkMeetingUsers.ToList())
             {
-                if (item.CusUserID == WorkContext.UserInfo.ID && item.IsConfirm)
+                if (item.CusUserID == WorkContext.UserInfo.ID && !item.IsConfirm)
                     ViewData["CanJoin"] = 1;
             }
             if (msg != null)

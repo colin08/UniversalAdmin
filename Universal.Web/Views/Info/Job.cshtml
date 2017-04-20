@@ -90,7 +90,7 @@
                             <ul>
                                 @foreach (var item in Model.FileList)
                                 {
-                                    <li><span>@item.FileName &nbsp; @item.FileSize</span>&nbsp;&nbsp;&nbsp;<a href="@item.FilePath">下载</a></li>
+                                    <li><span>@item.FileName &nbsp; @item.FileSize</span>&nbsp;&nbsp;&nbsp;<a href="/Tools/Down?path=@item.FilePath&name=@item.FileName" target="_blank">下载</a></li>
                                 }
                             </ul>
                         </div>
@@ -124,7 +124,7 @@
             </div>
         </div>
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>

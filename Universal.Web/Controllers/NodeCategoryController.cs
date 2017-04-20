@@ -80,7 +80,7 @@ namespace Universal.Web.Controllers
                 {
                     model.id = entity.ID;
                     model.title = entity.Title;
-                    model.remark = entity.Remark;
+                    //model.remark = "";
                 }
             }
             return View(model);
@@ -109,15 +109,15 @@ namespace Universal.Web.Controllers
                 {
                     model = new Entity.NodeCategory();
                     model.Title = entity.title;
-                    model.Remark = entity.remark;
+                    //model.Remark = entity.remark;
                     bll.Add(model);
                 }
                 else
                 {
                     model = bll.GetModel(p => p.ID == entity.id);
                     model.Title = entity.title;
-                    model.Remark = entity.remark;
-                    bll.Modify(model, "Title", "Remark");
+                    //model.Remark = entity.remark;
+                    bll.Modify(model, "Title");
                 }
 
                 entity.Msg = 1;

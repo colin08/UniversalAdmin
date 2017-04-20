@@ -81,6 +81,24 @@ namespace Universal.Web.Controllers
 
         }
 
+        ///// <summary>
+        ///// 会议详情
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public ActionResult Info(int id)
+        //{
+        //    var entity = BLL.BLLWorkMeeting.GetModel(id);
+        //    if (entity == null)
+        //    {
+        //        return View("NotFound");
+        //    }
+
+
+        //    return View(entity);
+        //}
+
+
         public ActionResult Modify(int? id)
         {
             LoadStatus();

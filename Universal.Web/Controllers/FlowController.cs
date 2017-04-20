@@ -18,6 +18,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             return View();
         }
 
@@ -49,6 +50,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
+            if((BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限进行删除";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";

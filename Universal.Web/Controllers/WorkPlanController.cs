@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Universal.Tools;
 using Universal.Web.Framework;
 
@@ -78,6 +79,63 @@ namespace Universal.Web.Controllers
             result.total = rowCount;
 
             return Json(result);
+        }
+
+        /// <summary>
+        /// 编辑项目
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult EditItem()
+        {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            ModifyPlanModel data = null;
+            try
+            {
+                data = js.Deserialize<ModifyPlanModel>(stream);
+            }
+            catch (Exception ex)
+            {
+                WorkContext.AjaxStringEntity.msgbox = ex.Message;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (data == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "序列化后为空";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            var entity = new BLL.BaseBLL<Entity.WorkPlan>().GetModel(p => p.ID == data.id);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "工作计划不存在或已被删除";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (entity.CusUserID != WorkContext.UserInfo.ID)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "该工作计划不属于您";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            BLL.BaseBLL<Entity.WorkPlanItem> bll = new BLL.BaseBLL<Entity.WorkPlanItem>();
+            foreach (var item in data.item)
+            {
+                var item_entity = bll.GetModel(p => p.ID == item.id);
+                if (item_entity == null)
+                    continue;
+                item_entity.Status = (Entity.PlanStatus)item.status;
+                item_entity.Remark = item.remark;
+                bll.Modify(item_entity, "Status", "Remark");
+            }
+            //给审核人员发送消息
+            if (entity.ApproveUserID != null)
+            {
+                int app_id = TypeHelper.ObjectToInt(entity.ApproveUserID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.planitemedit, string.Format(BLL.BLLMsgTemplate.PlanItemEdit, entity.WeekText), entity.ID);
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "保存成功";
+            return Json(WorkContext.AjaxStringEntity);
         }
 
         /// <summary>
@@ -211,7 +269,8 @@ namespace Universal.Web.Controllers
                     }
                 }
 
-            }else
+            }
+            else
             {
                 ViewData["ShowSave"] = true;
                 //默认审核用户
@@ -257,7 +316,7 @@ namespace Universal.Web.Controllers
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
             }
-            if(app_id != 0)
+            if (app_id != 0)
             {
                 entity.approve_user_name = BLL.BLLCusUser.GetNickName(app_id);
             }
@@ -414,5 +473,20 @@ namespace Universal.Web.Controllers
 
         #endregion
 
+    }
+
+    public class ModifyPlanModel
+    {
+        public int id { get; set; }
+
+        public List<ModifyPlanItemModel> item { get; set; }
+    }
+
+    public class ModifyPlanItemModel
+    {
+        public int id { get; set; }
+
+        public int status { get; set; }
+        public string remark { get; set; }
     }
 }

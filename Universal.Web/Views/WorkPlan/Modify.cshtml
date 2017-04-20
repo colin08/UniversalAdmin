@@ -84,7 +84,7 @@
                                 var show_sty = (Model.id > 0 && Model.approve_status) ? "" : "style=display:none";
                             }
                             <div class="limd">
-                                <table>
+                                <table style="width: 670px;">
                                     <thead>
                                         <tr>
                                             <td></td>
@@ -105,7 +105,7 @@
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].Title, new { @class = "usInput", @style = "width:150px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].Content, new { @class = "usInput", @style = "width:200px;" })</td>
                                                 <td>@Html.TextBoxFor(p => p.plan_item[i].WantTaget, new { @class = "usInput", @style = "width:120px;" })</td>
-                                                <td>@Html.TextBoxFor(p => p.plan_item[i].DoneTime, new { @class = "usInput" })</td>
+                                                <td>@Html.TextBoxFor(p => p.plan_item[i].DoneTime, new { @class = "usInput",@style="width:100px;" })</td>
                                                 <td @show_sty>@Html.DropDownListFor(p => p.plan_item[i].Status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "tb_select" })</td>
                                                 <td @show_sty>@Html.TextBoxFor(p => p.plan_item[i].Remark, new { @class = "usInput" })</td>
                                             </tr>
@@ -137,7 +137,7 @@
                 </form>
             </div>
         </div>
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>

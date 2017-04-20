@@ -232,7 +232,7 @@ namespace Universal.BLL
             if (db_list.Count != 0)
             {
                 var node_list = db_list.Where(p => p.is_end == true);
-                if (node_list.Count()!= 0)
+                if (node_list.Count() != 0)
                 {
                     out_list.Add(node_list.First());
                     RecursiveGetNext(project_id, node_list.FirstOrDefault().project_flow_node_id, out_list);
@@ -316,22 +316,27 @@ namespace Universal.BLL
                 entity.LastUpdateTime = DateTime.Now;
                 entity.EndTime = DateTime.Now;
 
-                //发送消息提醒
-                List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from ProjectUser where ProjectID = " + entity.ProjectID.ToString()).ToList();
-                string content = string.Format(BLLMsgTemplate.ProjectFlowDone, entity.Node.Title);
-                foreach (var item in user_list)
+                var entity_project = db.Projects.AsNoTracking().Where(p => p.ID == entity.ProjectID).FirstOrDefault();
+
+                if (entity_project != null)
                 {
-                    Entity.CusUserMessage entity_msg = new Entity.CusUserMessage();
-                    entity_msg.Content = content;
-                    entity_msg.CusUserID = item;
-                    entity_msg.Type = Entity.CusUserMessageType.projectflowdone;
-                    entity_msg.LinkID = entity.ProjectID.ToString();
-                    db.CusUserMessages.Add(entity_msg);
+                    //发送消息提醒
+                    List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from ProjectUser where ProjectID = " + entity.ProjectID.ToString()).ToList();
+                    string content = string.Format(BLLMsgTemplate.ProjectFlowDone, entity_project.Title, entity.Node.Title);
+                    foreach (var item in user_list)
+                    {
+                        Entity.CusUserMessage entity_msg = new Entity.CusUserMessage();
+                        entity_msg.Content = content;
+                        entity_msg.CusUserID = item;
+                        entity_msg.Type = Entity.CusUserMessageType.projectflowdone;
+                        entity_msg.LinkID = project_flow_node_id.ToString(); //entity.ProjectID.ToString();
+                        db.CusUserMessages.Add(entity_msg);
+                    }
+                    db.SaveChanges();
+                    string ids = string.Join(",", user_list.ToArray());
+                    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, entity.ProjectID.ToString());
                 }
-                db.SaveChanges();
-                string ids = string.Join(",", user_list.ToArray());
-                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
-                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, entity.ProjectID.ToString());
                 return true;
             }
         }
@@ -431,7 +436,7 @@ namespace Universal.BLL
                     return false;
                 }
 
-                if(!db.ProjectUsers.Any(p=>p.CusUserID == user_id && p.ProjectID == entity.ProjectID))
+                if (!db.ProjectUsers.Any(p => p.CusUserID == user_id && p.ProjectID == entity.ProjectID))
                 {
                     msg = "没有权限操作该节点";
                     return false;

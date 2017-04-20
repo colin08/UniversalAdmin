@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "404 Not Found";
+﻿@model Universal.Entity.ProjectFlowNode
+@{
+    ViewBag.Title = "版本信息";
     ViewData["tabLeft"] = "msg";
     ViewData["tabTop"] = "manager";
 }
@@ -24,15 +25,24 @@
             <div class="userInfo sysIn">
                 <ul>
                     <li>
-                        <div class="lilt"></div>
+                        <div class="lilt">项目名称</div>
                         <div class="limd">
-                            <h2 style="font-size:initial;">Sorry，该信息不存在或已被删除！</h2>
+                            <span>@Model.Project.Title</span>
                         </div>
                         <div class="litip"></div>
                     </li>
                     <li>
+                        <div class="lilt">完成的节点</div>
+                        <div class="limd">
+                            <span>@Model.Node.Title</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    
+                    <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
+                            <button type="button" onclick="location.href = '/Project/FlowInfo?id=@Model.ProjectID';" class="btn1 grey">查看详细信息</button>
                             <button type="button" onclick="location.href = '/User/Message';" class="btn1 grey">返回消息列表</button>
                         </div>
                     </li>

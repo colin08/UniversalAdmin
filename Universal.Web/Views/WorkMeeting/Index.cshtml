@@ -48,7 +48,7 @@
         </div>
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -92,7 +92,7 @@
                             dataHtml += "<td><a href='/Info/Meeting?id="+item.ID+"'>" + CutString(item.Title, 30) + "</a></td>";
                             dataHtml += "<td>" + item.TimeTxt + "</td>";
                             dataHtml += "<td>" + CutString(item.Location, 18) + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkMeeting/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Info/Meeting?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

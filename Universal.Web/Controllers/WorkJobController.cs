@@ -49,6 +49,20 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
+        /// 详情页
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Info(int id)
+        {
+            Entity.WorkJob entity = BLL.BLLWorkJob.GetModel(id);
+            if (entity == null)
+                return View("NotFound");
+            
+            return View(entity);
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="ids"></param>

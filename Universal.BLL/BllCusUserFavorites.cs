@@ -225,5 +225,51 @@ namespace Universal.BLL
             return response_entity;
         }
 
+        /// <summary>
+        /// 获取top的秘籍收藏
+        /// </summary>
+        /// <param name="top"></param>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUserDocFavorites> GetTopDocData(int top,int user_id)
+        {
+            List<Entity.CusUserDocFavorites> result = new List<Entity.CusUserDocFavorites>();
+            using (var db = new DataCore.EFDBContext())
+            {
+                result = db.CusUserDocFavorites.AsNoTracking().Where(p => p.CusUserID == user_id).Take(top).OrderByDescending(p => p.AddTime).ToList();
+                foreach (var item in result)
+                {
+                    var entity_doc = db.DocPosts.AsNoTracking().Where(p => p.ID == item.DocPostID).FirstOrDefault();
+                    if (entity_doc == null)
+                        item.DocPost = new Entity.DocPost();
+                    item.DocPost = entity_doc;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取top的项目收藏
+        /// </summary>
+        /// <param name="top"></param>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public static List<Entity.CusUserProjectFavorites> GetTopProjectData(int top, int user_id)
+        {
+            List<Entity.CusUserProjectFavorites> result = new List<Entity.CusUserProjectFavorites>();
+            using (var db = new DataCore.EFDBContext())
+            {
+                result = db.CusUserProjectFavorites.AsNoTracking().Where(p => p.CusUserID == user_id).Take(top).OrderByDescending(p => p.AddTime).ToList();
+                foreach (var item in result)
+                {
+                    var entity_project = db.Projects.AsNoTracking().Where(p => p.ID == item.ProjectID).FirstOrDefault();
+                    if (entity_project == null)
+                        item.Project = new Entity.Project();
+                    item.Project = entity_project;
+                }
+            }
+            return result;
+        }
+
     }
 }

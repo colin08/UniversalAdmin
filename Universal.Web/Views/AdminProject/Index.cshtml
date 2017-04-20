@@ -19,7 +19,7 @@
 <div class="container">
     <div class="tit1">
         <b>项目列表</b>
-        <div class="search"><input type="text" id="txt_search" placeholder="搜索项目名称/创建人/手机号" /><input type="button" onclick="pageData(1)" /></div>
+        <div class="search"><input type="text" id="txt_search" onkeydown="KeyDown('pageData(1)')" placeholder="搜索项目名称/创建人/手机号" /><input type="button" onclick="    pageData(1)" /></div>
 
     </div>
     <div class="itemOp">
@@ -94,7 +94,7 @@
 
 
 
-<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
 </div>
 </div>
 
@@ -153,9 +153,9 @@
 							    del_str="<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a>";
 							}
 							dataHtml += "<tr>";
-							dataHtml += "<td>" + CutString(item.Title, 10) + "</td>";
+							dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "\">" + CutString(item.Title, 10) + "</a></td>";
 							dataHtml += "<td><a href='/Project/FlowInfo?id="+item.ID+"'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
-							dataHtml += "<td>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 13) + "</td>";
+							dataHtml += "<td><a href='/Project/FlowInfo?id="+item.ID+"'>" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 13) + "</a></td>";
 							dataHtml += "<td>" + item.CusUser.NickName + "</td>";
 							dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
 							dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id=" + item.ID + "\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a>"+del_str+"</div></td>";

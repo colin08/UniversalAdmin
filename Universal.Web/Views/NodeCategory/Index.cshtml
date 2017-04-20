@@ -18,7 +18,7 @@
         <div class="container">
             <div class="tit1">
                 <b>节点分类设置</b>
-                <div class="search"><input type="text" id="txt_search" placeholder="请输入名称搜索" /><input type="button" onclick="pageData(1)" /></div>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入名称搜索"  onkeydown="KeyDown('pageData(1)')"  /><input type="button" onclick="pageData(1)" /></div>
                 <span class="banbenOp fr"><a href="/NodeCategory/Modify" title="新增分类"><i class="i-redbb"></i> 新增分类</a></span>
             </div>
             <div class="projectColl">
@@ -26,8 +26,8 @@
                     <thead>
                         <tr>
                             <th width="20"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
-                            <th width="30%">标题</th>
-                            <th width="40%">备注</th>
+                            <th>分类名称</th>
+                            @*<th width="40%">备注</th>*@
                             <th width="15%">添加时间</th>
                             <th width="10%">操作</th>
                         </tr>
@@ -55,7 +55,7 @@
 
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 </div>
 
@@ -94,8 +94,8 @@
                     $.each(data.data, function (i, item) {
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
-                        dataHtml += "<td>" + CutString(item.Title, 38) + "</td>";
-                        dataHtml += "<td>" + CutString(item.Remark, 58) + "</td>";
+                        dataHtml += "<td>" + CutString(item.Title, 50) + "</td>";
+                        //dataHtml += "<td>" + CutString(item.Remark, 58) + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "") + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/NodeCategory/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                         dataHtml += "</tr>";

@@ -64,7 +64,7 @@
 
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -73,7 +73,9 @@
 @section foot
 {
 @Scripts.Render("~/bundles/laypage")
+@Scripts.Render("~/bundles/layer")
     <script type="text/javascript">
+        var is_admin = @ViewData["IsAdmin"].ToString().ToLower();
         $(document).ready(function (e) {
             pageData(1, false)
         });
@@ -111,10 +113,15 @@
                             def_class = "lc_";
                             def_click = "onclick=\"setDef(" + item.ID + ")\"";
                         }
+                        var del_str = "";
+                        if(is_admin)
+                        {
+                            del_str="|<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\">删除</a>";
+                        }
                         dataHtml += "<tr>";
                         dataHtml += "<td>" + item.Title + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Flow/Modify?id=" + item.ID + "\">详情</a>|<a href=\"/Flow/Modify?id=" + item.ID + "\">编辑</a>|<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\">删除</a></div></td>";
+                        dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Flow/Modify?id=" + item.ID + "\">详情</a>|<a href=\"/Flow/Modify?id=" + item.ID + "\">编辑</a>"+del_str+"</div></td>";
                         dataHtml += "<td><a href=\"javascript:;\" " + def_click + " class=\"" + def_class + "\">" + def_txt + "</a></td>";
                         dataHtml += "</tr>";
                     });
@@ -146,28 +153,35 @@
             })
         }
         /*******************列表 end *************************/
-
-
         
-
         function del(id) {
-            $.ajax({
-                type: "post",
-                url: "/Flow/Del",
-                data: { "id": id },
-                async: false,
-                success: function (data) {
-                    if (data.msg == 1) {
-                        pageData(1);
+            layer.confirm('删除之后该流程下的节点信息及资料也会一并删除，与该流程关联的项目也将无法正常使用，是否确定删除？', { icon: 3 }, function (index) {
+                layer.close(index);
+
+                $.ajax({
+                    type: "post",
+                    url: "/Flow/Del",
+                    data: { "id": id },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            pageData(1);
+                        }
+                        else {
+                            alert(data.msgbox);
+                        }
+                    },
+                    error: function () {
+                        alert("操作失败，请检查网络");
                     }
-                    else {
-                        alert(data.msgbox);
-                    }
-                },
-                error: function () {
-                    alert("操作失败，请检查网络");
-                }
-            })
+                })
+            });
         }
 
         function setDef(id) {

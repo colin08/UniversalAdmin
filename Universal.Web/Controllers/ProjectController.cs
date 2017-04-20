@@ -77,7 +77,7 @@ namespace Universal.Web.Controllers
         {
             if((BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)))
             {
-                WorkContext.AjaxStringEntity.msgbox = "没有权限删除项目";
+                WorkContext.AjaxStringEntity.msgbox = "没有权限进行删除";
                 return Json(WorkContext.AjaxStringEntity);
             }
             if (id <= 0)
@@ -281,7 +281,8 @@ namespace Universal.Web.Controllers
             //判断审核人是否必填
             var req_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
             ViewData["RequieAPPID"] = req_approve;
-
+            //默认流程
+            ViewData["DefaultFlowID"] = BLL.BLLFlow.GetDefault();
             LoadFlow();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelProject model = new Models.ViewModelProject();
@@ -402,7 +403,8 @@ namespace Universal.Web.Controllers
             int app_id = TypeHelper.ObjectToInt(entity.approve_user_id, 0);
             var isAdd = entity.id == 0 ? true : false;
             LoadFlow();
-
+            //默认流程
+            ViewData["DefaultFlowID"] = BLL.BLLFlow.GetDefault();
             //判断审核人是否必填
             var requie_approve = BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID);
             ViewData["RequieAPPID"] = requie_approve;

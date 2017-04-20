@@ -5,6 +5,20 @@ using System.ComponentModel;
 
 namespace Universal.Entity
 {
+    public enum PlanStatus:byte
+    {
+        /// <summary>
+        /// 未完成
+        /// </summary>
+        [Description("未完成")]
+        ing = 0,
+        /// <summary>
+        /// 已完成
+        /// </summary>
+        [Description("已完成")]
+        done = 1
+    }
+
     /// <summary>
     /// 工作计划之周期计划
     /// </summary>
@@ -12,7 +26,7 @@ namespace Universal.Entity
     {
         public WorkPlanItem()
         {
-            this.Status = WorkStatus.ing;
+            this.Status = PlanStatus.ing;
         }
 
         public int ID { get; set; }
@@ -54,7 +68,7 @@ namespace Universal.Entity
         /// <summary>
         /// 完成情况
         /// </summary>
-        public WorkStatus Status { get; set; }
+        public PlanStatus Status { get; set; }
 
         /// <summary>
         /// 状态文本
@@ -64,17 +78,7 @@ namespace Universal.Entity
         {
             get
             {
-                switch (this.Status)
-                {
-                    case WorkStatus.ing:
-                        return "进行中";
-                    case WorkStatus.done:
-                        return "已完成";
-                    case WorkStatus.cancel:
-                        return "已取消";
-                    default:
-                        return "";
-                }
+                return Tools.EnumHelper.GetDescription<PlanStatus>(this.Status);
             }
         }
 

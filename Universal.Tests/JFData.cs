@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using Universal.Tools;
+using Universal.BLL;
 
 namespace Universal.Tests
 {
@@ -34,7 +35,7 @@ namespace Universal.Tests
             //db.Dispose();
             //string zip_path ="";
             //BLL.BLLProjectFlowNode.ImportProject(89,out zip_path);
-            
+            var list = BLL.BllCusUserFavorites.GetTopDocData(10, 1);
             Assert.AreEqual(true, true);
         }
     }

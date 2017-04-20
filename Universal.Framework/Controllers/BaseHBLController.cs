@@ -109,8 +109,7 @@ namespace Universal.Web.Framework
             if(WorkContext.UserInfo != null)
             {
                 List<BLL.Model.LayoutFavorites> result = new List<BLL.Model.LayoutFavorites>();
-                BLL.BaseBLL<Entity.CusUserProjectFavorites> bll = new BaseBLL<Entity.CusUserProjectFavorites>();
-                var project_list = bll.GetListBy(3, p => p.CusUserID == WorkContext.UserInfo.ID, "AddTime DESC", p => p.Project);
+                var project_list = BLL.BllCusUserFavorites.GetTopProjectData(3, WorkContext.UserInfo.ID);
                 foreach (var item in project_list)
                 {
                     var model = new BLL.Model.LayoutFavorites();
@@ -121,9 +120,8 @@ namespace Universal.Web.Framework
                     model.er_title = "预留";
                     result.Add(model);
                 }
-
-                BLL.BaseBLL<Entity.CusUserDocFavorites> bll_doc = new BaseBLL<Entity.CusUserDocFavorites>();
-                var doc_list = bll_doc.GetListBy(3, p => p.CusUserID == WorkContext.UserInfo.ID, "AddTime DESC", p => p.DocPost);
+                
+                var doc_list = BllCusUserFavorites.GetTopDocData(3, WorkContext.UserInfo.ID);
                 foreach (var item in doc_list)
                 {
                     var model = new BLL.Model.LayoutFavorites();

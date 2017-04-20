@@ -85,6 +85,22 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取默认流程id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetDefault()
+        {
+            using (var db= new DataCore.EFDBContext())
+            {
+                var entity = db.Flows.Where(p => p.IsDefault == true).AsNoTracking().FirstOrDefault();
+                if (entity == null)
+                    return 0;
+                else
+                    return entity.ID;
+            }
+        }
+
+        /// <summary>
         /// 获取前端需要的流程节点数据
         /// </summary>
         /// <param name="flow_id"></param>

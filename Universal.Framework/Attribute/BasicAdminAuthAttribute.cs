@@ -39,7 +39,7 @@ namespace Universal.Web.Framework
                     {
                         WebAjaxEntity<string> res = new WebAjaxEntity<string>();
                         res.msg = 0;
-                        res.msgbox = "只允许管理员身份的用户访问";
+                        res.msgbox = "无操作权限，请联系管理员";
                         JsonResult jr = new JsonResult();
                         jr.Data = res;
                         filterContext.Result = jr;
@@ -72,7 +72,7 @@ namespace Universal.Web.Framework
                             {
                                 WebAjaxEntity<string> res = new WebAjaxEntity<string>();
                                 res.msg = 0;
-                                res.msgbox = "只允许管理员身份的用户访问";
+                                res.msgbox = "无操作权限，请联系管理员";
                                 JsonResult jr = new JsonResult();
                                 jr.Data = res;
                                 filterContext.Result = jr;
@@ -94,7 +94,7 @@ namespace Universal.Web.Framework
                         {
                             WebAjaxEntity<string> res = new WebAjaxEntity<string>();
                             res.msg = 0;
-                            res.msgbox = "无权限";
+                            res.msgbox = "无操作权限，请联系管理员";
                             JsonResult jr = new JsonResult();
                             jr.Data = res;
                             filterContext.Result = jr;

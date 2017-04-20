@@ -88,7 +88,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 完成情况 0:进行中；1：已完成；2：取消，未审核通过时不展示/修改
         /// </summary>
-        public Entity.WorkStatus status { get; set; }
+        public Entity.PlanStatus status { get; set; }
 
         /// <summary>
         /// 状态文本，修改时传入空字符串

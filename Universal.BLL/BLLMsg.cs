@@ -83,6 +83,11 @@ namespace Universal.BLL
         public static readonly string WaitApprovePlan = "{0}添加了{1}需要您的审批";
 
         /// <summary>
+        /// 计划项有变动 工作计划【{0}】项有修改
+        /// </summary>
+        public static readonly string PlanItemEdit = "工作计划【{0}】项有修改";
+
+        /// <summary>
         /// 计划审核通过 {0}审核通过
         /// </summary>
         public static readonly string PlanApproveOK = "【{0}】审核通过";
@@ -108,9 +113,9 @@ namespace Universal.BLL
         public static readonly string FlowUpdate = "流程【{0}】于{1}被{2}更新了";
 
         /// <summary>
-        /// 项目流程节点完成提醒，项目流程:{0}已完成
+        /// 项目流程节点完成提醒，【{0}】{1}已完成
         /// </summary>
-        public static readonly string ProjectFlowDone = "项目流程:{0}已完成";
+        public static readonly string ProjectFlowDone = "【{0}】{1}已完成";
 
         /// <summary>
         /// 项目更新提醒 项目【{0}】被更新了

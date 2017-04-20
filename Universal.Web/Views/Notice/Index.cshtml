@@ -12,7 +12,7 @@
         <div class="container">
             <div class="tit1">
                 <b>公告列表</b>
-                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索" /><input type="button" onclick="pageData(1)" /></div>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索"  onkeydown="KeyDown('pageData(1)')"  /><input type="button" onclick="pageData(1)" /></div>
                 <span class="banbenOp fr"><a href="/Notice/Modify" title="发布公告"><i class="i-redbb"></i> 发布公告</a><a href="javascript:;" onclick="del(0)" title="删除"><i class="i-barrel"></i> 删除</a></span>
             </div>
             <div class="projectColl">
@@ -60,7 +60,7 @@
         </div>
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -100,7 +100,7 @@
                             dataHtml += "<tr>";
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                             dataHtml += "<td><a href=\"/Notice/Modify?id=" + item.ID + "\">" + CutString(item.Title, 15) + "</a></td>";
-                            dataHtml += "<td><span class=\"tfe\">" + CutString(item.Content, 48) + "</span></td>";
+                            dataHtml += "<td><span class=\"tfe\">" + CutString(item.Content, 38) + "</span></td>";
                             dataHtml += "<td>" + item.NoticeStr + "</td>";
                             dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "") + "</td>";

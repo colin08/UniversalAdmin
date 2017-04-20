@@ -18,7 +18,7 @@
 				<b class="f20" style="text-align: left;">秘籍列表</b> <span
 					class="pos-r fr">
 					<div class="search">
-						<input id="txt_search" value="" placeholder="请输入标题" type="text"><input
+						<input id="txt_search" value="" placeholder="请输入标题" type="text"  onkeydown="KeyDown('data_search()')" ><input
 							onclick="data_search()" type="button">
 					</div> <span class="banbenOp mt_5 mr_15"> <a href="/Shool/Modify"
 						title="上传"><i class="i-redbb"></i><span>上传秘籍</span></a></span> <input
@@ -68,7 +68,7 @@
 
 
 
-		<div class="footer">Copyright © 深圳花伴里实业集团有限公司 粤ICP备13089427号-1</div>
+		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
 	</div>
 </div>
 
@@ -127,7 +127,7 @@
                     $.each(data.data, function (i, item) {
                     
                         var tr=$('<tr></tr>').appendTo(tbody);
-                       	$('<td></td>').appendTo(tr).html(CutString(item.Title,25));
+                        $('<td></td>').appendTo(tr).html("<a href=\"/Shool/Info?id="+item.ID+"&b=1\">"+CutString(item.Title,25)+"");
                        	$('<td></td>').appendTo(tr).html(item.CusUser.NickName);
                        	$('<td></td>').appendTo(tr).html(ChangeDateFormat(item.LastUpdateTime,""));
                      	var td=$('<td></td>').appendTo(tr);

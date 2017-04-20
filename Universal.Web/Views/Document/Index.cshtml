@@ -17,7 +17,7 @@
         <div class="container">
             <div class="tit1">
                 <b>秘籍管理</b>
-                <div class="search"><input id="txt_search" value="" placeholder="请输入标题" type="text"><input onclick="data_search()" type="button"></div>
+                <div class="search"><input id="txt_search" value="" placeholder="请输入标题" type="text"  onkeydown="KeyDown('data_search()')"><input onclick="    data_search()" type="button"></div>
                 <span class="banbenOp fr"><a href="/Document/Modify" title="上传秘籍"><i class="i-redbb"></i> 上传秘籍</a></span>
                 <input type="hidden" id="hid_temp_doc_id" value="0" />
             </div>
@@ -65,7 +65,7 @@
 
         </div>
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -121,10 +121,10 @@
                         $.each(data.data, function (i, item) {
                             dataHtml += "<tr>";
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
-                            dataHtml += "<td>"+CutString(item.Title,25)+"</td>";
+                            dataHtml += "<td><a href=\"/Document/Modify?id="+item.ID+"\">"+CutString(item.Title,25)+"</a></td>";
                             dataHtml += "<td>"+item.CusUser.NickName+"</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime,"") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Document/Modify?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\""+item.FavIcon+"\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Document/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav("+item.ID+")\" class=\"afav\"><i class=\""+item.FavIcon+"\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

@@ -13,7 +13,7 @@
 <div class="search-head mb_20">
     <div class="search-head-bd">
         <div class="search-page">
-            <input type="text" id="txt_search" value="@ViewData["word"]" /><a href="javascript:;" class="btn-search" onclick="pageData(1)">搜索</a>
+            <input type="text" id="txt_search" value="@ViewData["word"]"  onkeydown="KeyDown('pageData(1)')" /><a href="javascript:;" class="btn-search" onclick="pageData(1)">搜索</a>
         </div>
         <div class="clearfix">
             <ul class="new-tab clearfix">
@@ -60,7 +60,7 @@
 <!--wrapper ]]-->
 
 
-<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
 
 
 <!--底部脚本-->

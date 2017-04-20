@@ -25,7 +25,7 @@ namespace Universal.Web.Models
             this.day2 = dt_temp_next_month_end.Day.ToString();
             this.plan_item = new List<Entity.WorkPlanItem>();
             var entity = new Entity.WorkPlanItem();
-            entity.Status = Entity.WorkStatus.ing;
+            entity.Status = Entity.PlanStatus.ing;
             this.plan_item.Add(entity);
         }
 

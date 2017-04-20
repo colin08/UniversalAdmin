@@ -33,7 +33,8 @@ namespace Universal.Web.Controllers
             BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
             int rowCount = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
+            if (BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID))
+                filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
             List<Entity.CusNotice> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc", p => p.CusUser);
@@ -125,7 +126,7 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(Models.ViewModelNotice entity)
         {
             var isAdd = entity.id == 0 ? true : false;
-            
+
 
             BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
             if (!isAdd)
@@ -155,7 +156,7 @@ namespace Universal.Web.Controllers
                     foreach (var item in BLL.BLLCusUser.GetListByIds(entity.see_ids))
                     {
                         str_ids.Append(item.ID.ToString() + ",");
-                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID,item.NickName));
+                        entity.see_entity.Add(new Models.ViewModelDocumentCategory(item.ID, item.NickName));
                     }
                     break;
                 default:

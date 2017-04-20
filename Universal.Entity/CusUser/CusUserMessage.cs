@@ -103,6 +103,12 @@ namespace Universal.Entity
         planapproveok,
 
         /// <summary>
+        /// 计划项有变更
+        /// </summary>
+        [Description("计划项变更")]
+        planitemedit,
+
+        /// <summary>
         /// 收藏的项目更新提醒
         /// </summary>
         [Description("收藏的项目更新提醒")]
@@ -212,7 +218,7 @@ namespace Universal.Entity
             {
                 switch (this.Type)
                 {
-                    
+
                     default:
                         return "";
                 }
@@ -230,7 +236,7 @@ namespace Universal.Entity
                 switch (Type)
                 {
                     case CusUserMessageType.appupdate:
-                        return "/Info/AppUpdate?id="+this.LinkID+"&msg="+this.ID.ToString();
+                        return "/Info/AppUpdate?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.notice:
                         return "/Info/Notice?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.fileshare:
@@ -239,9 +245,10 @@ namespace Universal.Entity
                     case CusUserMessageType.appproveok:
                     case CusUserMessageType.appproveno:
                     case CusUserMessageType.favprojectupdate:
-                    case CusUserMessageType.projectflowdone:
                     case CusUserMessageType.projectupdate:
                         return "/Info/Project?id=" + this.LinkID + "&msg=" + this.ID.ToString();
+                    case CusUserMessageType.projectflowdone:
+                        return "/Info/FlowNode?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitmeeting:
                     case CusUserMessageType.confrimjoinmeeting:
                     case CusUserMessageType.meetingcancel:
@@ -253,6 +260,7 @@ namespace Universal.Entity
                         return "/Info/Job?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.waitapproveplan:
                     case CusUserMessageType.planapproveok:
+                    case CusUserMessageType.planitemedit:
                         return "/Info/Plan?id=" + this.LinkID + "&msg=" + this.ID.ToString();
                     case CusUserMessageType.favdocupdate:
                         return "/Info/Document?id=" + this.LinkID + "&msg=" + this.ID.ToString();

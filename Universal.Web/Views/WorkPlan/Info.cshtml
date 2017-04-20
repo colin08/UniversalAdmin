@@ -9,6 +9,10 @@
 @section head
 {
     <link href="~/Assets/theme/css/dev.css" rel="stylesheet" />
+    <style>
+        .plan_tb {margin-top:30px; width:800px;border:1px solid #506470;padding:5px;}
+        .plan_tb td{border:1px solid #506470;padding:5px;}
+    </style>
 }
 <!--头部脚本 end-->
 
@@ -48,13 +52,13 @@
                     <li>
                         <div class="lilt">计划项</div>
                         <div class="limd">
-                            <table>
+                            <table class="plan_tb">
                                 <thead>
                                     <tr>
                                         <td>工作分项名称</td>
                                         <td>工作内容</td>
-                                        <td>预期达成目标</td>
-                                        <td>完成最后时限</td>
+                                        <td>预期目标</td>
+                                        <td>完成时限</td>
                                         <td>完成情况</td>
                                         <td>备注</td>
                                     </tr>
@@ -62,13 +66,18 @@
                                 <tbody id="workitem">
                                     @foreach (var item in Model.WorkPlanItemList)
                                     {
-                                        <tr>
+                                        <tr class="tr_tab" d-id="@item.ID">
                                             <td><span>@item.Title</span></td>
                                             <td><span>@item.Content</span></td>
                                             <td><span>@item.WantTaget</span></td>
                                             <td><span>@item.DoneTime</span></td>
-                                            <td><span>@item.StatusText</span></td>
-                                            <td><span>@item.Remark</span></td>
+                                            <td>
+                                                <select>
+                                                    <option value="0" @(item.Status == Universal.Entity.PlanStatus.ing ?"selected":"") >未完成</option>
+                                                    <option value="1" @(item.Status == Universal.Entity.PlanStatus.done ?"selected":"")>已完成</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="usInput" style="width:120px;" value="@item.Remark"></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -79,13 +88,14 @@
                     <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
+                            <button type="button" onClick="confsss()" class="btn1">提交</button>
                             <button type="button" onclick="location.href = '/WorkPlan/Index';" class="btn1 grey">返回</button>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -94,7 +104,46 @@
 @section foot
 {
     <script type="text/javascript">
-        
+        function confsss()
+        {
+            var data_json = '{"id":@Model.ID,"item":[';
+            $(".tr_tab").each(function () {
+                var id = $(this).attr("d-id");
+                var status = $(this).find("select").val();
+                var remark = $(this).find("input[type='text']").val();
+                data_json += '{"id":' + id + ',"status":' + status + ',"remark":"' + encodeURIComponent (remark)+ '"},'
+            })
+            if (data_json.length > 1)
+            {
+                data_json = data_json.substring(0, data_json.length - 1);
+            }
+            data_json += ']}';
+            
+            $.ajax({
+                type: "post",
+                url: "/WorkPlan/EditItem",
+                data: data_json,
+                async: false,
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        alert("保存成功");
+                    }
+                    else {
+                        alert(data.msgbox);
+                    }
+                },
+                error: function () {
+                    alert("操作失败，请检查网络");
+                }
+            })
+
+        }
     </script>
 
 }

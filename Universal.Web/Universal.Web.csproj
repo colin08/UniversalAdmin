@@ -1221,6 +1221,8 @@
     <Content Include="Views\Share\doc.cshtml" />
     <Content Include="Views\WorkPlan\Info.cshtml" />
     <Content Include="Views\Shool\Info.cshtml" />
+    <Content Include="Views\Info\FlowNode.cshtml" />
+    <Content Include="Views\WorkJob\Info.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

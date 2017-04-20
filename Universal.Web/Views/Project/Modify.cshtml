@@ -251,7 +251,7 @@
                             @Html.ValidationMessageFor(p => p.FenChengBiLi)
                         </li>
                         <li><label for="">均价</label>
-                            @Html.TextBoxFor(p => p.JunJia, new { @class = "add-input" })
+                            @Html.TextBoxFor(p => p.JunJia, new { @class = "add-input", placeholder = "单位：万元" })
                             @Html.ValidationMessageFor(p => p.JunJia)
                         </li>
                     </ul>
@@ -283,7 +283,7 @@
 
 
 
-<div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
 
 
 
@@ -452,7 +452,16 @@
     		$(hid).val(ids.join(','));
     	}
 
-        $(document).ready(function (e) {
+		$(document).ready(function (e) {
+		    if(@Model.id==0)
+		    {
+		        var default_flow_id = @Universal.Tools.TypeHelper.ObjectToInt(ViewData["DefaultFlowID"]);
+		        if(default_flow_id != 0)
+		        {
+		            $("#flow_id").val(default_flow_id);
+		        }
+		    }
+
                 @if(Model.Msg == 1)
                 {
                     @:show_div(3);

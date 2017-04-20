@@ -53,14 +53,17 @@ namespace Universal.Web.Areas.h5.Controllers
         /// <returns></returns>
         public ActionResult Flow(string project_id)
         {
+            ViewData["can_edit"] = false;
             int project = TypeHelper.ObjectToInt(project_id, 0);
             BLL.BaseBLL<Entity.Project> bll = new BLL.BaseBLL<Entity.Project>();
-            var entity = bll.GetModel(p => p.ID == project);
+            var entity = bll.GetModel(p => p.ID == project, p => p.ProjectUsers);
             if (entity == null)
             {
                 return Content("无此流程");
             }
             ViewData["project_id"] = entity.ID;
+            if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+                ViewData["can_edit"] = true;
             return View();
         }
     }

@@ -754,3 +754,10 @@ function importProject(id) {
         }
     })
 }
+
+
+function KeyDown(funcStr) {
+    if (event.keyCode == 13) {
+        eval(funcStr);
+    }
+}

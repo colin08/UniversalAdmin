@@ -58,7 +58,7 @@
         </div>
 
 
-        <div class="footer">Copyright ©  深圳花伴里实业集团有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -98,10 +98,10 @@
                             dataHtml += "<tr>";
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                             dataHtml += "<td><span class=\"col_red\">" + item.StatusText + "</span></td>";
-                            dataHtml += "<td>" + CutString(item.Title, 18) + "</td>";
+                            dataHtml += "<td><a href=\"/WorkJob/Info?id="+item.ID+"\">" + CutString(item.Title, 18) + "</a></td>";
                             dataHtml += "<td>" + CutString(item.Content, 48) + "</td>";
-                            dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkJob/Modify?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd") + "</td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkJob/Modify?id=" + item.ID + "\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {
