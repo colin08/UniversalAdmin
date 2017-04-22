@@ -40,7 +40,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public static bool Modfify(Model.ProjectStage model, out string msg)
+        public static bool Modfify(Model.ProjectStage model,int login_user_id, out string msg)
         {
             msg = "";
             if (model == null)
@@ -52,6 +52,17 @@ namespace Universal.BLL
                 msg = "期不存在";
                 return false;
             }
+            if(!db.Projects.Any(p=>p.ID == entity.ProjectID))
+            {
+                msg = "项目不存在";
+                return false;
+            }
+            if(!db.ProjectUsers.Any(p=>p.ProjectID == entity.ProjectID && p.CusUserID == login_user_id))
+            {
+                msg = "没有权限编辑";
+                return false;
+            }
+
             db.ProjectStageFiles.Where(p => p.ProjectStageID == entity.ID).ToList().ForEach(p => db.ProjectStageFiles.Remove(p));
 
             entity.Title = model.title;
@@ -97,7 +108,7 @@ namespace Universal.BLL
         /// <param name="model"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static int Add(int project_id,Model.ProjectStage model,out string msg)
+        public static int Add(int project_id,Model.ProjectStage model,int login_user_id,out string msg)
         {
             msg = "";
             if(model == null)
@@ -111,6 +122,12 @@ namespace Universal.BLL
                 msg = "项目不存在";
                 return 0;
             }
+            BaseBLL<Entity.ProjectUser> bll_project_user = new BaseBLL<Entity.ProjectUser>();
+            if(!bll_project_user.Exists(p=>p.ProjectID == project_id && p.CusUserID == login_user_id))
+            {
+                msg = "没有权限添加";
+                return 0;
+            }
             
 
             BLL.BaseBLL<Entity.ProjectStage> bll = new BaseBLL<Entity.ProjectStage>();
@@ -120,6 +137,34 @@ namespace Universal.BLL
             return entity.ID;
         }
 
+        /// <summary>
+        /// 删除某期信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="login_user_id"></param>
+        /// <returns></returns>
+        public static bool Del(int id,int login_user_id,out string msg)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                var entity = db.ProjectStages.Find(id);
+                if(entity == null)
+                {
+                    msg = "分期不存在";
+                    return false;
+                }
+
+                if(!db.ProjectUsers.Any(p=>p.ProjectID == entity.ProjectID && p.CusUserID == login_user_id))
+                {
+                    msg = "没有权限进行删除";
+                    return false;
+                }
+                db.ProjectStages.Remove(entity);
+                db.SaveChanges();
+                msg = "删除成功";
+                return true;
+            }
+        }
 
         /// <summary>
         /// 构造实体

@@ -1,13 +1,14 @@
-﻿@{ 
-    ViewBag.Title = "流程管理";
-    ViewData["tabLeft"] = "flow";
-    ViewData["tabTop"] = "manager"; 
-}
+﻿@{ ViewBag.Title = "流程管理"; ViewData["tabLeft"] = "flow";
+ViewData["tabTop"] = "manager"; }
 
 <!--头部脚本-->
 @section head { 
-<link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="/assets/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="/assets/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="/assets/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="/assets/css/process_page.css" />
 }
 
 <!--头部脚本 end-->
@@ -16,641 +17,454 @@
 
 	<div class="rightBox">
 		<div class="container" style="width: auto">
+
+
 			<div class="tit1">
-				<span class="fr f14 col_grey">注：编辑流程时，可按住 “流程块” 调整顺序,<br />右键点击下面编辑区域显示更多功能。
-				</span>
+				<div class="fr">
+				    <!--
+				    <a href="javascript:;" class="process_page_but_public" onclick="changePageTitle()">保存</a>
+				    <a href="/Flow/Index" class="process_page_but_public process_page_but_public_cola">取消</a>
+					-->
+                    <a href="/Flow/Compact?id=@ViewData["flow_id"]" class="process_page_but_public process_page_but_public_cola">流程预览&nbsp;&raquo;</a>
+				</div>
 				<div class="inner">
 					<a href="/Flow/Index" class="fl f16"><i class="i-back"></i>流程列表</a>
-					<b class="tit1Txt fr"><input type="text" name="flow_title" id="flow_title" value="@ViewData["flow_title"]" placeholder="请输入流程名称" /></b>
+					<b class="tit1Txt fr"><input type="text" name="flow_title" id="flow_title" value="@ViewData["flow_title"]" placeholder="新增流程" readonly="readonly" class="process_page_inp_color" /></b>
 				</div>
 
 			</div>
-
+<!--
 			<div id="flowdesign_canvas" class="mini-layout"
 				style="min-height: 1200px"></div>
-			<!--   <div class="liuchengEdit">
+			   <div class="liuchengEdit">
                 <img src="/assets/theme/images/temp1.jpg" />
-            </div>  -->
-
+            </div>  
+-->
+            <div class="process_page_st_a">
+			   <div class="cz_pd15 clearfix">
+			      <p class="l_txt"><span>*</span>流程名称</p>				  
+				  <input type="text" class="name_inp" id="process_page_name" value="@ViewData["flow_title"]">
+				  <span class="warm_txt">不超过80个字符</span>				  
+			   </div>
+			   <div class="cz_pd15 clearfix">
+			      <p class="l_txt"><span>*</span>流程节点</p>
+				  <div class="bor_box">
+				     <div class="insert_node" id="insert_node_empty" style="display:none;">
+					    <a href="javascript:;"><i>+</i>页面肯定是存在错误的......</a>
+					 </div>
+					 <div class="process_page_node_box" id="process_page_node_box" style="display:none;">					    
+						 <table cellpadding="0" cellspacing="0" class="process_new_style_list">
+						 </table>
+					 </div>
+				  </div>
+			   </div>
+			   <div class="cz_pd15 clearfix">
+				  <a href="javascript:;" class="process_page_but_public" onclick="changePageTitle()">保存</a>
+				  <a href="/Flow/Index" class="process_page_but_public process_page_but_public_cola">取消</a>
+                  <a href="/Flow/Compact?id=@ViewData["flow_id"]" class="process_page_but_public process_page_but_public_cola">流程预览&nbsp;&raquo;</a>        
+			   </div>
+			</div>
 		</div>
+
+
+
 		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
 	</div>
 
 </div>
-
+<div class="process_page_out_bg" id="process_page_out_bg">
+   <div class="process_page_out_box">
+       <div class="process_page_out_tt">
+          <a href="javascript:;" onclick="$('#process_page_out_bg').hide();">×</a>
+          <span id="process_page_out_tt">设置子级</span>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">节点类型</p>
+          <div class="fl">
+             <label class="process_page_out_pdr node_type_label" for="radio_pt"><i class="process_page_out_icon process_page_out_icon1"><input type="radio" name="node_type" value="pt" id="radio_pt" checked="checked" /></i>普通节点</label>
+             <label class="process_page_out_pdr node_type_label" for="radio_pd"><i class="process_page_out_icon"><input type="radio" name="node_type" value="pd" id="radio_pd" /></i>条件节点</label>
+          </div>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">选择节点</p>
+          <div class="process_page_out_border" id="node_list_pt">
+             <!--
+             <ul class="process_page_out_node_list">
+                <li class="tt"><i class="scd"></i>计划申报前期准备</li>
+                <li class="sun"><label for="radio_get_id"><i class="process_page_out_icon fr"><input type="radio" name="node_get" value="zm" id="radio_get_id" checked="checked" /></i>出具证明</label></li>
+             </ul>
+             -->
+          </div>
+          <div class="process_page_out_border" id="node_list_pd" style="display:none;">
+          </div>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">&nbsp;</p>
+          <div class="fl">
+                <a href="javascript:;" class="process_page_but_public" id="process_page_out_submit">确定</a>
+                <a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$('#process_page_out_bg').hide();">取消</a>     
+          </div>
+       </div>
+   </div>
+</div>
 <!--底部脚本-->
 @section foot {
+<script type="text/javascript" src="/assets/js/jf.pub.js"></script>
+/*流程图插件↓*/
+<script type="text/javascript"
+	src="/assets/bootstrap/js/bootstrap.min.js"></script>
 
-
-<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
-<link rel="stylesheet" type="text/css" href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
-<script type="text/javascript" src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
-<script type="text/javascript" src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
-<script type="text/javascript" src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
+<link rel="stylesheet" type="text/css"
+	href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
+<link rel="stylesheet" type="text/css"
+	href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
+<script type="text/javascript"
+	src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
+<script type="text/javascript"
+	src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
+<script type="text/javascript"
+	src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
 <!--select 2-->
-<script type="text/javascript" src="/assets/flowdesign/js/jquery.multiselect2side/js/jquery.multiselect2side.js?2025"></script>
+<script type="text/javascript"
+	src="/assets/flowdesign/js/jquery.multiselect2side/js/jquery.multiselect2side.js?2025"></script>
 <!--flowdesign-->
-<script type="text/javascript" src="/assets/flowdesign/js/flowdesign/leipi.flowdesign.v32.js?2025"></script>
-
-    
-<div class="modal fade" id="attributeModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title">Modal title</h4>
-			</div>
-			<div class="modal-body"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
-					onclick="node_attr_save(this)">确定保存</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div>
+<script type="text/javascript"
+	src="/assets/flowdesign/js/flowdesign/leipi.flowdesign.v32.js?2025"></script>
 <!-- /.modal -->
-
-
-<div id="selNodeBox" style="display: none">
-	<table border="0" cellspacing="0" cellpadding="0" class="table1">
-		<thead>
-			<tr id="node_l" style="display:none">
-				<th style="width: 80px">操作</th>
-				<th>节点名称</th>
-			</tr>
-			<tr id="node_c">
-                <th>节点分类</th>
-            </tr>
-		</thead>
-		<tbody id="listData">
-
-		</tbody>
-	</table>
-	<div class="listBtm">
-		<div class="page fr">
-			<span>共有<span id="span_data_total"></span>条，每页显示
-			</span> <select class="sel" id="select_page_size" style="width: auto">
-				<option value="10" selected>10</option>
-				<option value="20">20</option>
-			</select> <span>条</span>
-			<div id="pager"></div>
-		</div>
-	</div>
-
-</div>
+/*流程图插件↑*/	
 <!--end div-->
-<style type="text/css">
-.node_dialog td{padding:4px}
-</style>
-<div id="node_dialog" style="display: none">
-    <table border="0" cellspacing="0" cellpadding="0" class="table2 node_dialog">
-        <tr>
-            <td style="width:80px">节点名称</td>
-            <td data-key="title">{title}</td>
-        </tr>
-        <tr>
-            <td>节点内容</td>
-            <td data-key="content">{content}</td>
-        </tr>
-    </table>
-</div>
 <script src="/Assets/js/plugins/layer/laypage/laypage.js"></script>
 <input type="hidden" id="tmp_process_to" />
 
 <!--contextmenu div-->
-<div id="processMenu" style="display: none;">
-	<ul>
-		<li id="pmView"><i class="fa fa-eye"></i>&nbsp;<span
-			class="_label">详情</span></li>
-        <li id="pmAttribute"><i class="fa fa-cog"></i>&nbsp;<span
-            class="_label">属性</span></li>
-		<li id="pmDelete"><i class="fa fa-trash"></i>&nbsp;<span
-			class="_label">删除</span></li>
 
-	</ul>
-</div>
-<div id="canvasMenu" style="display: none;">
-	<ul>
-		<li id="cmSave"><i class="fa fa-save"></i>&nbsp;<span
-			class="_label">保存设计</span></li>
-		<li id="selNode"><i class="fa fa-plus"></i>&nbsp;<span
-			class="_label">添加节点</span></li>
-		<li id="cmRefresh"><i class="fa fa-refresh"></i>&nbsp;<span
-			class="_label">刷新 F5</span></li>
-	</ul>
-</div>
 <script type="text/javascript">
-	var _canvas;
-	var edit_node_item;
-	var the_flow_id =  @ViewData["flow_id"];
-	$.browser = {};
-	$.browser.mozilla = /firefox/.test(navigator.userAgent.toLowerCase());
-	$.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
-	$.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
-	$.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-	
-	
-	
-	
-	
-	
-	$(function() {
-		function selNode(obj,item)
-		{
-			item = $.extend({title:'添加节点',id:0},item||{});
-					
-					
-			var mLeft = parseInt($("#jqContextMenu").css("left")), mTop = parseInt($("#jqContextMenu").css("top"));
-			showDialog({
-				title :item.title,
-				html : $('#selNodeBox').show(),
-				onshow : function() {
-					GetNodeCategory( function(obj) {
-						obj = $(obj).parent();
-						id = obj.attr('data-id');
-						title = obj.attr('data-title');
-						
-						hideDialog();
-						$.ajax({
-							url:'/Tools/AddNode',
-							type:'post',
-							data:{
-								flow_id:the_flow_id,
-								node_id:id,
-								left:parseInt(mLeft),
-								top:parseInt(mTop),
-								color:'',
-								process_to:'',
-								title:$('#flow_title').val()
-							},
-							success:function(ret){
-								if(ret.msg==0){
-									alert(ret.msgbox);
-									$('#flow_title').focus();
-									return;
-								}
-								the_flow_id=ret.total;
-								var data = {
-										flow_node_id : ret.data,
-										flow_id : the_flow_id,
-										flow_node_title : title,
-										process_to : '',
-										icon : '',
-										left:mLeft,
-										top:mTop
-								};
-								_canvas.addProcess(data);
-							}
-						});
-						
-						
-					});
-				}
-			});
-		}
-		var canvasMenus={
-				"cmSave" : function(t) {
-					doSave();
-				},
-				//刷新
-				"cmRefresh" : function(t) {
-					location.reload();
-				},
-				selNode:function(obj){
-					selNode(obj);
-				}
-		};
-		/* $.ajax({
-			url:'/Tools/GetFlowPiece',
-			async: false,
-			success:function(data){
-				var node=$('#selNode');
-				$(data.data).each(function(){
-					var item=this;
-					var li=$('<li></li>').attr('data-id',this.id).attr('id','add_'+this.id);
-					$('<i class="fa fa-plus"></i>').appendTo(li);
-					$('<span class="_label"></span>').appendTo(li).html(this.title).css('marginLeft','5px');
-					node.after(li);
-					node=li;
-					
-					canvasMenus['add_'+this.id]=function(obj){
-						selNode(obj,item);
-					}
-				});
+var flowPId="@ViewData["flow_id"]";
+var flowPTitle="@ViewData["flow_title"]";
+
+
+function postSameNode(nodeId,parentId){//添加父级
+    if(flowPId==-1){
+	   flowPTitle=$("#process_page_name").val();
+	}
+    if(flowPId==-1&&flowPTitle==''){
+	   operatingMsgFunc(1,'请先添加流程名称，再进行操作!');
+	   $("#process_page_name").focus();
+	}
+	else{
+		$("#process_page_out_bg").hide();
+		warmMsgFunc(1,'数据操作中，请稍候...');
+		$.ajax({
+			type:'post',
+			dataType:'json',
+			async:true,
+			url:'/Tools/SetNodeCids',
+			//url:'/Tools/SetNodePids',
+			data:{
+			   flow_id:flowPId,
+			   title:flowPTitle,
+			   node_id:nodeId,
+			   //pids:parentId
+			   cids:parentId
+			},
+			timeout:5000,
+			success:function(data){	
+			   warmMsgFunc(0);	   
+			   if(data.msg==1){
+				  if(flowPId==-1){
+				     warmMsgFunc(1,'添加第一个节点需要更多耐心，请稍候...');
+					 window.location.href='/Flow/Modify?id='+data.total;
+					 return false;
+				  }
+				  makeNodeList(flowPId);
+			   }
+			   else{
+				  operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			   }
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+				warmMsgFunc(0);
+				operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
 			}
-		}); */
-		
-		
-		
-		
-		
-		var alertModal = $('#alertModal'), attributeModal = $("#attributeModal");
-		//消息提示
-		mAlert = function(messages, s) {
-			if (!messages)
-				messages = "";
-			if (!s)
-				s = 2000;
-			alertModal.find(".modal-body").html(messages);
-			alertModal.modal('toggle');
-			setTimeout(function() {
-				alertModal.modal("hide")
-			}, s);
-		}
-
-		
-		attributeModal.on('hidden.bs.modal', function (e) {
-			$(this).removeData("modal");//移除数据，防止缓存
-			});
-		
-		
-		//刷新页面
-		function page_reload() {
-			location.reload();
-		}
-		function GetNodeCategory(selected)
-        {
-            $.ajax({
-                url:"/Tools/GetNodeCategory",
-                success:function(data){
-                	$('#node_c').show();
-                    $('#node_l').hide();
-                	$('.listBtm').hide();
-                    var tbody = $('#listData').empty();
-                    $
-                            .each(data.data,
-                                    function(i, item) {
-                                        var tr = $('<tr></tr>')
-                                                .appendTo(tbody);
-                                        var td = $('<td></td>')
-                                                .appendTo(tr);
-                                        $('<a></a>').appendTo(td)
-                                                .html(this.title).click(function(){
-                                                	getNodeList(item.id,1,selected);
-                                                })
-
-                                    });
-                }
-            
-            });
-        }
-		function getNodeList(id, page, selected) {
-			$
-					.ajax({
-						url : "/Tools/GetNodeByCategory",
-						data : {
-							"page_size" : 10,
-							"page_index" : page,
-							"id" : id
-						},
-						async : false, //同步请求
-						datatype : "json",
-						beforeSend : function() {
-							//Loading....
-						},
-						complete : function() {
-							//Loading Complete
-						},
-						success : function(data) {
-							if (data.msg == 0) {
-								alert(data.msgbox);
-								return;
-							}
-
-		                    $('#node_c').hide();
-		                    $('#node_l').show();
-		                    $('.listBtm').show();
-							var tbody = $('#listData').empty();
-							$
-									.each(data.data,
-											function(i, item) {
-												var tr = $('<tr></tr>')
-														.appendTo(tbody);
-												var td = $('<td></td>')
-														.appendTo(tr);
-												td.attr('data-id', this.id)
-														.attr('data-title',
-																this.title);
-												$('<button>选择</button>')
-														.appendTo(td)
-														.click(function() {
-															selected(this);
-														});
-												$('<td></td>').appendTo(tr)
-														.html(this.title);
-												
-
-											});
-							if (data.total == 0) {
-								var tr = $('<tr></tr>').appendTo(tbody);
-								$('<td colspan="3"></td>')
-										.appendTo(tr)
-										.html(
-												'<p style="text-align:center;font-size:16px;">没有相关数据</p>');
-							}
-							$("#span_data_total").text(data.total);
-							laypage({
-								cont : $('#pager'), //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-								pages : data.msgbox, //通过后台拿到的总页数
-								curr : page || 1, //当前页
-								groups : 7, //连续显示分页数
-								skip : true, //是否开启跳页
-								jump : function(obj, first) { //触发分页后的回调
-									if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
-										getNodeList(id, obj.curr, selected);
-									}
-								}
-							});
-
-						}
-					});
-
-		}
-		/*
-		php 命名习惯 单词用下划线_隔开
-		js 命名习惯：首字母小写 + 其它首字线大写
-		 */
-		/*步骤数据*/
-		function getItem()
-		{
-			$.ajax({
-				url:'/Tools/GetAllFlowNode',
-				data:{flow_id:the_flow_id},
-				success:function(data){
-					make(data);
-				}
-			});
-		}
-		getItem();
-		
-		
-		function make(data){
-			var list=[];
-			$(data.list).each(function(){
-				var item=this;
-				if(this.style){
-					var s=this.style.split(';');
-					$(s).each(function(){
-						var t=this.split(':');
-						if(t.length!=2 || t[1]==''){
-							return true;
-						}
-						var key=t[0];
-						var val=t[1];
-						if(/left|top/gi.test(key)){
-							val=parseInt(val);
-						}
-						item[key]=val;
-					});
-				}
-				list.push(item);
-			});
-			data.list=list;
-		 _canvas = $("#flowdesign_canvas")
-				.Flowdesign(
-						{
-							"field_key":{id:'flow_node_id',title:'flow_node_title'},
-							"processData" : data
-							/*,mtAfterDrop:function(params)
-							{
-							    //alert("连接："+params.sourceId +" -> "+ params.targetId);
-							}*/
-							/*画面右键*/
-							,
-							canvasMenus:canvasMenus,
-							processMenus : {
-								"pmDelete" : function(t) {
-									if (confirm("你确定删除步骤吗？")) {
-										var activeId = _canvas.getActiveId();//右键当前的ID
-										$.ajax({
-											url:'/Tools/DelFlowNode',
-											type:'post',
-											data:{
-												flow_node_id:activeId
-											},
-											success:function(data){
-												console.log(JSON.stringify(data));
-												if(data.msg==1){
-												//_canvas.delProcess(activeId);
-												location.reload();
-												}else{
-													alert(data.msgbox);
-												}
-											}
-										});
-										
-										
-									}
-								},
-								"pmAttribute" :setAttr ,
-								"pmView":pmView
-								
-							},
-							fnRepeat : function() {
-								//alert("步骤连接重复1");//可使用 jquery ui 或其它方式提示
-								mAlert("步骤连接重复了，请重新连接");
-
-							},
-							fnClick : function() {
-								var activeId = _canvas.getActiveId();
-								mAlert("查看步骤信息 " + activeId);
-							},
-							fnDbClick : setAttr
-						});
-		}
+		});	
+	}	
+}
+function delSunNode(nodeId){
+        $("#process_page_out_bg").hide();
+		warmMsgFunc(1,'数据操作中，请稍候...');
+		$.ajax({
+			type:'get',
+			dataType:'json',
+			async:true,
+			url:'/Tools/DelFlowNode',
+			data:{
+			   flow_id:flowPId,
+			   node_id:nodeId
+			},
+			timeout:5000,
+			success:function(data){	
+			   warmMsgFunc(0);	   
+			   if(data.msg==1){
+				  makeNodeList(flowPId);
+			   }
+			   else{
+				  operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			   }
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+				warmMsgFunc(0);
+				operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			}
+		});	
+}
+function publicStyle(nodeId){//弹出框操作
+    var getDoorId="node_list_pt";
+	$("input[name='node_type'],input[name='node_get']").unbind("change");
+	$(".process_page_out_node_list .tt,#process_page_out_submit").unbind("click");
 	
-		
-		/*清除*/
-		$("#leipi_clear").bind('click', function() {
-			if (_canvas.clear()) {
-				//alert("清空连接成功");
-				mAlert("清空连接成功，你可以重新连接");
-			} else {
-				//alert("清空连接失败");
-				mAlert("清空连接失败");
-			}
-		});
-		var attributeModalCallBack=false;
-		 attributeModal.on('show.bs.modal',function (e) {
-			url=$(attributeModal).attr('data-url');
-			var div= $('<div></div>').load(url ,'',attributeModalCallBack);
-			 div.appendTo( attributeModal.find(".modal-body" ).empty());
-		 });
-		ajaxModal = function(url, fn) {
-			attributeModalCallBack=fn;
-			attributeModal.find(".modal-body").html(
-					'<img src="/assets/flowdesign/images/loading.gif"/>');
-			
-			 $( ".modal-title" ).html("编辑节点");
-			 attributeModal.attr('data-url',url);
-			attributeModal.modal();
+	$("input[name='node_type']").bind("change",function(){
+		$("input[name='node_type']").parent().removeClass("process_page_out_icon1");
+		$(this).parent().addClass("process_page_out_icon1");
+		var showId='node_list_'+$(this).val();
+		$(".process_page_out_border").hide();
+		$("#"+showId).show();
+		getDoorId=showId;
+	});
+	$(".process_page_out_node_list .tt").bind("click",function(){
+		$(this).parent().toggleClass("process_page_out_node_list_hide");
+	});
+	$("input[name='node_get']").bind("change",function(){
+		if($(this).is(":checked")){
+		   $(this).parents("li").addClass("get");
 		}
-		function getStyleValue(key,val){
-			if(/^width$|^height$|^line-height$|^left$|^top$/i.test(key))
-			{
-				return val==''?'':parseInt(val.replace(/[^\d+]/gi,''));
-			}else if(/^color$/gi.test(key)){
-				return val.replace(/^#/gi,'');
-			}
-			return val;
-		}
-		function pmView(){
-			  var id=$('#window'+_canvas.getActiveId()).data('node_id');
-			$.ajax({
-                url:'/Tools/GetNodeInfo',
-                data:{
-                    id:id
-                },
-                success:function(data){
-                    console.log(JSON.stringify(data));
-                    if(data.Msg!=0){
-                    	alert(data.MsgBox);
-                    	return;
-                    }
-                    var body=$('#node_dialog').html();
-                    $.each(data,function(k,v){
-                    	body=body.format(k,null==v?"":v);
-                    });
-                    showDialog({
-                        title :data.title,
-                        html : body
-                    });
-                }
-			});
-		}
-		function setAttr(){
-			$.ajax({
-				url:'/Tools/GetFLowNode',
-				data:{
-					flow_node_id:_canvas.getActiveId()
-				},
-				success:function(data){
-					console.log(JSON.stringify(data));
-					item=data.data;
-					edit_node_item=item;
-					ajaxModal('/assets/flow_attribute.html?',function(){
-						if(null!=item.style){
-							$(item.style.split(';')).each(function(){
-								var tmp=this.split(':');
-								if(tmp.length==2){
-									var k=tmp[0];
-									var v=tmp[1];
-									item[k]=getStyleValue(k,v);
-								}
-							});
-							}
-							init_flow_node_edit(null,item);
-							$('#tmp_process_to').val(item.process_to);
-					});
-				}
-			});
-			
-		}
-		
-		
-		function doSave()
-		{
-			var list = _canvas.getProcessInfo();//连接信息
-			var data={flow_id:the_flow_id,flow_node_list:list,title:$('#flow_title').val()};
-			
-			 $.ajax({
-	                url: "/Tools/SaveFlow",
-	                type: "post",
-	                dataType: "json",
-	                async:false,
-	                data: JSON.stringify(data),
-	                success: function (data) {
-	                	console.log(JSON.stringify(data));
-	                    if(data.msg ==1)
-	                    {
-	                        //TODO OK
-	                        alert('保存成功');
-	                    }
-	                },
-	                error: function (XMLHttpRequest, textStatus, errorThrown) {
-	                    alert(XMLHttpRequest.status);
-	                    alert(XMLHttpRequest.readyState);
-	                    alert(textStatus);
-	                }
-	            });
+		else{
+		   $(this).parents("li").removeClass("get");
 		}
 	});
-	function setStyleValue(key,val){
-		if(/^width$|^height$|^line-height$|^left$|^top$/i.test(key))
-		{
-			val=parseInt(val);
-			return isNaN(val)?"":parseInt(val);
-		}else if(/^color$/gi.test(key)){
-			return val==''?'':'#'+val;
+	$("#process_page_out_submit").bind("click",function(){
+	    var getId=$("input[name='node_get']:checked").val();
+		var parentId='';
+		if($(".process_page_out_border input[name='node_get']:checked").length>0){
+			$("#"+getDoorId+" input[name='node_get']:checked").each(function(index, element){
+			   if(index==0){
+				  parentId+=$(this).val();
+			   }
+			   else{
+				  parentId+=','+$(this).val();
+			   }
+			});
+			postSameNode(nodeId,parentId);
 		}
-		return val;
-	}
-	function node_attr_save(obj){
-		var box=$(obj).parents('.modal');
-		var tmp=get_node_edit_value();
-		if(false==tmp){
-			return;
-		}
-		var div=$('#window'+edit_node_item.id);
-		$.each(tmp,function(k,v){
-			div.attr('data-'+k,v);
-		});
-		edit_node_item=$.extend(edit_node_item,tmp);
-		console.log(JSON.stringify(edit_node_item));
-		
-		/* var tmp_process_to=$('#tmp_process_to').val();
-		var tmp={
-				flow_node_id:_canvas.getActiveId(),
-				width:width,
-				height:height,
-				color:color,
-				left:x,
-				top:y,
-				icon:icon,
-				process_to:tmp_process_to
-		}
-		
-		$.each(tmp,function(k,v){
-			var val=setStyleValue(k,v);
-			if(val==''){
-				return true;
+		else{
+		    if(flowPId!=-1){
+		       delSunNode(nodeId);
 			}
-			tmp[k]=val;
-		}); */
-		 $.ajax({
-             url: "/Tools/SaveFlowNode",
-             type: "post",
-             dataType: "json",
-             async:false,
-             data: JSON.stringify(edit_node_item),
-             success: function (data) {
-                 if(data.msg ==1)
-                 {
-                	 console.log(JSON.stringify(data));
-                	 hideDialog();
-                	 location.reload();
-                     //TODO OK
-                 }else{
-                	 alert(data.msgbox);
-                 }
-             },
-             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                 alert(XMLHttpRequest.status);
-                 alert(XMLHttpRequest.readyState);
-                 alert(textStatus);
-             }
-         });
-		//alert(data.join(';'));
+		}
+	});
+}
+function nodeSelectList(tNum,nodeId,parentId){//读取系统节点
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Tools/GetAllNode',
+		data:{
+		   flow_id:flowPId,
+		   t:tNum
+		},
+		timeout:5000,
+		success:function(data){
+		    if(data.data.length>0){
+				var html='';
+				for(var i=0; i<data.data.length; i++){
+					html+='<ul class="process_page_out_node_list" data-id="'+data.data[i].category_id+'">';
+					html+='<li class="tt"><i class="scd"></i>'+data.data[i].category_name+'</li>';
+					for(var y=0; y<data.data[i].node_list.length; y++){
+					    if(nodeId!=data.data[i].node_list[y].node_id){
+							if(parentId!=0&&parentId[data.data[i].node_list[y].node_id]){
+								html+='<li class="sun get"><label for="radio_get_'+data.data[i].node_list[y].node_id+'">';
+								html+='<i class="process_page_out_icon fr"><input type="checkbox" checked="checked" name="node_get" value="'+data.data[i].node_list[y].node_id+'" id="radio_get_'+data.data[i].node_list[y].node_id+'" /></i>';						   
+							}
+							else{
+								html+='<li class="sun"><label for="radio_get_'+data.data[i].node_list[y].node_id+'">';
+								html+='<i class="process_page_out_icon fr"><input type="checkbox" name="node_get" value="'+data.data[i].node_list[y].node_id+'" id="radio_get_'+data.data[i].node_list[y].node_id+'" /></i>';	
+							}
+							html+=data.data[i].node_list[y].node_name;
+							html+='</label></li>';
+						}
+					}
+					html+='</ul>';
+				}
+				if(tNum==0){
+				    $("#node_list_pt").html(html);
+				}
+				else{
+				    $("#node_list_pd").html(html);
+				}		
+				publicStyle(nodeId);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			console.log(XMLHttpRequest.status);
+		}
+	});		
+}
+function insertNodeOut(nodeId,parentId){//弹出节点选择列表
+    if(flowPId==-1&&$("#process_page_name").val()==''){
+	    operatingMsgFunc(1,'请先添加流程名称，再进行操作!');
+	    $("#process_page_name").focus();
 	}
+	else{
+		$("#process_page_out_bg").show();
+		$("#node_list_pt,#node_list_pd").html('<p>加载中，请稍后...</p>');
+		nodeSelectList(0,nodeId,parentId);
+		nodeSelectList(1,nodeId,parentId);
+	}
+}
+function delNodeOutBox(nodeId){//删除节点弹框询问
+    var html='<div class="but">'
+	+'<a href="javascript:;" class="process_page_but_public" onclick="delSunNode(\''+nodeId+'\');">确定</a>'
+	+'<a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$(\'#process_page_msg_box\').remove();">取消</a>'
+	+'</div>';
+    operatingMsgFunc(html,'是否从该流程中移除此节点？')
+}
+function makeNodeList(flowId){//读取流程列表
+	if(flowId!=''&&flowId!=0){		  
+		  $.ajax({
+			  type:'get',
+			  dataType:'json',
+			  async:true,
+			  url:'/Tools/GetFlowNode',
+			  data:{
+				  flow_id:flowId
+			  },
+			  timeout:5000,
+			  success:function(data){
+			      warmMsgFunc(0);
+				  if(data.data.length>0){
+					  $("#insert_node_empty").hide();
+					  $("#process_page_node_box").show();
+                      var dataHtml='<table cellpadding="0" cellspacing="0" class="process_new_style_list">';	
+					  for(var i=0; i<data.data.length; i++){//分类
+					     dataHtml+='<tr class="p_type_name">';
+						 dataHtml+='<td class="m_w"><p>'+data.data[i].category_name+'</p></td>';
+						 dataHtml+='<td></td>';
+						 dataHtml+='</tr>';
+						 for(var y=0; y<data.data[i].node_list.length; y++){//节点
+							 dataHtml+='<tr>';
+							 dataHtml+='<td>'+data.data[i].node_list[y].node_name+'</td>';
+							 var aryFids='{';
+							 if(data.data[i].node_list[y].c_node_list.length>0){
+								 dataHtml+='<td><span class="sp_fname">';
+								 for(var z=0; z<data.data[i].node_list[y].c_node_list.length; z++){//父级
+									if(z!=0){
+									   aryFids+=',';
+									   dataHtml+='，';
+									}								 
+								    aryFids+=data.data[i].node_list[y].c_node_list[z].c_node_id+':true';
+									dataHtml+=data.data[i].node_list[y].c_node_list[z].c_node_name;
+									
+								 }
+								 aryFids+='}';
+								 dataHtml+='</span>'
+								 +'<a href="javascript:;" class="operating_link" onclick="insertNodeOut(\''+data.data[i].node_list[y].node_id+'\','+aryFids+')">修改</a>'
+								 +'<a href="javascript:;" class="operating_link" onclick="delNodeOutBox(\''+data.data[i].node_list[y].node_id+'\')">删除</a>'
+								 +'</td>';
+							 }
+							 else{
+							     dataHtml+='<td><a href="javascript:;" class="operating_link" onclick="insertNodeOut(\''+data.data[i].node_list[y].node_id+'\',0)">设置子级节点</a></td>';
+							 }
+							 
+							 dataHtml+='</tr>';						    
+						 }
+					  }
+					  dataHtml+='</table>';	
+					  $("#process_page_node_box").html(dataHtml);
+				  }
+				  else{
+					  $("#insert_node_empty").show();
+					  $("#process_page_node_box").hide();				   
+				  }
+			  },
+			  error:function(XMLHttpRequest, textStatus, errorThrown){
+				  console.log(XMLHttpRequest.status);
+			  }
+		  });	
+	}
+	else{
+		$("#insert_node_empty").show();
+		$("#process_page_node_box").hide();
+	}
+}
+function changePageTitle(){//修改流程标题
+   var newName=$("#process_page_name").val();
+   var oldName=$("#flow_title").val();
+   warmMsgFunc(1,'页面保存中，请稍候...');
+   if(newName==oldName){
+      window.location.href='/Flow/Index';
+   }
+   else{
+	  $.ajax({
+		  type:'post',
+		  dataType:'json',
+		  async:true,
+		  url:'/Tools/ModifyFlowTitle',
+		  data:{
+			 flow_id:flowPId,
+			 new_title:newName
+		  },
+		  timeout:5000,
+		  success:function(data){
+			  warmMsgFunc(0);
+			  warmMsgFunc(1,'保存成功！正在回到流程列表...');
+			  if(data.msg==1){
+			     window.location.href='/Flow/Index';
+			  }
+			  else{
+			     operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			  }
+		  },
+		  error:function(XMLHttpRequest, textStatus, errorThrown){
+			  warmMsgFunc(0);
+              operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			  console.log(XMLHttpRequest.status);
+		  }
+	  });		
+   }    
+}
+function toMakeMap(){//流程图预览-需先调用接口，生成，而后跳转
+   warmMsgFunc(1,'页面保存中，请稍候...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Tools/GenerateFlowNodeCompact',
+		data:{
+		   flow_id:flowPId
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			warmMsgFunc(1,'生成成功！正在前往...');
+			if(data.msg==1){
+			   window.location.href='/Flow/Compact?id='+flowPId;
+			}
+			else{
+			   operatingMsgFunc(1,'初始化失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'初始化失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});		
 
-	
+}
+$(function(){	
+   warmMsgFunc(1,'页面初始化中，请稍候...');
+   makeNodeList(flowPId);  
+})
 </script>
 
 }

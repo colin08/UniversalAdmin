@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Novacode;
 
 namespace Universal.BLL
 {
@@ -173,7 +174,7 @@ namespace Universal.BLL
         public static bool ImportProject(int project_id, out string zip_path)
         {
             zip_path = "";
-            var project_entity = new BLL.BaseBLL<Entity.Project>().GetModel(p => p.ID == project_id);
+            var project_entity = BLLProject.GetModel(project_id);
             if (project_entity == null)
                 return false;
             var frist_entity = new BLL.BaseBLL<Entity.ProjectFlowNode>().GetModel(p => p.ProjectID == project_id && p.IsFrist, p => p.ProjectFlowNodeFiles);
@@ -194,10 +195,15 @@ namespace Universal.BLL
             RecursiveGetNext(project_id, model.project_flow_node_id, out_list);
 
             #region  生成ZIP
+
             string temp_base_floder = "/uploads/temp/";
+            //项目名称-过滤掉非法文件名字符
             string project_floder_name = Tools.IOHelper.FileNameFilter(project_entity.Title);
-            string temp_floder_path = temp_base_floder + project_floder_name + "/";
-            Tools.IOHelper.CreateDirectory(temp_floder_path);
+
+            #region 流程节点
+
+            string temp_flow_floder_path = temp_base_floder + project_floder_name + "/流程节点/";
+            Tools.IOHelper.CreateDirectory(temp_flow_floder_path);
 
             for (int i = 0; i < out_list.Count; i++)
             {
@@ -206,7 +212,7 @@ namespace Universal.BLL
                     //子目录名称
                     string child_floder_name = (i + 1).ToString() + "-" + out_list[i].node_title + "/";
                     //子目录相对路径
-                    string temp_child_floder = temp_floder_path + child_floder_name;
+                    string temp_child_floder = temp_flow_floder_path + child_floder_name;
                     Tools.IOHelper.CreateDirectory(temp_child_floder);
                     //循环复制当前节点的附件到临时目录
                     foreach (var node_files in out_list[i].files)
@@ -217,10 +223,158 @@ namespace Universal.BLL
 
                 }
             }
+
+            #endregion
+
+            #region  项目docx
+            //流程名称
+            string flow_name = "";
+            if (project_entity.FlowID != null)
+            {
+                int flow_id = Tools.TypeHelper.ObjectToInt(project_entity.FlowID);
+                var entity_flow = new BaseBLL<Entity.Flow>().GetModel(p => p.ID == flow_id);
+                if (entity_flow != null)
+                    flow_name = entity_flow.Title;
+            }
+            //项目用户
+            System.Text.StringBuilder project_users = new System.Text.StringBuilder();
+            foreach (var item in project_entity.ProjectUsers)
+            {
+                if (item.CusUser != null)
+                    project_users.Append(item.CusUser.NickName + ",");
+            }
+            if (project_users.Length > 0)
+                project_users.Remove(project_users.Length - 1, 1);
+
+            //设置word模板路径
+            var doc_template_path = Tools.IOHelper.GetMapPath("/App_Data/ProjectTemplate.docx");
+            var doc_to_path = Tools.IOHelper.GetMapPath(temp_base_floder + project_floder_name + "/" + project_floder_name + ".docx");
+            var project_albums_path = temp_base_floder + project_floder_name + "/项目相册附件/相册/";
+            Tools.IOHelper.CreateDirectory(project_albums_path);
+            var project_file_path = temp_base_floder + project_floder_name + "/项目相册附件/附件/";
+            Tools.IOHelper.CreateDirectory(project_file_path);
+            var project_stage_path = temp_base_floder + project_floder_name + "/拆迁分期附件/";
+            //Tools.IOHelper.CreateDirectory(project_stage_path);
+
+            //处理项目的附件和相册
+            foreach (var file in project_entity.ProjectFiles.ToList())
+            {
+                string new_file_name = Tools.IOHelper.GetIOFileName(file.FileName);
+                switch (file.Type)
+                {
+                    case Entity.ProjectFileType.file:
+                        Tools.IOHelper.CopyFile(file.FilePath, project_file_path + new_file_name);
+                        break;
+                    case Entity.ProjectFileType.album:
+                        Tools.IOHelper.CopyFile(file.FilePath, project_albums_path + new_file_name);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            DocX doc;
+            doc = DocX.Load(doc_template_path);
+            if (doc.Tables != null && doc.Tables.Count > 0)
+            {
+                Table table_basic = doc.Tables[0];
+                table_basic.Rows[1].Cells[1].Paragraphs[0].Append(project_entity.Title);
+                table_basic.Rows[1].Cells[3].Paragraphs[0].Append(project_entity.ApproveUser.NickName);
+                table_basic.Rows[2].Cells[1].Paragraphs[0].Append(flow_name);
+                table_basic.Rows[3].Cells[1].Paragraphs[0].Append(project_users.ToString());
+
+                Table table_project = doc.Tables[1];
+                table_project.Rows[2].Cells[1].Paragraphs[0].Append(Tools.EnumHelper.GetEnumShowName(typeof(Entity.ProjectArea), (int)project_entity.Area));
+                table_project.Rows[2].Cells[3].Paragraphs[0].Append(project_entity.GaiZaoXingZhi);
+                table_project.Rows[3].Cells[1].Paragraphs[0].Append(project_entity.ZhongDiHao);
+                table_project.Rows[3].Cells[3].Paragraphs[0].Append(project_entity.ShenBaoZhuTi);
+                table_project.Rows[4].Cells[1].Paragraphs[0].Append(project_entity.GengXinDanYuanYongDiMianJi.ToString());
+                table_project.Rows[4].Cells[3].Paragraphs[0].Append(project_entity.ZongMianJi + "㎡ " + project_entity.ZongMianJiOther);
+                table_project.Rows[5].Cells[1].Paragraphs[0].Append(project_entity.WuLeiQuanMianJi + "㎡");
+                table_project.Rows[5].Cells[3].Paragraphs[0].Append(project_entity.LaoWuCunMianJi + "㎡");
+                table_project.Rows[6].Cells[1].Paragraphs[0].Append(project_entity.FeiNongMianJi + "㎡");
+                table_project.Rows[6].Cells[3].Paragraphs[0].Append(project_entity.KaiFaMianJi + "㎡");
+                table_project.Rows[7].Cells[1].Paragraphs[0].Append(project_entity.RongJiLv.ToString());
+                table_project.Rows[7].Cells[3].Paragraphs[0].Append(project_entity.TuDiShiYongQuan);
+                table_project.Rows[8].Cells[1].Paragraphs[0].Append(project_entity.JianSheGuiHuaZheng);
+                table_project.Rows[8].Cells[3].Paragraphs[0].Append(project_entity.ChaiQianYongDiMianJi + " ㎡");
+                table_project.Rows[9].Cells[1].Paragraphs[0].Append(project_entity.ChaiQianJianZhuMianJi + " ㎡");
+                string lixiang_time = "";
+                if (project_entity.LiXiangTime != null)
+                    lixiang_time = Tools.TypeHelper.ObjectToDateTime(project_entity.LiXiangTime).ToShortDateString();
+                table_project.Rows[11].Cells[1].Paragraphs[0].Append(lixiang_time);
+                if (project_entity.ZhuanXiangTime != null)
+                    lixiang_time = Tools.TypeHelper.ObjectToDateTime(project_entity.ZhuanXiangTime).ToShortDateString();
+                table_project.Rows[11].Cells[3].Paragraphs[0].Append(lixiang_time);
+                if (project_entity.ZhuTiTime != null)
+                    lixiang_time = Tools.TypeHelper.ObjectToDateTime(project_entity.ZhuTiTime).ToShortDateString();
+                table_project.Rows[12].Cells[1].Paragraphs[0].Append(lixiang_time);
+                if (project_entity.YongDiTime != null)
+                    lixiang_time = Tools.TypeHelper.ObjectToDateTime(project_entity.YongDiTime).ToShortDateString();
+                table_project.Rows[12].Cells[3].Paragraphs[0].Append(lixiang_time);
+                if (project_entity.KaiPanTime != null)
+                    lixiang_time = Tools.TypeHelper.ObjectToDateTime(project_entity.KaiPanTime).ToShortDateString();
+                table_project.Rows[13].Cells[1].Paragraphs[0].Append(lixiang_time);
+                table_project.Rows[15].Cells[1].Paragraphs[0].Append(project_entity.FenChengBiLi);
+                table_project.Rows[15].Cells[3].Paragraphs[0].Append(project_entity.JunJia.ToString() + " (单位：万元)");
+
+                //拆迁模板
+                var db_stage_list = BLLProjectStage.GetAllStage(project_id);
+                Table table_stage_basic = doc.Tables[2];
+
+                int stage_total = db_stage_list.Count;
+                if (stage_total == 0)
+                    doc.Tables[2].Remove();
+
+                //先循环添加基础表格
+                for (int i = 0; i < stage_total - 1; i++)
+                {
+                    table_stage_basic.SetBorder(TableBorderType.Bottom, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    table_stage_basic.SetBorder(TableBorderType.InsideH, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    table_stage_basic.SetBorder(TableBorderType.InsideV, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    table_stage_basic.SetBorder(TableBorderType.Left, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    table_stage_basic.SetBorder(TableBorderType.Right, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    table_stage_basic.SetBorder(TableBorderType.Top, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
+                    doc.InsertTable(table_stage_basic);
+                }
+
+                for (int i = 0; i < stage_total; i++)
+                {
+                    //复制附件
+                    string stage_i_path = project_stage_path + db_stage_list[i].title + "/";
+                    Tools.IOHelper.CreateDirectory(stage_i_path);
+                    foreach (var file in db_stage_list[i].file_list)
+                    {
+                        string new_file_name = Tools.IOHelper.GetIOFileName(file.file_name);
+                        Tools.IOHelper.CopyFile(file.file_path, stage_i_path + new_file_name);
+
+                    }
+
+                    Table table_stage_template = doc.Tables[2 + i];
+                    table_stage_template.Rows[0].Cells[0].Paragraphs[0].Append(db_stage_list[i].title);
+                    table_stage_template.Rows[2].Cells[1].Paragraphs[0].Append(db_stage_list[i].begin_time);
+                    table_stage_template.Rows[2].Cells[3].Paragraphs[0].Append(db_stage_list[i].ChaiZhanDiMianJi + " ㎡");
+                    table_stage_template.Rows[3].Cells[1].Paragraphs[0].Append(db_stage_list[i].ZongHuShu);
+                    table_stage_template.Rows[3].Cells[3].Paragraphs[0].Append(db_stage_list[i].ChaiJianZhuMianJi + " ㎡");
+                    table_stage_template.Rows[4].Cells[1].Paragraphs[0].Append(db_stage_list[i].YiQYHuShu);
+                    table_stage_template.Rows[4].Cells[3].Paragraphs[0].Append(db_stage_list[i].ChaiBuChangMianJi + " ㎡");
+                    table_stage_template.Rows[5].Cells[1].Paragraphs[0].Append(db_stage_list[i].WeiQYHuShu);
+                    table_stage_template.Rows[5].Cells[3].Paragraphs[0].Append(db_stage_list[i].ChaiBuChangjinE);
+                    table_stage_template.Rows[6].Cells[1].Paragraphs[0].Append(db_stage_list[i].ZhanDiMianJi + " ㎡");
+                    table_stage_template.Rows[7].Cells[1].Paragraphs[0].Append(db_stage_list[i].JiDiMianJi + " ㎡");
+                    table_stage_template.Rows[8].Cells[1].Paragraphs[0].Append(db_stage_list[i].KongDiMianJi + " ㎡");
+                    table_stage_template.Rows[9].Cells[1].Paragraphs[0].Append(db_stage_list[i].YiQYMianJi + " ㎡");
+                    table_stage_template.Rows[10].Cells[1].Paragraphs[0].Append(db_stage_list[i].WeiQYMianJi + " ㎡");
+                }
+            }
+            doc.SaveAs(doc_to_path);
+
+            #endregion
+
             zip_path = "/uploads/zip/" + project_floder_name + ".zip";
             //return Tools.ZipHelper.Zip(Tools.IOHelper.GetMapPath(temp_floder_path), Tools.IOHelper.GetMapPath(zip_path));
-            var is_ok = Tools.WebHelper.ToZip(Tools.IOHelper.GetMapPath(zip_path), Tools.IOHelper.GetMapPath(temp_floder_path));
-            Tools.IOHelper.DeleteDirectory(temp_floder_path);
+            var is_ok = Tools.WebHelper.ToZip(Tools.IOHelper.GetMapPath(zip_path), Tools.IOHelper.GetMapPath(temp_base_floder + project_floder_name +"/"));
+            Tools.IOHelper.DeleteDirectory(temp_base_floder + project_floder_name + "/");
             return is_ok;
             #endregion
         }

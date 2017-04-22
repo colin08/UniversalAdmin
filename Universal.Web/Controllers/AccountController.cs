@@ -133,7 +133,7 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ResetPwd(Models.ViewModelSendPwd req)
         {
-            if(string.IsNullOrWhiteSpace(WebSite.ResetPwd))
+            if (string.IsNullOrWhiteSpace(WebSite.ResetPwd))
                 ModelState.AddModelError("guid", "站点配置文件有误");
 
             if(ModelState.IsValid)
@@ -149,7 +149,7 @@ namespace Universal.Web.Controllers
                         bll.Modify(model, new string[] { "Password" });
                     }
                     TempData["Telphone"] = req.telphone;
-                    TempData["DefaultPwd"] = WebSite.ResetPwd;
+                    
                     return RedirectToAction("ResetSuc", "Account");
                 }
             }
@@ -211,6 +211,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult ResetSuc()
         {
+            ViewBag.DefaultPwd = WebSite.ResetPwd;
             ViewBag.Telphone = TempData["Telphone"].ToString();
             return View();
         }

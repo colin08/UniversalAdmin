@@ -965,7 +965,7 @@ namespace Universal.Web.Controllers
             string msg = "";
             if (data.stage_id <= 0)
             {
-                int id = BLL.BLLProjectStage.Add(project_id, data, out msg);
+                int id = BLL.BLLProjectStage.Add(project_id, data,WorkContext.UserInfo.ID, out msg);
                 WorkContext.AjaxStringEntity.msg = id > 0 ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 WorkContext.AjaxStringEntity.data = id.ToString();
@@ -973,7 +973,7 @@ namespace Universal.Web.Controllers
             }
             else
             {
-                var isOK = BLL.BLLProjectStage.Modfify(data, out msg);
+                var isOK = BLL.BLLProjectStage.Modfify(data,WorkContext.UserInfo.ID, out msg);
                 WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);

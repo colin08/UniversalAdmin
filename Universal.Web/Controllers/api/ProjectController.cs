@@ -610,14 +610,14 @@ namespace Universal.Web.Controllers.api
             string msg = "";
             if (model.stage_id <= 0)
             {
-                int id = BLL.BLLProjectStage.Add(req.project_id, model, out msg);
+                int id = BLL.BLLProjectStage.Add(req.project_id, model,req.login_user_id, out msg);
                 WorkContext.AjaxStringEntity.msg = id > 0 ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return WorkContext.AjaxStringEntity;
             }
             else
             {
-                var isOK = BLL.BLLProjectStage.Modfify(model, out msg);
+                var isOK = BLL.BLLProjectStage.Modfify(model, req.login_user_id, out msg);
                 WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return WorkContext.AjaxStringEntity;
@@ -630,7 +630,7 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/project/modify/stage/del")]
-        public WebAjaxEntity<string> DelProjectStage(int stage_id)
+        public WebAjaxEntity<string> DelProjectStage(int stage_id,int login_user_id)
         {
             if (stage_id <= 0)
             {
@@ -638,9 +638,10 @@ namespace Universal.Web.Controllers.api
                 return WorkContext.AjaxStringEntity;
             }
 
-            new BLL.BaseBLL<Entity.ProjectStage>().DelBy(p => p.ID == stage_id);
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "ok";
+            string msg = "";
+            var is_ok = BLL.BLLProjectStage.Del(stage_id, login_user_id, out msg);
+            WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
             return WorkContext.AjaxStringEntity;
         }
 

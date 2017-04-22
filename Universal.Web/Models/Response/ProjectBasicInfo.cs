@@ -25,6 +25,11 @@ namespace Universal.Web.Models.Response
         /// </summary>
         public int favorites_id { get; set; }
 
+        /// <summary>
+        /// 当前登录的用户ID，操作分期信息需要传入
+        /// </summary>
+        public int login_user_id { get; set; }
+
     }
 
     /// <summary>
