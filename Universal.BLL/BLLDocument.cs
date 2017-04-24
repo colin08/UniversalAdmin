@@ -179,6 +179,48 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取所有用户可见的开放的秘籍
+        /// </summary>
+        /// <param name="page_index"></param>
+        /// <param name="page_size"></param>
+        /// <param name="rowCount"></param>
+        /// <returns></returns>
+        public static List<Entity.DocPost> GetOpenPageData(int page_index, int page_size, ref int rowCount)
+        {
+            rowCount = 0;
+
+            List<Entity.DocPost> response_entity = new List<Entity.DocPost>();
+
+            int begin_index = (page_index - 1) * page_size + 1;
+            int end_index = page_index * page_size;
+
+            var db = new DataCore.EFDBContext();
+            string sql = "";
+            string sql_total = "";
+
+            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * from (select * from DocPost where See = 0) as P ) AS T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) from DocPost where See = 0";
+
+            rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
+            response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();
+            foreach (var item in response_entity)
+            {
+                var entity = db.CusUsers.Find(item.CusUserID);
+                if (entity == null)
+                {
+                    entity = new Entity.CusUser();
+                }
+                item.CusUser = entity;
+
+                item.CategoryName = BLLDocCategory.GetTopParent(item.DocCategoryID);
+            }
+            db.Dispose();
+            return response_entity;
+
+        }
+
+
+        /// <summary>
         /// 修改
         /// </summary>
         /// <param name="entity"></param>

@@ -154,7 +154,6 @@ namespace Universal.Web.Controllers.api
             int rowCount = 0;
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             BLL.BaseBLL<Entity.CusUserDocFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserDocFavorites>();
-            BLL.BaseBLL<Entity.DocCategory> bll_docc = new BLL.BaseBLL<Entity.DocCategory>();
             BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
             foreach (var item in BLL.BLLDocument.GetPowerPageData(req.page_index, req.page_size, ref rowCount, req.user_id, req.search_word, req.category_id))
             {
@@ -163,9 +162,7 @@ namespace Universal.Web.Controllers.api
                 model.id = item.ID;
                 model.add_user = item.CusUser.NickName;
                 model.category_id = item.DocCategoryID;
-                var cat_entity = bll_docc.GetModel(p => p.ID == item.DocCategoryID);
-                if (cat_entity != null)
-                    model.category_name = cat_entity.Title;
+                var cat_entity = item.CategoryName;
                 model.title = item.Title;
                 model.content = ReplaceTextAreaImg(item.Content);
                 var fav_entity = bll_fav.GetModel(p => p.CusUserID == req.user_id && p.DocPostID == item.ID);
@@ -193,6 +190,58 @@ namespace Universal.Web.Controllers.api
             response_entity.msgbox = "ok";
             return response_entity;
         }
+
+        /// <summary>
+        /// 获取访客可见秘籍列表(无需user_id)
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/document/open/list")]
+        public WebAjaxEntity<List<Models.Response.DocumentInfo>> GetDocOpenList([FromBody]Models.Request.BasePage req)
+        {
+            WebAjaxEntity<List<Models.Response.DocumentInfo>> response_entity = new WebAjaxEntity<List<Models.Response.DocumentInfo>>();
+            if (req.page_index <= 0 || req.page_size <= 0)
+            {
+                response_entity.msgbox = "非法参数";
+                return response_entity;
+            }
+
+            int rowCount = 0;
+            List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
+            BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
+            foreach (var item in BLL.BLLDocument.GetOpenPageData(req.page_index, req.page_size, ref rowCount))
+            {
+                Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
+                model.add_time = item.AddTime;
+                model.id = item.ID;
+                model.add_user = item.CusUser.NickName;
+                model.category_id = item.DocCategoryID;
+                model.category_name = item.CategoryName;
+                model.title = item.Title;
+                model.content = ReplaceTextAreaImg(item.Content);
+                List<Entity.DocFile> file_list = bll_file.GetListBy(0, p => p.DocPostID == item.ID, "ID ASC");
+                if (file_list != null)
+                {
+                    foreach (var file in file_list)
+                    {
+                        Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                        model_file.file_name = file.FileName;
+                        model_file.file_path = GetSiteUrl() + file.FilePath;
+                        model_file.file_size = file.FileSize;
+                        model_file.type = Entity.ProjectFileType.file;
+                        model.file_list.Add(model_file);
+                    }
+                }
+                response_list.Add(model);
+            }
+            if (rowCount > 0)
+                response_entity.data = response_list;
+            response_entity.total = rowCount;
+            response_entity.msg = 1;
+            response_entity.msgbox = "ok";
+            return response_entity;
+        }
+
 
         /// <summary>
         /// 添加下载记录
