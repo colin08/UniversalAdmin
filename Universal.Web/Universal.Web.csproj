@@ -161,6 +161,7 @@
     <Content Include="Assets\css\style.min.css" />
     <Content Include="Assets\error\ie.html" />
     <Content Include="Assets\fonts\fontawesome-webfont.svg" />
+    <Content Include="Assets\img\browser.png" />
     <Content Include="Assets\img\default_avatar.jpg" />
     <Content Include="Assets\img\favicon.ico" />
     <Content Include="Assets\js\bootstrap.min.js" />

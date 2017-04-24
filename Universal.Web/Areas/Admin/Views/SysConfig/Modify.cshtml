@@ -52,6 +52,24 @@
                 <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.FileUrl)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.FileUrl, (object)new { @class = "form-control", placeholder = "留空为本站" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.FileUrl)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.CompanyName)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.CompanyName, (object)new { @class = "form-control", placeholder = "不能超过30个字符" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.CompanyName)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AppPoolName)</label>
                     <div class="col-sm-3">
                         @Html.TextBoxFor(p => p.AppPoolName, (object)new { @class = "form-control", placeholder = "不超过15个字符" })

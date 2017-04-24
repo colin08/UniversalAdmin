@@ -101,7 +101,13 @@ namespace Universal.Tools
         [Display(Name = "站点URL"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^(http|https)\://.+$", ErrorMessage = "URL格式错误")]
         public string SiteUrl { get; set; }
 
-        [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过15个字符")]
+        [Display(Name ="附件地址")]
+        public string FileUrl { get; set; }
+
+        [Display(Name ="公司名称"),Required(ErrorMessage ="不能为空"),MaxLength(30,ErrorMessage = "不能超过30个字符")]
+        public string CompanyName { get; set; }
+
+        [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
 
         [Display(Name = "数据库备份目录"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^[C-Zc-z]:(\\\w+)*\\$", ErrorMessage = "目录格式有误，Ps:C:\\db\\"), MaxLength(100, ErrorMessage = "不能超过100个字符")]
