@@ -1,0 +1,26 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FLowGuide</title>
+    
+</head>
+<body>
+    <div>
+        <!-- 流程标题 --> 
+        <span>@ViewData["FlowTitle"]</span>
+
+    </div>
+    <script type="text/javascript">
+        //流程ID
+        var flow_id = @ViewData["flow_id"];
+        
+    </script>
+</body>
+</html>

@@ -183,9 +183,10 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="page_index"></param>
         /// <param name="page_size"></param>
+        /// <param name="category_id"></param>
         /// <param name="rowCount"></param>
         /// <returns></returns>
-        public static List<Entity.DocPost> GetOpenPageData(int page_index, int page_size, ref int rowCount)
+        public static List<Entity.DocPost> GetOpenPageData(int page_index, int page_size,int category_id, ref int rowCount)
         {
             rowCount = 0;
 
@@ -198,8 +199,8 @@ namespace Universal.BLL
             string sql = "";
             string sql_total = "";
 
-            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row, * from (select * from DocPost where See = 0) as P ) AS T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-            sql_total = "select count(1) from DocPost where See = 0";
+            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from DocPost where See = 0 and DocCategoryID = " + category_id.ToString() + ") AS T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) from DocPost where See = 0 and DocCategoryID = " + category_id.ToString() + "";
 
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();

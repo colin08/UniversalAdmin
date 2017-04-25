@@ -205,11 +205,16 @@ namespace Universal.Web.Controllers.api
                 response_entity.msgbox = "非法参数";
                 return response_entity;
             }
+            if(req.user_id <=0)
+            {
+                response_entity.msgbox = "分类不能为空";
+                return response_entity;
+            }
 
             int rowCount = 0;
             List<Models.Response.DocumentInfo> response_list = new List<Models.Response.DocumentInfo>();
             BLL.BaseBLL<Entity.DocFile> bll_file = new BLL.BaseBLL<Entity.DocFile>();
-            foreach (var item in BLL.BLLDocument.GetOpenPageData(req.page_index, req.page_size, ref rowCount))
+            foreach (var item in BLL.BLLDocument.GetOpenPageData(req.page_index, req.page_size,req.user_id, ref rowCount))
             {
                 Models.Response.DocumentInfo model = new Models.Response.DocumentInfo();
                 model.add_time = item.AddTime;
