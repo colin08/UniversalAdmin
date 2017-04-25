@@ -990,6 +990,7 @@
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\NodeCategoryController.cs" />
     <Compile Include="Controllers\ShareController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\WorkMeetingController.cs" />
     <Compile Include="Controllers\WorkJobController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -1239,6 +1240,7 @@
   <ItemGroup>
     <Folder Include="Areas\h5\Models\" />
     <Folder Include="Areas\h5\Views\Shared\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
