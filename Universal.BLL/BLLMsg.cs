@@ -157,7 +157,7 @@ namespace Universal.BLL
                 string ids = string.Join(",", user_list.ToArray());
                 if (ids.Length > 0)
                 {
-                    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                    var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
                     Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
                 }
             }
@@ -220,7 +220,7 @@ namespace Universal.BLL
                 }
                 db.SaveChanges();
                 string ids = string.Join(",", user_list.ToArray());
-                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
                 Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
@@ -250,7 +250,7 @@ namespace Universal.BLL
                 }
                 db.SaveChanges();
                 string ids = string.Join(",", id_list);
-                var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
                 Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
