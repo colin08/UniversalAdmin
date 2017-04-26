@@ -30,7 +30,7 @@ namespace Universal.Web.Framework
             {
                 BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
                 bll.Add(entity);
-            }));
+            })){ IsBackground = true }.Start();
 
         }
     }

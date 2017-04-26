@@ -7,23 +7,41 @@
 @section head
 {
 @Styles.Render("~/Content/ztree_metroStyle")
+@Styles.Render("~/Content/icheck")
+<style type="text/css">
+    .ztree li ul.line{height:initial;}
+</style>
 }
 
 <!--头部脚本 end-->
-<!--路径导航-->
+<!--Panel-->
 @section nav
 {
+<div class="ibox-title">
+    <h5>编辑后台用户</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+        </a>
+    </div>
+</div>
+}
+<!--Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
     <div class="col-sm-4">
-        <h2>编辑后台用户</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><a href="@Url.Action("Index", "SysRole", new { Area = "Admin" })">后台用户组列表</a></li>
-            <li><strong>编辑组信息</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysRole/Index">用户组管理</a></li>
+            <li><strong>编辑</strong></li>
         </ol>
     </div>
-    <a href="@Url.Action("Index", "SysRole", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
-}
-<!--路径导航 end-->
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航  end -->
+
 <!--Main Body-->
 
 <div class="clients-list">
@@ -52,9 +70,12 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.IsAdmin) </label>
                     <div class="col-sm-10">
-                        @Html.RadioButtonFor(x => x.IsAdmin, true, new { @id = "rb_is_admin_1" }) <label for="rb_is_admin_1">是</label>
-                        &nbsp;
-                        @Html.RadioButtonFor(x => x.IsAdmin, false, new { @id = "rb_is_admin_2" }) <label for="rb_is_admin_1">否</label>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, true, new { @id = "rb_is_admin_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, false, new { @id = "rb_is_admin_2" }) <i></i> 禁用</label>
+                        </div>
                     </div>
                 </div>
 
@@ -76,7 +97,8 @@
 
             <div id="tab-2" class="tab-pane">
                 <div class="form-group" style="margin-top:25px;">
-                    <div class="col-sm-4 col-sm-offset-1">
+                    <div class="clear"></div>
+                    <div class="col-sm-4"> <!--col-sm-offset-1-->
                         <ul id="tree" class="ztree"></ul>
                     </div>
                 </div>
@@ -87,7 +109,7 @@
                 <div class="col-sm-4 col-sm-offset-2">
                     @if(CheckAdminPower("sysrole/edit",true))
                     {
-                    @:<button class="btn btn-primary" type="submit">保存内容</button>&nbsp;
+                    @:<button class="btn btn-info" type="submit">保存内容</button>&nbsp;
                     @:<button class="btn btn-white" type="reset">取消</button>
                     }
                 </div>
@@ -101,8 +123,9 @@
 <!--底部脚本-->
 @section foot
 {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/ztree_excheck")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/ztree_excheck")
+@Scripts.Render("~/bundles/icheck")
 
     <script  type="text/javascript">        
         var setting = {
@@ -119,7 +142,7 @@
             }
         };
 
-        var zNodes =@Html.Raw(ViewData["Tree"]);
+        var zNodes = @Html.Raw(ViewData["Tree"]);
 
         var code;
 
@@ -150,6 +173,12 @@
         $(document).ready(function(){
             $.fn.zTree.init($("#tree"), setting, zNodes);
             setCheck();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
         });
 
         $(function () {

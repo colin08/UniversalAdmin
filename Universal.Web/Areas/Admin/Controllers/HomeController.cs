@@ -127,7 +127,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         public ActionResult Center()
-        {            
+        {
             return View();
         }
 

@@ -14,6 +14,12 @@ namespace Universal.Web
             //关闭压缩功能，否则发布后文件加载不了
             BundleTable.EnableOptimizations = false;
 
+            bundles.Add(new ScriptBundle("~/bundles/admin_base").Include(
+                        "~/Assets/js/jquery.min.js",
+                        "~/Assets/js/bootstrap.min.js",
+                        "~/Assets/js/plugins/layer/layer.min.js",
+                        "~/Assets/js/plugins/pace/pace.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Assets/js/jquery.min.js"));
 
@@ -28,6 +34,15 @@ namespace Universal.Web
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                         "~/Assets/js/bootstrap.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/pace").Include(
+                        "~/Assets/js/plugins/pace/pace.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/icheck").Include(
+                        "~/Assets/js/plugins/iCheck/icheck.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/chosen").Include(
+                        "~/Assets/js/plugins/chosen/chosen.jquery.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/layer").Include(
                       "~/Assets/js/plugins/layer/layer.min.js"));
 
@@ -39,6 +54,9 @@ namespace Universal.Web
 
             bundles.Add(new ScriptBundle("~/bundles/uploadifive").Include(
                       "~/Assets/js/plugins/uploadifive/jquery.uploadifive.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/webuploader").Include(
+                      "~/Assets/js/plugins/webuploader/webuploader.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/simditor").Include(
                       "~/Assets/js/plugins/simditor/module.min.js",
@@ -55,16 +73,7 @@ namespace Universal.Web
 
             bundles.Add(new ScriptBundle("~/bundles/slimscroll").Include(
                       "~/Assets/js/plugins/slimscroll/jquery.slimscroll.min.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/hplus").Include(
-                      "~/Assets/js/hplus.min.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/contabs").Include(
-                      "~/Assets/js/contabs.min.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/toastr").Include(
-                      "~/Assets/js/plugins/toastr/toastr.min.js"));
-
+            
             bundles.Add(new ScriptBundle("~/bundles/ztree_excheck").Include(
                       "~/Assets/js/plugins/ztree/js/jquery.ztree.core.min.js",
                       "~/Assets/js/plugins/ztree/js/jquery.ztree.excheck.min.js"));
@@ -73,15 +82,21 @@ namespace Universal.Web
             bundles.Add(new StyleBundle("~/Content/admin/css").Include(
                       "~/Assets/css/bootstrap.min.css",
                       "~/Assets/css/font-awesome.min.css",
-                      "~/Assets/css/animate.min.css",
-                      "~/Assets/css/style.min.css",
+                      "~/Assets/css/animate.css",
+                      "~/Assets/css/style.css",
                       "~/Assets/css/admin.css"));
 
             bundles.Add(new StyleBundle("~/Content/uploadifive").Include(
                       "~/Assets/js/plugins/uploadifive/uploadifive.css"));
 
-            bundles.Add(new StyleBundle("~/Content/toastr").Include(
-                      "~/Assets/css/plugins/toastr/toastr.min.css"));
+            bundles.Add(new StyleBundle("~/Content/webuploader").Include(
+                      "~/Assets/js/plugins/webuploader/webuploader.css"));
+
+            bundles.Add(new StyleBundle("~/Content/icheck").Include(
+                      "~/Assets/css/plugins/iCheck/custom.css"));
+
+            bundles.Add(new StyleBundle("~/Content/chosen").Include(
+                      "~/Assets/css/plugins/chosen/chosen.css"));
 
             bundles.Add(new StyleBundle("~/Content/simditor").Include(
                        "~/Assets/css/plugins/simditor/simditor.css",

@@ -254,6 +254,12 @@ function FileDownLoad(url, data, method) {
     };
 };
 
+function KeyDown(funcStr) {
+    if (event.keyCode == 13) {
+        eval(funcStr);
+    }
+}
+
 // Ajax 文件下载
 //jQuery.download = function (url, data, method) {
 //    // 获得url和data

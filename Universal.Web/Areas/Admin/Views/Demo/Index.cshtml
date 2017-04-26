@@ -3,24 +3,33 @@
     ViewBag.Title = "测试数据列表";
 }
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
+<div class="ibox-title">
+    <h5>测试数据</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+        </a>
+    </div>
+</div>
+}
+<!-- Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
     <div class="col-sm-4">
-        <h2>测试数据列表</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><strong>测试数据列表</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/Demo/Index">测试数据</a></li>
+            <li><strong>演示数据列表</strong></li>
         </ol>
     </div>
 
-<div class="pull-right" style="margin-right:15px;">
-    <button type="button" class="btn pull-right" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+    <div style="height: 40px;"></div>
 </div>
-}
-<!--路径导航 end-->
- 
-<!--Main Body-->
+<!-- 路径导航 end -->
 
 <div class="row">
     <div class="col-sm-2">
@@ -31,18 +40,22 @@
         <p></p>
     </div>
     <div class="col-sm-2">
-        
+
     </div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" class="input-sm form-control">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-primary" onclick="WordSearch()"> 搜索</button>
+                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
             </span>
         </div>
     </div>
 </div>
 <br>
+
+ 
+<!--Main Body-->
+
 @if(Model.DataList.Count>0)
 {
 
@@ -89,7 +102,7 @@
 
 }else
 {
-    <p><h2>没有相关数据</h2></p>
+    <p id="pager"><h2>没有相关数据</h2></p>
 }
 <!-- Main Body end -->
 

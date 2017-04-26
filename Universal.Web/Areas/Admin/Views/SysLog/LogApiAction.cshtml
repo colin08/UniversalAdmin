@@ -10,49 +10,59 @@
 }
 <!--头部脚本 end-->
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
-    <div class="col-sm-4">
-        <h2>接口日志列表</h2>
-        <ol class="breadcrumb">
-            <li>主页</li>
-            <li><strong>接口日志列表</strong></li>
-        </ol>
-        
+<div class="ibox-title">
+    <h5>接口日志</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+        </a>
     </div>
-
-<div class="pull-right" style="margin-right:15px;">
-    <button type="button" class="btn pull-right" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
 </div>
 }
-<!--路径导航 end-->
- 
-<!--Main Body-->
+<!-- Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysLog/LogApiAction">接口日志</a></li>
+            <li><strong>日志列表</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
 
 <div class="row">
     <div class="col-sm-2">
-        @if(CheckAdminPower("SysLog/DelApiAction", true))
+        @if (CheckAdminPower("SysLog/DelApiAction", true))
         {
-        @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysLog/DelApiAction',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysLog/DelApiAction',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
     </div>
     <div class="col-sm-4">
         <p></p>
     </div>
     <div class="col-sm-2">
-        <p></p>
+        
     </div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" id="txt_word" value="@Model.word" placeholder="请求地址" class="input-sm form-control">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="请求地址" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-primary" onclick="WordSearch()"> 搜索</button>
+                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
             </span>
         </div>
     </div>
 </div>
 <br>
+ 
+<!--Main Body-->
 
 @if(Model.DataList.Count >0)
 {
@@ -106,14 +116,14 @@
 }
 else
 {
-    <p><h2>没有相关数据</h2></p>
+    <p id="pager"><h2>没有相关数据</h2></p>
 }
 <!-- Main Body end -->
 
 <!--底部脚本-->
 @section foot
 {
-@Scripts.Render("~/bundles/layer")
+@Scripts.Render("~/bundles/laypage")
 <script>
     function WordSearch()
     {

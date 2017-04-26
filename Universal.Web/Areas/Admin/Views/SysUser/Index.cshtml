@@ -10,53 +10,65 @@
 }
 <!--头部脚本 end-->
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
+<div class="ibox-title">
+    <h5>用户列表</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+        </a>
+    </div>
+</div>
+
+}
+<!--Panel end-->
+ 
+<!--路径导航-->
+<div class="row">
     <div class="col-sm-4">
-        <h2>后台用户列表</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysUser/Index">用户管理</a></li>
             <li><strong>用户列表</strong></li>
         </ol>
-        
     </div>
 
-<div class="pull-right" style="margin-right:15px;">
-    <button type="button" class="btn pull-right" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+    <div style="height: 40px;"></div>
 </div>
-}
-<!--路径导航 end-->
- 
+<!-- 路径导航 end -->
+
 <!--Main Body-->
 
 <div class="row">
     <div class="col-sm-2">
         @if (CheckAdminPower("sysuser/edit", true))
         {
-        @:<a class="btn btn-white" href="@Url.Action("Edit", "SysUser", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+            @:<a class="btn btn-white" href="@Url.Action("Edit", "SysUser", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
         @if (CheckAdminPower("sysuser/del", true))
         {
-        @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysUser/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysUser/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
     </div>
     <div class="col-sm-4">
         <p></p>
     </div>
     <div class="col-sm-2">
-        @Html.DropDownListFor(p => p.role, ViewData["sysuser_role"] as List<SelectListItem>, new { @class= "input-sm form-control", onchange = "RoleChange(this)" })
+        @Html.DropDownListFor(p => p.role, ViewData["sysuser_role"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "RoleChange(this)" })
     </div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" class="input-sm form-control">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-primary" onclick="WordSearch()"> 搜索</button>
+                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
             </span>
         </div>
     </div>
 </div>
-<br>
+
+<br />
 
 @if(Model.DataList.Count>0)
 { 
@@ -106,9 +118,10 @@
         </div>
     </div>
 </div>
-}else
+}
+else
 {
-    <p><h2>没有相关数据</h2></p>
+    <p id="pager"><h2>没有相关数据</h2></p>
 }
 <!-- Main Body end -->
 
@@ -116,7 +129,7 @@
 @section foot
 {
 @Scripts.Render("~/bundles/laypage")
-<script>
+<script type="text/javascript">
     function RoleChange(dp)
     {
         if(dp.value ==0)

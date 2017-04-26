@@ -1,54 +1,37 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "首页";
 }
 
-<!DOCTYPE html>
-<html>
+@section head
+{
 
-<head>
+}
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Center</title>
-    <link rel="shortcut icon" href="~/favicon.ico">
-    @Styles.Render("~/Content/admin/css")
-    @Styles.Render("~/Content/toastr")
-</head>
-
-<body class="gray-bg">
-    <div class="wrapper wrapper-content">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                    <h5>系统资源占用</h5>
-                    <div class="pull-right">                        
-                        <div class="switch">
-                            <div class="onoffswitch">
-                                <input type="checkbox" class="onoffswitch-checkbox" id="auto_ref" alt="自动刷新">
-                                <label class="onoffswitch-label" for="auto_ref">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="div_sys">
-
-                </div>    
-                   @*@{ 
-                       Html.RenderAction("SysInfo", "Home");
-                    }*@
-                </div>
+@section nav
+{
+<div class="ibox-title">
+    <h5>系统信息</h5>
+    <div class="ibox-tools pull-right">
+        <div class="switch">
+            <div class="onoffswitch">
+                <input type="checkbox" class="onoffswitch-checkbox" id="auto_ref" alt="自动刷新">
+                <label class="onoffswitch-label" for="auto_ref">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
             </div>
         </div>
     </div>
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
-@Scripts.Render("~/bundles/layer")
+</div>
 
+}
+
+<div id="div_sys">
+
+</div>
+
+@section foot
+{
 <script type="text/javascript">
     var loadDivId;
     var idInt;
@@ -90,5 +73,4 @@
         });
     })
 </script>
-</body>
-</html>
+}

@@ -3,20 +3,35 @@
     ViewBag.Title = "编辑测试信息";
 }
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
-<div class="col-sm-4">
-    <h2>编辑测试信息</h2>
-    <ol class="breadcrumb">
-        <li>主页</li>
-        <li><a href="@Url.Action("Index", "Demo", new { Area = "Admin" })">后台用户列表</a></li>
-        <li><strong>编辑测试信息</strong></li>
-    </ol>
+<div class="ibox-title">
+    <h5>编辑测试信息</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+        </a>
+    </div>
 </div>
-<a href="@Url.Action("Index", "Demo", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
 }
-<!--路径导航 end-->
+<!--Panel end-->
+
+<!-- 路径导航 -->
+
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/Demo/Index">测试数据列表</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+
+<!-- 路径导航 end -->
 
 <!--Main Body-->
 
@@ -106,7 +121,7 @@
 
                     <div class="col-sm-6">
                         @Html.HiddenFor(p => p.StrAlbums)
-                        <button type="button" class="btn btn-primary " onclick="upload()">
+                        <button type="button" class="btn btn-info " onclick="upload()">
                             <i class="fa fa-upload"></i> 上传文件
                         </button>
                     </div>
@@ -175,7 +190,7 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-primary" type="button" onclick="add_dynamic()">添加一条</button>
+                        <button class="btn btn-info" type="button" onclick="add_dynamic()">添加一条</button>
                     </label>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -224,7 +239,7 @@
             
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
-                    <button class="btn btn-primary" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
                     <button class="btn btn-white" type="reset">取消</button>
                 </div>
             </div>

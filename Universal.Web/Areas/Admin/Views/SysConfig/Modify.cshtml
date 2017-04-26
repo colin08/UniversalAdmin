@@ -10,25 +10,38 @@
 }
 
 <!--头部脚本 end-->
-<!--路径导航-->
+
+<!--Panel-->
 @section nav
 {
+    <div class="ibox-title">
+        <h5>系统配置</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
     <div class="col-sm-4">
-        <h2>系统配置文件</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><strong>编辑系统配置文件</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysConfig/Modify">系统配置</a></li>
+            <li><strong>编辑</strong></li>
         </ol>
     </div>
-    <div class="pull-right" style="margin-right:15px;">
-        @if (CheckAdminPower("sysconfig/apppoolrecycle", true))
-        {
-            <a class="btn btn-primary" style="margin-right:50px;" onclick="AppPoolRecycle()" id="a_recycle_pool">回收应用程序池</a>
-        }
-    <button type="button" class="btn pull-right" onclick="javascript: location.href = '/admin/sysconfig/modify' "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+    @if (CheckAdminPower("sysconfig/apppoolrecycle", true))
+    {
+        <a class="btn btn-info pull-right" style="margin-right:50px;" onclick="AppPoolRecycle()" id="a_recycle_pool">回收应用程序池</a>
+    }
+    <div style="height: 40px;"></div>
 </div>
-}
-<!--路径导航 end-->
+<!-- 路径导航 end -->
+
 <!--Main Body-->
 
 <div class="clients-list">
@@ -262,7 +275,7 @@
 
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
-                    <button class="btn btn-primary" type="submit">保存变更</button>&nbsp;
+                    <button class="btn btn-info" type="submit">保存变更</button>&nbsp;
                     <button class="btn btn-white" onclick="javascript: location.href='/admin/sysconfig/modify'"><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
                 </div>
             </div>

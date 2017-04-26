@@ -10,24 +10,32 @@
 }
 <!--头部脚本 end-->
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
+    <div class="ibox-title">
+        <h5>APP版本</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+}
+<!-- Panel end -->
+<!--路径导航-->
+<div class="row">
     <div class="col-sm-4">
-        <h2>APP版本列表</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><strong>APP版本列表</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/AppVersion/Index">APP版本列表</a></li>
+            <li><strong>用户组列表</strong></li>
         </ol>
     </div>
 
-<div class="pull-right" style="margin-right:15px;">
-    <button type="button" class="btn pull-right" onclick="javascript: location.reload() "><i class="glyphicon glyphicon-refresh"></i> 刷新</button>
+    <div style="height: 40px;"></div>
 </div>
-}
-<!--路径导航 end-->
- 
-<!--Main Body-->
+<!--路径导航 end -->
 
 <div class="row">
     <div class="col-sm-4">        
@@ -49,19 +57,19 @@
     <div class="col-sm-2">
         <p></p>
     </div>
+    <div class="col-sm-4">
+    </div>
     <div class="col-sm-2">
         @Html.DropDownListFor(p => p.platform, ViewData["PlatformsList"] as List<SelectListItem>, new { @class= "input-sm form-control", onchange = "SelectChange(this)" })
     </div>
-    <div class="col-sm-4">
-        
-    </div>
 </div>
 <br>
+ 
+<!--Main Body-->
 
 @if(Model.DataList.Count >0)
 {
-
-
+    
 <div class="table-responsive">
     <table class="table table-striped table-hover">
         <thead>
@@ -110,7 +118,7 @@
 
 }else
 {
-    <p><h2>没有相关数据</h2></p>
+    <p id="pager"><h2>没有相关数据</h2></p>
 }
 
 <!-- Main Body end -->
@@ -119,7 +127,7 @@
 @section foot
 {
 @Scripts.Render("~/bundles/laypage")
-<script>
+<script type="text/javascript">
 
     function SelectChange(dp)
     {

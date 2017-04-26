@@ -1,0 +1,12 @@
+blueimp  		---相册插件
+chosen   		---增强下拉框
+codemirror  	---代码高亮
+colorpicker 	---颜色选择器
+cropper			---剪裁图片并上传
+dataTables		---表格
+duallistbox		---两个列表选择
+gritter			---消息提醒
+jsTree			---树
+multiselect		---下拉框多选
+plyr 			---Html5媒体播放器
+switchery		---复选框变IOS开关

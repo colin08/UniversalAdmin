@@ -81,7 +81,7 @@ namespace Universal.Web.Framework
             //验证是否有权限
             if (WorkContext.UserInfo != null)
             {
-                if (!CheckAdminPower("",false))
+                if (!CheckAdminPower("", false))
                 {
                     if (WebHelper.IsAjax())
                     {
@@ -91,7 +91,7 @@ namespace Universal.Web.Framework
                     }
                     else
                     {
-                        filterContext.Result = PromptView("Error","无权限","您没有权限进行此操作");
+                        filterContext.Result = PromptView("Error", "无权限", "您没有权限进行此操作");
                     }
                 }
             }
@@ -106,12 +106,12 @@ namespace Universal.Web.Framework
         protected override void OnException(ExceptionContext filterContext)
         {
             string error_msg = filterContext.Exception.Message;
-            if(!filterContext.ExceptionHandled)
+            if (!filterContext.ExceptionHandled)
             {
                 filterContext.ExceptionHandled = true;
                 ExceptionInDB.ToInDB(filterContext.Exception);
             }
-            
+
             if (WorkContext.IsHttpAjax)
             {
                 WorkContext.AjaxStringEntity.msg = 0;
@@ -120,7 +120,7 @@ namespace Universal.Web.Framework
             }
             else
             {
-                    filterContext.Result = PromptView("500", "系统发生错误", error_msg);
+                filterContext.Result = PromptView("500", "系统发生错误", error_msg);
                 //if (string.IsNullOrWhiteSpace(WorkContext.UrlReferrer))
                 //{
                 //}
@@ -181,8 +181,13 @@ namespace Universal.Web.Framework
                 SysUserID = user_id,
                 Type = LogType
             };
-            BaseBLL<Entity.SysLogMethod> bll = new BaseBLL<Entity.SysLogMethod>();
-            bll.Add(entity);            
+
+            new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
+            {
+                BaseBLL<Entity.SysLogMethod> bll = new BaseBLL<Entity.SysLogMethod>();
+                bll.Add(entity);
+            }))
+            { IsBackground = true }.Start();
         }
 
 
@@ -194,9 +199,9 @@ namespace Universal.Web.Framework
         /// <param name="details">详细消息</param>
         /// <param name="message">简略消息</param>
         /// <returns></returns>
-        protected ViewResult PromptView(string status,string message,string details)
+        protected ViewResult PromptView(string status, string message, string details)
         {
-            return View("Prompt", new PromptModel(status,message, details));
+            return View("Prompt", new PromptModel(status, message, details));
         }
 
         /// <summary>
@@ -217,7 +222,7 @@ namespace Universal.Web.Framework
         /// <param name="message">简略消息</param>
         /// <param name="details">详细消息</param>
         /// <returns></returns>
-        protected ViewResult PromptView(string linkUrl,string status,string message,string details)
+        protected ViewResult PromptView(string linkUrl, string status, string message, string details)
         {
             return View("Prompt", new PromptModel(linkUrl, status, message, details));
         }
@@ -231,9 +236,9 @@ namespace Universal.Web.Framework
         /// <param name="details">详细消息</param>
         /// <param name="time">倒计时</param>
         /// <returns></returns>
-        protected ViewResult PromptView(string linkUrl, string status, string message, string details,int time)
+        protected ViewResult PromptView(string linkUrl, string status, string message, string details, int time)
         {
-            return View("Prompt", new PromptModel(linkUrl, status, message, details,time));
+            return View("Prompt", new PromptModel(linkUrl, status, message, details, time));
         }
         #endregion
 
@@ -259,7 +264,7 @@ namespace Universal.Web.Framework
                     filters.Add(new FilterSearch("ID", uid.ToString(), FilterSearchContract.等于));
                     filters.Add(new FilterSearch("Password", upwd, FilterSearchContract.等于));
                     Entity.SysUser model = bll.GetModel(filters, null, "SysRole.SysRoleRoutes.SysRoute");
-                    if(model != null)
+                    if (model != null)
                     {
                         if (model.Status)
                         {
@@ -306,7 +311,7 @@ namespace Universal.Web.Framework
         /// </summary>
         /// <param name="PageKey"></param>
         /// <returns></returns>
-        protected bool CheckAdminPower(string PageKey,bool isPost)
+        protected bool CheckAdminPower(string PageKey, bool isPost)
         {
             if (string.IsNullOrWhiteSpace(PageKey))
             {
@@ -321,8 +326,8 @@ namespace Universal.Web.Framework
             List<FilterSearch> filters = new List<FilterSearch>();
             filters.Add(new FilterSearch("IsPost", isPost.ToString(), FilterSearchContract.等于));
             filters.Add(new FilterSearch("Route", PageKey, FilterSearchContract.等于));
-            int total =bll.GetCount(filters);
-            if(total>0)
+            int total = bll.GetCount(filters);
+            if (total > 0)
             {
                 var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
                 result = entity == null ? false : true;

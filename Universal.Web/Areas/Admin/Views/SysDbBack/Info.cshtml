@@ -10,20 +10,34 @@
 }
 
 <!--头部脚本 end-->
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
+<div class="ibox-title">
+    <h5>备份详情</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+        </a>
+    </div>
+</div>
+}
+<!-- Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
     <div class="col-sm-4">
-        <h2>备份详情</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><a href="@Url.Action("Index", "CusCategory", new { Area = "Admin" })">备份列表</a></li>
-            <li><strong>备份详情</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysDbBack/Index">数据库备份列表</a></li>
+            <li><strong>详情</strong></li>
         </ol>
     </div>
-    <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white pull-right" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
-}
-<!--路径导航 end-->
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+
 <!--Main Body-->
 
 <div class="clients-list">
@@ -120,9 +134,8 @@
 
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-2">
-                    <button class="btn btn-primary" type="button" onclick="FileDown('@Model.FilePath','')"><i class="fa fa-download"></i><span class="bold"> 下载备份</span></button>&nbsp;
+                    <button class="btn btn-info" type="button" onclick="FileDown('@Model.FilePath','')"><i class="fa fa-download"></i><span class="bold"> 下载备份</span></button>&nbsp;
                     <button class="btn" type="button" onclick="Restore()"><i class="fa fa-repeat"></i><span class="bold"> 还原备份</span></button>&nbsp;
-                    <a href="@Url.Action("Index", "SysDbBack", new { Area = "Admin" })" class="btn btn-white" style="margin-right:10px;"><i class="glyphicon glyphicon-arrow-left"></i> 返回列表</a>
                 </div>
             </div>
         </div>

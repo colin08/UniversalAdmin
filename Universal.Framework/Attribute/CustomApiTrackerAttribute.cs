@@ -69,7 +69,8 @@ namespace Universal.Web.Framework
                     DateTime now_date = DateTime.Now.Date;
                     bll.DelBy(p => p.ExecuteStartTime < now_date);
                     bll.Add(MonLog.GetLogEntity());
-                }));
+                }))
+                { IsBackground =true}.Start();
             }
         }
     }

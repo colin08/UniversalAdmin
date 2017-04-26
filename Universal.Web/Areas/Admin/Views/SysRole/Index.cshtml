@@ -10,52 +10,66 @@
 }
 <!--头部脚本 end-->
 
-<!--路径导航-->
+<!-- Panel -->
 @section nav
 {
+<div class="ibox-title">
+    <h5>用户组列表</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+        </a>
+    </div>
+</div>
+}
+<!-- Panel end -->
+
+<!--路径导航-->
+<div class="row">
     <div class="col-sm-4">
-        <h2>后台用户组列表</h2>
         <ol class="breadcrumb">
-            <li>主页</li>
-            <li><strong>后台用户组列表</strong></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysRole/Index">用户组管理</a></li>
+            <li><strong>用户组列表</strong></li>
         </ol>
     </div>
-    @if(CheckAdminPower("sysrole/updateroute", true))
+    @if (CheckAdminPower("sysrole/updateroute", true))
     {
-        <a class="btn btn-primary pull-right" onclick="update()" id="a_update_route">更新系统路由表</a>
+    <a class="btn btn-default pull-right" onclick="update()" id="a_update_route">更新系统路由表</a>
     }
-}
-<!--路径导航 end-->
- 
-<!--Main Body-->
+    <div style="height: 40px;"></div>
+</div>
+<!--路径导航 end -->
 
+<!--Main Body-->
 <div class="row">
     <div class="col-sm-2">
         @if (CheckAdminPower("sysrole/edit", true))
         {
-        @:<a class="btn btn-white" href="@Url.Action("Edit", "SysRole", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+            @:<a class="btn btn-white" href="@Url.Action("Edit", "SysRole", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
         @if (CheckAdminPower("sysrole/del", true))
         {
-        @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysRole/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysRole/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
     </div>
     <div class="col-sm-4">
         <p></p>
     </div>
     <div class="col-sm-2">
-        
+        <p></p>
     </div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" class="input-sm form-control">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-primary" onclick="WordSearch()"> 搜索</button>
+                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
             </span>
         </div>
     </div>
 </div>
 <br>
+
 
 @if(Model.DataList.Count >0)
 {
@@ -105,7 +119,7 @@
 
 }else
 {
-    <p><h2>没有相关数据</h2></p>
+    <p id="pager"><h2>没有相关数据</h2></p>
 }
 
 <!-- Main Body end -->

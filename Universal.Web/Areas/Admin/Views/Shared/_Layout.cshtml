@@ -8,43 +8,43 @@
 
     @Styles.Render("~/Content/admin/css")
 
-    @RenderSection("head",required:false)
+    @RenderSection("head", required: false)
 </head>
 
+
 <body class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox">
-            <div class="ibox-content">
-                <div class="row">
-                    
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins bordertop">
                     @RenderSection("nav")
-                    
+
+                    <!-- 内容开始 -->
+
+                    <div class="ibox-content">
+
+                        @RenderBody()
+
+                    </div>
+
+                    <!-- 内容结束 -->
+
                 </div>
-                <hr />
 
-                @RenderBody()
-
+                    @if (ViewData.ContainsKey("ExecutionTime"))
+                    {
+                    @: <div class="pull-left" style="margin: 10px 0 0 15px;">@ViewData["ExecutionTime"] ms <div>
+                    }
             </div>
-            
-            @{ 
-                if (ViewData.ContainsKey("ExecutionTime"))
-                {
-                    <text>
-                    <div class="pull-left" style="margin: 10px 0 0 15px;">
-                    time：@ViewData["ExecutionTime"] ms   
-                    <div>
-                    </text>
-                }
-            }
-
         </div>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/layer")
+
+    <!-- 全局js -->
+    @Scripts.Render("~/bundles/admin_base")
+    <!-- 第三方插件 -->
     @Scripts.Render("~/bundles/tools")
 
-    @RenderSection("foot",required:false)
+    @RenderSection("foot", required: false)
 
 </body>
 </html>
