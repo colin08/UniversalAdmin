@@ -198,9 +198,12 @@ namespace Universal.BLL
             var db = new DataCore.EFDBContext();
             string sql = "";
             string sql_total = "";
+            string str_where = "See = 0";
+            if(category_id>0)
+                str_where += "and DocCategoryID = " + category_id.ToString();
 
-            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from DocPost where See = 0 and DocCategoryID = " + category_id.ToString() + ") AS T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
-            sql_total = "select count(1) from DocPost where See = 0 and DocCategoryID = " + category_id.ToString() + "";
+            sql = "select * from (SELECT ROW_NUMBER() OVER(ORDER BY LastUpdateTime DESC) as row,* from DocPost where " + str_where + ") AS T where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            sql_total = "select count(1) from DocPost where " + str_where;
 
             rowCount = db.Database.SqlQuery<int>(sql_total).ToList()[0];
             response_entity = db.Database.SqlQuery<Entity.DocPost>(sql).ToList();

@@ -208,9 +208,9 @@ namespace Universal.Web.Controllers.api
                 response_entity.msgbox = "非法参数";
                 return response_entity;
             }
-            if(req.user_id <=0)
+            if(req.user_id <0)
             {
-                response_entity.msgbox = "分类不能为空";
+                response_entity.msgbox = "非法分类";
                 return response_entity;
             }
 
