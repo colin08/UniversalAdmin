@@ -57,11 +57,12 @@ namespace Universal.BLL
                 msg = "项目不存在";
                 return false;
             }
-            if(!db.ProjectUsers.Any(p=>p.ProjectID == entity.ProjectID && p.CusUserID == login_user_id))
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, login_user_id))
             {
-                msg = "没有权限编辑";
+                msg = "没有权限权限";
                 return false;
             }
+
 
             db.ProjectStageFiles.Where(p => p.ProjectStageID == entity.ID).ToList().ForEach(p => db.ProjectStageFiles.Remove(p));
 
@@ -122,8 +123,8 @@ namespace Universal.BLL
                 msg = "项目不存在";
                 return 0;
             }
-            BaseBLL<Entity.ProjectUser> bll_project_user = new BaseBLL<Entity.ProjectUser>();
-            if(!bll_project_user.Exists(p=>p.ProjectID == project_id && p.CusUserID == login_user_id))
+            //BaseBLL<Entity.ProjectUser> bll_project_user = new BaseBLL<Entity.ProjectUser>();
+            if(!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, login_user_id))
             {
                 msg = "没有权限添加";
                 return 0;
@@ -154,11 +155,12 @@ namespace Universal.BLL
                     return false;
                 }
 
-                if(!db.ProjectUsers.Any(p=>p.ProjectID == entity.ProjectID && p.CusUserID == login_user_id))
+                if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, login_user_id))
                 {
-                    msg = "没有权限进行删除";
+                    msg = "没有权限添加";
                     return false;
                 }
+
                 db.ProjectStages.Remove(entity);
                 db.SaveChanges();
                 msg = "删除成功";

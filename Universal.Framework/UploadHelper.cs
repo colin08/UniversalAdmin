@@ -333,6 +333,7 @@ namespace Universal.Web.Framework
             }
             catch (Exception ex)
             {
+                IOHelper.WriteLogs(ex.StackTrace);
                 hash["msg"] = 0;
                 hash["msgbox"] = ex.Message;
                 return hash;

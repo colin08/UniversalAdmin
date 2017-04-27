@@ -431,6 +431,11 @@ namespace Universal.BLL
             msg = "非法参数";
             if (id <= 0)
                 return false;
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
+            {
+                msg = "没有权限操作";
+                return false;
+            }
             var db = new DataCore.EFDBContext();
             var entity = db.Projects.Find(id);
             if (entity == null)
@@ -438,11 +443,12 @@ namespace Universal.BLL
                 msg = "项目不存在";
                 return false;
             }
-            if (entity.CusUserID != user_id)
-            {
-                msg = "只能删除自己添加的项目";
-                return false;
-            }
+
+            //if (entity.CusUserID != user_id)
+            //{
+            //    msg = "只能删除自己添加的项目";
+            //    return false;
+            //}
             //删除附件
             db.ProjectFiles.Where(p => p.ProjectID == id).ToList().ForEach(p => db.ProjectFiles.Remove(p));
 

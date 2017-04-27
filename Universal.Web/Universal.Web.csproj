@@ -987,6 +987,7 @@
     <Compile Include="Controllers\api\ProjectFlowNodeController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\AppVersionController.cs" />
+    <Compile Include="Controllers\DownLoadController.cs" />
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\NodeCategoryController.cs" />
     <Compile Include="Controllers\ShareController.cs" />
@@ -1240,6 +1241,7 @@
   <ItemGroup>
     <Folder Include="Areas\h5\Models\" />
     <Folder Include="Areas\h5\Views\Shared\" />
+    <Folder Include="Views\DownLoad\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>

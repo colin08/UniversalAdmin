@@ -71,7 +71,12 @@ namespace Universal.Web.Controllers
             LoadPlatform();
             int num = TypeHelper.ObjectToInt(id, 0);
             Models.ViewModelAppVersion entity = new Models.ViewModelAppVersion();
-
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.版本列表, WorkContext.UserInfo.ID))
+            {
+                entity.Msg = 4;
+                entity.MsgBox = "没有权限操作";
+                return View(entity);
+            }
             if (num != 0)
             {
                 BLL.BaseBLL<Entity.AppVersion> bll = new BLL.BaseBLL<Entity.AppVersion>();
@@ -106,7 +111,12 @@ namespace Universal.Web.Controllers
         {
             LoadPlatform();
             var isAdd = entity.ID == 0 ? true : false;
-
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.版本列表, WorkContext.UserInfo.ID))
+            {
+                entity.Msg = 4;
+                entity.MsgBox = "没有权限操作";
+                return View(entity);
+            }
             if (((int)entity.Platforms) == 0)
             {
                 ModelState.AddModelError("APPType", "请选择平台");
@@ -152,7 +162,7 @@ namespace Universal.Web.Controllers
                 model.LinkUrl = entity.LinkUrl;
                 model.Version = entity.Version;
                 model.VersionCode = entity.VersionCode;
-                if (model.Platforms == Entity.APPVersionPlatforms.Android)
+                if (entity.Platforms == Entity.APPVersionPlatforms.Android)
                 {
                     model.LogoImg = entity.LogoImg;
                     model.DownUrl = entity.DownUrl;

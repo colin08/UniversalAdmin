@@ -12,6 +12,11 @@ namespace Universal.Web.Models.Request
     public class ProjectInfoPro
     {
         /// <summary>
+        /// 登录的用户ID
+        /// </summary>
+        public int user_id { get; set; }
+
+        /// <summary>
         /// 项目ID
         /// </summary>
         public int project_id { get; set; }

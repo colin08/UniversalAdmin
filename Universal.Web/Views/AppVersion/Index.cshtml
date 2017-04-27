@@ -99,17 +99,26 @@
                         var dataHtml = "";
                         $.each(data.data, function (i, item) {
                             var logo = "";
-                            if (item.Platforms == "Android")
+                            var down_url = "";
+                            if (item.Platforms == 1)
+                            {
                                 logo = item.LogoImg;
+                                down_url = item.DownUrl;
+                            }
+                            else
+                            {
+                                down_url = item.LinkUrl;
+                                logo = "/uploads/logo.png";
+                            }
 
                             dataHtml += "<tr>";
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
-                            dataHtml += "<td><img src=\"" + item.LogoImg + "\" /></td>";
+                            dataHtml += "<td><img src=\"" + logo + "\" width='40' height='40' /></td>";
                             dataHtml += "<td><i class=\"" + item.PlatformsLog + "\"></i></td>";
                             dataHtml += "<td>" + item.PlatformsStr + "</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.AddTime, "") + "</td>";
                             dataHtml += "<td>" + ConvertBtteToMB(item.Size) + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a target=\"_blank\" href=\"" + item.DownUrl + "\" class=\"aDown\"><i class=\"i-downR\"></i></a><a href=\"/AppVersion/Modify?id=" + item.ID + "\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a target=\"_blank\" href=\"" + down_url + "\" class=\"aDown\"><i class=\"i-downR\"></i></a><a href=\"/AppVersion/Modify?id=" + item.ID + "\" class=\"aEdt\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

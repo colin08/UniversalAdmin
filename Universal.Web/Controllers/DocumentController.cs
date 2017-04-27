@@ -71,6 +71,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DelDoc(string ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍操作, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             if (string.IsNullOrWhiteSpace(ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -96,6 +102,11 @@ namespace Universal.Web.Controllers
             LoadCategory();
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelDocument model = new Models.ViewModelDocument();
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍操作, WorkContext.UserInfo.ID))
+            {
+                model.Msg = 4;
+                return View(model);
+            }
             if (ids != 0)
             {
                 BLL.BaseBLL<Entity.DocPost> bll = new BLL.BaseBLL<Entity.DocPost>();
@@ -153,6 +164,12 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(Models.ViewModelDocument entity)
         {
             var isAdd = entity.id == 0 ? true : false;
+
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍操作, WorkContext.UserInfo.ID))
+            {
+                entity.Msg = 4;
+                return View(entity);
+            }
 
             LoadCategory();
             if(entity.category_id <=0)

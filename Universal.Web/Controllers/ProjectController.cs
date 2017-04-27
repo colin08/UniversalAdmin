@@ -75,11 +75,6 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
-            if((BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)))
-            {
-                WorkContext.AjaxStringEntity.msgbox = "没有权限进行删除";
-                return Json(WorkContext.AjaxStringEntity);
-            }
             if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -285,15 +280,17 @@ namespace Universal.Web.Controllers
             ViewData["DefaultFlowID"] = BLL.BLLFlow.GetDefault();
             LoadFlow();
             int ids = TypeHelper.ObjectToInt(id);
+
             Models.ViewModelProject model = new Models.ViewModelProject();
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, WorkContext.UserInfo.ID))
+            {
+                model.Msg = 4;
+                return View(model);
+            }
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
-                if (entity.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
-                {
-                    model.Msg = 4;
-                    return View(model);
-                }
+                
 
                 if (entity != null)
                 {
@@ -495,7 +492,7 @@ namespace Universal.Web.Controllers
                 {
                     model = bll.GetModel(p => p.ID == entity.id);
                     //判断有没有权限编辑
-                    if (model.ProjectUsers.ToList().Count(p => p.CusUserID == WorkContext.UserInfo.ID) == 0)
+                    if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, WorkContext.UserInfo.ID))
                     {
                         entity.Msg = 4;
                         return View(entity);

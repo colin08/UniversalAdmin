@@ -85,10 +85,19 @@ namespace Universal.Web.Controllers
 
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "删除成功";
-            return Json(WorkContext.AjaxStringEntity);
+            try
+            {
+                bll.DelBy(p => id_list.Contains(p.ID));
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "删除成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            catch (Exception ex)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "删除失败，该用户可能是项目或者计划的审核人";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            
 
         }
 
@@ -130,6 +139,15 @@ namespace Universal.Web.Controllers
                 Entity.CusUser model = BLL.BLLCusUser.GetModel(user_id);
                 if (model != null)
                 {
+                    if(user_id != WorkContext.UserInfo.ID)
+                    {
+                        if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+                        {
+                            entity.Msg = 4;
+                            entity.MsgBox = "没有权限操作";
+                            return View(entity);
+                        }
+                    }
                     entity.about_me = model.AboutMe;
                     entity.avatar = model.Avatar;
                     entity.department_id = model.CusDepartmentID;
@@ -149,6 +167,14 @@ namespace Universal.Web.Controllers
                 {
                     entity.Msg = 2;
                     entity.MsgBox = "数据不存在";
+                }
+            }else
+            {
+                if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+                {
+                    entity.Msg = 4;
+                    entity.MsgBox = "没有权限操作";
+                    return View(entity);
                 }
             }
             return View(entity);
@@ -172,9 +198,25 @@ namespace Universal.Web.Controllers
                 {
                     ModelState.AddModelError("telphone", "信息不存在或已被删除");
                 }
+                if(entity.id != WorkContext.UserInfo.ID)
+                {
+                    if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+                    {
+                        entity.Msg = 4;
+                        entity.MsgBox = "没有权限操作";
+                        return View(entity);
+                    }
+                }
             }
             else
             {
+                if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+                {
+                    entity.Msg = 4;
+                    entity.MsgBox = "没有权限操作";
+                    return View(entity);
+                }
+
                 if (bll.Exists(p => p.Telphone == entity.telphone))
                 {
                     ModelState.AddModelError("Telphone", "该手机号已存在");
@@ -229,7 +271,8 @@ namespace Universal.Web.Controllers
                 model.CusUserJobID = entity.job_id;
                 model.Email = entity.email == null ? null : entity.email.ToLower();
                 model.Gender = entity.gender;
-                model.IsAdmin = string.IsNullOrWhiteSpace(entity.user_route_str) ? false : true;
+                //全选则为管理员
+                model.IsAdmin = entity.user_route_str.Split(',').Length == 10 ? true : false;
                 model.NickName = entity.nick_name;
                 model.ShorNum = entity.short_num;
                 model.Status = true;

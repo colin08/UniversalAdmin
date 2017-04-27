@@ -58,6 +58,11 @@ namespace Universal.Web.Controllers
         public JsonResult AddDocCategory(int pid, string title)
         {
             WebAjaxEntity<int> result = new WebAjaxEntity<int>();
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍分类, WorkContext.UserInfo.ID))
+            {
+                result.msg = 0;
+                return Json(result);
+            }
             int re_id = BLL.BLLDocCategory.Add(pid, title);
             if (re_id <= 0)
                 result.msg = 0;
@@ -75,6 +80,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult ModifyDocCategory(int id, string title)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍分类, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             bool isOK = BLL.BLLDocCategory.Modify(id, title);
             if (isOK)
             {
@@ -95,6 +106,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍分类, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             if (BLL.BLLDocCategory.Del(id))
             {
                 WorkContext.AjaxStringEntity.msg = 1;
@@ -116,6 +133,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Sort(string ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.秘籍分类, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (string.IsNullOrWhiteSpace(ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";

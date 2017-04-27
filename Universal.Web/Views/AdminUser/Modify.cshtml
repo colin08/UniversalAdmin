@@ -274,6 +274,11 @@
                 {
                     @:alert("数据验证失败");
                 }
+                else if(Model.Msg == 4)
+                {
+                    @:alert("@Model.MsgBox");
+                    @:location.href = "/AdminUser/Index";
+                }
 
             });
 

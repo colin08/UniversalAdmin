@@ -79,6 +79,11 @@ namespace Universal.Web.Controllers
                 WorkContext.AjaxStringEntity.msgbox = "父级ID错误";
                 return Json(WorkContext.AjaxStringEntity);
             }
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.部门管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
 
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -103,6 +108,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Modify(int id, string title, string user_ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.部门管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "部门错误";
@@ -132,6 +143,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.部门管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             string msg = "";
             bool is_ok = BLL.BLLDepartment.Del(id, out msg);
             WorkContext.AjaxStringEntity.msg = is_ok ? 1 : 0;

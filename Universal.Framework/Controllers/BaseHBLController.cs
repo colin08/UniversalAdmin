@@ -157,6 +157,7 @@ namespace Universal.Web.Framework
                 path_list.Add("/account/resetsuc");
                 path_list.Add("/account/sendcode");
                 path_list.Add("/share/doc");
+                path_list.Add("/download/app");
                 if (!path_list.Contains(WorkContext.PageKey.ToLower()))
                 {
                     if (WebHelper.IsAjax())

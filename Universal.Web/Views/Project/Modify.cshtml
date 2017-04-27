@@ -474,7 +474,7 @@
                     @:alert("数据验证失败");
                 }else if(Model.Msg == 4)
                 {
-                    @:alert("没有权限编辑");
+                    @:alert("@Model.MsgBox");
                     @:location.href = "/Project/Index";
                 }else if(Model.Msg == 5)
                 {

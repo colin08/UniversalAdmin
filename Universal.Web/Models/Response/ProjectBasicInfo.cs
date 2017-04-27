@@ -18,6 +18,11 @@ namespace Universal.Web.Models.Response
         /// </summary>
         public bool is_fav { get; set; }
 
+        /// <summary>
+        /// 项目是否完结
+        /// </summary>
+        public bool is_done { get; set; }
+
         public int create_user_id { get; set; }
 
         /// <summary>
@@ -41,6 +46,11 @@ namespace Universal.Web.Models.Response
         {
             this.file_list = new List<ProjectFile>();
         }
+
+        /// <summary>
+        /// 项目是否完结
+        /// </summary>
+        public bool is_done { get; set; }
 
         /// <summary>
         /// 项目标题

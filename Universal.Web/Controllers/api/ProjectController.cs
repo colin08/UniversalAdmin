@@ -141,6 +141,7 @@ namespace Universal.Web.Controllers.api
                 }
                 model.last_update_time = item.LastUpdateTime;
                 model.project_id = item.ID;
+                model.is_done = ProjectStatus(item.ID);
                 model.title = item.Title;
                 model.user_name = item.CusUser.NickName;
                 model.create_user_id = item.CusUserID;
@@ -184,6 +185,12 @@ namespace Universal.Web.Controllers.api
             if (entity_user == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            if(!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, req.user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限";
                 return WorkContext.AjaxStringEntity;
             }
 
@@ -272,6 +279,7 @@ namespace Universal.Web.Controllers.api
                 }
                 response_model.project_id = project_id;
                 response_model.title = entity.Title;
+                response_model.is_done = ProjectStatus(project_id);
                 response_model.user_id = entity.CusUserID;
                 response_model.user_name = entity.CusUser.NickName;
                 response_model.user_telphone = entity.CusUser.Telphone;
@@ -359,6 +367,7 @@ namespace Universal.Web.Controllers.api
                 }
                 response_model.project_id = project_id;
                 response_model.Area = entity.Area;
+                response_model.is_done = ProjectStatus(project_id);
                 response_model.ChaiQianJianZhuMianJi = entity.ChaiQianJianZhuMianJi;
                 response_model.ChaiQianYongDiMianJi = entity.ChaiQianYongDiMianJi;
                 response_model.FeiNongMianJi = entity.FeiNongMianJi;
@@ -440,6 +449,12 @@ namespace Universal.Web.Controllers.api
             if (entity_user == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, req.user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限";
                 return WorkContext.AjaxStringEntity;
             }
 
@@ -536,6 +551,16 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "项目不存在";
                 return WorkContext.AjaxStringEntity;
             }
+            if(req.user_id == 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "缺少用户参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, req.user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限";
+                return WorkContext.AjaxStringEntity;
+            }
             entity.Area = req.Area;
             entity.GaiZaoXingZhi = req.GaiZaoXingZhi;
             entity.ZhongDiHao = req.ZhongDiHao;
@@ -580,6 +605,11 @@ namespace Universal.Web.Controllers.api
                 response_entity.msgbox = "项目不存在";
                 return response_entity;
             }
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
+            {
+                response_entity.msgbox = "没有权限操作";
+                return response_entity;
+            }
 
             var db_list = new BLL.BaseBLL<Entity.ProjectStage>().GetListBy(0, p => p.ProjectID == project_id, "ID ASC", p => p.FileList);
             BLL.BaseBLL<Entity.CusUserProjectFavorites> bll_fav = new BLL.BaseBLL<Entity.CusUserProjectFavorites>();
@@ -606,6 +636,12 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/project/modify/stage/modify")]
         public WebAjaxEntity<string> ModifyProjectStage([FromBody]Models.Response.ProjectInfoStage req)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, req.login_user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限";
+                return WorkContext.AjaxStringEntity;
+            }
+
             BLL.Model.ProjectStage model = BuildAddProjectStage(req);
             string msg = "";
             if (model.stage_id <= 0)
@@ -635,6 +671,11 @@ namespace Universal.Web.Controllers.api
             if (stage_id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, login_user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限";
                 return WorkContext.AjaxStringEntity;
             }
 
@@ -938,6 +979,16 @@ namespace Universal.Web.Controllers.api
             return response_entity;
         }
 
+        /// <summary>
+        /// 获取项目状态，返回true为已完结
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <returns></returns>
+        private static bool ProjectStatus(int project_id)
+        {
+            BLL.BaseBLL<Entity.ProjectFlowNode> bll = new BLL.BaseBLL<Entity.ProjectFlowNode>();
+            return !bll.Exists(p => p.ProjectID == project_id && p.IsEnd == false);
+        }
 
         /// <summary>
         /// 构造项目拆迁分期信息

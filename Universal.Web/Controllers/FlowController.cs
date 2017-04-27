@@ -50,9 +50,9 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(int id)
         {
-            if((BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID)))
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.流程设置, WorkContext.UserInfo.ID))
             {
-                WorkContext.AjaxStringEntity.msgbox = "没有权限进行删除";
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
                 return Json(WorkContext.AjaxStringEntity);
             }
             if (id <= 0)
@@ -82,6 +82,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult SetDefault(int id)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.流程设置, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (id <= 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";

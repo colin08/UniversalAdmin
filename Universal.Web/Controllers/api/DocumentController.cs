@@ -55,6 +55,11 @@ namespace Universal.Web.Controllers.api
                 WorkContext.AjaxStringEntity.msgbox = "没有收到用户信息";
                 return WorkContext.AjaxStringEntity;
             }
+            if(!BLL.BLLCusRoute.CheckUserAuthority( BLL.CusRouteType.秘籍操作,req.user_id))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return WorkContext.AjaxStringEntity;
+            }
             BLL.BaseBLL<Entity.CusUser> bll_user = new BLL.BaseBLL<Entity.CusUser>();
             if (!bll_user.Exists(p => p.ID == req.user_id))
             {

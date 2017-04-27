@@ -144,18 +144,13 @@
                             if (item.ProjectFlowNodeDoing.flow_node_id != -1) {
                                 node_link = "/Project/FlowNodeInfo?id=" + item.ProjectFlowNodeDoing.flow_node_id;
                             }
-                            var del_str = "";
-                            if(is_admin)
-                            {
-                                del_str="<a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a>";
-                            }
                             dataHtml += "<tr>";
                             dataHtml += "<td><a href=\"/Project/BasicInfo?id=" + item.ID + "\">" + CutString(item.Title, 10) + "</a></td>";
                             dataHtml += "<td><a href='/Project/FlowInfo?id=" + item.ID + "'>" + CutString(item.ProjectFlowNodeDoing.node_title, 15) + "</a></td>";
                             dataHtml += "<td><a href='/Project/FlowInfo?id=" + item.ID + "'" + CutString(item.ProjectFlowNodeDoing.flow_node_remark, 55) + "</a></td>";
                             dataHtml += "<td>" + item.CusUser.NickName + "</td>";
                             dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime, "") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a>"+del_str+"</div></td>";
+                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Project/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/Project/BasicInfo?id=" + item.ID + "\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:void(0);\" onclick=\"fav(" + item.ID + ")\" class=\"afav\"><i class=\"" + item.IsFavorites + "\"></i></a><a href=\"javascript:;\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

@@ -55,6 +55,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DelNotice(string ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.公告管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (string.IsNullOrWhiteSpace(ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -73,6 +78,12 @@ namespace Universal.Web.Controllers
         {
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelNotice model = new Models.ViewModelNotice();
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.公告管理, WorkContext.UserInfo.ID))
+            {
+                model.Msg = 4;
+                model.MsgBox = "没有权限操作";
+                return View(model);
+            }
             if (ids != 0)
             {
                 BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
@@ -126,7 +137,12 @@ namespace Universal.Web.Controllers
         public ActionResult Modify(Models.ViewModelNotice entity)
         {
             var isAdd = entity.id == 0 ? true : false;
-
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.公告管理, WorkContext.UserInfo.ID))
+            {
+                entity.Msg = 4;
+                entity.MsgBox = "没有权限操作";
+                return View(entity);
+            }
 
             BLL.BaseBLL<Entity.CusNotice> bll = new BLL.BaseBLL<Entity.CusNotice>();
             if (!isAdd)

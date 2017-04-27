@@ -53,7 +53,7 @@
 
                         <li class="li_android">
                             <div class="lilt"><em class="col_red">*</em>上传apk文件</div>
-                            <div class="limd big">
+                            <div class="limd">
                                 <a href="javascript:;" class="Btn2 uploadBtnBox">添加文件 <input type="file" id="upload_apk" class="uploadBtn" /> </a>
                                 <span id="span_filename">@Model.DownUrl</span> &nbsp; <span id="span_upload_status"></span>
                             </div>
@@ -94,6 +94,10 @@
                 @if(Model.Msg == 1)
                 {
                     @: location.href = "/APPVersion/Index";
+                }else if(Model.Msg == 4)
+                {
+                    @:alert("@Model.MsgBox");
+                    @:location.href = "/AppVersion/Index";
                 }
                 SetShow();
             });

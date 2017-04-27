@@ -133,7 +133,8 @@ namespace Universal.BLL
             if (string.IsNullOrWhiteSpace(entity_project_node.ProcessTo))
                 return response_entity;
 
-            var next_list = db.ProjectFlowNodes.SqlQuery("SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',','," + entity_project_node.ProcessTo + ",') > 0").AsNoTracking().ToList();
+            string strSql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',','," + entity_project_node.ProcessTo + ",') > 0";
+            var next_list = db.ProjectFlowNodes.SqlQuery(strSql).AsNoTracking().ToList();
             foreach (var item in next_list)
             {
                 var entity_node = db.Nodes.Where(p => p.ID == item.NodeID).AsNoTracking().FirstOrDefault();
@@ -373,7 +374,7 @@ namespace Universal.BLL
 
             zip_path = "/uploads/zip/" + project_floder_name + ".zip";
             //return Tools.ZipHelper.Zip(Tools.IOHelper.GetMapPath(temp_floder_path), Tools.IOHelper.GetMapPath(zip_path));
-            var is_ok = Tools.WebHelper.ToZip(Tools.IOHelper.GetMapPath(zip_path), Tools.IOHelper.GetMapPath(temp_base_floder + project_floder_name +"/"));
+            var is_ok = Tools.WebHelper.ToZip(Tools.IOHelper.GetMapPath(zip_path), Tools.IOHelper.GetMapPath(temp_base_floder + project_floder_name + "/"));
             Tools.IOHelper.DeleteDirectory(temp_base_floder + project_floder_name + "/");
             return is_ok;
             #endregion
@@ -460,6 +461,10 @@ namespace Universal.BLL
         /// <returns></returns>
         public static bool SetEnd(int project_flow_node_id, int user_id)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
+            {
+                return false;
+            }
             using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).FirstOrDefault();
@@ -503,6 +508,11 @@ namespace Universal.BLL
         public static bool SetStatus(int project_flow_node_id, int user_id, out string msg)
         {
             msg = "";
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
+            {
+                msg = "没有权限操作";
+                return false;
+            }
             using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.ProjectFlowNodes.Find(project_flow_node_id);
@@ -535,6 +545,11 @@ namespace Universal.BLL
         public static bool SetSelect(int project_flow_node_id, int user_id, out string msg)
         {
             msg = "ok";
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
+            {
+                msg = "没有权限操作";
+                return false;
+            }
             using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).FirstOrDefault();
@@ -549,7 +564,7 @@ namespace Universal.BLL
                     return false;
                 }
                 //获取同级条件节点
-                string sql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',',(SELECT ','+ProcessTo+',' FROM [dbo].[ProjectFlowNode] where charindex('," + project_flow_node_id.ToString() + ",',','+ltrim(ProcessTo)+',') > 0)) > 0";
+                string sql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',',(SELECT top 1 ','+ProcessTo+',' FROM [dbo].[ProjectFlowNode] where charindex('," + project_flow_node_id.ToString() + ",',','+ltrim(ProcessTo)+',') > 0)) > 0";
                 var tj_list = db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList();
                 foreach (var item in tj_list)
                 {
@@ -590,7 +605,7 @@ namespace Universal.BLL
                     return false;
                 }
 
-                if (!db.ProjectUsers.Any(p => p.CusUserID == user_id && p.ProjectID == entity.ProjectID))
+                if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.项目操作, user_id))
                 {
                     msg = "没有权限操作该节点";
                     return false;

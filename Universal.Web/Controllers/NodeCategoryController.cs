@@ -51,6 +51,11 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult Del(string ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.节点分类, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
             if (string.IsNullOrWhiteSpace(ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -69,6 +74,12 @@ namespace Universal.Web.Controllers
         {
             int ids = TypeHelper.ObjectToInt(id);
             Models.ViewModelNodeCategory model = new Models.ViewModelNodeCategory();
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.节点分类, WorkContext.UserInfo.ID))
+            {
+                model.Msg = 4;
+                model.MsgBox = "没有权限操作";
+                return View(model);
+            }
             if (ids != 0)
             {
                 Entity.NodeCategory entity = new BLL.BaseBLL<Entity.NodeCategory>().GetModel(p => p.ID == ids);
@@ -90,6 +101,12 @@ namespace Universal.Web.Controllers
         [ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Modify(Models.ViewModelNodeCategory entity)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.节点分类, WorkContext.UserInfo.ID))
+            {
+                entity.Msg = 4;
+                entity.MsgBox = "没有权限操作";
+                return View(entity);
+            }
             var isAdd = entity.id == 0 ? true : false;
             BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
             if (!isAdd)
