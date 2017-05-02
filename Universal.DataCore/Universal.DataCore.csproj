@@ -218,6 +218,10 @@
     <Compile Include="Migrations\201704190931534_add_lit_modify.Designer.cs">
       <DependentUpon>201704190931534_add_lit_modify.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704300157010_add_push_turn.cs" />
+    <Compile Include="Migrations\201704300157010_add_push_turn.Designer.cs">
+      <DependentUpon>201704300157010_add_push_turn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -361,6 +365,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704190931534_add_lit_modify.resx">
       <DependentUpon>201704190931534_add_lit_modify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704300157010_add_push_turn.resx">
+      <DependentUpon>201704300157010_add_push_turn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

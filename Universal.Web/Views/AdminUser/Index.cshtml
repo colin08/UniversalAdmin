@@ -37,11 +37,12 @@
                                 <tr>
                                     <th width="5%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
                                     <th width="15%">姓名</th>
-                                    <th width="20%">手机号</th>
+                                    <th width="13%">手机号</th>
                                     <th width="10%">管理权限</th>
-                                    <th width="15%">职位</th>
+                                    <th width="13%">职位</th>
                                     <th width="15%">邮箱</th>
                                     <th width="10%">登录密码</th>
+                                    <th width="10%">状态</th>
                                     <th width="10%">操作</th>
                                 </tr>
                             </thead>
@@ -136,6 +137,11 @@
                             {
                                 is_manager ="<em class=\"leader\">主管</em>";
                             }
+                            var status_txt = "禁用";
+                            if(!item.Status)
+                            {
+                                status_txt = "启用";
+                            }
 
                             dataHtml += "<tr>";
                             if(item.ID == 1)
@@ -151,6 +157,7 @@
                             dataHtml += "<td>" + item.CusUserJob.Title + "</td>";
                             dataHtml += "<td>" + email + "</td>";
                             dataHtml += "<td><a href='javascript:void(0)' onclick='reset_pwd("+item.ID+")'>重置</a></td>";
+                            dataHtml +="<td><a  href='javascript:void(0)' onclick='set_status(this)' d-id='"+item.ID+"'>"+status_txt+"</a></td>";
                             dataHtml += "<td><div class=\"tbOpare\"><a href=\"/AdminUser/Modify?id="+item.ID+"\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\"  onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
@@ -219,6 +226,42 @@
                             data_search();
                         }
                         else {
+                            alert(data.msgbox);
+                        }
+                    },
+                    error: function () {
+                        alert("操作失败，请检查网络");
+                    }
+                })
+            }
+
+            function set_status(obj)
+            {
+                var id = $(obj).attr("d-id");
+                console.log(id);
+                if(id==0)
+                {
+                    alert("非法参数");
+                    return;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "/AdminUser/SetStatus",
+                    data: { "id": id },
+                    async: false,
+                    beforeSend: function () {
+                        $(obj).attr('disabled',"true");
+                    },
+                    complete: function () {
+                        $(obj).removeAttr("disabled");
+                    },
+                    success: function (data) {
+                        if(data.msg)
+                        {
+                            $(obj).text(data.data);
+                            //alert(data.msgbox);
+                        }else
+                        {
                             alert(data.msgbox);
                         }
                     },

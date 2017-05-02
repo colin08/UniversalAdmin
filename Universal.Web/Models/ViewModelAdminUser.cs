@@ -14,6 +14,7 @@ namespace Universal.Web.Models
         public ViewModelAdminUser()
         {
             this.password = "";
+            this.status = true;
             this.gender = Entity.CusUserGender.male;
             this.avatar = "/uploads/avatar.jpg";
             this.user_route = new List<BLL.Model.AdminUserRoute>();
@@ -42,6 +43,11 @@ namespace Universal.Web.Models
         /// </summary>
         [Required(ErrorMessage ="部门必须选择")]
         public int department_id { get; set; }
+
+        /// <summary>
+        /// 用户状态
+        /// </summary>
+        public bool status { get; set; }
 
         /// <summary>
         /// 部门名称

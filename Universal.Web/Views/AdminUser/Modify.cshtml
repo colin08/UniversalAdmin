@@ -83,7 +83,24 @@
                                 </div>
                                 <div class="litip">@Html.ValidationMessageFor(p => p.password)</div>
                             </li>
-
+                            <li>
+                                <div class="lilt">状态</div>
+                                <div class="limd">
+                                    <span>
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.status, true)
+                                            <i class="pub_radio"></i>
+                                            <span>启用</span>
+                                        </label>
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.status, false)
+                                            <i class="pub_radio"></i>
+                                            <span>禁用</span>
+                                        </label>
+                                    </span>
+                                </div>
+                                <div class="litip"></div>
+                            </li>
                         </ul>
                     </div>
 

@@ -337,6 +337,76 @@ namespace Universal.Web.Controllers.api
         //}
 
         /// <summary>
+        /// 设置用户消息推送状态
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [Route("api/v1/user/push/trun")]
+        [HttpPost]
+        public WebAjaxEntity<string> SetPushTurn([FromBody]Models.Request.UserPushTrun req)
+        {
+            var entity_user = BLL.BLLCusUser.GetSimpleModel(req.user_id);
+            if (entity_user == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return WorkContext.AjaxStringEntity;
+            }
+            string data = "";
+            if (!string.IsNullOrWhiteSpace(req.data))
+                data = "," + req.data + ",";
+
+            BLL.BaseBLL<Entity.CusUserPushTurn> bll = new BLL.BaseBLL<Entity.CusUserPushTurn>();
+            var entity = bll.GetModel(p => p.CusUserID == req.user_id);
+            if (entity == null)
+            {
+                entity = new Entity.CusUserPushTurn();
+                entity.OnStr = data;
+                entity.CusUserID = req.user_id;
+                bll.Add(entity);
+            }
+            else
+            {
+                entity.OnStr = data;
+                bll.Modify(entity, "OnStr");
+            }
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "设置成功";
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
+        /// 获取用户设置的推送开关状态
+        /// </summary>
+        /// <param name="user_id">用户ID</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/user/push/get")]
+        public WebAjaxEntity<string> GetPushTrun(int user_id)
+        {
+            BLL.BaseBLL<Entity.CusUserPushTurn> bll = new BLL.BaseBLL<Entity.CusUserPushTurn>();
+            var entity = bll.GetModel(p => p.CusUserID == user_id);
+            if (entity == null)
+                WorkContext.AjaxStringEntity.data = null;
+            else
+            {
+                string temp_str = entity.OnStr;
+                if (!string.IsNullOrWhiteSpace(temp_str))
+                {
+                    if (temp_str.StartsWith(","))
+                        temp_str = temp_str.Substring(1, temp_str.Length - 1);
+                    if (temp_str.EndsWith(","))
+                        temp_str = temp_str.Substring(0, temp_str.Length - 1);
+                }
+                WorkContext.AjaxStringEntity.data = temp_str;
+            }
+
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return WorkContext.AjaxStringEntity;
+        }
+
+        /// <summary>
         /// 用户登录
         /// </summary>
         /// <param name="req"></param>

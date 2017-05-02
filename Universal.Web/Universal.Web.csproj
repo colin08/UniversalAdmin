@@ -1027,6 +1027,7 @@
     <Compile Include="Models\Request\ProjectInfoPro.cs" />
     <Compile Include="Models\Request\ProjectList.cs" />
     <Compile Include="Models\Request\RemoveFav.cs" />
+    <Compile Include="Models\Request\UserPushTrun.cs" />
     <Compile Include="Models\Request\WorkJob.cs" />
     <Compile Include="Models\Request\WorkMeeting.cs" />
     <Compile Include="Models\Request\WorkPlan.cs" />

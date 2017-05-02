@@ -76,7 +76,6 @@ namespace Universal.BLL
         {
             if (model == null)
                 return;
-
             HttpContext.Current.Session[SessionKey.Web_User_Info] = null;
 
             HttpContext.Current.Session[SessionKey.Web_User_Info] = model;
@@ -120,6 +119,8 @@ namespace Universal.BLL
                 return 0;
             var entity = GetSimpleModel(user_id);
             if (entity == null)
+                return 0;
+            if (!entity.Status)
                 return 0;
             nick_name = entity.NickName;
             return user_id;

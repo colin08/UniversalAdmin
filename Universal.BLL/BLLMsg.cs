@@ -157,8 +157,9 @@ namespace Universal.BLL
                 string ids = string.Join(",", user_list.ToArray());
                 if (ids.Length > 0)
                 {
-                    var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
-                    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
+                    PushFilter(ids, content, Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
+                    //var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
+                    //Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favprojectupdate, project_id.ToString());
                 }
             }
         }
@@ -190,8 +191,9 @@ namespace Universal.BLL
                 string ids = string.Join(",", user_list.ToArray());
                 if (ids.Length > 0)
                 {
-                    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
-                    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
+                    PushFilter(ids, content, Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
+                    //    var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
+                    //    Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, doc_id.ToString());
 
                 }
             }
@@ -220,8 +222,9 @@ namespace Universal.BLL
                 }
                 db.SaveChanges();
                 string ids = string.Join(",", user_list.ToArray());
-                var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
-                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
+                PushFilter(ids, content, type, link_id.ToString());
+                //var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
+                //Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
 
@@ -234,6 +237,11 @@ namespace Universal.BLL
         /// <returns></returns>
         public static void PushSomeUser(string user_ids, Entity.CusUserMessageType type, string content, int link_id)
         {
+            if (string.IsNullOrWhiteSpace(user_ids)) { return; }
+            if (user_ids.StartsWith(","))
+                user_ids = user_ids.Substring(1, user_ids.Length - 1);
+            if (user_ids.EndsWith(","))
+                user_ids = user_ids.Substring(0, user_ids.Length - 1);
             using (var db = new DataCore.EFDBContext())
             {
                 var id_list = Array.ConvertAll<string, int>(user_ids.Split(','), int.Parse);
@@ -249,9 +257,10 @@ namespace Universal.BLL
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
-                string ids = string.Join(",", id_list);
-                var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
-                Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
+                PushFilter(user_ids, content, type, link_id.ToString());
+                //string ids = string.Join(",", id_list);
+                //var telphone_list = db.Database.SqlQuery<string>("select distinct Telphone from CusUser where id in (" + ids + ")").ToList();
+                //Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)type, link_id.ToString());
             }
         }
 
@@ -276,8 +285,100 @@ namespace Universal.BLL
             entity.Type = type;
             entity.LinkID = link_id.ToString();
             bll_msg.Add(entity);
-            Tools.JPush.PushALl(entity_user.Telphone, content, (int)type, link_id.ToString());
+            PushFilter(user_id.ToString(), content, type, link_id.ToString());
             return entity.ID > 0;
+        }
+
+
+        /// <summary>
+        /// 过滤推送的用户
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="content"></param>
+        /// <param name="type"></param>
+        /// <param name="link_id"></param>
+        /// <returns></returns>
+        public static void PushFilter(string ids, string content, Entity.CusUserMessageType type, string link_id)
+        {
+            if (string.IsNullOrWhiteSpace(ids)) return;
+            new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
+            {
+                using (var db = new DataCore.EFDBContext())
+                {
+                    StringBuilder telphone_list = new StringBuilder();
+                    foreach (var item in ids.Split(','))
+                    {
+                        int user_id = Tools.TypeHelper.ObjectToInt(item);
+                        var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == user_id).FirstOrDefault();
+                        if (entity_user == null) continue;
+                        var entity = db.CusUserPushTurns.AsNoTracking().Where(p => p.CusUserID == user_id).FirstOrDefault();
+                        //如果没查到数据，直接允许推送
+                        if (entity == null) telphone_list.Append(entity_user.Telphone);
+                        //判断开关状态
+                        if (CheckTrun(type, entity.OnStr)) telphone_list.Append(entity_user.Telphone);
+                    }
+                    if (telphone_list.Length > 0)
+                    {
+                        telphone_list.Remove(telphone_list.Length - 1, 1);
+                        Tools.JPush.PushALl(telphone_list.ToString(), content, (int)type, link_id.ToString());
+                    }
+                }
+            }))
+            { IsBackground = true }.Start();
+        }
+
+        /// <summary>
+        /// 判断是否要推送
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="trun"></param>
+        /// <returns></returns>
+        private static bool CheckTrun(Entity.CusUserMessageType type, string trun)
+        {
+            if (string.IsNullOrWhiteSpace(trun)) return false;
+            string type_trun = "";
+            switch (type)
+            {
+                case Entity.CusUserMessageType.appupdate:
+                    break;
+                case Entity.CusUserMessageType.notice: //公告通知
+                    type_trun = ",1,";
+                    break;
+                case Entity.CusUserMessageType.fileshare:
+                    break;
+                case Entity.CusUserMessageType.approveproject: //待办
+                case Entity.CusUserMessageType.appproveok:
+                case Entity.CusUserMessageType.appproveno:
+                case Entity.CusUserMessageType.confrimjoinmeeting:
+                case Entity.CusUserMessageType.meetingcancel:
+                case Entity.CusUserMessageType.meetingchangedate:
+                case Entity.CusUserMessageType.waitmeeting:
+                case Entity.CusUserMessageType.waitjobdone:
+                case Entity.CusUserMessageType.waitapproveplan:
+                case Entity.CusUserMessageType.planapproveok:
+                    type_trun = ",2,";
+                    break;
+                case Entity.CusUserMessageType.favprojectupdate: //项目
+                case Entity.CusUserMessageType.projectflowdone:
+                case Entity.CusUserMessageType.projectupdate:
+                    type_trun = ",3,";
+                    break;
+                case Entity.CusUserMessageType.jobtimeout:
+                    break;
+                case Entity.CusUserMessageType.confrimdonejob:
+                    break;
+                case Entity.CusUserMessageType.planitemedit:
+                    break;
+                case Entity.CusUserMessageType.favdocupdate:
+                    break;
+                case Entity.CusUserMessageType.flowupdate:
+                    break;
+                default:
+                    break;
+            }
+            if (string.IsNullOrWhiteSpace(type_trun)) return true;
+
+            return trun.IndexOf(type_trun) == -1 ? false : true;
         }
 
     }

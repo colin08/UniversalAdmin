@@ -62,6 +62,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult DelUser(string ids)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             if (string.IsNullOrWhiteSpace(ids))
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
@@ -109,6 +115,12 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult ResetUserPwd(int id)
         {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             Entity.CusUser model = bll.GetModel(p => p.ID == id);
             if (model == null)
@@ -120,6 +132,35 @@ namespace Universal.Web.Controllers
             bll.Modify(model, "Password");
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "密码已重置为：" + WebSite.ResetPwd;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 设置用户状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SetStatus(int id)
+        {
+            if (!BLL.BLLCusRoute.CheckUserAuthority(BLL.CusRouteType.员工管理, WorkContext.UserInfo.ID))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "没有权限操作";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
+            Entity.CusUser model = bll.GetModel(p => p.ID == id);
+            if (model == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "用户不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            model.Status = !model.Status;
+            bll.Modify(model, "Status");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "操作成功";
+            WorkContext.AjaxStringEntity.data = model.Status ? "禁用" : "启用";
             return Json(WorkContext.AjaxStringEntity);
         }
 
@@ -154,6 +195,7 @@ namespace Universal.Web.Controllers
                     entity.department_title = model.CusDepartment.Title;
                     entity.email = model.Email == null ? "" : model.Email.ToLower();
                     entity.gender = model.Gender;
+                    entity.status = model.Status;
                     entity.id = model.ID;
                     entity.job_id = model.CusUserJobID;
                     entity.job_title = model.CusUserJob.Title;
@@ -265,6 +307,7 @@ namespace Universal.Web.Controllers
                         model.Password = SecureHelper.MD5(pwd);
                 }
 
+                model.Status = entity.status;
                 model.AboutMe = entity.about_me;
                 model.Avatar = entity.avatar;
                 model.CusDepartmentID = entity.department_id;
@@ -275,7 +318,6 @@ namespace Universal.Web.Controllers
                 model.IsAdmin = entity.user_route_str.Split(',').Length == 10 ? true : false;
                 model.NickName = entity.nick_name;
                 model.ShorNum = entity.short_num;
-                model.Status = true;
                 model.Telphone = entity.telphone;
                 model.Brithday = entity.brithday;
                 if (isAdd)

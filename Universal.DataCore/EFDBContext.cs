@@ -166,6 +166,11 @@ namespace Universal.DataCore
         public DbSet<Entity.CusUserMessage> CusUserMessages { get; set; }
 
         /// <summary>
+        /// 用户推送开关
+        /// </summary>
+        public DbSet<Entity.CusUserPushTurn> CusUserPushTurns { get; set; }
+
+        /// <summary>
         /// 节点
         /// </summary>
         public DbSet<Entity.Node> Nodes { get; set; }
