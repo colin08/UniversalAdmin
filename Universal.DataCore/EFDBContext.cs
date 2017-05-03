@@ -44,6 +44,11 @@ namespace Universal.DataCore
         public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
 
         /// <summary>
+        /// 系统及时消息
+        /// </summary>
+        public DbSet<Entity.SysMessage> SysMessages { get; set; }
+
+        /// <summary>
         /// 意见反馈
         /// </summary>
         public DbSet<Entity.Feedback> Feedbacks { get; set; }

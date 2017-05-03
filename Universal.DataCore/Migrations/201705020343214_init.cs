@@ -2,7 +2,7 @@ namespace Universal.DataCore.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-
+    
     public partial class init : DbMigration
     {
         public override void Up()
@@ -229,6 +229,19 @@ namespace Universal.DataCore.Migrations
                 .ForeignKey("dbo.SysUser", t => t.SysUserID, cascadeDelete: true)
                 .Index(t => t.SysUserID);
 
+            CreateTable(
+                "dbo.SysMessage",
+                c => new
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    Content = c.String(nullable: false, maxLength: 255),
+                    IsRead = c.Boolean(nullable: false),
+                    OpenNewTab = c.Boolean(nullable: false),
+                    LinkUrl = c.String(nullable: false, maxLength: 500),
+                    AddTime = c.DateTime(nullable: false),
+                })
+                .PrimaryKey(t => t.ID);
+
             //按照某一个Id查询它及它的所有子级成员存储过程
             string SQLGetChildCusCategory = @"
                     CREATE PROCEDURE [dbo].[sp_GetChildCusCategory] (@Id int)
@@ -352,9 +365,9 @@ namespace Universal.DataCore.Migrations
                         ";
 
             Sql(SQLFunGetChildCusCategoryStr);
-
+            
         }
-
+        
         public override void Down()
         {
             DropForeignKey("dbo.SysLogMethod", "SysUserID", "dbo.SysUser");
@@ -381,6 +394,7 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.Demo", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Demo", new[] { "AddUserID" });
             DropIndex("dbo.CusCategory", new[] { "PID" });
+            DropTable("dbo.SysMessage");
             DropTable("dbo.SysLogMethod");
             DropTable("dbo.SysLogException");
             DropTable("dbo.SysLogApiAction");

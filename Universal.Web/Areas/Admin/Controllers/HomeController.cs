@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data.Entity;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
@@ -124,6 +124,36 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 获取系统消息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SysMessage()
+        {
+            SignalR.SysMessage sm = new SignalR.SysMessage();
+            var model = sm.GetData();
+            return Json(model);
+        }
+
+        /// <summary>
+        /// 设置消息已读
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SetMsgRead(int id)
+        {
+            BLL.BaseBLL<Entity.SysMessage> bll = new BLL.BaseBLL<Entity.SysMessage>();
+            var model = bll.GetModel(p => p.ID == id, "ID DESC");
+            if(!model.IsRead)
+            {
+                model.IsRead = true;
+                bll.Modify(model, "IsRead");
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            return Json(WorkContext.AjaxStringEntity);
         }
 
         public ActionResult Center()

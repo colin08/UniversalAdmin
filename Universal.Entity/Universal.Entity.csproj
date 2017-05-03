@@ -62,6 +62,7 @@
     <Compile Include="SysLog\SysLogApiAction.cs" />
     <Compile Include="SysLog\SysLogException.cs" />
     <Compile Include="SysLog\SysLogMethod.cs" />
+    <Compile Include="SysMessage.cs" />
     <Compile Include="SysRole.cs" />
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />
