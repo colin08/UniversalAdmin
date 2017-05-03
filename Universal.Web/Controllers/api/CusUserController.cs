@@ -20,6 +20,35 @@ namespace Universal.Web.Controllers.api
     public class CusUserController : BaseAPIController
     {
         /// <summary>
+        /// Android版本升级
+        /// </summary>
+        /// <param name="vcode">当前升级号</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/v1/appversion/check")]
+        public WebAjaxEntity<Entity.AppVersion> AppUpdate(int vcode)
+        {
+            WebAjaxEntity<Entity.AppVersion> response_entity = new WebAjaxEntity<Entity.AppVersion>();
+            var entity = BLL.BLLAppVersion.GetLatest(Entity.APPVersionPlatforms.Android);
+            if(entity == null)
+            {
+                response_entity.msgbox = "无版本可用";
+                return response_entity;
+            }
+            if(entity.VersionCode <= vcode)
+            {
+                response_entity.msgbox = "当前已是最新版本";
+                return response_entity;
+            }
+            entity.DownUrl = GetSiteUrl() + entity.DownUrl;
+            entity.LogoImg = GetSiteUrl() + entity.LogoImg;
+            response_entity.msg = 1;
+            response_entity.msgbox = "有新版本可用";
+            response_entity.data = entity;
+            return response_entity;
+        }
+
+        /// <summary>
         /// 发送验证码
         /// </summary>
         /// <param name="tel">手机号</param>
