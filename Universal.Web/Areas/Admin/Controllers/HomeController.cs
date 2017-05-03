@@ -137,25 +137,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             var model = sm.GetData();
             return Json(model);
         }
-
-        /// <summary>
-        /// 设置消息已读
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult SetMsgRead(int id)
-        {
-            BLL.BaseBLL<Entity.SysMessage> bll = new BLL.BaseBLL<Entity.SysMessage>();
-            var model = bll.GetModel(p => p.ID == id, "ID DESC");
-            if(!model.IsRead)
-            {
-                model.IsRead = true;
-                bll.Modify(model, "IsRead");
-            }
-            WorkContext.AjaxStringEntity.msg = 1;
-            return Json(WorkContext.AjaxStringEntity);
-        }
-
+        
         public ActionResult Center()
         {
             return View();

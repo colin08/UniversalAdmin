@@ -62,6 +62,7 @@
     <Compile Include="BLLDemo.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLSysDbBack.cs" />
+    <Compile Include="BLLSysMessage.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />

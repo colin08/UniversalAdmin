@@ -109,9 +109,10 @@
 									}
 								</ul>
 							</li>
-						}
-						if (CheckAdminPower("SysDbBack/Index", false))
-						{
+                        }
+                        <li><a class="J_menuItem" href="/Admin/SysMessage/Index"><i class="fa fa-bell"></i> <span class="nav-label">系统消息管理</span></a></li>
+                        if (CheckAdminPower("SysDbBack/Index", false))
+                        {
 							<li><a class="J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a></li>
 						}
 						if (CheckAdminPower("SysConfig/Modify", false))
@@ -194,7 +195,7 @@
                                 <i class="fa fa-bell"></i> <span class="label label-primary" id="sys_msg_total"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-alerts" id="sys_msg_list">
-                                <li>
+                                @*<li>
                                     <a href="http://www.baidu.com" class="J_menuItem">
                                         <div>
                                             <i class="fa fa-times-circle" onclick="setMsgRead(2)"></i> &nbsp;&nbsp;
@@ -221,7 +222,7 @@
                                             <i class="fa fa-angle-right"></i>
                                         </a>
                                     </div>
-                                </li>
+                                </li>*@
                             </ul>
                         </li>
 
@@ -289,7 +290,7 @@
                         $("#sys_msg_total").text('');
                         lis.push('<li style="text-align:center;">没有消息</li><li class="divider"></li>');
                     }
-                    lis.push('<li><div class="text-center link-block"><a class="J_menuItem" href="notifications.html"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
+                    lis.push('<li><div class="text-center link-block"><a class="J_menuItem" href="javascript:(0);" onclick="to_msg_list()"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
                     $list.append(lis.join(''));
                 }
             });
@@ -306,12 +307,17 @@
 		    });
 		});
 
+		function to_msg_list()
+		{
+		    document.getElementById("J_iframe").src = "/Admin/SysMessage/Index";
+		}
+
 		function setMsgRead(obj)
 		{
 		    var link =$(obj).attr("link");
 		    var id =$(obj).attr("d-id");
 		    $.ajax({
-		        url: '/Admin/Home/SetMsgRead',
+		        url: '/Admin/SysMessage/SetMsgRead',
 		        type: 'POST',
 		        data:{"id":id},
 		        datatype: 'json',

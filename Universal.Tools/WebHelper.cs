@@ -1002,6 +1002,20 @@ namespace Universal.Tools
         }
 
         /// <summary>
+        /// 截取字符串
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string CutString(string val,int length)
+        {
+            if (string.IsNullOrWhiteSpace(val))
+                return val;
+            if(val.Length< length) return val;
+            return val.Substring(0, length) + "...";
+        }
+
+        /// <summary>
         /// 判断当前字符串是否存在SQL注入
         /// </summary>
         /// <returns></returns>

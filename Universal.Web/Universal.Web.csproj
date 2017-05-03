@@ -614,6 +614,7 @@
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysDbBackController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SysMessageController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
@@ -627,6 +628,7 @@
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelDemo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelSysMessage.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
@@ -740,6 +742,7 @@
     <Content Include="Assets\css\plugins\simditor\editor.scss" />
     <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
     <Content Include="Assets\css\plugins\simditor\simditor.scss" />
+    <Content Include="Areas\Admin\Views\SysMessage\Index.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
     <None Include="Web.Debug.config">
