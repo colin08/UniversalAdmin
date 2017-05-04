@@ -83,6 +83,7 @@
 @section foot {
 <script src="~/Assets/theme/js/menu.js"></script>
 @Scripts.Render("~/bundles/laypage")
+@Scripts.Render("~/bundles/layer")
 <script type="text/javascript">
         $(document).ready(function (e) {
             pageData(1,@ViewData["DefaultID"],false)
@@ -96,10 +97,18 @@
         /*******************列表 end *************************/
         //分页方法
         function pageData(page_index, doc_id, clearbox) {
-            if (doc_id == 0)
+            var word = $("#txt_search").val();
+            if(word.length == 0)
             {
-                return;
+                if (doc_id == 0)
+                {
+                    return;
+                }
+            }else
+            {
+                doc_id = 0;
             }
+
             $("#hid_temp_doc_id").val(doc_id);
             if (clearbox)
             {
@@ -108,14 +117,14 @@
             $.ajax({
                 type: "post",
                 url: "/Shool/DocData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": doc_id, "keyword": $("#txt_search").val() },
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": doc_id, "keyword": word },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
-                    //Loading....
+                    layer.load(2);
                 },
                 complete: function () {
-                    //Loading Complete
+                    layer.closeAll('loading');
                 },
                 success: function (data) {
                     if (data.msg == 0) {

@@ -666,6 +666,7 @@
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\datepicker.css" />
     <Content Include="Assets\js\plugins\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Assets\js\plugins\My97DatePicker\WdatePicker.js" />
+    <Content Include="Assets\js\plugins\pace\pace.css" />
     <Content Include="Assets\js\plugins\perfect-scrollbar\perfect-scrollbar.min.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.js" />
     <Content Include="Assets\js\plugins\simditor\hotkeys.min.js" />
@@ -1177,6 +1178,7 @@
     <Content Include="Areas\h5\Views\Mobile\Flow.cshtml" />
     <Content Include="App_Data\WorkPlanTemplate.xlsx" />
     <Content Include="Areas\h5\Views\Mobile\FLowGuide.cshtml" />
+    <Content Include="Assets\js\plugins\pace\jquery.pace.min.js" />
     <None Include="Properties\PublishProfiles\HBL_NEW.pubxml" />
     <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\Statctics\Domain.cshtml" />

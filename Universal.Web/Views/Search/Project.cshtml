@@ -6,6 +6,7 @@
 <!--头部脚本-->
 @section head
 {
+<link href="~/Assets/js/plugins/pace/pace.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
 
@@ -65,6 +66,7 @@
 @section foot
 {
 @Scripts.Render("~/bundles/laypage")
+<script src="~/Assets/js/plugins/pace/jquery.pace.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function (e) {
             pageData(1);
@@ -80,10 +82,10 @@
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
-                    //Loading....
+                    Pace.start();
                 },
                 complete: function () {
-                    //Loading Complete
+                    Pace.stop();
                 },
                 success: function (data) {
                     if (data.msg == 0) {
