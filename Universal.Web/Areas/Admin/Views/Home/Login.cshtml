@@ -12,6 +12,7 @@
     <title>后台管理 - 登录</title>
 
     @Styles.Render("~/Content/admin/css")
+    @Styles.Render("~/Content/icheck")
 </head>
 
 <body class="gray-bg">
@@ -33,10 +34,11 @@
                     <div class="pull-left vali-msg">@Html.ValidationMessageFor(p => p.password)</div>
                 </div>
                 <div class="pull-left" style="margin-bottom: 10px;">
-                    @Html.CheckBoxFor(s => s.is_rember)
-                    <label for="@Html.DisplayNameFor(s=>s.is_rember)">
-                        保持登录
-                    </label>
+                    <div class="i-checks">
+                        <label style="font-weight:inherit;">
+                            @Html.CheckBoxFor(s => s.is_rember) 保持登录
+                        </label>
+                    </div>
                 </div>
                 
                 <button type="submit" id="confi" class="btn btn-info block full-width m-b">登 录</button>
@@ -55,7 +57,15 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/icheck")
     <script>
+        $(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        })
+
         function toValid() {
             if ($("form").valid())
             {
