@@ -319,8 +319,8 @@ namespace Universal.BLL
                 old_list.Add(p);
 
                 //查询是否顶级
-                var sql = "select count(1) from FlowNode where charindex('," + flow_node.ID.ToString() + ",',','+ProcessTo+',')> 0";
-                bool is_frist = db.Database.SqlQuery<int>(sql).ToList()[0] == 0 ? true : false;
+                //var sql = "select count(1) from FlowNode where charindex('," + flow_node.ID.ToString() + ",',','+ProcessTo+',')> 0";
+                //bool is_frist = db.Database.SqlQuery<int>(sql).ToList()[0] == 0 ? true : false;
 
                 Entity.ProjectFlowNode entity_node = new Entity.ProjectFlowNode();
                 entity_node.Color = flow_node.Color;
@@ -333,7 +333,7 @@ namespace Universal.BLL
                 entity_node.EditUserId = login_user_id;
                 entity_node.LastUpdateTime = DateTime.Now;
                 entity_node.Top = flow_node.Top;
-                entity_node.IsFrist = is_frist;
+                entity_node.IsFrist = flow_node.is_frist;
                 db.ProjectFlowNodes.Add(entity_node);
                 db.SaveChanges();
                 //旧的的id对应新的id
@@ -345,12 +345,18 @@ namespace Universal.BLL
             {
                 int project_flow_id = Tools.TypeHelper.ObjectToInt(new_dy[item.pid]);
                 StringBuilder str_child = new StringBuilder();
-                foreach (var citem in item.cids)
-                    str_child.Append(new_dy[citem.id].ToString() + ",");
-                if (str_child.Length > 0)
-                    str_child.Remove(str_child.Length - 1, 1);
-                string sql = "update ProjectFlowNode set ProcessTo='" + str_child.ToString() + "' where id = " + project_flow_id.ToString();
-                db.Database.ExecuteSqlCommand(sql);
+                if (item.cids != null)
+                {
+                    foreach (var citem in item.cids)
+                        if(new_dy[citem.id] != null) str_child.Append(new_dy[citem.id].ToString() + ",");
+
+
+                    if (str_child.Length > 0)
+                        str_child.Remove(str_child.Length - 1, 1);
+                    string sql = "update ProjectFlowNode set ProcessTo='" + str_child.ToString() + "' where id = " + project_flow_id.ToString();
+                    db.Database.ExecuteSqlCommand(sql);
+
+                }
             }
         }
 
@@ -528,7 +534,7 @@ namespace Universal.BLL
                 //权限
                 if (!is_admin)
                 {
-                    auth_where += " and (ApproveStatus =1 or CusUserID = "+user_id.ToString()+") and (See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0)";
+                    auth_where += " and (ApproveStatus =1 or CusUserID = " + user_id.ToString() + ") and (See = 0 or CHARINDEX(isnull((case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end),''),isnull((case CusUserID when " + user_id + " then(case See when 2 then '" + user_id_str + "' when 1 then '" + user_department_str + "' end) end) + isnull(TOID,''),''))> 0)";
 
                 }
             }
@@ -593,8 +599,8 @@ namespace Universal.BLL
                 //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.ProjectFlowNodeDoing();
                 var entity_action_user = new Entity.CusUser();
-                var flow_list =BLL.BLLProjectFlowNode.GetProjectFlow(item.ID);
-                if(flow_list.Count == 0)
+                var flow_list = BLL.BLLProjectFlowNode.GetProjectFlow(item.ID);
+                if (flow_list.Count == 0)
                 {
                     entity_node.flow_node_id = -1;
                     entity_node.node_title = "全部节点已完成";
@@ -604,7 +610,7 @@ namespace Universal.BLL
                 }
                 else
                 {
-                    var temp_entity = flow_list[flow_list.Count -1];
+                    var temp_entity = flow_list[flow_list.Count - 1];
                     entity_node.edit_id = temp_entity.user_id;
                     entity_node.flow_node_id = temp_entity.project_flow_node_id;
                     entity_node.flow_node_remark = temp_entity.remark;
@@ -637,7 +643,7 @@ namespace Universal.BLL
                 //if (entity_node.edit_id != 0)
                 //{
                 //    entity_action_user = new Entity.CusUser();// db.CusUsers.Where(p => p.ID == entity_node.edit_id).AsNoTracking().FirstOrDefault();
-                    
+
                 //}
                 //if (entity_action_user.ID == 0)
                 //{

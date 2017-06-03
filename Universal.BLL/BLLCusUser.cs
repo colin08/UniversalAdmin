@@ -17,6 +17,19 @@ namespace Universal.BLL
     public class BLLCusUser
     {
         /// <summary>
+        /// 是否有联系人权限
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool CheckPermissionContacts(int id)
+        {
+            using (var db =new DataCore.EFDBContext())
+            {
+                return db.CusUserRoutes.Any(p => p.CusUserID == id && p.CusRouteID == 20);
+            }
+        }
+
+        /// <summary>
         /// 判断用户是否登陆
         /// </summary>
         /// <returns></returns>

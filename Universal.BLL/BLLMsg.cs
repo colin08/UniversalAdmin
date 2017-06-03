@@ -301,30 +301,28 @@ namespace Universal.BLL
         public static void PushFilter(string ids, string content, Entity.CusUserMessageType type, string link_id)
         {
             if (string.IsNullOrWhiteSpace(ids)) return;
-            new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
+            using (var db = new DataCore.EFDBContext())
             {
-                using (var db = new DataCore.EFDBContext())
+                StringBuilder telphone_list = new StringBuilder();
+                foreach (var item in ids.Split(','))
                 {
-                    StringBuilder telphone_list = new StringBuilder();
-                    foreach (var item in ids.Split(','))
+                    int user_id = Tools.TypeHelper.ObjectToInt(item);
+                    var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == user_id).FirstOrDefault();
+                    if (entity_user == null) continue;
+                    var entity = db.CusUserPushTurns.AsNoTracking().Where(p => p.CusUserID == user_id).FirstOrDefault();
+                    //如果没查到数据，直接允许推送
+                    if (entity == null) telphone_list.Append(entity_user.Telphone +",");
+                    else
                     {
-                        int user_id = Tools.TypeHelper.ObjectToInt(item);
-                        var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == user_id).FirstOrDefault();
-                        if (entity_user == null) continue;
-                        var entity = db.CusUserPushTurns.AsNoTracking().Where(p => p.CusUserID == user_id).FirstOrDefault();
-                        //如果没查到数据，直接允许推送
-                        if (entity == null) telphone_list.Append(entity_user.Telphone);
-                        //判断开关状态
-                        if (CheckTrun(type, entity.OnStr)) telphone_list.Append(entity_user.Telphone);
-                    }
-                    if (telphone_list.Length > 0)
-                    {
-                        telphone_list.Remove(telphone_list.Length - 1, 1);
-                        Tools.JPush.PushALl(telphone_list.ToString(), content, (int)type, link_id.ToString());
+                        if (CheckTrun(type, entity.OnStr)) telphone_list.Append(entity_user.Telphone +","); //判断开关状态
                     }
                 }
-            }))
-            { IsBackground = true }.Start();
+                if (telphone_list.Length > 0)
+                {
+                    telphone_list.Remove(telphone_list.Length - 1, 1);
+                    Tools.JPush.PushALl(telphone_list.ToString(), content, (int)type, link_id.ToString());
+                }
+            }
         }
 
         /// <summary>

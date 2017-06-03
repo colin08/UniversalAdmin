@@ -42,6 +42,8 @@ namespace Universal.Web.Models
     {
         public int id { get; set; }
 
+        public int department_id { get; set; }        
+
         public string telphone { get; set; }
 
         public string nick_name { get; set; }

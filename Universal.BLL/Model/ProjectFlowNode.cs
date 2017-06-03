@@ -78,6 +78,9 @@ namespace Universal.BLL.Model
 
         public bool is_end { get; set; }
 
+        public bool is_frist { get; set; }
+        
+
         public List<ProjectFlowNodeFile> files { get; set; }
 
         public void BuildFileList(List<Entity.ProjectFlowNodeFile> list)

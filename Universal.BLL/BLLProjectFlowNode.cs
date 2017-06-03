@@ -68,6 +68,7 @@ namespace Universal.BLL
                 model.left = item.Left;
                 model.top = item.Top;
                 model.is_end = item.IsEnd;
+                model.is_frist = item.IsFrist;
                 model.project_flow_node_id = item.ID;
                 model.status = item.Status;
                 model.BuildFileList(item.ProjectFlowNodeFiles.ToList());
@@ -101,6 +102,7 @@ namespace Universal.BLL
                     model.left = item.Left;
                     model.top = item.Top;
                     model.is_end = item.IsEnd;
+                    model.is_frist = item.IsFrist;
                     model.project_flow_node_id = item.ID;
                     model.status = item.Status;
                     model.BuildFileList(node_file_list);
@@ -159,6 +161,7 @@ namespace Universal.BLL
                 model.left = item.Left;
                 model.top = item.Top;
                 model.is_end = item.IsEnd;
+                model.is_frist = item.IsFrist;
                 model.project_flow_node_id = item.ID;
                 model.status = item.Status;
                 model.BuildFileList(node_file_list);
@@ -499,6 +502,7 @@ namespace Universal.BLL
                 return true;
             }
         }
+        
 
         /// <summary>
         /// 开启/关闭节点

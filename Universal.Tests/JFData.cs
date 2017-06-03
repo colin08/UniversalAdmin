@@ -35,7 +35,11 @@ namespace Universal.Tests
             //db.Dispose();
             //string zip_path ="";
             //BLL.BLLProjectFlowNode.ImportProject(89,out zip_path);
-            var list = BLL.BllCusUserFavorites.GetTopDocData(10, 1);
+            //var list = BLL.BllCusUserFavorites.GetTopDocData(10, 1);
+
+            string msg = "";
+            var isOK = BLL.BLLFlow.SetFlowFristNode(81, 74, out msg);
+
             Assert.AreEqual(true, true);
         }
     }

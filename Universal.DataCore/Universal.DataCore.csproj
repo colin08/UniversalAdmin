@@ -222,6 +222,10 @@
     <Compile Include="Migrations\201704300157010_add_push_turn.Designer.cs">
       <DependentUpon>201704300157010_add_push_turn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706030353274_add_flow_node_frist.cs" />
+    <Compile Include="Migrations\201706030353274_add_flow_node_frist.Designer.cs">
+      <DependentUpon>201706030353274_add_flow_node_frist.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -368,6 +372,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704300157010_add_push_turn.resx">
       <DependentUpon>201704300157010_add_push_turn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706030353274_add_flow_node_frist.resx">
+      <DependentUpon>201706030353274_add_flow_node_frist.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

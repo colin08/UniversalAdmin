@@ -74,5 +74,10 @@ namespace Universal.Entity
         /// </summary>
         public string ICON { get; set; }
 
+        /// <summary>
+        /// 是否是开始节点
+        /// </summary>
+        public bool is_frist { get; set; }
+
     }
 }

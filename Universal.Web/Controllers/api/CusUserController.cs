@@ -1221,6 +1221,7 @@ namespace Universal.Web.Controllers.api
             entity.shor_num = model.ShorNum == null ? "" : model.ShorNum;
             entity.telphone = model.Telphone;
             entity.is_department_manager = BLL.BLLDepartment.CheckUserIsManager(entity.id, entity.department_id);
+            entity.permission_contacts = BLL.BLLCusUser.CheckPermissionContacts(entity.id);
             return entity;
         }
 

@@ -87,6 +87,10 @@ namespace Universal.Web.Models.Response
         /// 简介
         /// </summary>
         public string about_me { get; set; }
-        
+
+        /// <summary>
+        /// 是否有联系人权限
+        /// </summary>
+        public bool permission_contacts { get; set; }
     }
 }

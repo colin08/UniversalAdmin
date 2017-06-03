@@ -300,6 +300,37 @@ namespace Universal.BLL
             }
         }
 
+        /// <summary>
+        /// 设置流程起始节点
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <param name="node_id"></param>
+        /// <returns></returns>
+        public static bool SetFlowFristNode(int flow_id,int node_id,out string msg)
+        {
+            msg = "设置成功";
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity_flow_node = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
+                if(entity_flow_node == null)
+                {
+                    msg = "该节点不属于该流程";
+                    return false;
+                }
+                if(entity_flow_node.is_frist)
+                {
+                    msg = "该节点已经是开始节点了";
+                    return false;
+                }
+
+                string sql = "update FlowNode set is_frist = 0 where FlowID =" + flow_id.ToString();
+                entity_flow_node.is_frist = true;
+                db.Database.ExecuteSqlCommand(sql);
+                db.SaveChanges();
+                return true;
+            }
+        }
+
         ///// <summary>
         ///// 生成插件所需流程节点数据
         ///// </summary>
@@ -400,6 +431,7 @@ namespace Universal.BLL
                 model.color = item.Color;
                 model.left = item.Left;
                 model.top = item.Top;
+                model.is_frist = item.is_frist;
                 model.project_flow_node_id = item.ID;
                 response_entity.Add(model);
             }

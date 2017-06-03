@@ -20,7 +20,7 @@
 <div class="container">
     <div class="new-head mb-40 clearfix">
         <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
-        <b class="f20">编辑项目</b>
+        <b class="f20">@(Model.id>0?"编辑项目":"添加项目")</b>
     </div>
     <div class="step step_1">
         <span class="sp_1" id="tab_one">1 基本信息</span>
@@ -268,7 +268,7 @@
             <div class="addmb" style="display:none;" id="div_three">
                 <div class="addsuccess">
                     <p><img src="/Assets/theme/ico/ico_43.png" /></p>
-                    <p>恭喜您，编辑项目成功</p>
+                    <p>恭喜您， @(Model.id > 0 ? "编辑项目" : "添加项目") 成功</p>
                     <div class="mt_35">
                         <button type="button" class="btn1" onclick="location.href = '/Project/Index'">项目管理</button>
                     </div>

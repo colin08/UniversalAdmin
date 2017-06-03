@@ -241,17 +241,29 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GetUserList(string search)
+        public JsonResult GetUserList(string dep_id,string search)
         {
             WebAjaxEntity<List<Models.ViewModelNoticeUser>> result = new WebAjaxEntity<List<Models.ViewModelNoticeUser>>();
             BLL.BaseBLL<Entity.CusUser> bll = new BLL.BaseBLL<Entity.CusUser>();
             List<Models.ViewModelNoticeUser> list = new List<Models.ViewModelNoticeUser>();
-            foreach (var item in bll.GetListBy(0, p => p.Telphone.Contains(search) || p.NickName.Contains(search), "ID asc"))
+            List<BLL.FilterSearch> search_list = new List<BLL.FilterSearch>();
+            if(!string.IsNullOrWhiteSpace(dep_id))
+            {
+                int de_id = TypeHelper.ObjectToInt(dep_id, 0);
+                if(de_id != 0)  search_list.Add(new BLL.FilterSearch("CusDepartmentID", dep_id, BLL.FilterSearchContract.等于));
+            }
+            if(!string.IsNullOrWhiteSpace(search))
+            {
+                search_list.Add(new BLL.FilterSearch("Telphone", search, BLL.FilterSearchContract.like));
+                search_list.Add(new BLL.FilterSearch("NickName", search, BLL.FilterSearchContract.like));
+            }
+            foreach (var item in bll.GetListBy(0, search_list, "ID asc"))
             {
                 Models.ViewModelNoticeUser model = new Models.ViewModelNoticeUser();
                 model.id = item.ID;
                 model.nick_name = item.NickName;
                 model.telphone = item.Telphone;
+                model.department_id = item.CusDepartmentID;
                 list.Add(model);
             }
             result.data = list;
@@ -401,7 +413,7 @@ namespace Universal.Web.Controllers
         }
 
         /// <summary>
-        /// 设置节点父级信息
+        /// 设置节点子级信息
         /// </summary>
         /// <param name="flow_id">为-1时为顶级</param>
         /// <param name="title">流程标题</param>
@@ -434,6 +446,22 @@ namespace Universal.Web.Controllers
             var isOK = BLL.BLLFlow.DelFlowNode(flow_id,node_id);
             WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = "";
+            return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 设置开始节点
+        /// </summary>
+        /// <param name="flow_id"></param>
+        /// <param name="node_id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult SetFristNode(int flow_id,int node_id)
+        {
+            string msg = "";
+            var isOK = BLL.BLLFlow.SetFlowFristNode(flow_id,node_id, out msg);
+            WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
         }
 

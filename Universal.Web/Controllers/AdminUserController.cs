@@ -315,7 +315,7 @@ namespace Universal.Web.Controllers
                 model.Email = entity.email == null ? null : entity.email.ToLower();
                 model.Gender = entity.gender;
                 //全选则为管理员
-                model.IsAdmin = entity.user_route_str.Split(',').Length == 10 ? true : false;
+                model.IsAdmin = entity.user_route_str.Split(',').Length == 11 ? true : false;
                 model.NickName = entity.nick_name;
                 model.ShorNum = entity.short_num;
                 model.Telphone = entity.telphone;

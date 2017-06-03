@@ -489,17 +489,24 @@ namespace Universal.Tools
         /// <param name="path">路径</param>
         public static void WriteLogs(string content, string path = "")
         {
-            string file_name = "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            string server_path = "~/logs/" + path;
-            string wl_path = HttpContext.Current.Server.MapPath(server_path);
-            if (!Directory.Exists(wl_path))
-                Directory.CreateDirectory(wl_path); //如果没有该目录，则创建
-            StreamWriter sw = new StreamWriter(wl_path + file_name, true, Encoding.UTF8);
-            DateTime dt = DateTime.Now;
-            sw.WriteLine("**************************" + dt.ToString() + " begin **************************");
-            sw.WriteLine(content);
-            sw.WriteLine("/*************************" + dt.ToString() + " end **************************/");
-            sw.Close();
+            try
+            {
+                string file_name = "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+                string server_path = "~/logs/" + path;
+                string wl_path = HttpContext.Current.Server.MapPath(server_path);
+                if (!Directory.Exists(wl_path))
+                    Directory.CreateDirectory(wl_path); //如果没有该目录，则创建
+                StreamWriter sw = new StreamWriter(wl_path + file_name, true, Encoding.UTF8);
+                DateTime dt = DateTime.Now;
+                sw.WriteLine("**************************" + dt.ToString() + " begin **************************");
+                sw.WriteLine(content);
+                sw.WriteLine("/*************************" + dt.ToString() + " end **************************/");
+                sw.Close();
+            }
+            catch (Exception)
+            {
+                
+            }
         }
         #endregion
         

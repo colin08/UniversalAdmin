@@ -12,6 +12,7 @@ namespace Universal.Web.Controllers
     /// <summary>
     /// 通讯录
     /// </summary>
+    [BasicAdminAuth]
     public class ContactsController : BaseHBLController
     {
         // GET: Msg
