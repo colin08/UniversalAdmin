@@ -37,9 +37,16 @@ namespace Universal.Tests
             //BLL.BLLProjectFlowNode.ImportProject(89,out zip_path);
             //var list = BLL.BllCusUserFavorites.GetTopDocData(10, 1);
 
-            string msg = "";
-            var isOK = BLL.BLLFlow.SetFlowFristNode(81, 74, out msg);
+            //string msg = "";
+            //var isOK = BLL.BLLFlow.SetFlowFristNode(81, 74, out msg);
 
+            StringBuilder ids = new StringBuilder();
+            var db = new DataCore.EFDBContext();
+            BLL.BLLFlow.GetChildNodeID(db, 90, 74, ids);
+
+            var sss = ids.ToString();
+
+            db.Dispose();
             Assert.AreEqual(true, true);
         }
     }

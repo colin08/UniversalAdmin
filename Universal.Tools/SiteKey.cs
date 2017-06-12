@@ -24,7 +24,7 @@ namespace Universal.Tools
         /// <summary>
         /// 缓存时间(分钟)
         /// </summary>
-        public static readonly int CACHE_TIME = 60;
+        public static readonly int CACHE_TIME = 5;
 
     }
 

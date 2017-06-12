@@ -90,7 +90,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static int GetDefault()
         {
-            using (var db= new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.Flows.Where(p => p.IsDefault == true).AsNoTracking().FirstOrDefault();
                 if (entity == null)
@@ -241,7 +241,7 @@ namespace Universal.BLL
                     continue;
 
                 var entity_temp = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == c_node_id).AsNoTracking().FirstOrDefault();
-                if(entity_temp == null)
+                if (entity_temp == null)
                 {
                     entity_temp = new Entity.FlowNode();
                     entity_temp.FlowID = flow_id;
@@ -252,7 +252,7 @@ namespace Universal.BLL
                     db.FlowNodes.Add(entity_temp);
                     db.SaveChanges();
                 }
-                str_cids.Append(entity_temp.ID.ToString()+",");
+                str_cids.Append(entity_temp.ID.ToString() + ",");
             }
             if (str_cids.Length > 0)
                 str_cids.Remove(str_cids.Length - 1, 1);
@@ -288,16 +288,53 @@ namespace Universal.BLL
         {
             using (var db = new DataCore.EFDBContext())
             {
-                var entity = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
+                var entity = db.FlowNodes.AsNoTracking().Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
                 if (entity != null)
                 {
-                    db.FlowNodes.Remove(entity);
-                    db.SaveChanges();
+                    //迭代获取子节点自增ID
+                    StringBuilder child_ids = new StringBuilder();
+                    GetChildNodeID(db, flow_id, node_id, child_ids);
+                    if (child_ids.Length > 0)
+                        child_ids.Remove(child_ids.Length - 1, 1);
+                    if(child_ids.Length>0)
+                    {
+                        string strSql = "delete FlowNode where ID in(" + child_ids.ToString() + ")";
+                        db.Database.ExecuteSqlCommand(strSql);
+                    }
+
+                    //删除子节点
+                    //if (!string.IsNullOrWhiteSpace(entity.ProcessTo))
+                    //{
+                    //    string strSql = "delete FlowNode where ID in(" + entity.ProcessTo + ")";
+                    //    db.Database.ExecuteSqlCommand(strSql);
+                    //}
+                    //db.FlowNodes.Remove(entity);
+                    //db.SaveChanges();
                     return true;
                 }
                 else
                     return false;
             }
+        }
+
+        public static void GetChildNodeID(DataCore.EFDBContext db, int flow_id, int node_id, System.Text.StringBuilder ids)
+        {
+            if (node_id == 0) return;
+
+            var entity = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
+            if (entity == null) return;
+            ids.Append(entity.ID.ToString() + ",");
+            if (!string.IsNullOrWhiteSpace(entity.ProcessTo))
+            {
+                string sql_child = "select * from FlowNode where ID in(" + entity.ProcessTo + ")";
+                var child_list = db.FlowNodes.SqlQuery(sql_child).ToList();
+                foreach (var item in child_list)
+                {
+                    GetChildNodeID(db, flow_id, item.NodeID, ids);
+                }
+
+            }
+            return;
         }
 
         /// <summary>
@@ -306,18 +343,18 @@ namespace Universal.BLL
         /// <param name="flow_id"></param>
         /// <param name="node_id"></param>
         /// <returns></returns>
-        public static bool SetFlowFristNode(int flow_id,int node_id,out string msg)
+        public static bool SetFlowFristNode(int flow_id, int node_id, out string msg)
         {
             msg = "设置成功";
             using (var db = new DataCore.EFDBContext())
             {
                 var entity_flow_node = db.FlowNodes.Where(p => p.FlowID == flow_id && p.NodeID == node_id).FirstOrDefault();
-                if(entity_flow_node == null)
+                if (entity_flow_node == null)
                 {
                     msg = "该节点不属于该流程";
                     return false;
                 }
-                if(entity_flow_node.is_frist)
+                if (entity_flow_node.is_frist)
                 {
                     msg = "该节点已经是开始节点了";
                     return false;
