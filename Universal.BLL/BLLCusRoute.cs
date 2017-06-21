@@ -33,8 +33,9 @@ namespace Universal.BLL
         [Description("appversion")]
         版本列表,
         [Description("nodecategory")]
-        节点分类
-
+        节点分类,
+        [Description("contacts")]
+        通讯录
     }
 
     /// <summary>

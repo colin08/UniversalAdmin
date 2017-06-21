@@ -114,6 +114,59 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 判断流程是否走完
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <returns></returns>
+        public static Model.ProjectFlowNode CheckNodeIsDone(DataCore.EFDBContext db, int project_id)
+        {
+            if (db == null || project_id <= 0) return null;
+            if (!db.ProjectFlowNodes.Any(p => p.ProjectID == project_id)) return null;
+            Entity.ProjectFlowNode entity_next_node = null;
+            //获取最后一个完成的节点
+            string sql = "SELECT top 1 * FROM [dbo].[ProjectFlowNode] where ProjectID = " + project_id.ToString() + " order by EndTime Desc;";
+            var last_done_node = db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList()[0];
+            if (last_done_node == null)
+            {
+                //没有最后节点，则可能是没有开始,则取第一个
+                entity_next_node = db.ProjectFlowNodes.Include(p => p.Node).Include(p => p.EditUser).Include(p => p.ProjectFlowNodeFiles).Where(p => p.ProjectID == project_id && p.IsFrist == true).AsNoTracking().FirstOrDefault();
+                if (entity_next_node == null) return null;
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(last_done_node.ProcessTo)) return null;
+                int next_project_id = Tools.TypeHelper.ObjectToInt(last_done_node.ProcessTo, 0);
+                if (next_project_id == 0) return null;
+                entity_next_node = db.ProjectFlowNodes.Include(p => p.Node).Include(p => p.EditUser).Include(p => p.ProjectFlowNodeFiles).Where(p => p.ID == next_project_id).AsNoTracking().FirstOrDefault();
+            }
+            if (entity_next_node == null) return null;
+            Model.ProjectFlowNode model = new Model.ProjectFlowNode();
+            model.icon = entity_next_node.ICON;
+            model.remark = Tools.WebHelper.UrlDecode(entity_next_node.Remark == null ? "" : entity_next_node.Remark);
+            if (entity_next_node.EditUser != null)
+            {
+                model.user_name = entity_next_node.EditUser.NickName;
+                model.user_id = entity_next_node.EditUserId;
+
+            }
+            model.piece = entity_next_node.Piece;
+            model.last_update_time = entity_next_node.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            model.process_to = entity_next_node.ProcessTo;
+            model.node_id = entity_next_node.NodeID;
+            model.node_title = entity_next_node.Node.Title;
+            model.node_is_fator = entity_next_node.Node.IsFactor;
+            model.color = entity_next_node.Color;
+            model.left = entity_next_node.Left;
+            model.top = entity_next_node.Top;
+            model.is_end = entity_next_node.IsEnd;
+            model.is_frist = entity_next_node.IsFrist;
+            model.project_flow_node_id = entity_next_node.ID;
+            model.status = entity_next_node.Status;
+            model.BuildFileList(entity_next_node.ProjectFlowNodeFiles.ToList());
+            return model;
+        }
+
+        /// <summary>
         /// 获取下一级节点
         /// </summary>
         /// <param name="project_id"></param>
@@ -502,7 +555,7 @@ namespace Universal.BLL
                 return true;
             }
         }
-        
+
 
         /// <summary>
         /// 开启/关闭节点
@@ -578,6 +631,16 @@ namespace Universal.BLL
                         return false;
                     }
                 }
+                //同时将上级分支节点设为完成
+                var parent_entity = db.ProjectFlowNodes.SqlQuery("SELECT * FROM [dbo].[ProjectFlowNode] where charindex('," + project_flow_node_id.ToString() + ",',','+ltrim(ProcessTo)+',') > 0").AsNoTracking().ToList();
+                if (parent_entity == null) return false;
+                var parent_node = db.ProjectFlowNodes.Find(parent_entity[0].ID);
+                if (parent_node == null) return false;
+                parent_node.EditUserId = user_id;
+                parent_node.IsEnd = true;
+                parent_node.LastUpdateTime = DateTime.Now;
+                parent_node.EndTime = DateTime.Now;
+
                 //条件都满足
                 entity.EditUserId = user_id;
                 entity.IsEnd = true;

@@ -54,17 +54,14 @@ namespace Universal.Web.Framework
             }
             else
             {
-                if (!WorkContext.UserInfo.IsAdmin)
+
+                //获取有权限的第一个
+                string controll = BLL.BLLCusRoute.GetFristRoute(WorkContext.UserInfo.ID);
+                if (string.IsNullOrWhiteSpace(controll))
                     WorkContext.ManagerHome = "/User/Basic";
                 else
-                {
-                    //获取有权限的第一个
-                    string controll = BLL.BLLCusRoute.GetFristRoute(WorkContext.UserInfo.ID);
-                    if (string.IsNullOrWhiteSpace(controll))
-                        WorkContext.ManagerHome = "";
-                    else
-                        WorkContext.ManagerHome = "/" + controll + "/index";
-                }
+                    WorkContext.ManagerHome = "/" + controll + "/index";
+
             }
             GetMessage();
 
@@ -92,7 +89,7 @@ namespace Universal.Web.Framework
         /// </summary>
         protected void GetMessage()
         {
-            if(WorkContext.UserInfo != null)
+            if (WorkContext.UserInfo != null)
             {
                 //获取消息
                 BLL.BaseBLL<Entity.CusUserMessage> bll = new BaseBLL<Entity.CusUserMessage>();
@@ -100,13 +97,13 @@ namespace Universal.Web.Framework
                 WorkContext.MessageTotal = bll.GetCount(p => p.CusUserID == WorkContext.UserInfo.ID && p.IsRead == false);
             }
         }
-        
+
         /// <summary>
         /// 获取收藏列表信息
         /// </summary>
         protected void GetFavorites()
         {
-            if(WorkContext.UserInfo != null)
+            if (WorkContext.UserInfo != null)
             {
                 List<BLL.Model.LayoutFavorites> result = new List<BLL.Model.LayoutFavorites>();
                 var project_list = BLL.BllCusUserFavorites.GetTopProjectData(3, WorkContext.UserInfo.ID);
@@ -120,7 +117,7 @@ namespace Universal.Web.Framework
                     model.er_title = "预留";
                     result.Add(model);
                 }
-                
+
                 var doc_list = BllCusUserFavorites.GetTopDocData(3, WorkContext.UserInfo.ID);
                 foreach (var item in doc_list)
                 {

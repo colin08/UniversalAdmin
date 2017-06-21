@@ -300,7 +300,7 @@ namespace Universal.BLL
 
         }
 
-        private static string DepartmentTreeData(out int default_id)
+        public static string DepartmentTreeData(out int default_id)
         {
             BLL.BaseBLL<Entity.CusDepartment> bll = new BLL.BaseBLL<Entity.CusDepartment>();
             List<Entity.CusDepartment> list = bll.GetListBy(0, p => p.Status == true, "Priority Desc", false);

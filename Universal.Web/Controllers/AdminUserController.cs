@@ -18,7 +18,7 @@ namespace Universal.Web.Controllers
         public ActionResult Index()
         {
             int default_id = 0;
-            string data = BLL.BLLDepartment.CreateDepartmentTreeData(out default_id);
+            string data = BLL.BLLDepartment.DepartmentTreeData(out default_id);
             ViewData["TreeData"] = data;
             ViewData["DefaultID"] = default_id;
             return View();
@@ -315,7 +315,8 @@ namespace Universal.Web.Controllers
                 model.Email = entity.email == null ? null : entity.email.ToLower();
                 model.Gender = entity.gender;
                 //全选则为管理员
-                model.IsAdmin = entity.user_route_str.Split(',').Length == 11 ? true : false;
+                if(!string.IsNullOrWhiteSpace(entity.user_route_str))
+                    model.IsAdmin = entity.user_route_str.Split(',').Length == 11 ? true : false;
                 model.NickName = entity.nick_name;
                 model.ShorNum = entity.short_num;
                 model.Telphone = entity.telphone;

@@ -109,7 +109,8 @@ namespace Universal.BLL
         {
 
             msg = "";
-
+            if (entity.LiXiangTime < DateTime.Now.AddYears(30))
+                entity.LiXiangTime = null;
             int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
             if (app_id != 0)
             {
@@ -595,30 +596,46 @@ namespace Universal.BLL
 
                 item.ProjectFiles = db.ProjectFiles.AsNoTracking().Where(p => p.ProjectID == item.ID).ToList();
 
-                //获取当前进行的节点信息
-                //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始
                 var entity_node = new Entity.ProjectFlowNodeDoing();
                 var entity_action_user = new Entity.CusUser();
-                var flow_list = BLL.BLLProjectFlowNode.GetProjectFlow(item.ID);
-                if (flow_list.Count == 0)
+                //获取当前进行的节点信息
+                var doing_node = BLLProjectFlowNode.CheckNodeIsDone(db, item.ID);
+                if(doing_node == null)
                 {
                     entity_node.flow_node_id = -1;
                     entity_node.node_title = "全部节点已完成";
                     entity_node.flow_node_remark = "";
-
                     entity_action_user.NickName = "";
-                }
-                else
+                }else
                 {
-                    var temp_entity = flow_list[flow_list.Count - 1];
-                    entity_node.edit_id = temp_entity.user_id;
-                    entity_node.flow_node_id = temp_entity.project_flow_node_id;
-                    entity_node.flow_node_remark = temp_entity.remark;
-                    entity_node.node_title = temp_entity.node_title;
+                    entity_node.edit_id = doing_node.user_id;
+                    entity_node.flow_node_id = doing_node.project_flow_node_id;
+                    entity_node.flow_node_remark = doing_node.remark;
+                    entity_node.node_title = doing_node.node_title;
                     //设置用户
-                    entity_action_user.ID = temp_entity.user_id;
-                    entity_action_user.NickName = temp_entity.user_name;
+                    entity_action_user.ID = doing_node.user_id;
+                    entity_action_user.NickName = doing_node.user_name;
                 }
+                //如果项目已完成，则直接显示已完成，否则查找最后正在进行的节点，如果查找不到，则查找初始节点，标识未未开始                
+                //var flow_list = BLL.BLLProjectFlowNode.GetProjectFlow(item.ID);
+                //if (flow_list.Count == 0)
+                //{
+                //    entity_node.flow_node_id = -1;
+                //    entity_node.node_title = "全部节点已完成";
+                //    entity_node.flow_node_remark = "";
+                //    entity_action_user.NickName = "";
+                //}
+                //else
+                //{
+                //    var temp_entity = flow_list[flow_list.Count - 1];
+                //    entity_node.edit_id = temp_entity.user_id;
+                //    entity_node.flow_node_id = temp_entity.project_flow_node_id;
+                //    entity_node.flow_node_remark = temp_entity.remark;
+                //    entity_node.node_title = temp_entity.node_title;
+                //    //设置用户
+                //    entity_action_user.ID = temp_entity.user_id;
+                //    entity_action_user.NickName = temp_entity.user_name;
+                //}
                 //if (db.Database.SqlQuery<int>("select count(1) from ProjectFlowNode where ProjectID = " + item.ID + " and IsEnd = 0").ToList()[0] > 0)
                 //{
                 //    entity_node = db.Database.SqlQuery<Entity.ProjectFlowNodeDoing>("select F.ID as flow_node_id,N.Title as node_title, F.Remark as flow_node_remark,F.EditUserID as edit_id from (select top 1 * from ProjectFlowNode where ProjectID = " + item.ID.ToString() + " and Status=1 and IsEnd = 1 order by[EndTime] DESC) as F left JOIN Node as N on F.NodeID = N.ID").FirstOrDefault();
