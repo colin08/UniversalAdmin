@@ -562,14 +562,14 @@ namespace Universal.BLL
 
             //状态筛选
             if (status != 0)
-                inner_select += ",(select count(1) as total from ProjectFlowNode where ProjectID = P.ID and IsEnd =0) as NodeNoCompTotal";
+                inner_select += ",dbo.fn_ProjectNodeDoing(P.ID) as NodeNoCompTotal"; //inner_select += ",(select count(1) as total from ProjectFlowNode where ProjectID = P.ID and IsEnd =0) as NodeNoCompTotal";
             switch (status)
             {
                 case 1:
                     inner_where += " and NodeNoCompTotal =0";
                     break;
                 case 2:
-                    inner_where += " and NodeNoCompTotal != 0";
+                    inner_where += " and NodeNoCompTotal = 1";
                     break;
             }
 
