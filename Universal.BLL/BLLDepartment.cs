@@ -55,8 +55,6 @@ namespace Universal.BLL
                 var user = db.CusUsers.Find(id);
                 if (user == null)
                     break;
-                if (!user.IsAdmin)
-                    break;
 
                 var admin = new Entity.CusDepartmentAdmin();
                 admin.CusDepartment = department;
@@ -98,9 +96,7 @@ namespace Universal.BLL
                 var user = db.CusUsers.Find(user_id);
                 if (user == null)
                     break;
-                if (!user.IsAdmin)
-                    break;
-
+                
                 var admin = new Entity.CusDepartmentAdmin();
                 admin.CusDepartment = department;
                 admin.CusUser = user;

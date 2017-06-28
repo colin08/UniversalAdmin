@@ -255,7 +255,7 @@ namespace Universal.Web.Controllers
             if(!string.IsNullOrWhiteSpace(search))
             {
                 search_list.Add(new BLL.FilterSearch("Telphone", search, BLL.FilterSearchContract.like));
-                search_list.Add(new BLL.FilterSearch("NickName", search, BLL.FilterSearchContract.like));
+                search_list.Add(new BLL.FilterSearch("NickName", search, BLL.FilterSearchContract.like, BLL.FilterRelate.Or));
             }
             foreach (var item in bll.GetListBy(0, search_list, "ID asc"))
             {

@@ -13,6 +13,41 @@ namespace Universal.BLL
     public class BLLNode
     {
         /// <summary>
+        /// 节点是否可以删除,如果不能删除，则提示所有引用的数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public static bool CanDel(int id, out string msg)
+        {
+            msg = "";
+            StringBuilder result = new StringBuilder();
+            string flow_node_sql = "select Cast(ID as varchar(10))+':'+Title from Flow where ID in(SELECT FlowID FROM [dbo].[FlowNode] where NodeID=" + id.ToString() + " or charindex(',"+id.ToString()+",',','+ProcessTo+',')>0 GROUP BY(FlowID));";
+            var db = new DataCore.EFDBContext();
+            var flow_node_arr = db.Database.SqlQuery<string>(flow_node_sql).ToArray();
+            if (flow_node_arr.Count() > 0)
+            {
+                result.Append("引用该节点的流程如下：\r\n");
+                result.Append(string.Join(",", flow_node_arr) + "\r\n");
+
+            }
+            string project_flow_node_sql = "select Cast(ID as varchar(10))+':'+Title from Project where ID in(SELECT ProjectID FROM [dbo].[ProjectFlowNode] where NodeID=" + id.ToString() + " or charindex('," + id.ToString() + ",',','+ProcessTo+',')>0 GROUP BY(ProjectID));";
+            var project_flow_node_arr = db.Database.SqlQuery<string>(project_flow_node_sql).ToArray();
+            if(project_flow_node_arr.Count()>0)
+            {
+                result.Append("引用该节点的项目如下：\r\n");
+                result.Append(string.Join(",", project_flow_node_arr));
+            }
+            db.Dispose();
+            if (result.Length > 0)
+            {
+                msg = result.ToString();
+                return false;
+            }
+            else return true;
+        }
+
+        /// <summary>
         /// 获取流程选择时可用的节点集合
         /// </summary>
         /// <param name="flow_id"></param>

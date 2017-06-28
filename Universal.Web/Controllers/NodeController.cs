@@ -67,11 +67,11 @@ namespace Universal.Web.Controllers
             foreach (var item in ids.Split(','))
             {
                 int node_id = TypeHelper.ObjectToInt(item);
-                string nodes = "," + item + ",";
-                var use_total = bll_flow.GetCount(p => p.NodeID == node_id || p.PIds.Contains(nodes));
-                if(use_total> 0)
+                string msg = "";
+                var can_del = BLL.BLLNode.CanDel(node_id, out msg);
+                if(!can_del)
                 {
-                    WorkContext.AjaxStringEntity.msgbox = "ID为：" + item + "的已经使用，无法删除";
+                    WorkContext.AjaxStringEntity.msgbox = "无法删除" + item + "，已有使用:\r\n" + msg;
                     return Json(WorkContext.AjaxStringEntity);
                 }else
                 {
