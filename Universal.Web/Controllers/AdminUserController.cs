@@ -197,8 +197,8 @@ namespace Universal.Web.Controllers
                     entity.gender = model.Gender;
                     entity.status = model.Status;
                     entity.id = model.ID;
-                    entity.job_id = model.CusUserJobID;
-                    entity.job_title = model.CusUserJob.Title;
+                    entity.job_id = model.CusUserJobID == null ? 0 : TypeHelper.ObjectToInt(model.CusUserJobID);
+                    entity.job_title = model.CusUserJob == null ? "" : model.CusUserJob.Title;
                     entity.nick_name = model.NickName;
                     entity.password = "litdev";
                     entity.short_num = model.ShorNum;
@@ -276,17 +276,16 @@ namespace Universal.Web.Controllers
             {
                 ModelState.AddModelError("department_id", "请选择部门");
             }
-            if (entity.job_id == 0)
-            {
-                ModelState.AddModelError("job_id", "请选择职位");
-            }
+            //if (entity.job_id == 0)
+            //{
+            //    ModelState.AddModelError("job_id", "请选择职位");
+            //}
 
             string pwd = "";
             if (string.IsNullOrWhiteSpace(entity.password))
                 pwd = "123456";
             else
                 pwd = entity.password;
-
 
             if (ModelState.IsValid)
             {
@@ -311,7 +310,10 @@ namespace Universal.Web.Controllers
                 model.AboutMe = entity.about_me;
                 model.Avatar = entity.avatar;
                 model.CusDepartmentID = entity.department_id;
-                model.CusUserJobID = entity.job_id;
+                if (entity.job_id <= 0)
+                    model.CusUserJobID = null;
+                else
+                    model.CusUserJobID = entity.job_id;
                 model.Email = entity.email == null ? null : entity.email.ToLower();
                 model.Gender = entity.gender;
                 //全选则为管理员

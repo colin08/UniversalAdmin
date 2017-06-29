@@ -54,12 +54,12 @@ namespace Universal.Web.Models.Response
         public bool is_department_manager { get; set; }
 
         /// <summary>
-        /// 所属职位id
+        /// 所属职位id，如果没有职位，则为0
         /// </summary>
         public int job_id { get; set; }
 
         /// <summary>
-        /// 所属职位名称
+        /// 所属职位名称，如果没有职位，则为空字符串
         /// </summary>
         public string job_name { get; set; }
 

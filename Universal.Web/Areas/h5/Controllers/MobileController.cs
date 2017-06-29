@@ -63,8 +63,24 @@ namespace Universal.Web.Areas.h5.Controllers
                 return Content("无此流程");
             }
             ViewData["project_id"] = entity.ID;
-            if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
-                ViewData["can_edit"] = true;
+            
+            if(entity.ApproveUserID != null)
+            {
+                if(entity.ApproveStatus != Entity.ApproveStatusType.yes)
+                {
+                    ViewData["can_edit"] = false;
+                }else
+                {
+                    if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+                        ViewData["can_edit"] = true;
+                }
+            }else
+            {
+                if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+                    ViewData["can_edit"] = true;
+
+            }
+
             return View();
         }
 

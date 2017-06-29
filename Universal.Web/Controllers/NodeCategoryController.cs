@@ -62,8 +62,25 @@ namespace Universal.Web.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
             BLL.BaseBLL<Entity.NodeCategory> bll = new BLL.BaseBLL<Entity.NodeCategory>();
-            var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
-            bll.DelBy(p => id_list.Contains(p.ID));
+            foreach (var item in ids.Split(','))
+            {
+                int node_id = TypeHelper.ObjectToInt(item);
+                string msg = "";
+                var model = bll.GetModel(p => p.ID == node_id);
+                if(BLL.BLLNode.CanDelCategory(node_id,out msg))
+                {
+                    bll.DelBy(p => p.ID == node_id);
+                }else
+                {
+                    WorkContext.AjaxStringEntity.msg = 0;
+                    WorkContext.AjaxStringEntity.msgbox = "无法删除分类：" + model.Title + "\r" + msg;
+                    return Json(WorkContext.AjaxStringEntity);
+                }
+            }
+
+            //
+            //var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
+            //bll.DelBy(p => id_list.Contains(p.ID));
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "删除成功";
             return Json(WorkContext.AjaxStringEntity);
@@ -115,6 +132,13 @@ namespace Universal.Web.Controllers
                 {
                     entity.Msg = 2;
                     ModelState.AddModelError("title", "信息不存在");
+                }
+            }else
+            {
+                if(bll.Exists(p=>p.Title == entity.title))
+                {
+                    entity.Msg = 2;
+                    ModelState.AddModelError("title", "已有同名分类");
                 }
             }
                         

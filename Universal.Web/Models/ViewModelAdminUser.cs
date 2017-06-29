@@ -57,7 +57,6 @@ namespace Universal.Web.Models
         /// <summary>
         /// 职位
         /// </summary>
-        [Required(ErrorMessage ="职位必须选择")]
         public int job_id { get; set; }
 
         /// <summary>

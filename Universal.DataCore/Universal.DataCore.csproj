@@ -226,6 +226,10 @@
     <Compile Include="Migrations\201706030353274_add_flow_node_frist.Designer.cs">
       <DependentUpon>201706030353274_add_flow_node_frist.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706290239314_user_job_null.cs" />
+    <Compile Include="Migrations\201706290239314_user_job_null.Designer.cs">
+      <DependentUpon>201706290239314_user_job_null.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -375,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706030353274_add_flow_node_frist.resx">
       <DependentUpon>201706030353274_add_flow_node_frist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706290239314_user_job_null.resx">
+      <DependentUpon>201706290239314_user_job_null.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

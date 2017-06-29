@@ -74,6 +74,7 @@ namespace Universal.BLL
                 foreach (var item in ids.Split(','))
                 {
                     int id = Tools.TypeHelper.ObjectToInt(item);
+                    if (id == entity.CusUserID) continue;
                     var entity_user = db.CusUsers.Find(id);
                     if (entity_user != null)
                     {
@@ -108,6 +109,7 @@ namespace Universal.BLL
                 foreach (var item in ids.Split(','))
                 {
                     int id = Tools.TypeHelper.ObjectToInt(item);
+                    if (id == entity.CusUserID) continue;
                     var entity_user = db.CusUsers.Find(id);
                     if (entity_user != null)
                     {

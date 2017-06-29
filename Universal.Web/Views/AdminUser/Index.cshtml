@@ -142,6 +142,11 @@
                             {
                                 status_txt = "启用";
                             }
+                            var job_name ="";
+                            if(item.CusUserJob != null)
+                            {
+                                job_name = item.CusUserJob.Title;
+                            }
 
                             dataHtml += "<tr>";
                             if(item.ID == 1)
@@ -154,7 +159,7 @@
                             dataHtml += "<td>"+item.NickName+ is_manager +"</td>";
                             dataHtml += "<td>"+item.Telphone+" </td>";
                             //dataHtml += "<td>" + admin_str + "</td>";
-                            dataHtml += "<td>" + item.CusUserJob.Title + "</td>";
+                            dataHtml += "<td>" + job_name + "</td>";
                             dataHtml += "<td>" + email + "</td>";
                             dataHtml += "<td><a href='javascript:void(0)' onclick='reset_pwd("+item.ID+")'>重置</a></td>";
                             dataHtml +="<td><a  href='javascript:void(0)' onclick='set_status(this)' d-id='"+item.ID+"'>"+status_txt+"</a></td>";

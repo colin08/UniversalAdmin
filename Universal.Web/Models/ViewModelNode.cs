@@ -127,8 +127,8 @@ namespace Universal.Web.Models
             {
                 if (this.file_list == null)
                     this.file_list = new List<ViewModelListFile>();
-
-                file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
+                string down_link = "/Tools/Down?path=" + item.FilePath + "&name=" + item.FileName;
+                file_list.Add(new ViewModelListFile(down_link, item.FileName, item.FileSize));//file_list.Add(new ViewModelListFile(item.FilePath, item.FileName, item.FileSize));
                 files.Append(item.FilePath + "," + item.FileName + "," + item.FileSize + "|");
             }
             this.files = files.ToString();

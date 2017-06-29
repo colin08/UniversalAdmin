@@ -54,7 +54,7 @@ namespace Universal.Entity
         /// <summary>
         /// 职位
         /// </summary>
-        public int CusUserJobID { get; set; }
+        public int? CusUserJobID { get; set; }
 
         /// <summary>
         /// 该用户是否是所属部门的主管

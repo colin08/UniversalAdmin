@@ -62,7 +62,7 @@
                                 <div class="litip">@Html.ValidationMessageFor(p=>p.department_id)</div>
                             </li>
                             <li>
-                                <div class="lilt"><em class="col_red">*</em>职位</div>
+                                <div class="lilt">职位</div>
                                 <div class="limd pr">
                                     @Html.HiddenFor(p => p.job_id)
                                     <input type="text" value="@Model.job_title" id="job_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selPosition(this)" class="addBtn">选择职位</a>

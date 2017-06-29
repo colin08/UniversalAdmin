@@ -22,7 +22,7 @@ namespace Universal.BLL
         {
             msg = "";
             StringBuilder result = new StringBuilder();
-            string flow_node_sql = "select Cast(ID as varchar(10))+':'+Title from Flow where ID in(SELECT FlowID FROM [dbo].[FlowNode] where NodeID=" + id.ToString() + " or charindex(',"+id.ToString()+",',','+ProcessTo+',')>0 GROUP BY(FlowID));";
+            string flow_node_sql = "select Cast(ID as varchar(10))+':'+Title from Flow where ID in(SELECT FlowID FROM [dbo].[FlowNode] where NodeID=" + id.ToString() + " or charindex('," + id.ToString() + ",',','+ProcessTo+',')>0 GROUP BY(FlowID));";
             var db = new DataCore.EFDBContext();
             var flow_node_arr = db.Database.SqlQuery<string>(flow_node_sql).ToArray();
             if (flow_node_arr.Count() > 0)
@@ -33,7 +33,7 @@ namespace Universal.BLL
             }
             string project_flow_node_sql = "select Cast(ID as varchar(10))+':'+Title from Project where ID in(SELECT ProjectID FROM [dbo].[ProjectFlowNode] where NodeID=" + id.ToString() + " or charindex('," + id.ToString() + ",',','+ProcessTo+',')>0 GROUP BY(ProjectID));";
             var project_flow_node_arr = db.Database.SqlQuery<string>(project_flow_node_sql).ToArray();
-            if(project_flow_node_arr.Count()>0)
+            if (project_flow_node_arr.Count() > 0)
             {
                 result.Append("引用该节点的项目如下：\r\n");
                 result.Append(string.Join(",", project_flow_node_arr));
@@ -45,6 +45,37 @@ namespace Universal.BLL
                 return false;
             }
             else return true;
+        }
+
+
+        /// <summary>
+        /// 判断节点分类能否删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public static bool CanDelCategory(int id, out string msg)
+        {
+            msg = "";
+            bool isOK = false;
+            var db = new DataCore.EFDBContext();
+            var node_list = db.Nodes.AsNoTracking().Where(p => p.NodeCategoryID == id).ToList();
+            StringBuilder str_node = new StringBuilder();
+            foreach (var node in node_list)
+            {
+                str_node.Append(node.Title + ",\r\n");
+            }
+            if (str_node.Length > 0)
+            {
+                msg = "所属该分类的节点如下：" + str_node.ToString();
+                isOK = false;
+            }
+            else
+            {
+                isOK = true;
+            }
+            db.Dispose();
+            return isOK;
         }
 
         /// <summary>

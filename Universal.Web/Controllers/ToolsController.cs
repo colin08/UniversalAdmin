@@ -382,7 +382,7 @@ namespace Universal.Web.Controllers
             Entity.Node entity = BLL.BLLNode.GetMode(ids);
             if (entity != null)
             {
-                model.content = entity.Content;
+                model.content = WebHelper.HtmlEncode(entity.Content);
                 model.title = entity.Title;
                 model.location = entity.Location;
                 model.id = ids;

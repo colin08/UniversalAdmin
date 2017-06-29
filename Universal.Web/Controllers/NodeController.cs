@@ -16,6 +16,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
+            LoadCategory(1);
             return View();
         }
 
@@ -25,13 +26,16 @@ namespace Universal.Web.Controllers
         /// <param name="page_size"></param>
         /// <param name="page_index"></param>
         /// <param name="keyword">搜索关键字</param>
+        /// <param name="category_id">搜索分类</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult PageData(int page_size, int page_index, string keyword)
+        public JsonResult PageData(int page_size, int page_index, string keyword,int category_id)
         {
             BLL.BaseBLL<Entity.Node> bll = new BLL.BaseBLL<Entity.Node>();
             int rowCount = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            if (category_id > 0)
+                filter.Add(new BLL.FilterSearch("NodeCategoryID", category_id.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
             List<Entity.Node> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "LastUpdateTime desc",p=>p.NodeCategory);
@@ -151,6 +155,13 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("title", "信息不存在");
                 }
+            }else
+            {
+                if(bll.Exists(p=>p.Title == entity.title))
+                {
+                    entity.Msg = 2;
+                    ModelState.AddModelError("title", "已有同名节点");
+                }
             }
             if(entity.category_id <=0)
             {
@@ -208,10 +219,11 @@ namespace Universal.Web.Controllers
             return View(entity);
         }
 
-        private void LoadCategory()
+        private void LoadCategory(int type=0)
         {
             List<SelectListItem> userRoleList = new List<SelectListItem>();
-            userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
+            if(type ==0)
+                userRoleList.Add(new SelectListItem() { Text = "请选择分类", Value = "0" });
             foreach (var item in BLL.BLLNode.GetNodeCategory())
             {
                 userRoleList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });

@@ -30,12 +30,12 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<Entity.AppVersion> response_entity = new WebAjaxEntity<Entity.AppVersion>();
             var entity = BLL.BLLAppVersion.GetLatest(Entity.APPVersionPlatforms.Android);
-            if(entity == null)
+            if (entity == null)
             {
                 response_entity.msgbox = "无版本可用";
                 return response_entity;
             }
-            if(entity.VersionCode <= vcode)
+            if (entity.VersionCode <= vcode)
             {
                 response_entity.msgbox = "当前已是最新版本";
                 return response_entity;
@@ -1056,14 +1056,35 @@ namespace Universal.Web.Controllers.api
                 model.id = item.ID;
                 model.link_id = item.LinkID;
                 model.type = item.Type;
-                var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
-                if (entity_user != null)
-                {
-                    model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
-                }
-                model.add_user_id = item.CusUserID;
                 model.type_name = item.TypeName;
 
+                if (model.type == Entity.CusUserMessageType.notice)
+                {
+                    int lin_ = TypeHelper.ObjectToInt(item.LinkID);
+                    var notice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == lin_, p => p.CusUser);
+                    if (notice != null)
+                    {
+                        if (notice.CusUser != null)
+                        {
+                            model.add_user_name = notice.CusUser.NickName;
+                            model.add_user_id = notice.CusUserID;
+                        }
+                    }
+                    else
+                    {
+                        model.add_user_name = "";
+                    }
+                }
+                else
+                {
+                    var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
+                    if (entity_user != null)
+                    {
+                        model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
+                    }
+                    model.add_user_id = item.CusUserID;
+                }
+                
                 response_list.Add(model);
             }
 
@@ -1096,12 +1117,31 @@ namespace Universal.Web.Controllers.api
                 model.link_id = item.LinkID;
                 model.type = item.Type;
                 model.type_name = item.TypeName;
-                var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
-                if (entity_user != null)
+                if (model.type == Entity.CusUserMessageType.notice)
                 {
-                    model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
+                    int lin_ = TypeHelper.ObjectToInt(item.LinkID);
+                    var notice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == lin_, p => p.CusUser);
+                    if (notice != null)
+                    {
+                        if (notice.CusUser != null)
+                        {
+                            model.add_user_name = notice.CusUser.NickName;
+                            model.add_user_id = notice.CusUserID;
+                        }
+                    }else
+                    {
+                        model.add_user_name = "";
+                    }
                 }
-                model.add_user_id = item.CusUserID;
+                else
+                {
+                    var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
+                    if (entity_user != null)
+                    {
+                        model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
+                    }
+                    model.add_user_id = item.CusUserID;
+                }
                 response_list.Add(model);
             }
 
@@ -1208,15 +1248,25 @@ namespace Universal.Web.Controllers.api
             entity.email = model.Email;
             entity.gender = model.Gender;
             entity.id = model.ID;
-            entity.job_id = model.CusUserJobID;
-            if (model.CusUserJob == null)
+            if (model.CusUserJobID == null)
             {
-                Entity.CusUserJob job = new BLL.BaseBLL<Entity.CusUserJob>().GetModel(p => p.ID == model.CusUserJobID);
-                if (job != null)
-                    entity.job_name = job.Title;
+                entity.job_id = 0;
+                entity.job_name = "";
             }
             else
-                entity.job_name = model.CusUserJob.Title;
+            {
+                int temp_job_id = TypeHelper.ObjectToInt(model.CusUserJobID);
+                entity.job_id = temp_job_id;
+                if (model.CusUserJob == null)
+                {
+                    Entity.CusUserJob job = new BLL.BaseBLL<Entity.CusUserJob>().GetModel(p => p.ID == temp_job_id);
+                    if (job != null)
+                        entity.job_name = job.Title;
+                }
+                else
+                    entity.job_name = model.CusUserJob.Title;
+            }
+
             entity.nick_name = model.NickName;
             entity.shor_num = model.ShorNum == null ? "" : model.ShorNum;
             entity.telphone = model.Telphone;

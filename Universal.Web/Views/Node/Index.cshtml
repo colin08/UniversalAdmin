@@ -18,7 +18,14 @@
         <div class="container">
             <div class="tit1">
                 <b>节点设置</b>
-                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索"  onkeydown="KeyDown('pageData(1)')" /><input type="button" onclick="    pageData(1)" /></div>
+                <div class="search"><input type="text" id="txt_search" placeholder="请输入标题搜索"  onkeydown="KeyDown('pageData(1)')" /><input type="button" onclick="pageData(1)" /></div>
+                <select id="select_category" onchange="pageData(1)" class="select-input valid fr" style="width: 120px;height:34px;line-height:34px;">
+                    <option value="0">所有分类</option>
+                    @foreach (var item in (List<SelectListItem>)ViewData["category"])
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
                 <span class="banbenOp fr"><a href="/Node/Modify" title="新增节点"><i class="i-redbb"></i> 新增节点</a></span>
             </div>
             <div class="projectColl">
@@ -64,6 +71,7 @@
 @section foot
 {
     @Scripts.Render("~/bundles/laypage")
+@Scripts.Render("~/bundles/layer")
     <script type="text/javascript">
         $(document).ready(function (e) {
             pageData(1)
@@ -75,7 +83,7 @@
             $.ajax({
                 type: "post",
                 url: "/Node/PageData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val(), "category_id": $("#select_category").val() },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -131,7 +139,6 @@
         }
         /*******************列表 end *************************/
 
-       
         function del(id) {
             var ids = "";
             if (id == 0) {
@@ -149,29 +156,34 @@
             else {
                 ids = id;
             }
-            $.ajax({
-                type: "post",
-                url: "/Node/Del",
-                data: { "ids": ids },
-                async: false,
-                beforeSend: function () {
 
-                },
-                complete: function () {
+            layer.confirm('确定删除？', { icon: 3 }, function (index) {
+                layer.close(index);
 
-                },
-                success: function (data) {
-                    if (data.msg == 1) {
-                        pageData(1);
+                $.ajax({
+                    type: "post",
+                    url: "/Node/Del",
+                    data: { "ids": ids },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            pageData(1);
+                        }
+                        else {
+                            alert(data.msgbox);
+                        }
+                    },
+                    error: function () {
+                        alert("操作失败，请检查网络");
                     }
-                    else {
-                        alert(data.msgbox);
-                    }
-                },
-                error: function () {
-                    alert("操作失败，请检查网络");
-                }
-            })
+                })
+            });
         }
     </script>
 

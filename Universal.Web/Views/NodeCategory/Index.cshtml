@@ -63,6 +63,7 @@
 @section foot
 {
     @Scripts.Render("~/bundles/laypage")
+@Scripts.Render("~/bundles/layer")
     <script type="text/javascript">
         $(document).ready(function (e) {
             pageData(1)
@@ -147,29 +148,32 @@
             else {
                 ids = id;
             }
-            $.ajax({
-                type: "post",
-                url: "/NodeCategory/Del",
-                data: { "ids": ids },
-                async: false,
-                beforeSend: function () {
+            layer.confirm('确定删除？', { icon: 3 }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    url: "/NodeCategory/Del",
+                    data: { "ids": ids },
+                    async: false,
+                    beforeSend: function () {
 
-                },
-                complete: function () {
+                    },
+                    complete: function () {
 
-                },
-                success: function (data) {
-                    if (data.msg == 1) {
-                        pageData(1);
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            pageData(1);
+                        }
+                        else {
+                            alert(data.msgbox);
+                        }
+                    },
+                    error: function () {
+                        alert("操作失败，请检查网络");
                     }
-                    else {
-                        alert(data.msgbox);
-                    }
-                },
-                error: function () {
-                    alert("操作失败，请检查网络");
-                }
-            })
+                })
+            });
         }
     </script>
 
