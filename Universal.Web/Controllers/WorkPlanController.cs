@@ -198,7 +198,7 @@ namespace Universal.Web.Controllers
         {
             int rowCount = 0;
             BLL.BaseBLL<Entity.WorkPlan> bll = new BLL.BaseBLL<Entity.WorkPlan>();
-            List<Entity.WorkPlan> list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.ApproveUserID == WorkContext.UserInfo.ID && p.IsApprove == false, "AddTime desc");
+            List<Entity.WorkPlan> list = bll.GetPagedList(page_index, page_size, ref rowCount, p => p.ApproveUserID == WorkContext.UserInfo.ID && p.ApproveStatus == Entity.ApproveStatusType.nodo, "AddTime desc");
             //foreach (var item in list)
             //    item.ApproveNickName = BLL.BLLCusUser.GetUserDepartmentAdminText(item.CusUserID);
             WebAjaxEntity<List<Entity.WorkPlan>> result = new WebAjaxEntity<List<Entity.WorkPlan>>();
@@ -214,12 +214,27 @@ namespace Universal.Web.Controllers
         /// 计划审批
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="remark"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult DoApprove(int id)
+        public JsonResult DoApprove(int id, int type, string remark)
         {
             string msg = "";
-            bool isOK = BLL.BLLWorkPlan.Approve(WorkContext.UserInfo.ID, id, out msg);
+            if (type != 0 && type != 1 && type != 2)
+            {
+                msg = "非法参数";
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (type == 2 && string.IsNullOrWhiteSpace(remark))
+            {
+                msg = "审核不通过时请填写不通过原因";
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            Entity.ApproveStatusType status = (Entity.ApproveStatusType)type;
+            bool isOK = BLL.BLLWorkPlan.Approve(WorkContext.UserInfo.ID, id, status, remark, out msg);
             WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return Json(WorkContext.AjaxStringEntity);
@@ -245,8 +260,8 @@ namespace Universal.Web.Controllers
                 }
                 else
                 {
-                    ViewData["ShowSave"] = !model.IsApprove;
-                    entity.approve_status = model.IsApprove;
+                    ViewData["ShowSave"] = !(model.ApproveStatus == Entity.ApproveStatusType.yes);
+                    entity.approve_status = model.ApproveStatus;
                     //LoadPlatform(model.WeekText);
                     entity.id = model.ID;
                     entity.week_text = model.WeekText;
@@ -305,7 +320,7 @@ namespace Universal.Web.Controllers
                     entity.Msg = 2;
                     ModelState.AddModelError("week_text", "信息不存在");
                 }
-                if (bll.GetModel(p => p.ID == entity.id).IsApprove)
+                if (bll.GetModel(p => p.ID == entity.id).ApproveStatus != Entity.ApproveStatusType.yes)
                 {
                     //审批过的不能再编辑
                     entity.Msg = 4;
@@ -344,7 +359,7 @@ namespace Universal.Web.Controllers
                 if (isAdd)
                 {
                     model = new Entity.WorkPlan();
-                    model.IsApprove = false;
+                    model.ApproveStatus = Entity.ApproveStatusType.nodo;
                     model.ApproveTime = null;
                     model.CusUserID = WorkContext.UserInfo.ID;
 
@@ -368,7 +383,6 @@ namespace Universal.Web.Controllers
                 model.WorkPlanItemList = entity.plan_item;
                 if (isAdd)
                 {
-                    model.SetApproveStatus();
                     bll.Add(model);
                     if (app_id > 0)
                         BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName, entity.week_text), model.ID);

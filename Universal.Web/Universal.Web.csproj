@@ -1017,6 +1017,7 @@
     <Compile Include="Models\Request\AddDownloadLog.cs" />
     <Compile Include="Models\Request\AddDownLog.cs" />
     <Compile Include="Models\Request\AddProject.cs" />
+    <Compile Include="Models\Request\ApproveWorkPlan.cs" />
     <Compile Include="Models\Request\BasePage.cs" />
     <Compile Include="Models\Request\FeebBack.cs" />
     <Compile Include="Models\Request\DocumentList.cs" />

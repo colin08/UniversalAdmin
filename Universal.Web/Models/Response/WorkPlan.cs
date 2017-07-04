@@ -33,9 +33,19 @@ namespace Universal.Web.Models.Response
         public string approve_user_name { get; set; }
 
         /// <summary>
-        /// 是否审批
+        /// 审批状态
         /// </summary>
-        public bool is_approve { get; set; }
+        public Entity.ApproveStatusType approve_status { get; set; }
+        
+        /// <summary>
+        /// 审批状态文本
+        /// </summary>
+        public string approve_status_text { get; set; }
+
+        /// <summary>
+        /// 审核不通过时的说明
+        /// </summary>
+        public string approve_no_text { get; set; }
 
         /// <summary>
         /// 审批时间

@@ -82,20 +82,58 @@
                         <div class="litip"></div>
                     </li>
                     <li>
+                        <div class="lilt">审批状态</div>
+                        <div class="limd">
+                            <span>@Model.ApproveStatusTxt</span>
+                        </div>
+                        <div class="litip"></div>
+                    </li>
+                    @if ((int)ViewData["ShowApprove"] == 1)
+                    {
+                        <li>
+                            <div class="lilt">审批备注</div>
+                            <div class="limd">
+                                <span>@Model.ApproveRemark</span>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                    }
+                    else if ((int)ViewData["ShowApprove"] == 2)
+                    {
+                        <li>
+                            <div class="lilt">修改审批状态</div>
+                            <div class="limd">
+                                <label class="lab pub_lab" for="ra_app_status_1">
+                                    <input type="radio" name="ra_app_status" value="1" id="ra_app_status_1" checked />
+                                    <i class="pub_radio"></i>
+                                    <span>审核通过</span>
+                                </label>
+                                <label class="lab pub_lab" for="ra_app_status_2">
+                                    <input type="radio" name="ra_app_status" value="2" id="ra_app_status_2" />
+                                    <i class="pub_radio"></i>
+                                    <span>审核不通过</span>
+                                </label>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                        <li>
+                            <div class="lilt">审核不通过原因</div>
+                            <div class="limd">
+                                <input type="text" class="usInput" id="txt_app_status_remark" max="500" />
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                        <li>
+                            <div class="lilt"></div>
+                            <div class="limd">
+                                <button type="button" class="btn1" onclick="approve()">提交审核结果</button>
+                            </div>
+                            <div class="litip"></div>
+                        </li>
+                    }
+                    <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
-                            @if ((bool)ViewData["IsDepartmentAdmin"])
-                            {
-                                if (Model.IsApprove)
-                                {
-                                    <button type="button" class="btn1" style="background:#ccc">已审批</button>
-                                }
-                                else
-                                {
-                                    <button type="button" onclick="approve()" class="btn1" id="btn_s">审批</button>
-
-                                }
-                            }
                             <button type="button" onclick="location.href = '@ViewData["BackUrl"]';" class="btn1 grey">返回 @ViewData["BackTitle"]</button>
                         </div>
                     </li>
@@ -114,10 +152,17 @@
     <script type="text/javascript">
         var msg_id = @ViewData["msg_id"];
         function approve() {
+            var remark = $("#txt_app_status_remark").val();
+            var ck_val = $("input[name='ra_app_status']:checked").val();
+            if(ck_val == 2 && remark.length == 0)
+            {
+                alert("审核不通过时必须填写不通过原因");
+                return;
+            }
             $.ajax({
                 type: "post",
                 url: "/WorkPlan/DoApprove",
-                data: { "id": @Model.ID },
+                data: { "id": @Model.ID,"type":ck_val,"remark":remark },
                 async: false,
                 beforeSend: function () {
 
@@ -132,9 +177,8 @@
                             $.post("/Info/SetTaskDone",{"id":msg_id},function(result){});
                         }
                         alert("审批成功");
-                        $("#btn_s").attr({"disabled":"disabled"});
-                        $("#btn_s").attr({"style":"background:#ccc"});
-                        $("#btn_s").text("已审批");
+                        window.location.href="/WorkPlan/Index";
+                        //window.location.reload();
                     }
                     else {
                         alert(data.msgbox);
@@ -145,6 +189,7 @@
                 }
             })
         }
+
     </script>
 }
 <!--底部脚本 end-->

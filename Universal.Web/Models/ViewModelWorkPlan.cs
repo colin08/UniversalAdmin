@@ -40,7 +40,7 @@ namespace Universal.Web.Models
         /// <summary>
         /// 审核状态
         /// </summary>
-        public bool approve_status { get; set; }
+        public Entity.ApproveStatusType approve_status { get; set; }
         
         /// <summary>
         /// 年

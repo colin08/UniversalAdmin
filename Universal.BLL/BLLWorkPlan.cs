@@ -18,7 +18,7 @@ namespace Universal.BLL
         {
             using (var db = new DataCore.EFDBContext())
             {
-                return db.WorkPlans.AsNoTracking().Include(p => p.ApproveUser).Include(p=>p.CusUser).Include(p => p.WorkPlanItemList).Where(p => p.ID == id).FirstOrDefault();
+                return db.WorkPlans.AsNoTracking().Include(p => p.ApproveUser).Include(p => p.CusUser).Include(p => p.WorkPlanItemList).Where(p => p.ID == id).FirstOrDefault();
             }
         }
 
@@ -76,7 +76,7 @@ namespace Universal.BLL
             //        SELECT A.*,',' + dbo.fn_GetWorkPlanApproveUserIds(B.CusDepartmentID) + ',' as ids from WorkPlan as A left join CusUser as B on A.CusUserID = B.ID
             //        ) AS Z
             //        where CHARINDEX(',"+user_id.ToString()+",', ids)> 0";
-            
+
 
 
 
@@ -89,7 +89,7 @@ namespace Universal.BLL
                 {
                     entity = new Entity.CusUser();
                 }
-                item.CusUser = entity;                
+                item.CusUser = entity;
             }
             db.Dispose();
             return response_entity;
@@ -103,7 +103,7 @@ namespace Universal.BLL
         /// <param name="file_name">导出的文件，绝对路径，包含文件名和后缀</param>
         /// <param name="workplan_id">工作计划ID</param>
         /// <returns></returns>
-        public static bool ImportToExcel(string file_path,int workplan_id,out string msg)
+        public static bool ImportToExcel(string file_path, int workplan_id, out string msg)
         {
             msg = "ok";
             if (string.IsNullOrWhiteSpace(file_path) || workplan_id <= 0)
@@ -152,7 +152,7 @@ namespace Universal.BLL
                 msg = ex.Message;
                 return false;
             }
-            
+
         }
 
         /// <summary>
@@ -163,12 +163,12 @@ namespace Universal.BLL
         /// <param name="rowCount"></param>
         /// <param name="user_id"></param>
         /// <returns></returns>
-        public static List<Entity.WorkPlan> GetPagedList(int pageIndex, int pageSize, ref int rowCount,int user_id)
+        public static List<Entity.WorkPlan> GetPagedList(int pageIndex, int pageSize, ref int rowCount, int user_id)
         {
-            using (var db =new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
-                rowCount = db.WorkPlans.Where(p=>p.CusUserID == user_id).Count();
-                return db.WorkPlans.OrderByDescending(p=>p.AddTime).Where(p => p.CusUserID == user_id).Include(p => p.ApproveUser).Include(p => p.WorkPlanItemList).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+                rowCount = db.WorkPlans.Where(p => p.CusUserID == user_id).Count();
+                return db.WorkPlans.OrderByDescending(p => p.AddTime).Where(p => p.CusUserID == user_id).Include(p => p.ApproveUser).Include(p => p.WorkPlanItemList).Skip((pageIndex - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
             }
 
         }
@@ -176,12 +176,17 @@ namespace Universal.BLL
         /// <summary>
         /// 计划审批
         /// </summary>
+        /// <param name="user_id">审核人员的id</param>
+        /// <param name="plan_id">计划id</param>
+        /// <param name="type">审核状态</param>
+        /// <param name="no_msg">不通过原因</param>
+        /// <param name="msg"></param>
         /// <returns></returns>
-        public static bool Approve(int user_id,int plan_id,out string msg)
+        public static bool Approve(int user_id, int plan_id, Entity.ApproveStatusType type, string no_msg, out string msg)
         {
             msg = "";
             var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == user_id);
-            if(entity_user == null)
+            if (entity_user == null)
             {
                 msg = "审核的用户不存在";
                 return false;
@@ -193,25 +198,38 @@ namespace Universal.BLL
                 msg = "要审批的计划不存在";
                 return false;
             }
-
-            if(entity.ApproveUserID != user_id)
+            if (entity.ApproveUserID == null)
+            {
+                msg = "该计划不需要审批";
+                return false;
+            }
+            if (entity.ApproveUserID != user_id)
             {
                 msg = "该计划不是由您来审核";
                 return false;
             }
-
-            if (entity.IsApprove)
+            if (entity.ApproveStatus != Entity.ApproveStatusType.nodo)
             {
-                msg = "已审批";
+                msg = "该计划已经审批过了";
                 return false;
             }
+            if (type == Entity.ApproveStatusType.no && string.IsNullOrWhiteSpace(no_msg))
+            {
+                msg = "审核不通过时请填写不通过原因";
+                return false;
+            }
+            else no_msg = "";
 
-            entity.IsApprove = true;
+            entity.ApproveStatus = type;
+            entity.ApproveRemark = no_msg;
             entity.ApproveTime = DateTime.Now;
-            if (bll.Modify(entity, "IsApprove", "ApproveTime") > 0)
+            if (bll.Modify(entity, "ApproveStatus", "ApproveRemark", "ApproveTime") > 0)
             {
                 msg = "审批成功";
-                BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity.WeekText), entity.ID);
+                if (type == Entity.ApproveStatusType.yes)
+                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity.WeekText), entity.ID);
+                else if (type == Entity.ApproveStatusType.no)
+                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapprovenook, string.Format(BLL.BLLMsgTemplate.PlanApproveNoOK, entity.WeekText), entity.ID);
                 return true;
             }
             else
@@ -231,7 +249,7 @@ namespace Universal.BLL
             var db = new DataCore.EFDBContext();
             db.WorkPlanItems.Where(p => p.WorkPlanID == entity.ID).ToList().ForEach(p => db.WorkPlanItems.Remove(p));
 
-            if(entity.WorkPlanItemList != null)
+            if (entity.WorkPlanItemList != null)
             {
                 foreach (var item in entity.WorkPlanItemList)
                 {
@@ -240,13 +258,24 @@ namespace Universal.BLL
                 }
             }
             entity.WorkPlanItemList.Clear();
-            entity.SetApproveStatus();
+            //如果是审核不通过的状态下修改的，则重新进入审核状态
+            if (entity.ApproveStatus == Entity.ApproveStatusType.no)
+            {
+                entity.ApproveRemark = "";
+                entity.ApproveStatus = Entity.ApproveStatusType.nodo;
+
+                var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == entity.CusUserID).FirstOrDefault();
+                int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
+                if (app_id > 0)
+                    BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID);
+
+            }
             var ss = db.Entry<Entity.WorkPlan>(entity);
             ss.State = EntityState.Modified;
             int row = db.SaveChanges();
             db.Dispose();
             return row > 0;
         }
-        
+
     }
 }

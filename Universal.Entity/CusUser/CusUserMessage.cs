@@ -135,7 +135,13 @@ namespace Universal.Entity
         /// 项目更新提醒
         /// </summary>
         [Description("项目更新提醒")]
-        projectupdate
+        projectupdate,
+
+        /// <summary>
+        /// 计划审核不通过
+        /// </summary>
+        [Description("计划审核不通过")]
+        planapprovenook,
     }
 
     /// <summary>

@@ -93,6 +93,11 @@ namespace Universal.BLL
         public static readonly string PlanApproveOK = "【{0}】审核通过";
 
         /// <summary>
+        /// 计划审核不通过 {0}审核不通过
+        /// </summary>
+        public static readonly string PlanApproveNoOK = "【{0}】审核未通过";
+
+        /// <summary>
         /// 计划审核未通过 您的工作计划审核未通过，原因：{1}
         /// </summary>
         public static readonly string PlanApproveNO = "您的工作计划审核未通过，原因：{1}";

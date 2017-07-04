@@ -98,15 +98,10 @@
                     $("#listData").html("");
                     var dataHtml = "";
                     $.each(data.data, function (i, item) {
-                        var app_text = "未审批";
-                        if (item.IsApprove)
-                        {
-                            app_text = "已审批";
-                        }
                         dataHtml += "<tr>";
                         dataHtml += "<td>" + item.WeekText + "</td>";
                         dataHtml += "<td>" + item.CusUser.NickName + "</td>";
-                        dataHtml += "<td>" + app_text + "</td>";
+                        dataHtml += "<td>" + approve_status_text + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Info/Plan?id=" + item.ID + "\" class=\"aEdt\"><i class=\"i-look\"></i></a></div></td>";
                         dataHtml += "</tr>";
                     });

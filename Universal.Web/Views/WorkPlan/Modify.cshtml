@@ -81,7 +81,7 @@
                         <li>
                             <div class="lilt">工作计划</div>
                             @{
-                                var show_sty = (Model.id > 0 && Model.approve_status) ? "" : "style=display:none";
+                                var show_sty = (Model.id > 0 && Model.approve_status == Universal.Entity.ApproveStatusType.yes) ? "" : "style=display:none";
                             }
                             <div class="limd">
                                 <table style="width: 670px;">
@@ -127,7 +127,7 @@
                             @if(Universal.Tools.TypeHelper.ObjectToBool(ViewData["ShowSave"]))
                             {
 
-                            <div class="limd"><button type="submit" onClick="return beforConfrim()" class="btn1">发布</button> <button type="button" onclick=" location.href='/WorkPlan/Index' ;" class="btn1 grey">取消</button></div>
+                            <div class="limd"><button type="submit" onClick="return beforConfrim()" class="btn1">发布</button> <button type="button" onclick="location.href='/WorkPlan/Index' ;" class="btn1 grey">取消</button></div>
                             }else
                             {
                                 <div class="limd"><span>已审核的不可再修改</span></div>

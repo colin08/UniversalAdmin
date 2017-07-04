@@ -217,8 +217,22 @@ namespace Universal.Web.Controllers
             }
 
             ViewData["ApproveUser"] = approver_user.NickName;
-            ;
-            ViewData["IsDepartmentAdmin"] = approver_user.ID == WorkContext.UserInfo.ID;
+
+            ViewData["ShowApprove"] = 0;
+            //如果是项目添加者，则只显示项目审批状态
+            if (entity.CusUserID == WorkContext.UserInfo.ID)
+            {
+                ViewData["ShowApprove"] = 1;
+            }
+            else if (entity.ApproveUserID == WorkContext.UserInfo.ID)
+            {
+                //如果是审批人，则显示审批按钮和文本框
+                ViewData["ShowApprove"] = 2;
+            }
+            else
+            {
+
+            }
 
             SetMsgRead(msg);
 

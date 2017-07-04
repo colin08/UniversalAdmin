@@ -618,7 +618,9 @@ namespace Universal.Web.Controllers.api
             model.begin_time = entity.BeginTime;
             model.end_time = entity.EndTime;
             model.id = entity.ID;
-            model.is_approve = entity.IsApprove;
+            model.approve_status = entity.ApproveStatus;
+            model.approve_status_text = entity.ApproveStatusTxt;
+            model.approve_status_text = entity.ApproveRemark;
             model.week_text = entity.WeekText;
             if (entity.WorkPlanItemList != null)
             {
@@ -686,7 +688,7 @@ namespace Universal.Web.Controllers.api
                 BLL.BLLWorkPlan.Modify(entity);
             else
             {
-                entity.SetApproveStatus();
+                entity.ApproveStatus = Entity.ApproveStatusType.nodo;
                 bll.Add(entity);
             }
             if (req.approve_user_id > 0)
@@ -699,15 +701,24 @@ namespace Universal.Web.Controllers.api
         /// <summary>
         /// 审批工作计划
         /// </summary>
-        /// <param name="user_id"></param>
-        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("api/v1/user/workplan/approve")]
-        public WebAjaxEntity<string> ApproveWorkPlan(int user_id, int id)
+        public WebAjaxEntity<string> ApproveWorkPlan([FromBody]Models.Request.ApproveWorkPlan req)
         {
+            if(req.user_id == 0 || req.work_plan_id == 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            if(req.approve_status == Entity.ApproveStatusType.no && string.IsNullOrWhiteSpace(req.approve_no_text))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "审核不通过时请填写不通过原因";
+                return WorkContext.AjaxStringEntity;
+            }
+
             string msg = "";
-            bool isOK = BLL.BLLWorkPlan.Approve(user_id, id, out msg);
+            bool isOK = BLL.BLLWorkPlan.Approve(req.user_id, req.work_plan_id, req.approve_status, req.approve_no_text, out msg);
             WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
             WorkContext.AjaxStringEntity.msgbox = msg;
             return WorkContext.AjaxStringEntity;

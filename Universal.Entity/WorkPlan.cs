@@ -15,25 +15,7 @@ namespace Universal.Entity
         {
             this.AddTime = DateTime.Now;
         }
-
-        /// <summary>
-        /// 设置审核状态，必须调用一次
-        /// </summary>
-        public void SetApproveStatus()
-        {
-            int app_id = Tools.TypeHelper.ObjectToInt(this.ApproveUserID, 0);
-            if (app_id == 0)
-            {
-                //未选审核人
-                IsApprove = true;
-                ApproveTime = DateTime.Now;
-            }else
-            {
-                IsApprove = false;
-                ApproveTime = null;
-            }
-        }
-
+        
         public int ID { get; set; }
 
         /// <summary>
@@ -53,11 +35,6 @@ namespace Universal.Entity
         public string WeekText { get; set; }
         
         /// <summary>
-        /// 是否审批
-        /// </summary>
-        public bool IsApprove { get; set; }
-
-        /// <summary>
         /// 审批时间
         /// </summary>
         public DateTime? ApproveTime { get; set; }
@@ -73,6 +50,29 @@ namespace Universal.Entity
         [ForeignKey("ApproveUserID")]
         public virtual CusUser ApproveUser { get; set; }
 
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        public ApproveStatusType ApproveStatus { get; set; }
+
+        /// <summary>
+        /// 审核状态文本
+        /// </summary>
+        [NotMapped]
+        public string ApproveStatusTxt
+        {
+            get
+            {
+                return Tools.EnumHelper.GetBEnumShowName(typeof(ApproveStatusType), (byte)this.ApproveStatus);
+            }
+        }
+
+        /// <summary>
+        /// 审核状态备注
+        /// </summary>
+        [MaxLength(500)]
+        public string ApproveRemark { get; set; }
+        
         /// <summary>
         /// 开始时间
         /// </summary>
