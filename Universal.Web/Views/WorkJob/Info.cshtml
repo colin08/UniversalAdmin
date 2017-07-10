@@ -60,7 +60,17 @@
                             <ul>
                                 @foreach (var item in Model.WorkJobUsers.ToList())
                                 {
-                                    <li><span>@item.CusUser.NickName</span></li>
+                                    <li><span>@item.CusUser.NickName</span>&nbsp;<span style="color:@(item.IsConfirm ? "green":"red")">@(item.IsConfirm ? "已完成":"未完成")</span>
+                                        &nbsp;&nbsp;&nbsp;
+                                        @if(item.IsConfirm)
+                                        {
+                                            var str_json = Newtonsoft.Json.JsonConvert.SerializeObject(item.ConfrimFiles.ToList());
+                                            var contnet = item.ConfirmText;
+
+                                            <a>完成情况</a>
+                                        }
+                                    </li>
+
                                 }
                             </ul>
                         </div>

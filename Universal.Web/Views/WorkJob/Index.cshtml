@@ -67,7 +67,8 @@
 {
     @Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
-            $(document).ready(function (e) {
+        $(document).ready(function (e) {
+            console.log(ChangeDateFormat("2017-04-20T17:21:40.237", "yyyy-MM-dd"));
                 pageData(1, false)
             });
 
@@ -87,6 +88,8 @@
                         //Loading Complete
                     },
                     success: function (data) {
+                        data = eval('(' + data + ')');
+                        
                         if (data.msg == 0) {
                             alert(data.msgbox);
                             return;
@@ -95,13 +98,19 @@
                         $("#listData").html("");
                         var dataHtml = "";
                         $.each(data.data, function (i, item) {
+                            var edit_or_look = "<a href=\"/WorkJob/Modify?id=" + item.ID + "\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"/WorkJob/Info?id=" + item.ID + "\" class=\"\"><i class=\"i-look\"></i></a>";
+                            console.log(item.type);
+                            if (item.type == 2)
+                            {
+                                edit_or_look = "<a href=\"/WorkJob/Info?id=" + item.ID + "\" class=\"\"><i class=\"i-look\"></i></a>";
+                            }
                             dataHtml += "<tr>";
                             dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                             dataHtml += "<td><span class=\"col_red\">" + item.StatusText + "</span></td>";
                             dataHtml += "<td><a href=\"/WorkJob/Info?id="+item.ID+"\">" + CutString(item.Title, 18) + "</a></td>";
                             dataHtml += "<td>" + CutString(item.Content, 48) + "</td>";
-                            dataHtml += "<td>" + ChangeDateFormat(item.DoneTime, "yyyy-MM-dd") + "</td>";
-                            dataHtml += "<td><div class=\"tbOpare\"><a href=\"/WorkJob/Modify?id=" + item.ID + "\" class=\"\"><i class=\"i-edt\"></i></a><a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
+                            dataHtml += "<td>" + item.DoneTime + "</td>";
+                            dataHtml += "<td><div class=\"tbOpare\">"+edit_or_look+"<a href=\"javascript:void(0);\" onclick=\"del(" + item.ID + ")\" class=\"aDel\"><i class=\"i-barrel\"></i></a></div></td>";
                             dataHtml += "</tr>";
                         });
                         if (data.data.length == 0) {

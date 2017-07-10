@@ -147,6 +147,7 @@ namespace Universal.BLL
                 var entity_project = db.Projects.Find(project_id);
                 if (entity_project == null)
                     return;
+                var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == entity_project.CusUserID).FirstOrDefault();
                 List<int> user_list = db.Database.SqlQuery<int>("SELECT CusUserID FROM CusUserProjectFavorites WHERE ProjectID = " + project_id.ToString()).ToList();
                 string content = string.Format(BLLMsgTemplate.FavProjectUpdate, entity_project.Title);
                 foreach (var item in user_list)
@@ -156,6 +157,7 @@ namespace Universal.BLL
                     entity.CusUserID = item;
                     entity.Type = Entity.CusUserMessageType.favprojectupdate;
                     entity.LinkID = project_id.ToString();
+                    entity.AddUserName = entity_user.NickName;
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
@@ -181,6 +183,7 @@ namespace Universal.BLL
                 var entity_doc = db.DocPosts.Find(doc_id);
                 if (entity_doc == null)
                     return;
+                var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == entity_doc.CusUserID).FirstOrDefault();
                 List<int> user_list = db.Database.SqlQuery<int>("select CusUserID from CusUserDocFavorites where DocPostID = " + doc_id.ToString()).ToList();
                 string content = string.Format(BLLMsgTemplate.FavDocUpdate, entity_doc.Title);
                 foreach (var item in user_list)
@@ -190,6 +193,7 @@ namespace Universal.BLL
                     entity.CusUserID = item;
                     entity.Type = Entity.CusUserMessageType.favdocupdate;
                     entity.LinkID = doc_id.ToString();
+                    entity.AddUserName = entity_user.NickName;
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
@@ -211,7 +215,7 @@ namespace Universal.BLL
         /// <param name="content"></param>
         /// <param name="link_id"></param>
         /// <returns></returns>
-        public static void PushAllUser(Entity.CusUserMessageType type, string content, int link_id)
+        public static void PushAllUser(Entity.CusUserMessageType type, string content, int link_id,string nick_name)
         {
             using (var db = new DataCore.EFDBContext())
             {
@@ -223,6 +227,7 @@ namespace Universal.BLL
                     entity.CusUserID = item;
                     entity.Type = type;
                     entity.LinkID = link_id.ToString();
+                    entity.AddUserName = nick_name;
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
@@ -240,7 +245,7 @@ namespace Universal.BLL
         /// <param name="content"></param>
         /// <param name="link_id"></param>
         /// <returns></returns>
-        public static void PushSomeUser(string user_ids, Entity.CusUserMessageType type, string content, int link_id)
+        public static void PushSomeUser(string user_ids, Entity.CusUserMessageType type, string content, int link_id,string nick_name)
         {
             if (string.IsNullOrWhiteSpace(user_ids)) { return; }
             if (user_ids.StartsWith(","))
@@ -259,6 +264,7 @@ namespace Universal.BLL
                     entity.CusUserID = item;
                     entity.Type = type;
                     entity.LinkID = link_id.ToString();
+                    entity.AddUserName = nick_name;
                     db.CusUserMessages.Add(entity);
                 }
                 db.SaveChanges();
@@ -277,7 +283,7 @@ namespace Universal.BLL
         /// <param name="content">消息内容,string.Format 拼接MsgTemplate类中的常量</param>
         /// <param name="link_id">链接id</param>
         /// <returns></returns>
-        public static bool PushMsg(int user_id, Entity.CusUserMessageType type, string content, int link_id)
+        public static bool PushMsg(int user_id, Entity.CusUserMessageType type, string content, int link_id,string nick_name)
         {
             BLL.BaseBLL<Entity.CusUser> bll_user = new BaseBLL<Entity.CusUser>();
             var entity_user = bll_user.GetModel(p => p.ID == user_id);
@@ -289,6 +295,7 @@ namespace Universal.BLL
             entity.CusUserID = user_id;
             entity.Type = type;
             entity.LinkID = link_id.ToString();
+            entity.AddUserName = nick_name;
             bll_msg.Add(entity);
             PushFilter(user_id.ToString(), content, type, link_id.ToString());
             return entity.ID > 0;

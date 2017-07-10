@@ -12,7 +12,7 @@ namespace Universal.Web.Models.Response
     {
         public WorkJob()
         {
-            this.users_list = new List<SelectUser>();
+            this.users_list = new List<WorkJobConfrimUser>();
             this.file_list = new List<ProjectFile>();
         }
 
@@ -55,6 +55,11 @@ namespace Universal.Web.Models.Response
         public DateTime done_time { get; set; }
 
         /// <summary>
+        /// 数据类别，1：自己添加的任务，2：别人指派给我的任务
+        /// </summary>
+        public int work_type { get; set; }
+
+        /// <summary>
         /// 添加时间
         /// </summary>
         public DateTime add_time { get; set; }
@@ -62,7 +67,7 @@ namespace Universal.Web.Models.Response
         /// <summary>
         /// 执行人
         /// </summary>
-        public List<SelectUser> users_list { get; set; }
+        public List<WorkJobConfrimUser> users_list { get; set; }
 
         /// <summary>
         /// 附件

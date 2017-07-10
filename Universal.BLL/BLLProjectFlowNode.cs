@@ -523,6 +523,7 @@ namespace Universal.BLL
             }
             using (var db = new DataCore.EFDBContext())
             {
+                var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == user_id).FirstOrDefault();
                 var entity = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).FirstOrDefault();
                 if (entity == null)
                     return false;
@@ -545,6 +546,7 @@ namespace Universal.BLL
                         entity_msg.CusUserID = item;
                         entity_msg.Type = Entity.CusUserMessageType.projectflowdone;
                         entity_msg.LinkID = project_flow_node_id.ToString(); //entity.ProjectID.ToString();
+                        entity_msg.AddUserName = entity_user.NickName;
                         db.CusUserMessages.Add(entity_msg);
                     }
                     db.SaveChanges();

@@ -644,7 +644,7 @@ namespace Universal.Web.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 filter.Add(new BLL.FilterSearch("Content", keyword, BLL.FilterSearchContract.like));
 
-            List<Entity.CusUserMessage> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "IsRead DESC,AddTime desc");
+            List<Entity.CusUserMessage> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "IsRead ASC,AddTime desc");
             WebAjaxEntity<List<Entity.CusUserMessage>> result = new WebAjaxEntity<List<Entity.CusUserMessage>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();

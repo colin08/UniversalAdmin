@@ -110,6 +110,25 @@
                         </div>
                         <div class="litip"></div>
                     </li>
+                    @if((int)ViewData["CanJoin"] == 1)
+                    {
+                        <li>
+                            <div class="lilt">任务完成说明</div>
+                            <div class="limd"><textarea id="txt_comfrim_text" rows="3" class="usTextarea"></textarea></div>
+                            <div class="litip"></div>
+                        </li>
+                        <li>
+                            <div class="lilt">完成的附件 <input type="hidden" id="files" value=""/></div>
+                            <div class="limd big">
+                                <ul id="file_list">
+
+                                    <li class="guding">
+                                        <a href="javascript:;" class="btn-add uploadBtnBox" onclick="AddFile()"><i class="i-attach"></i>新增</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
                     <li>
                         <div class="lilt">&nbsp;</div>
                         <div class="limd">
@@ -138,7 +157,7 @@
             $.ajax({
                 type: "post",
                 url: "/WorkJob/Confirm",
-                data: { "id":@Model.ID },
+                data: { "id":@Model.ID,"text":$("#txt_comfrim_text").val(),"files":$("#files").val() },
                 async: false,
                 beforeSend: function () {
 
@@ -165,5 +184,102 @@
             })
         }
     </script>
+
+<script type="text/javascript">
+        function RemoveUp(obj)
+        {
+            $(obj).parent("li").remove();
+            CreateUploadData();
+        }
+
+        function AddFile()
+        {
+            var li_html = "<li>";
+            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"  onclick=\"RemoveUp(this)\"><i class=\"i-barrel\"></i></a>";
+            li_html += "    <a href=\"javascript:;\" class=\"btn-add uploadBtnBox\"><i class=\"i-redbb\"></i>上传文件<input type=\"file\" class=\"uploadBtn\" onchange=\"Upload(this)\" /></a>";
+            li_html += "    <span spath=\"\"></span> &nbsp;<span></span><span></span>";
+            li_html += "</li>";
+            $(".guding").before(li_html);
+        }
+
+        function Upload(obj)
+        {
+            //alert($(obj).parent("a").parent("li").attr("data_id"));
+            //显示的文件名
+            var span_file_name = $(obj).parent("a").next();
+
+            //上传状态
+            var span_file_status = $(obj).parent("a").next().next();
+
+            //文件大小
+            var span_file_size = $(obj).parent("a").next().next().next();
+
+            //原始文件名
+            var file_name = getFileName($(obj).val());
+            if (CheckIsUpload(file_name))
+            {
+                alert("该文件已上传");
+                return;
+            }
+            var fd = new FormData();
+            fd.append("FileData", $(obj)[0].files[0]);
+            $(span_file_status).html("上传中...");
+            $(span_file_name).html(file_name);
+            $.ajax({
+                url: '/Tools/UploadFile',
+                type: 'POST',
+                cache: false,
+                contentType: "multipart/form-data",
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                $(span_file_status).html("");
+                if (res.msg == 1) {
+                    $(span_file_name).attr("spath", res.data);
+                    $(span_file_size).html(res.msgbox);
+                    CreateUploadData();
+                } else {
+                    alert(res.msgbox);
+                }
+            }).fail(function (res) { });
+
+        }
+
+        //创建服务数据
+        function CreateUploadData()
+        {
+            var filestr = "";
+            $.each($("#file_list").find("li"), function () {
+                if ($(this).attr("class") == undefined)
+                {
+                    var server_path = $(this).find("span:eq(0)").attr("spath");
+                    var file_name = $(this).find("span:eq(0)").text();
+                    var file_size = $(this).find("span:eq(2)").text();
+                    if(server_path.length != 0&& file_name.length != 0 && file_size.length != 0)
+                        filestr += server_path + "," + file_name + "," + file_size + "|";
+                }
+            })
+            $("#files").val(filestr);
+        }
+
+        function CheckIsUpload(file_name)
+        {
+            var is_ext = false;
+            $.each($("#file_list").find("li"), function () {
+                if ($(this).attr("class") == undefined) {
+                    if ($(this).find("span:eq(0)").text() == file_name)
+                        is_ext = true;
+                }
+            })
+            return is_ext;
+        }
+
+        function getFileName(o) {
+            var pos = o.lastIndexOf("\\");
+            return o.substring(pos + 1);
+        }
+
+</script>
 }
 <!--底部脚本 end-->

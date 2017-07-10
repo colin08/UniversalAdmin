@@ -31,12 +31,7 @@ namespace Universal.Web.Models.Response
         /// 链接ID
         /// </summary>
         public string link_id { get; set; }
-        
-        /// <summary>
-        /// 发布人ID
-        /// </summary>
-        public int add_user_id { get; set; }
-
+                
         /// <summary>
         /// 发布人名字，包含部门信息
         /// </summary>

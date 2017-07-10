@@ -78,12 +78,12 @@ namespace Universal.BLL
                     case Entity.ApproveStatusType.nodo:
                         break;
                     case Entity.ApproveStatusType.yes:
-                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveok, string.Format(BLL.BLLMsgTemplate.AppproveOK, entity.Title), entity.ID);
+                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveok, string.Format(BLL.BLLMsgTemplate.AppproveOK, entity.Title), entity.ID,entity_user.NickName);
                         //向收藏此项目的用户发送通知
                         BLL.BLLMsg.PushFavProjectUser(entity.ID);
                         break;
                     case Entity.ApproveStatusType.no:
-                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveno, string.Format(BLL.BLLMsgTemplate.AppproveNo, entity.Title, remark), entity.ID);
+                        BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.appproveno, string.Format(BLL.BLLMsgTemplate.AppproveNo, entity.Title, remark), entity.ID,entity_user.NickName);
                         break;
                     default:
                         break;
@@ -168,7 +168,7 @@ namespace Universal.BLL
             }
             db.Dispose();
             if (app_id != 0)
-                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID,entity_user.NickName);
             return entity.ID;
         }
 
@@ -274,9 +274,9 @@ namespace Universal.BLL
                 CopyFlowNodeFromCompact(db, entity.ID, true, flow_entity.ID, login_user_id);
             db.Dispose();
             if (app_id != 0)
-                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, entity.Title), entity.ID,entity_user.NickName);
             //项目更新提醒
-            BLLMsg.PushSomeUser(user_ids, Entity.CusUserMessageType.projectupdate, string.Format(BLLMsgTemplate.ProjectUpdate, entity.Title), entity.ID);
+            BLLMsg.PushSomeUser(user_ids, Entity.CusUserMessageType.projectupdate, string.Format(BLLMsgTemplate.ProjectUpdate, entity.Title), entity.ID,entity_user.NickName);
             return entity.ID;
         }
 

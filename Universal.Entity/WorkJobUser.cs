@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Universal.Entity
 {
@@ -35,6 +36,17 @@ namespace Universal.Entity
         /// <summary>
         /// 是否完成
         /// </summary>
-        public bool IsConfirm { get; set; }        
+        public bool IsConfirm { get; set; }       
+        
+        /// <summary>
+        /// 完成后的反馈文本
+        /// </summary>
+        public string ConfirmText { get; set; } 
+
+        /// <summary>
+        /// 完成后反馈的附件
+        /// </summary>
+        public ICollection<Entity.WorkJobUserFile> ConfrimFiles { get; set; }
+
     }
 }

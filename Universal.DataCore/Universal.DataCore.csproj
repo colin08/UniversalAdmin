@@ -234,6 +234,14 @@
     <Compile Include="Migrations\201707040833157_modify_work_plan.Designer.cs">
       <DependentUpon>201707040833157_modify_work_plan.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707050955569_modify_work_job.cs" />
+    <Compile Include="Migrations\201707050955569_modify_work_job.Designer.cs">
+      <DependentUpon>201707050955569_modify_work_job.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707060935244_add_msg_username.cs" />
+    <Compile Include="Migrations\201707060935244_add_msg_username.Designer.cs">
+      <DependentUpon>201707060935244_add_msg_username.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -389,6 +397,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707040833157_modify_work_plan.resx">
       <DependentUpon>201707040833157_modify_work_plan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707050955569_modify_work_job.resx">
+      <DependentUpon>201707050955569_modify_work_job.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707060935244_add_msg_username.resx">
+      <DependentUpon>201707060935244_add_msg_username.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

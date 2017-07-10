@@ -98,6 +98,7 @@
     <Compile Include="SysUser.cs" />
     <Compile Include="WorkJob.cs" />
     <Compile Include="WorkJobFile.cs" />
+    <Compile Include="WorkJobUserFile.cs" />
     <Compile Include="WorkMeeting.cs" />
     <Compile Include="WorkJobUser.cs" />
     <Compile Include="WorkMeetingFile.cs" />

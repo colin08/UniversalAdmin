@@ -8,7 +8,7 @@ namespace Universal.Web.Models.Request
     /// <summary>
     /// 添加/修改我的工作计划所需参数
     /// </summary>
-    public class WorkPlan
+    public class WorkPlanR
     {
         /// <summary>
         /// 添加传入0，修改传入id

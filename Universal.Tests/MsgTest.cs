@@ -17,7 +17,7 @@ namespace Universal.Tests
 
             //Tools.JPush.PushALl("15876594020", "手动测试", 1, "2");
 
-            BLL.BLLMsg.PushMsg(8, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, "推送测试"), 161);
+            BLL.BLLMsg.PushMsg(8, Entity.CusUserMessageType.approveproject, string.Format(BLL.BLLMsgTemplate.ApproveProject, "推送测试"), 161,"");
 
             //var ss = Entity.APPVersionPlatforms.Android;
             //string app_name = Tools.EnumHelper.GetBEnumShowName(typeof(Entity.APPVersionPlatforms), (byte)ss);

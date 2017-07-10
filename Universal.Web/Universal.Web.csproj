@@ -1045,6 +1045,8 @@
     <Compile Include="Models\Response\StatcticsCondition.cs" />
     <Compile Include="Models\Response\TreeData.cs" />
     <Compile Include="Models\Response\WorkJob.cs" />
+    <Compile Include="Models\Request\WorkJobConfrim.cs" />
+    <Compile Include="Models\Response\WorkJobConfrimUserFile.cs" />
     <Compile Include="Models\Response\WorkMeeting.cs" />
     <Compile Include="Models\Response\WorkPlan.cs" />
     <Compile Include="Models\ViewModelAdminUser.cs" />

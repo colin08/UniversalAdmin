@@ -41,7 +41,7 @@ namespace Universal.BLL
                     entity.IsConfirm = true;
                     db.SaveChanges();
                     //向发起会议者发送通知
-                    BLLMsg.PushMsg(entity_mee.CusUserID, Entity.CusUserMessageType.confrimjoinmeeting, string.Format(BLLMsgTemplate.ConfrimJoinMeeting, entity_user.NickName, entity_mee.Title), id);
+                    BLLMsg.PushMsg(entity_mee.CusUserID, Entity.CusUserMessageType.confrimjoinmeeting, string.Format(BLLMsgTemplate.ConfrimJoinMeeting, entity_user.NickName, entity_mee.Title), id,entity_user.NickName);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace Universal.BLL
             db.WorkMeetings.Add(entity);
             db.SaveChanges();
             db.Dispose();
-            BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.WaitMeeting, entity.Title), entity.ID);
+            BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.WaitMeeting, entity.Title), entity.ID,entity_cus_user.NickName);
             return entity.ID;
         }
 
@@ -129,7 +129,7 @@ namespace Universal.BLL
             if (old_entity.TimeTxt != entity.TimeTxt)
             {
                 //会议改期
-                BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.MeetingChangeDate, entity_cus_user.NickName, entity.Title, old_entity.TimeTxt, entity.TimeTxt), entity.ID);
+                BLL.BLLMsg.PushSomeUser(ids, Entity.CusUserMessageType.waitmeeting, string.Format(BLLMsgTemplate.MeetingChangeDate, entity_cus_user.NickName, entity.Title, old_entity.TimeTxt, entity.TimeTxt), entity.ID,entity_cus_user.NickName);
             }
             return row > 0;
         }

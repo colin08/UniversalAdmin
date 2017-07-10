@@ -141,6 +141,11 @@ namespace Universal.DataCore
 
         public DbSet<Entity.WorkJobUser> WorkJobUsers { get; set; }
 
+        /// <summary>
+        /// 任务指派完成后用户反馈的附件
+        /// </summary>
+        public DbSet<Entity.WorkJobUserFile> WorkJobUserFiles { get; set; }
+
         public DbSet<Entity.WorkJobFile> WorkJobFiles { get; set; }
 
         /// <summary>

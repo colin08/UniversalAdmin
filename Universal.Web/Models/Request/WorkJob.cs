@@ -8,9 +8,9 @@ namespace Universal.Web.Models.Request
     /// <summary>
     /// 添加任务指派所需参数
     /// </summary>
-    public class WorkJob
+    public class WorkJobR
     {
-        public WorkJob()
+        public WorkJobR()
         {
             this.file_list = new List<Response.ProjectFile>();
         }

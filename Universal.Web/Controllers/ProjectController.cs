@@ -19,7 +19,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
-            ViewData["IsAdmin"] =!(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
+            ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             LoadNodeCategory();
             return View();
         }
@@ -195,6 +195,7 @@ namespace Universal.Web.Controllers
         {
             //是否可以编辑节点
             ViewData["can_edit"] = false;
+
             ViewData["IsAdmin"] = !(BLL.BLLCusUser.CheckUserIsAdmin(WorkContext.UserInfo.ID));
             if (id <= 0)
                 return Content("项目不存在");
@@ -203,8 +204,32 @@ namespace Universal.Web.Controllers
             if (entity == null)
                 return Content("项目不存在");
             ViewData["project_id"] = id;
-            if(entity.ProjectUsers.ToList().Any(p=>p.CusUserID == WorkContext.UserInfo.ID))
-                ViewData["can_edit"] = true;
+
+            if (entity.ApproveUserID != null)
+            {
+                if (entity.ApproveStatus != Entity.ApproveStatusType.yes)
+                {
+                    ViewData["can_edit"] = false;
+                }
+                else
+                {
+                    if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+                        ViewData["can_edit"] = true;
+                }
+            }
+            else
+            {
+                if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+                    ViewData["can_edit"] = true;
+
+            }
+
+            //if (entity.ApproveStatus != Entity.ApproveStatusType.yes)
+            //{
+
+            //}
+            //if (entity.ProjectUsers.ToList().Any(p => p.CusUserID == WorkContext.UserInfo.ID))
+            //    ViewData["can_edit"] = true;
 
             return View(entity);
         }
@@ -290,7 +315,7 @@ namespace Universal.Web.Controllers
             if (ids != 0)
             {
                 var entity = BLL.BLLProject.GetModel(ids);
-                
+
 
                 if (entity != null)
                 {
@@ -421,9 +446,9 @@ namespace Universal.Web.Controllers
             {
                 ModelState.AddModelError("approve_user_id", "审核人必选");
             }
-            if(app_id != 0)
+            if (app_id != 0)
             {
-                if(app_id == WorkContext.UserInfo.ID)
+                if (app_id == WorkContext.UserInfo.ID)
                 {
                     entity.Msg = 5;
                     entity.MsgBox = "不能自己审批自己的项目";
@@ -738,7 +763,7 @@ namespace Universal.Web.Controllers
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);
         }
-        
+
         /// <summary>
         /// 设置节点结束
         /// </summary>
@@ -962,7 +987,7 @@ namespace Universal.Web.Controllers
             string msg = "";
             if (data.stage_id <= 0)
             {
-                int id = BLL.BLLProjectStage.Add(project_id, data,WorkContext.UserInfo.ID, out msg);
+                int id = BLL.BLLProjectStage.Add(project_id, data, WorkContext.UserInfo.ID, out msg);
                 WorkContext.AjaxStringEntity.msg = id > 0 ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 WorkContext.AjaxStringEntity.data = id.ToString();
@@ -970,7 +995,7 @@ namespace Universal.Web.Controllers
             }
             else
             {
-                var isOK = BLL.BLLProjectStage.Modfify(data,WorkContext.UserInfo.ID, out msg);
+                var isOK = BLL.BLLProjectStage.Modfify(data, WorkContext.UserInfo.ID, out msg);
                 WorkContext.AjaxStringEntity.msg = isOK ? 1 : 0;
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);

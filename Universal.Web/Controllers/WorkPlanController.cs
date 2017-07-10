@@ -131,7 +131,7 @@ namespace Universal.Web.Controllers
             if (entity.ApproveUserID != null)
             {
                 int app_id = TypeHelper.ObjectToInt(entity.ApproveUserID);
-                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.planitemedit, string.Format(BLL.BLLMsgTemplate.PlanItemEdit, entity.WeekText), entity.ID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.planitemedit, string.Format(BLL.BLLMsgTemplate.PlanItemEdit, entity.WeekText), entity.ID,WorkContext.UserInfo.NickName);
             }
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "保存成功";
@@ -334,6 +334,10 @@ namespace Universal.Web.Controllers
             if (app_id != 0)
             {
                 entity.approve_user_name = BLL.BLLCusUser.GetNickName(app_id);
+                if(app_id == WorkContext.UserInfo.ID)
+                {
+                    ModelState.AddModelError("approve_user_id", "不能审批自己的计划");
+                }
             }
 
             DateTime BeginTime = DateTime.Now;
@@ -385,7 +389,7 @@ namespace Universal.Web.Controllers
                 {
                     bll.Add(model);
                     if (app_id > 0)
-                        BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName, entity.week_text), model.ID);
+                        BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, WorkContext.UserInfo.NickName, entity.week_text), model.ID,WorkContext.UserInfo.NickName);
                 }
                 else
                     BLL.BLLWorkPlan.Modify(model);

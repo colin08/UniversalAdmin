@@ -8,9 +8,9 @@ namespace Universal.Web.Models.Request
     /// <summary>
     /// 添加我的会议需要的参数
     /// </summary>
-    public class WorkMeeting
+    public class WorkMeetingR
     {
-        public WorkMeeting()
+        public WorkMeetingR()
         {
             this.file_list = new List<Response.ProjectFile>();
         }

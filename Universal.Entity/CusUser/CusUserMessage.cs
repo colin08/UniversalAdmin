@@ -278,6 +278,11 @@ namespace Universal.Entity
             }
         }
 
+        /// <summary>
+        /// 添加者用户名
+        /// </summary>
+        [MaxLength(50)]
+        public string AddUserName { get; set; }
 
         /// <summary>
         /// 添加时间

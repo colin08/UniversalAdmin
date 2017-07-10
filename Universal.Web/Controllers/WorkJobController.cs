@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Universal.Tools;
 using System.Data.Entity;
 using Universal.Web.Framework;
+using Newtonsoft.Json;
 
 namespace Universal.Web.Controllers
 {
@@ -30,22 +31,22 @@ namespace Universal.Web.Controllers
         [HttpPost]
         public JsonResult PageData(int page_size, int page_index, string keyword)
         {
-            BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
             int rowCount = 0;
-            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            filter.Add(new BLL.FilterSearch("CusUserID", WorkContext.UserInfo.ID.ToString(), BLL.FilterSearchContract.等于));
-            if (!string.IsNullOrWhiteSpace(keyword))
-                filter.Add(new BLL.FilterSearch("Title", keyword, BLL.FilterSearchContract.like));
-            List<Entity.WorkJob> list = bll.GetPagedList(page_index, page_size, ref rowCount, filter, "AddTime desc");
-            foreach (var item in list)
-                item.StatusText = BLL.BLLWorkJob.GetJobStatus(item.ID);
+            var list = BLL.BLLWorkJob.GetPageList(page_size, page_index, WorkContext.UserInfo.ID, keyword, out rowCount);
             WebAjaxEntity<List<Entity.WorkJob>> result = new WebAjaxEntity<List<Entity.WorkJob>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
             result.data = list;
             result.total = rowCount;
+            JsonSerializerSettings setting = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatString = "yyyy-MM-dd"
+            };
 
-            return Json(result);
+            var ret = JsonConvert.SerializeObject(result, setting);
+
+            return Json(ret);
         }
 
         /// <summary>
@@ -58,6 +59,16 @@ namespace Universal.Web.Controllers
             Entity.WorkJob entity = BLL.BLLWorkJob.GetModel(id);
             if (entity == null)
                 return View("NotFound");
+            BLL.BaseBLL<Entity.WorkJobUserFile> bll = new BLL.BaseBLL<Entity.WorkJobUserFile>();
+            foreach (var item in entity.WorkJobUsers)
+            {
+                var files = bll.GetListBy(0, p => p.WorkJobUserID == item.ID, "ID ASC");
+                foreach (var file in files)
+                {
+                    file.FilePath = "/Tools/Down?path=" + file.FilePath + "&name=" + file.FileName;
+                }
+                item.ConfrimFiles = files;
+            }
             
             return View(entity);
         }
@@ -88,11 +99,28 @@ namespace Universal.Web.Controllers
         /// 用户点击完成
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="files"></param>
+        /// <param name="text"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Confirm(int id)
+        public JsonResult Confirm(int id,string text,string files)
         {
-            BLL.BLLWorkJob.Confirm(id, WorkContext.UserInfo.ID);
+            List<Entity.WorkJobUserFile> list = new List<Entity.WorkJobUserFile>();
+            foreach (var item in files.Split('|'))
+            {
+                if (string.IsNullOrWhiteSpace(item))
+                    continue;
+
+                var file = item.Split(',');
+                if (file.Length != 3)
+                    continue;
+                Entity.WorkJobUserFile entity_file = new Entity.WorkJobUserFile();
+                entity_file.FilePath = file[0];
+                entity_file.FileName = file[1];
+                entity_file.FileSize = file[2];
+                list.Add(entity_file);
+            }
+            BLL.BLLWorkJob.Confirm(id, WorkContext.UserInfo.ID, text, list);
             WorkContext.AjaxStringEntity.msg = 1;
             return Json(WorkContext.AjaxStringEntity);
         }

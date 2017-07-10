@@ -647,7 +647,7 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpPost]
         [Route("api/v1/user/workplan/modify")]
-        public WebAjaxEntity<string> AddJobPlan([FromBody]Models.Request.WorkPlan req)
+        public WebAjaxEntity<string> AddJobPlan([FromBody]Models.Request.WorkPlanR req)
         {
             var entity_user = new BLL.BaseBLL<Entity.CusUser>().GetModel(p => p.ID == req.user_id);
             if (entity_user == null)
@@ -666,7 +666,15 @@ namespace Universal.Web.Controllers.api
             if (req.approve_user_id <= 0)
                 entity.ApproveUserID = null;
             else
+            {
+                if (req.approve_user_id == req.user_id)
+                {
+                    WorkContext.AjaxStringEntity.msgbox = "不能审批自己的计划";
+                    return WorkContext.AjaxStringEntity;
+                }
                 entity.ApproveUserID = req.approve_user_id;
+
+            }
             if (req.plan_item != null)
             {
                 if (entity.WorkPlanItemList == null)
@@ -685,14 +693,16 @@ namespace Universal.Web.Controllers.api
                 }
             }
             if (req.id > 0)
+            {
                 BLL.BLLWorkPlan.Modify(entity);
+            }
             else
             {
                 entity.ApproveStatus = Entity.ApproveStatusType.nodo;
                 bll.Add(entity);
             }
             if (req.approve_user_id > 0)
-                BLL.BLLMsg.PushMsg(req.approve_user_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID);
+                BLL.BLLMsg.PushMsg(req.approve_user_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID,entity_user.NickName);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
@@ -706,12 +716,12 @@ namespace Universal.Web.Controllers.api
         [Route("api/v1/user/workplan/approve")]
         public WebAjaxEntity<string> ApproveWorkPlan([FromBody]Models.Request.ApproveWorkPlan req)
         {
-            if(req.user_id == 0 || req.work_plan_id == 0)
+            if (req.user_id == 0 || req.work_plan_id == 0)
             {
                 WorkContext.AjaxStringEntity.msgbox = "非法参数";
                 return WorkContext.AjaxStringEntity;
             }
-            if(req.approve_status == Entity.ApproveStatusType.no && string.IsNullOrWhiteSpace(req.approve_no_text))
+            if (req.approve_status == Entity.ApproveStatusType.no && string.IsNullOrWhiteSpace(req.approve_no_text))
             {
                 WorkContext.AjaxStringEntity.msgbox = "审核不通过时请填写不通过原因";
                 return WorkContext.AjaxStringEntity;
@@ -851,7 +861,7 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpPost]
         [Route("api/v1/user/workmeeting/modify")]
-        public WebAjaxEntity<string> ModifyMeeting([FromBody]Models.Request.WorkMeeting req)
+        public WebAjaxEntity<string> ModifyMeeting([FromBody]Models.Request.WorkMeetingR req)
         {
             Entity.WorkMeeting entity = new Entity.WorkMeeting();
             if (req.id > 0)
@@ -897,10 +907,8 @@ namespace Universal.Web.Controllers.api
         {
             WebAjaxEntity<List<Models.Response.WorkJob>> response_entity = new WebAjaxEntity<List<Models.Response.WorkJob>>();
             List<Models.Response.WorkJob> response_list = new List<Models.Response.WorkJob>();
-            BLL.BaseBLL<Entity.WorkJob> bll = new BLL.BaseBLL<Entity.WorkJob>();
-
             int rowCount = 0;
-            var db_list = bll.GetPagedList(req.page_index, req.page_size, ref rowCount, p => p.CusUserID == req.user_id, "AddTime desc", p => p.WorkJobUsers.Select(s => s.CusUser));
+            var db_list = BLL.BLLWorkJob.GetPageList(req.page_size, req.page_index, req.user_id, "", out rowCount);
             foreach (var item in db_list)
                 response_list.Add(BuildWorkJob(item, req.user_id));
 
@@ -938,14 +946,27 @@ namespace Universal.Web.Controllers.api
         /// <summary>
         /// 完成任务指派
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="user_id"></param>
+        /// <param name="req"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("api/v1/user/workjob/comp")]
-        public WebAjaxEntity<string> WorkJobComp(int id, int user_id)
+        public WebAjaxEntity<string> WorkJobComp([FromBody]Models.Request.WorkJobConfrim req)
         {
-            BLL.BLLWorkJob.Confirm(id, user_id);
+            if(req == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "未收到参数";
+                return WorkContext.AjaxStringEntity;
+            }
+            List<Entity.WorkJobUserFile> file_list = new List<Entity.WorkJobUserFile>();
+            foreach (var item in req.files)
+            {
+                Entity.WorkJobUserFile entity = new Entity.WorkJobUserFile();
+                entity.FileName = item.file_name;
+                entity.FilePath = item.file_path;
+                entity.FileSize = item.file_size;
+                file_list.Add(entity);
+            }
+            BLL.BLLWorkJob.Confirm(req.work_job_id, req.user_id, req.text, file_list);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
@@ -970,15 +991,51 @@ namespace Universal.Web.Controllers.api
             model.create_user_id = entity.CusUserID;
             model.status_text = BLL.BLLWorkJob.GetJobStatus(entity.ID);
             model.title = entity.Title;
-            List<Models.Response.SelectUser> users_list = new List<Models.Response.SelectUser>();
+            model.work_type = (entity.CusUserID == user_id) ? 1 : 2;
+            BLL.BaseBLL<Entity.CusUser> bll_user = new BLL.BaseBLL<Entity.CusUser>();
+            List<Models.Response.WorkJobConfrimUser> users_list = new List<Models.Response.WorkJobConfrimUser>();
+            List<Entity.WorkJobUser> db_job_user = new List<Entity.WorkJobUser>();
             if (entity.WorkJobUsers != null)
             {
-                foreach (var user in entity.WorkJobUsers)
+                db_job_user = entity.WorkJobUsers.ToList();
+            }
+            else
+            {
+                db_job_user = new BLL.BaseBLL<Entity.WorkJobUser>().GetListBy(0, p => p.WorkJobID == entity.ID, "ID ASC", p => p.ConfrimFiles);
+            }
+            foreach (var user in db_job_user)
+            {
+                Models.Response.WorkJobConfrimUser temp_model = new Models.Response.WorkJobConfrimUser();
+                if (user.CusUser == null)
+                    user.CusUser = bll_user.GetModel(p => p.ID == user.CusUserID);
+                if (user.CusUser != null)
                 {
-                    users_list.Add(BuilderSelectUser(user.CusUser, user.IsConfirm));
-                    if (user.CusUserID == user_id && !user.IsConfirm)
-                        model.is_comp = true;
+                    temp_model.avatar = GetSiteUrl() + user.CusUser.Avatar;
+                    temp_model.nick_name = user.CusUser.NickName;
+                    temp_model.short_num = user.CusUser.ShorNum;
+                    temp_model.telphone = user.CusUser.Telphone;
+                    temp_model.user_id = user.CusUserID;
                 }
+                temp_model.confrim_text = user.ConfirmText;
+                temp_model.is_join = user.IsConfirm;
+                temp_model.file_list = new List<Models.Response.ProjectFile>();
+                if (user.ConfrimFiles == null)
+                {
+                    user.ConfrimFiles = new BLL.BaseBLL<Entity.WorkJobUserFile>().GetListBy(0, p => p.WorkJobUserID == user.ID, "ID ASC").ToList();
+                }
+                foreach (var file in user.ConfrimFiles.ToList())
+                {
+                    Models.Response.ProjectFile model_file = new Models.Response.ProjectFile();
+                    model_file.file_name = file.FileName;
+                    model_file.file_path = GetSiteUrl() + file.FilePath;
+                    model_file.file_size = file.FileSize;
+                    model_file.type = Entity.ProjectFileType.file;
+                    temp_model.file_list.Add(model_file);
+                }
+
+                users_list.Add(temp_model);
+                if (user.CusUserID == user_id && !user.IsConfirm)
+                    model.is_comp = true;
             }
 
             model.users_list = users_list;
@@ -986,6 +1043,8 @@ namespace Universal.Web.Controllers.api
             List<Entity.WorkJobFile> file_list = null;
             if (entity.FileList.Count == 0)
                 file_list = new BLL.BaseBLL<Entity.WorkJobFile>().GetListBy(0, p => p.WorkJobID == entity.ID, "ID ASC");
+            else
+                file_list = entity.FileList.ToList();
 
             if (file_list != null)
             {
@@ -1010,7 +1069,7 @@ namespace Universal.Web.Controllers.api
         /// <returns></returns>
         [HttpPost]
         [Route("api/v1/user/workjob/modify")]
-        public WebAjaxEntity<string> ModifyWorkJob([FromBody]Models.Request.WorkJob req)
+        public WebAjaxEntity<string> ModifyWorkJob([FromBody]Models.Request.WorkJobR req)
         {
             Entity.WorkJob entity = new Entity.WorkJob();
             if (req.id > 0)
@@ -1068,34 +1127,8 @@ namespace Universal.Web.Controllers.api
                 model.link_id = item.LinkID;
                 model.type = item.Type;
                 model.type_name = item.TypeName;
+                model.add_user_name = item.AddUserName;
 
-                if (model.type == Entity.CusUserMessageType.notice)
-                {
-                    int lin_ = TypeHelper.ObjectToInt(item.LinkID);
-                    var notice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == lin_, p => p.CusUser);
-                    if (notice != null)
-                    {
-                        if (notice.CusUser != null)
-                        {
-                            model.add_user_name = notice.CusUser.NickName;
-                            model.add_user_id = notice.CusUserID;
-                        }
-                    }
-                    else
-                    {
-                        model.add_user_name = "";
-                    }
-                }
-                else
-                {
-                    var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
-                    if (entity_user != null)
-                    {
-                        model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
-                    }
-                    model.add_user_id = item.CusUserID;
-                }
-                
                 response_list.Add(model);
             }
 
@@ -1128,31 +1161,7 @@ namespace Universal.Web.Controllers.api
                 model.link_id = item.LinkID;
                 model.type = item.Type;
                 model.type_name = item.TypeName;
-                if (model.type == Entity.CusUserMessageType.notice)
-                {
-                    int lin_ = TypeHelper.ObjectToInt(item.LinkID);
-                    var notice = new BLL.BaseBLL<Entity.CusNotice>().GetModel(p => p.ID == lin_, p => p.CusUser);
-                    if (notice != null)
-                    {
-                        if (notice.CusUser != null)
-                        {
-                            model.add_user_name = notice.CusUser.NickName;
-                            model.add_user_id = notice.CusUserID;
-                        }
-                    }else
-                    {
-                        model.add_user_name = "";
-                    }
-                }
-                else
-                {
-                    var entity_user = bll_user.GetModel(p => p.ID == item.CusUserID, p => p.CusDepartment);
-                    if (entity_user != null)
-                    {
-                        model.add_user_name = entity_user.CusDepartment.Title + " - " + entity_user.NickName;
-                    }
-                    model.add_user_id = item.CusUserID;
-                }
+                model.add_user_name = item.AddUserName;
                 response_list.Add(model);
             }
 

@@ -79,6 +79,12 @@ namespace Universal.Entity
         public DateTime AddTime { get; set; }
 
         /// <summary>
+        /// 数据类别
+        /// </summary>
+        [NotMapped]
+        public int type { get; set; }
+
+        /// <summary>
         /// 执行人
         /// </summary>
         public virtual ICollection<WorkJobUser> WorkJobUsers { get; set; }

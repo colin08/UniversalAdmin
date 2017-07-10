@@ -209,12 +209,12 @@ namespace Universal.Web.Controllers
                     switch (model.See)
                     {
                         case Entity.DocPostSee.everyone:
-                            BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID);
+                            BLL.BLLMsg.PushAllUser(Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID,WorkContext.UserInfo.NickName);
                             break;
                         case Entity.DocPostSee.department:
                             break;
                         case Entity.DocPostSee.user:
-                            BLL.BLLMsg.PushSomeUser(final_ids, Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID);
+                            BLL.BLLMsg.PushSomeUser(final_ids, Entity.CusUserMessageType.notice, string.Format(BLL.BLLMsgTemplate.Notice, model.Title), model.ID,WorkContext.UserInfo.NickName);
                             break;
                         default:
                             break;

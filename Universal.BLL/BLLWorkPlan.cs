@@ -218,7 +218,7 @@ namespace Universal.BLL
                 msg = "审核不通过时请填写不通过原因";
                 return false;
             }
-            else no_msg = "";
+            
 
             entity.ApproveStatus = type;
             entity.ApproveRemark = no_msg;
@@ -227,9 +227,9 @@ namespace Universal.BLL
             {
                 msg = "审批成功";
                 if (type == Entity.ApproveStatusType.yes)
-                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity.WeekText), entity.ID);
+                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapproveok, string.Format(BLL.BLLMsgTemplate.PlanApproveOK, entity.WeekText), entity.ID,entity_user.NickName);
                 else if (type == Entity.ApproveStatusType.no)
-                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapprovenook, string.Format(BLL.BLLMsgTemplate.PlanApproveNoOK, entity.WeekText), entity.ID);
+                    BLL.BLLMsg.PushMsg(entity.CusUserID, Entity.CusUserMessageType.planapprovenook, string.Format(BLL.BLLMsgTemplate.PlanApproveNoOK, entity.WeekText), entity.ID,entity_user.NickName);
                 return true;
             }
             else
@@ -246,6 +246,14 @@ namespace Universal.BLL
         /// <returns></returns>
         public static bool Modify(Entity.WorkPlan entity)
         {
+            if(entity.ApproveUserID != null)
+            {
+                int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID);
+                if(app_id == entity.CusUserID)
+                {
+                    return false;
+                }
+            }
             var db = new DataCore.EFDBContext();
             db.WorkPlanItems.Where(p => p.WorkPlanID == entity.ID).ToList().ForEach(p => db.WorkPlanItems.Remove(p));
 
@@ -267,7 +275,7 @@ namespace Universal.BLL
                 var entity_user = db.CusUsers.AsNoTracking().Where(p => p.ID == entity.CusUserID).FirstOrDefault();
                 int app_id = Tools.TypeHelper.ObjectToInt(entity.ApproveUserID, 0);
                 if (app_id > 0)
-                    BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID);
+                    BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.waitapproveplan, string.Format(BLL.BLLMsgTemplate.WaitApprovePlan, entity_user.NickName, entity.WeekText), entity.ID,entity_user.NickName);
 
             }
             var ss = db.Entry<Entity.WorkPlan>(entity);
