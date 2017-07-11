@@ -17,5 +17,7 @@ namespace Universal.Web.Areas.Admin.Models
         public string Route { get; set; }
 
         public string Tag { get; set; }
+
+        public bool IsSuperMch { get; set; }
     }
 }

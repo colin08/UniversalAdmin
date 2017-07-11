@@ -32,14 +32,13 @@ namespace Universal.Web
 
             GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
 
-
-            SqlDependency.Start(SqlConnection);
+            
         }
 
 
         void Application_End()
         {
-            SqlDependency.Stop(SqlConnection);
+            
         }
 
 

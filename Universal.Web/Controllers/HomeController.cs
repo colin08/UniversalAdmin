@@ -11,7 +11,9 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            //Tools.Crypto3DES des = new Tools.Crypto3DES(SiteKey.DES3KEY);
+            //var ss = des.DESEnCode("1");
+            return Content("");
         }
         
         [BasicAuth]

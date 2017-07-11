@@ -10,15 +10,30 @@ namespace Universal.Entity
     /// </summary>
     public class SysRole
     {
+        public SysRole()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         /// <summary>
         /// 自增ID
         /// </summary>
         public int ID { get; set; }
 
         /// <summary>
+        /// 所属商户ID
+        /// </summary>
+        public int SysMerchantID { get; set; }
+
+        /// <summary>
+        /// 商户信息
+        /// </summary>
+        public virtual SysMerchant SysMerchant { get; set; }
+
+        /// <summary>
         /// 组名
         /// </summary>
-        [StringLength(30,ErrorMessage ="不能超过30个字符"),Index(IsUnique = true), Required(ErrorMessage ="请输入组名"),Display(Name ="组名")]
+        [StringLength(30,ErrorMessage ="不能超过30个字符"), Required(ErrorMessage ="请输入组名"),Display(Name ="组名")]
         public string RoleName { get; set; }
 
         /// <summary>

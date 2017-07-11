@@ -37,6 +37,11 @@ namespace Universal.Entity
         /// </summary>
         [MaxLength(30)]
         public string Desc { get; set; }
+
+        /// <summary>
+        /// 仅超级商家使用(超级商家指我们)
+        /// </summary>
+        public bool IsSuperMch { get; set; }
         
         /// <summary>
         /// 添加时间

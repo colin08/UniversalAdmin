@@ -50,19 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppVersion.cs" />
+    <Compile Include="Old\AppVersion.cs" />
     <Compile Include="BaseAdminEntity.cs" />
-    <Compile Include="Category\CusCategory.cs" />
-    <Compile Include="Demo\Demo.cs" />
-    <Compile Include="Demo\DemoAlbum.cs" />
-    <Compile Include="Demo\DemoDept.cs" />
-    <Compile Include="Feedback.cs" />
+    <Compile Include="Old\Category\CusCategory.cs" />
+    <Compile Include="Old\Demo\Demo.cs" />
+    <Compile Include="Old\Demo\DemoAlbum.cs" />
+    <Compile Include="Old\Demo\DemoDept.cs" />
+    <Compile Include="Old\Feedback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SysDbBack.cs" />
     <Compile Include="SysLog\SysLogApiAction.cs" />
     <Compile Include="SysLog\SysLogException.cs" />
     <Compile Include="SysLog\SysLogMethod.cs" />
-    <Compile Include="SysMessage.cs" />
+    <Compile Include="SysMerchant.cs" />
+    <Compile Include="Old\SysMessage.cs" />
     <Compile Include="SysRole.cs" />
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />

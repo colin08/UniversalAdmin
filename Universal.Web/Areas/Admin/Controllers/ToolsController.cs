@@ -27,10 +27,9 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// 上传文件
+        /// 上传文件 [AdminPermission("其他","上传文件")]
         /// </summary>
         /// <returns></returns>
-        [AdminPermission("其他","上传文件")]
         public ActionResult UploadFile(Admin_Upload_Type type, string folder, int num, string call_back_ele,string call_func)
         {
             string file_ext = "";

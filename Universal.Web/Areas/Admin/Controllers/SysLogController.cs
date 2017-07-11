@@ -19,7 +19,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return Content("没有返回值");
         }
 
-        [AdminPermission("日志", "系统异常日志列表")]
+        [AdminPermission("日志", "系统异常日志列表", true)]
         public ActionResult LogException()
         {
             BLL.BaseBLL<Entity.SysLogException> bll = new BLL.BaseBLL<Entity.SysLogException>();
@@ -50,6 +50,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             int total = 0;
 
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("SysMerchantID", WorkContext.UserInfo.SysMerchantID.ToString(), BLL.FilterSearchContract.等于));
             if (type != 0)
                 filter.Add(new BLL.FilterSearch("Type", type.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
@@ -64,7 +65,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View(response_model);
         }
 
-        [AdminPermission("日志", "接口日志列表")]
+        [AdminPermission("日志", "接口日志列表", true)]
         public ActionResult LogApiAction(int page = 1, string word = "")
         {
             word = WebHelper.UrlDecode(word);
@@ -90,7 +91,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminPermissionAttribute("日志", "删除异常日志")]
+        [AdminPermissionAttribute("日志", "删除异常日志", true)]
         public JsonResult DelException(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
@@ -136,7 +137,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminPermissionAttribute("日志", "删除接口日志")]
+        [AdminPermissionAttribute("日志", "删除接口日志", true)]
         public JsonResult DelApiAction(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

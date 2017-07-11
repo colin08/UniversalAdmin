@@ -155,7 +155,14 @@ namespace Universal.Web.Framework
             return TypeHelper.ObjectToInt(Math.Ceiling(Convert.ToDouble(total) / Convert.ToDouble(page_size)));
         }
 
-
+        /// <summary>
+        /// 获取站点URL
+        /// </summary>
+        /// <returns></returns>
+        protected string GetSiteUrl()
+        {
+            return Request.Url.Scheme + "://" + Request.Url.Authority;
+        }
 
         /// <summary>
         /// 添加操作日志
@@ -163,23 +170,42 @@ namespace Universal.Web.Framework
         /// <param name="LogType">操作类别</param>
         /// <param name="obj">操作对象</param>
         /// <param name="detail">介绍内容</param>
+        /// <param name="user_id">用户ID</param>
         protected void AddAdminLogs(Entity.SysLogMethodType LogType, string detail, int user_id = 0)
         {
             if (!WebSite.LogMethodInDB)
                 return;
-
+            //int mc_id = 0;
+            //if (mch_id <= 0)
+            //{
+            //    string mcids = WebHelper.GetCookie(CookieKey.Login_Merchant);
+            //    Crypto3DES des = new Crypto3DES(SiteKey.DES3KEY);
+            //    mc_id = TypeHelper.ObjectToInt(des.DESDeCode(mcids), 0);
+            //}
+            //else mc_id = mch_id;
 
             if (WorkContext.UserInfo != null)
             {
                 user_id = WorkContext.UserInfo.ID;
             }
 
+            int mch_id = 0;
+
+            if (WorkContext.UserInfo == null)
+            {
+                var entity_user = new BLL.BaseBLL<Entity.SysUser>().GetModel(p => p.ID == user_id, "ID DESC");
+                if (entity_user == null) return;
+                mch_id = entity_user.SysMerchantID;
+            }
+            else mch_id = WorkContext.UserInfo.SysMerchantID;
+
             var entity = new Entity.SysLogMethod()
             {
                 AddTime = DateTime.Now,
                 Detail = detail,
                 SysUserID = user_id,
-                Type = LogType
+                Type = LogType,
+                SysMerchantID = mch_id
             };
 
             new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
@@ -255,15 +281,22 @@ namespace Universal.Web.Framework
             else
             {
                 //检查COOKIE
+                string mchine_id = WebHelper.GetCookie(CookieKey.Login_Merchant);
+                if (string.IsNullOrWhiteSpace(mchine_id)) return false;
+                Crypto3DES des = new Crypto3DES(SiteKey.DES3KEY);
+                int mch_id = TypeHelper.ObjectToInt(des.DESDeCode(mchine_id),0);
+                if (!BLL.BLLMerchant.Exists(mch_id)) return false;
+
                 int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Login_UserID));
                 string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
-                if (uid != 0 && !string.IsNullOrWhiteSpace(upwd))
+                if (uid > 0 && !string.IsNullOrWhiteSpace(upwd))
                 {
                     BaseBLL<Entity.SysUser> bll = new BaseBLL<Entity.SysUser>();
                     List<FilterSearch> filters = new List<FilterSearch>();
+                    filters.Add(new FilterSearch("SysMerchantID", mch_id.ToString(), FilterSearchContract.等于));
                     filters.Add(new FilterSearch("ID", uid.ToString(), FilterSearchContract.等于));
                     filters.Add(new FilterSearch("Password", upwd, FilterSearchContract.等于));
-                    Entity.SysUser model = bll.GetModel(filters, null, "SysRole.SysRoleRoutes.SysRoute");
+                    Entity.SysUser model = bll.GetModel(filters, null, "SysRole");
                     if (model != null)
                     {
                         if (model.Status)
@@ -319,21 +352,8 @@ namespace Universal.Web.Framework
                 PageKey = WorkContext.PageKey;
             }
             PageKey = PageKey.ToLower();
-            if (WorkContext.UserInfo.SysRole.IsAdmin)
-                return true;
-            var result = true;
-            BaseBLL<Entity.SysRoute> bll = new BaseBLL<Entity.SysRoute>();
-            List<FilterSearch> filters = new List<FilterSearch>();
-            filters.Add(new FilterSearch("IsPost", isPost.ToString(), FilterSearchContract.等于));
-            filters.Add(new FilterSearch("Route", PageKey, FilterSearchContract.等于));
-            int total = bll.GetCount(filters);
-            if (total > 0)
-            {
-                var entity = WorkContext.UserInfo.SysRole.SysRoleRoutes.Where(p => p.SysRoute.Route == PageKey && p.SysRoute.IsPost == isPost).FirstOrDefault();
-                result = entity == null ? false : true;
-            }
 
-            return result;
+            return BLLSysUser.CheckAdminPower(PageKey, isPost, WorkContext.UserInfo);
         }
 
         #endregion

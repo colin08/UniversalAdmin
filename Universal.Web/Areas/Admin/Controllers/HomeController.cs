@@ -19,23 +19,31 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Login(string m)
         {
-            var viewModelLogin = new Models.ViewModelLogin();
+            if (string.IsNullOrWhiteSpace(m)) return Content("");
+
+            Crypto3DES des3 = new Crypto3DES(SiteKey.DES3KEY);
+            int mch_id = TypeHelper.ObjectToInt(des3.DESDeCode(m), 0);
+            if (!BLL.BLLMerchant.Exists(mch_id)) return Content("");
+
+            var viewModelLogin = new Models.ViewModelLogin(m);
             if (WorkContext.UserInfo != null)
                 return RedirectToAction("Index");
             //如果保存了cookie，则为用户做自动登录
             if (!string.IsNullOrWhiteSpace(WebHelper.GetCookie(CookieKey.Is_Remeber)))
             {
-                if (WebHelper.GetCookie(CookieKey.Is_Remeber) == "1")
+                //如果做了自动登陆且商户ID跟Cookie里一致
+                if (WebHelper.GetCookie(CookieKey.Is_Remeber) == "1" && WebHelper.GetCookie(CookieKey.Login_Merchant) == m)
                 {
                     int uid = TypeHelper.ObjectToInt(WebHelper.GetCookie(CookieKey.Login_UserID));
                     string upwd = WebHelper.GetCookie(CookieKey.Login_UserPassword);
                     BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
                     List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+                    filters.Add(new BLL.FilterSearch("SysMerchantID", mch_id.ToString(), BLL.FilterSearchContract.等于));
                     filters.Add(new BLL.FilterSearch("ID", uid.ToString(), BLL.FilterSearchContract.等于));
                     filters.Add(new BLL.FilterSearch("Password", upwd, BLL.FilterSearchContract.等于));
-                    Entity.SysUser model = bll.GetModel(filters,null, "SysRole.SysRoleRoutes.SysRoute");
+                    Entity.SysUser model = bll.GetModel(filters,null, "SysRole");
                     if (model != null)
                     {
                         if (model.Status)
@@ -45,6 +53,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                             Session.Timeout = 60; //一小时不操作，session就过期
                             model.LastLoginTime = DateTime.Now;
                             bll.Modify(model, new string[] { "LastLoginTime" });
+                            BLL.BLLMerchant.ModifyLastLoginTime(mch_id);
                             return RedirectToAction("Index");
                         }
                         else
@@ -74,15 +83,24 @@ namespace Universal.Web.Areas.Admin.Controllers
                 }
             }
 
+            Crypto3DES des3 = new Crypto3DES(SiteKey.DES3KEY);
+            int mch_id = TypeHelper.ObjectToInt(des3.DESDeCode(viewModelLogin.mch_id), 0);
+            if (!BLL.BLLMerchant.Exists(mch_id))
+            {
+                ModelState.AddModelError("user_name", "无效商户");
+                return View(viewModelLogin);
+            }
+
             if (ModelState.IsValid)
             {
                 string passworld = SecureHelper.MD5(viewModelLogin.password);
 
                 BLL.BaseBLL<Entity.SysUser> bll = new BLL.BaseBLL<Entity.SysUser>();
                 List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
+                filters.Add(new BLL.FilterSearch("SysMerchantID", mch_id.ToString(), BLL.FilterSearchContract.等于));
                 filters.Add(new BLL.FilterSearch("UserName", viewModelLogin.user_name, BLL.FilterSearchContract.等于));
                 filters.Add(new BLL.FilterSearch("Password", passworld, BLL.FilterSearchContract.等于));
-                Entity.SysUser model = bll.GetModel(filters,null, "SysRole.SysRoleRoutes.SysRoute");
+                Entity.SysUser model = bll.GetModel(filters,null, "SysRole");//SysRole.SysRoleRoutes.SysRoute
                 if (model == null)
                 {
                     ModelState.AddModelError("user_name", "用户名或密码错误");
@@ -99,18 +117,21 @@ namespace Universal.Web.Areas.Admin.Controllers
                 Session.Timeout = 60;
                 if (viewModelLogin.is_rember)
                 {
+                    WebHelper.SetCookie(CookieKey.Login_Merchant, viewModelLogin.mch_id, 14400);
                     WebHelper.SetCookie(CookieKey.Is_Remeber, "1", 14400);
                     WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString(), 14400);
                     WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password, 14400);
                 }
                 else
                 {
+                    WebHelper.SetCookie(CookieKey.Login_Merchant, viewModelLogin.mch_id);
                     WebHelper.SetCookie(CookieKey.Login_UserID, model.ID.ToString());
                     WebHelper.SetCookie(CookieKey.Login_UserPassword, model.Password);
                 }
                 model.LastLoginTime = DateTime.Now;
                 bll.Modify(model, new string[] { "LastLoginTime" });
                 AddAdminLogs(Entity.SysLogMethodType.Login, "通过后台网页登陆", model.ID);
+                BLL.BLLMerchant.ModifyLastLoginTime(mch_id);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -126,19 +147,24 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 获取系统消息
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult SysMessage()
-        {
-            SignalR.SysMessage sm = new SignalR.SysMessage();
-            var model = sm.GetData();
-            return Json(model);
-        }
+        ///// <summary>
+        ///// 获取系统消息
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult SysMessage()
+        //{
+        //    SignalR.SysMessage sm = new SignalR.SysMessage();
+        //    var model = sm.GetData();
+        //    return Json(model);
+        //}
         
         public ActionResult Center()
+        {
+            return View();
+        }
+
+        public ActionResult NewCenter()
         {
             return View();
         }
@@ -211,7 +237,8 @@ namespace Universal.Web.Areas.Admin.Controllers
             WebHelper.SetCookie(CookieKey.Login_UserID, "", -1);
             WebHelper.SetCookie(CookieKey.Login_UserPassword, "", -1);
             Session[SessionKey.Admin_User_Info] = null;
-            return RedirectToAction("Login", "Home");
+            string mch_id = WebHelper.GetCookie(CookieKey.Login_Merchant);
+            return RedirectToAction("Login", "Home", new { m = mch_id });
         }
 
 

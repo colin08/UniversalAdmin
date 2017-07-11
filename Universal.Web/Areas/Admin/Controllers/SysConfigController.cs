@@ -18,7 +18,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 建这个Controller只是为了添加一项权限
         /// </summary>
         /// <returns></returns>
-        [AdminPermission("系统操作","查看高级信息")]
+        [AdminPermission("系统操作","查看高级信息", true)]
         public ActionResult Sys()
         {
             return Content("没有意义");
@@ -28,7 +28,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [AdminPermission("站点配置文件", "编辑配置文件页面")]
+        [AdminPermission("站点配置文件", "编辑配置文件页面", true)]
         public ActionResult Modify()
         {
             return View(WebSite);
@@ -39,7 +39,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        [AdminPermission("站点配置文件", "保存修改的配置文件")]
+        [AdminPermission("站点配置文件", "保存修改的配置文件", true)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Modify(WebSiteModel entity)
@@ -62,7 +62,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
 
-        [AdminPermission("站点配置文件","回收应用程序池")]
+        [AdminPermission("站点配置文件","回收应用程序池", true)]
         [HttpPost]
         public JsonResult AppPoolRecycle()
         {

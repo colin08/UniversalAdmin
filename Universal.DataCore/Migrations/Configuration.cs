@@ -17,17 +17,28 @@ namespace Universal.DataCore.Migrations
 
         protected override void Seed(Universal.DataCore.EFDBContext context)
         {
+            //添加默认商户
+            var entity_mch = new Entity.SysMerchant();
+            entity_mch.AddTime = DateTime.Now;
+            entity_mch.Title = "试镜";
+            entity_mch.IsSuperMch = true;
+            entity_mch.Remark = "我们的自营店";
+            context.SysMerchants.AddOrUpdate(x => x.Title, entity_mch);
+
+            //用户组
             var role_list = new List<Entity.SysRole>() {
                 new Entity.SysRole() {
                     AddTime = DateTime.Now,
                     RoleName = "管理员",
                     RoleDesc = "管理员组",
+                    SysMerchant =entity_mch,
                     IsAdmin = true
                 },
                 new Entity.SysRole() {
                     AddTime = DateTime.Now,
-                    RoleName = "编辑用户",
-                    RoleDesc = "编辑用户组",
+                    RoleName = "员工",
+                    RoleDesc = "员工组",
+                    SysMerchant =entity_mch,
                     IsAdmin = false
                 }
             };
@@ -36,66 +47,21 @@ namespace Universal.DataCore.Migrations
             context.SaveChanges();
 
             var role_root = context.SysRoles.Where(p => p.RoleName == "管理员").FirstOrDefault();
-            string pwd = SecureHelper.MD5("admin");
+            string pwd = SecureHelper.MD5("sj2015");
             var user_root = new Entity.SysUser() {
                 LastLoginTime = DateTime.Now,
                 RegTime = DateTime.Now,
-                NickName = "超级管理员",
+                NickName = "店主",
                 Password = pwd,
                 Status = true,
                 SysRole = role_root,
-                UserName = "admin",
+                UserName = "chief",
                 Gender = Entity.UserGender.男,
+                SysMerchant = entity_mch,
                 Avatar = ""
             };
             context.SysUsers.AddOrUpdate(p => p.UserName, user_root);
-
-            var category_a = new Entity.CusCategory();
-            category_a.PID = null;
-            category_a.Title = "国内";
-            context.CusCategorys.Add(category_a);
-
-            var category_b = new Entity.CusCategory();
-            category_b.PID = null;
-            category_b.Title = "世界";
-            context.CusCategorys.Add(category_b);
-
-            var category_1 = new Entity.CusCategory();
-            category_1.PCategory = category_a;
-            category_1.Title = "社会";
-            category_1.Depth = 2;
-            context.CusCategorys.Add(category_1);
-
-            var category_2 = new Entity.CusCategory();
-            category_2.PCategory = category_a;
-            category_2.Title = "经济";
-            category_2.Depth = 2;
-            context.CusCategorys.Add(category_2);
-
-            var category_3 = new Entity.CusCategory();
-            category_3.PCategory = category_a;
-            category_3.Title = "文化";
-            category_3.Depth = 2;
-            context.CusCategorys.Add(category_3);
-
-            var category_4 = new Entity.CusCategory();
-            category_4.PCategory = category_b;
-            category_4.Title = "格局";
-            category_4.Depth = 2;
-            context.CusCategorys.Add(category_4);
-
-            var category_5 = new Entity.CusCategory();
-            category_5.PCategory = category_b;
-            category_5.Title = "要闻";
-            category_5.Depth = 2;
-            context.CusCategorys.Add(category_5);
-
-            var category_6 = new Entity.CusCategory();
-            category_6.PCategory = category_b;
-            category_6.Title = "趋势";
-            category_6.Depth = 2;
-            context.CusCategorys.Add(category_6);
-
+            
             context.SaveChanges();
         }
     }

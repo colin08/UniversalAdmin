@@ -11,6 +11,14 @@ namespace Universal.Web.Areas.Admin.Models
     /// </summary>
     public class ViewModelLogin
     {
+        public ViewModelLogin()
+        {
+
+        }
+        public ViewModelLogin(string mch_id)
+        {
+            this.mch_id = mch_id;
+        }
         /// <summary>
         /// 用户名
         /// </summary>
@@ -29,5 +37,10 @@ namespace Universal.Web.Areas.Admin.Models
         /// 是否记住登陆
         /// </summary>
         public bool is_rember { get; set; }
+
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public string mch_id { get; set; }
     }
 }

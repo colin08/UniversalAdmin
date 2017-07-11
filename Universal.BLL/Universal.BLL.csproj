@@ -58,11 +58,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
-    <Compile Include="BLLCusCategory.cs" />
-    <Compile Include="BLLDemo.cs" />
+    <Compile Include="BLLSysUser.cs" />
+    <Compile Include="Old\BLLCusCategory.cs" />
+    <Compile Include="Old\BLLDemo.cs" />
     <Compile Include="BLLEmail.cs" />
+    <Compile Include="BLLMerchant.cs" />
     <Compile Include="BLLSysDbBack.cs" />
-    <Compile Include="BLLSysMessage.cs" />
+    <Compile Include="Old\BLLSysMessage.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />

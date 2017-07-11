@@ -31,6 +31,16 @@ namespace Universal.Entity
         public int ID { get; set; }
 
         /// <summary>
+        /// 商户ID
+        /// </summary>
+        public int SysMerchantID { get; set; }
+
+        /// <summary>
+        /// 商户信息
+        /// </summary>
+        public virtual SysMerchant SysMerchant { get; set; }
+
+        /// <summary>
         /// 用户ID
         /// </summary>
         [Required]

@@ -25,6 +25,11 @@ namespace Universal.Web.Framework
         public string Desc { get; set; }
 
         /// <summary>
+        /// 仅超级商家使用(超级商家指我们)
+        /// </summary>
+        public bool IsSuperMch { get; set; }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="Tag">权限标签，操作时将以此为分组，方便查看(例如：用户、日志)</param>
@@ -33,7 +38,19 @@ namespace Universal.Web.Framework
         {
             this.Tag = Tag;
             this.Desc = Desc;
+            this.IsSuperMch = false;
         }
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="Tag">权限标签，操作时将以此为分组，方便查看(例如：用户、日志)</param>
+        /// <param name="Desc">说明</param>
+        public AdminPermissionAttribute(string Tag, string Desc,bool IsSuperMch)
+        {
+            this.Tag = Tag;
+            this.Desc = Desc;
+            this.IsSuperMch = IsSuperMch;
+        }
     }
 }

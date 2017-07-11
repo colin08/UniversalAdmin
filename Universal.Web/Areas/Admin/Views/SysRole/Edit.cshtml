@@ -51,8 +51,7 @@
     </ul>
     <form method="post" class="form-horizontal"  onsubmit="configm_before()">
         @Html.AntiForgeryToken()
-        <input type="hidden" id="hid_qx" name="hid_qx" value="aaa" />
-        @Html.HiddenFor(p=>p.AddTime)
+        <input type="hidden" id="hid_qx" name="hid_qx" value="" />
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
                 <div style="margin-top:20px;"></div>
@@ -71,10 +70,10 @@
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.IsAdmin) </label>
                     <div class="col-sm-10">
                         <div class="radio-inline i-checks">
-                            <label>@Html.RadioButtonFor(x => x.IsAdmin, true, new { @id = "rb_is_admin_1" }) <i></i> 正常</label>
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, true, new { @id = "rb_is_admin_1" }) <i></i> 是</label>
                         </div>
                         <div class="radio-inline i-checks">
-                            <label>@Html.RadioButtonFor(x => x.IsAdmin, false, new { @id = "rb_is_admin_2" }) <i></i> 禁用</label>
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, false, new { @id = "rb_is_admin_2" }) <i></i> 否</label>
                         </div>
                     </div>
                 </div>

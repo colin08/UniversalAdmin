@@ -24,6 +24,7 @@
             </div>
             <h3>欢迎登录后台系统</h3>
             <form method="post" role="form" class="m-t" onsubmit="toValid()" style="margin-top:25px;">
+                @Html.HiddenFor(s=>s.mch_id)
                 @Html.AntiForgeryToken()
                 <div class="form-group" style="margin-bottom:25px;">
                     @Html.TextBoxFor(s => s.user_name, new { placeholder = "用户名", @class= "form-control" })

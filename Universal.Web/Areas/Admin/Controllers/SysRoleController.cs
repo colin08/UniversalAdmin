@@ -25,6 +25,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             int total = 0;
 
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("SysMerchantID", WorkContext.UserInfo.SysMerchantID.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
                 filter.Add(new BLL.FilterSearch("RoleName", word, BLL.FilterSearchContract.like));
 
@@ -36,89 +37,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.total_page = CalculatePage(total, response_model.page_size);
             return View(response_model);
         }
-
-
-        [AdminPermissionAttribute("其他", "更新权限数据")]
-        [HttpPost]
-        public JsonResult UpdateRoute()
-        {
-            List<Models.ModelRoute> route_list = new List<Models.ModelRoute>();
-
-            #region 反射获取所有的控制路由
-
-            string path = IOHelper.GetMapPath("~/bin/Universal.Web.dll");
-            byte[] buffer = System.IO.File.ReadAllBytes(path);
-            Assembly assembly = Assembly.Load(buffer);
-
-            foreach (var type in assembly.ExportedTypes)
-            {
-                System.Reflection.MemberInfo[] properties = type.GetMembers();
-                foreach (var item in properties)
-                {
-                    string controllerName = item.ReflectedType.Name.Replace("Controller", "").ToString();
-                    string actionName = item.Name.ToString();
-                    //访问路由
-                    string route_map = controllerName.ToLower() + "/" + actionName.ToLower();
-                    //是否是HttpPost请求
-                    bool IsHttpPost = item.GetCustomAttributes(typeof(System.Web.Mvc.HttpPostAttribute), true).Count() > 0 ? true : false;
-
-                    object[] attrs = item.GetCustomAttributes(typeof(Framework.AdminPermissionAttribute), true);
-                    if (attrs.Length == 1)
-                    {
-                        Framework.AdminPermissionAttribute attr = (Framework.AdminPermissionAttribute)attrs[0];
-                        route_list.Add(new Models.ModelRoute
-                        {
-                            Tag = attr.Tag,
-                            Desc = attr.Desc,
-                            IsPost = IsHttpPost,
-                            Route = route_map
-                        });
-                    }
-                }
-            }
-            #endregion
-
-            BLL.BaseBLL<Entity.SysRoute> bll = new BLL.BaseBLL<Entity.SysRoute>();
-            var db_list = bll.GetListBy(0,new List<BLL.FilterSearch>(),null);
-
-            foreach (var item in db_list)
-            {
-                var entity = route_list.Where(p => p.IsPost == item.IsPost && p.Route == item.Route).FirstOrDefault();
-                //如果数据库对应程序中不存在，则删除数据库里的
-                if (entity == null)
-                {
-                    bll.Del(item);
-
-                }
-                else
-                {
-                    //否则修改数据库里的DES之类的辅助说明              
-                    item.Desc = entity.Desc;
-                    item.Tag = entity.Tag;
-                    bll.Modify(item);
-                }
-            }
-
-            foreach (var item in route_list)
-            {
-                var entity = bll.GetModel(p => p.IsPost == item.IsPost && p.Route == item.Route, null);
-                if (entity == null)
-                {
-                    var route = new Entity.SysRoute();
-                    route.AddTime = DateTime.Now;
-                    route.Desc = item.Desc;
-                    route.IsPost = item.IsPost;
-                    route.Route = item.Route;
-                    route.Tag = item.Tag;
-                    bll.Add(route);
-                }
-            }
-            AddAdminLogs(Entity.SysLogMethodType.Update, "更新权限数据");
-
-            WorkContext.AjaxStringEntity.msg = 1;
-            WorkContext.AjaxStringEntity.msgbox = "success";
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        
 
         [AdminPermissionAttribute("用户组", "用户组信息编辑页面")]
         public ActionResult Edit(int? id)
@@ -160,25 +79,33 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                if (bll.Exists(p => p.ID == entity.ID))
+                if (!bll.Exists(p => p.ID == entity.ID))
                     return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
 
                 var old_entity = bll.GetModel(p => p.ID == entity.ID, null);
                 //验证组名是否存在
                 if (old_entity.RoleName != entity.RoleName)
                 {
-                    if (bll.Exists(p => p.RoleName == entity.RoleName))
+                    if (bll.Exists(p => p.RoleName == entity.RoleName && p.SysMerchantID == WorkContext.UserInfo.SysMerchantID))
                         ModelState.AddModelError("RoleName", "该组名已存在");
                 }
+                entity.SysMerchantID = old_entity.SysMerchantID;
             }
 
             if (ModelState.IsValid)
             {
                 BLL.BLLSysRole bll_role = new BLL.BLLSysRole();
                 if (entity.ID == 0)//添加
+                {
+                    entity.SysMerchantID = WorkContext.UserInfo.SysMerchantID;
                     bll_role.Add(entity, qx);
+                    AddAdminLogs(Entity.SysLogMethodType.Add, "添加用户组:" + entity.RoleName);
+                }
                 else //修改
+                {
                     bll_role.Modify(entity, qx);
+                    AddAdminLogs(Entity.SysLogMethodType.Update, "修改用户组:" + entity.RoleName);
+                }
 
                 return PromptView("/admin/SysRole", "OK", "Success", "操作成功", 5);
             }
@@ -225,7 +152,8 @@ namespace Universal.Web.Areas.Admin.Controllers
                 role = bll_route.GetModel(p => p.ID == id, null);
 
             List<Models.ViewModelTree> list = new List<Models.ViewModelTree>();
-            var route_group = new BLL.BLLSysRoute().GetListGroupByTag();
+            bool is_super = BLL.BLLMerchant.CheckIsSuper(WorkContext.UserInfo.SysMerchantID);
+            var route_group = new BLL.BLLSysRoute().GetListGroupByTag(is_super);
             for (int i = 0; i < route_group.Count; i++)
             {
                 int top_id = i + 10000;

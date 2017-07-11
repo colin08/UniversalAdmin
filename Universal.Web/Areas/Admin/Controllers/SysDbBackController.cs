@@ -16,7 +16,7 @@ namespace Universal.Web.Areas.Admin.Controllers
     public class SysDbBackController : BaseAdminController
     {
 
-        [AdminPermissionAttribute("数据库", "数据库管理首页")]
+        [AdminPermissionAttribute("数据库", "数据库管理首页", true)]
         public ActionResult Index(int page = 1, string word = "", int type = 0)
         {
             LoadType();
@@ -49,7 +49,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View(response_model);
         }
 
-        [AdminPermissionAttribute("数据库", "删除备份的数据库")]
+        [AdminPermissionAttribute("数据库", "删除备份的数据库", true)]
         [HttpPost]
         public JsonResult Del(string ids)
         {
@@ -77,7 +77,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return Json(WorkContext.AjaxStringEntity);
         }
 
-        [AdminPermission("数据库", "新增备份页面")]
+        [AdminPermission("数据库", "新增备份页面", true)]
         public ActionResult Add()
         {
             LoadType();
@@ -86,7 +86,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View(entity);
         }
 
-        [AdminPermission("数据库", "保存新增备份")]
+        [AdminPermission("数据库", "保存新增备份", true)]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Add(Entity.SysDbBack entity)
@@ -120,7 +120,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [AdminPermission("数据库", "备份的详情信息")]
+        [AdminPermission("数据库", "备份的详情信息", true)]
         public ActionResult Info(int id)
         {
             BLL.BaseBLL<Entity.SysDbBack> bll = new BLL.BaseBLL<Entity.SysDbBack>();
@@ -136,7 +136,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [AdminPermission("数据库", "还原数据库")]
+        [AdminPermission("数据库", "还原数据库", true)]
         [HttpPost]
         public JsonResult Restore(int id)
         {

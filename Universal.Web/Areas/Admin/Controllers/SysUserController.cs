@@ -21,6 +21,12 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("后台用户", "后台用户首页")]
         public ActionResult Index(int page = 1, int role = 0, string word = "")
         {
+            var role_is_admin  = BLL.BLLSysUser.CheckUserRoleIsAdmin(WorkContext.UserInfo.ID);
+            if(!role_is_admin)
+            {
+                //不是admin组，则只显示当前组
+                role = WorkContext.UserInfo.SysRoleID;
+            }
             word = WebHelper.UrlDecode(word);
             Models.ViewModelSysUserList response_model = new Models.ViewModelSysUserList();
             response_model.page = page;
@@ -28,11 +34,11 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.word = word;
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysuserindex"), SiteKey.AdminDefaultPageSize);
-
             Load();
 
             int total = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("SysMerchantID", WorkContext.UserInfo.SysMerchantID.ToString(), BLL.FilterSearchContract.等于));
             if (role != 0)
                 filter.Add(new BLL.FilterSearch("SysRoleID", role.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
@@ -97,7 +103,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断用户名是否存在
-                if (bll.Exists(p => p.UserName == entity.UserName))
+                if (bll.Exists(p => p.UserName == entity.UserName && p.SysMerchantID == WorkContext.UserInfo.SysMerchantID))
                 {
                     ModelState.AddModelError("UserName", "该用户名已存在");
                 }
@@ -106,7 +112,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             else
             {
                 //如果要编辑的用户不存在
-                if (bll.Exists(p => p.ID == entity.ID))
+                if (!bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
@@ -121,8 +127,9 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity.RegTime = DateTime.Now;
                     entity.Password = SecureHelper.MD5(entity.Password);
                     entity.LastLoginTime = DateTime.Now;
+                    entity.SysMerchantID = WorkContext.UserInfo.SysMerchantID;
                     bll.Add(entity);
-
+                    AddAdminLogs(Entity.SysLogMethodType.Add, "添加用户：" + entity.NickName);
                 }
                 else //修改
                 {
@@ -135,6 +142,12 @@ namespace Universal.Web.Areas.Admin.Controllers
                     user.Avatar = entity.Avatar;
                     user.SysRoleID = entity.SysRoleID;
                     bll.Modify(user);
+                    AddAdminLogs(Entity.SysLogMethodType.Update, "修改用户：" + entity.NickName);
+                    //如果修改的是自己，则重新登录
+                    if(entity.ID == WorkContext.UserInfo.ID)
+                    {
+                        return View("OutFram");
+                    }
                 }
 
                 return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 5);
@@ -170,10 +183,15 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         private void Load()
         {
+            var role_is_admin = BLL.BLLSysUser.CheckUserRoleIsAdmin(WorkContext.UserInfo.ID);
             List<SelectListItem> userRoleList = new List<SelectListItem>();
             userRoleList.Add(new SelectListItem() { Text = "全部组", Value = "0" });
             BLL.BaseBLL<Entity.SysRole> bll = new BLL.BaseBLL<Entity.SysRole>();
-            foreach (var item in bll.GetListBy(0,new List<BLL.FilterSearch>(),null))
+            List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
+            filter.Add(new BLL.FilterSearch("SysMerchantID", WorkContext.UserInfo.SysMerchantID.ToString(), BLL.FilterSearchContract.等于));
+            if(!role_is_admin)
+                filter.Add(new BLL.FilterSearch("ID", WorkContext.UserInfo.SysRoleID.ToString(), BLL.FilterSearchContract.等于));
+            foreach (var item in bll.GetListBy(0, filter, null))
             {
                 userRoleList.Add(new SelectListItem() { Text = item.RoleName, Value = item.ID.ToString() });
             }

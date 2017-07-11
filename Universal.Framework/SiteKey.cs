@@ -14,7 +14,7 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 3DES加密KEY
         /// </summary>
-        public static readonly string DES3KEY = "Orderfood";
+        public static readonly string DES3KEY = "NewShiJi";
 
         /// <summary>
         /// 后台分页默认每页大小
@@ -72,6 +72,11 @@ namespace Universal.Web.Framework
 
     public class CookieKey
     {
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public static readonly string Login_Merchant = "mch";
+
         /// <summary>
         /// 是否记住我
         /// </summary>

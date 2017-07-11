@@ -5,7 +5,10 @@ using System.Web;
 
 namespace Universal.Web.Areas.Admin.Models
 {
-    public class ViewModelDemo : BasePageModel
+    /// <summary>
+    /// 商户分页列表
+    /// </summary>
+    public class ViewModelSysMerchantList : BasePageModel
     {
         /// <summary>
         /// 当前筛选的关键字
@@ -13,8 +16,9 @@ namespace Universal.Web.Areas.Admin.Models
         public string word { get; set; }
 
         /// <summary>
-        /// 
+        /// 商户列表
         /// </summary>
-        public List<Entity.Demo> DataList { get; set; }
+        public List<Entity.SysMerchant> DataList { get; set; }
+        
     }
 }

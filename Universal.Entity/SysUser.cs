@@ -29,9 +29,18 @@ namespace Universal.Entity
         public int ID { get; set; }
 
         /// <summary>
+        /// 所属商户ID
+        /// </summary>
+        public int SysMerchantID { get; set; }
+
+        /// <summary>
+        /// 商户信息
+        /// </summary>
+        public virtual SysMerchant SysMerchant { get; set; }
+
+        /// <summary>
         /// 用户名
         /// </summary>
-        [Index(IsUnique =true)]
         [StringLength(20), Display(Name = "用户名")]
         [Required(ErrorMessage = "用户名不能为空")]
         [RegularExpression(@"^[a-zA-Z0-9]{3,10}$", ErrorMessage = "用户名只能由3-10位字母或数字组成")]
