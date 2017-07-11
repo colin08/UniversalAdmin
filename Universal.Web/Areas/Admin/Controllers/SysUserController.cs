@@ -97,7 +97,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             if (isAdd)
             {
                 //判断用户名是否存在
-                if (bll.Exists(p => p.UserName == entity.UserName))
+                if (!bll.Exists(p => p.UserName == entity.UserName))
                 {
                     ModelState.AddModelError("UserName", "该用户名已存在");
                 }
@@ -106,7 +106,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             else
             {
                 //如果要编辑的用户不存在
-                if (bll.Exists(p => p.ID == entity.ID))
+                if (!bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
                 }

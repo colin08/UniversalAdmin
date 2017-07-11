@@ -86,7 +86,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             string str_albums = WebHelper.GetFormString("StrAlbums");
             if (!isAdd)
             {
-                if (bll.Exists(p => p.ID == entity.ID))
+                if (!bll.Exists(p => p.ID == entity.ID))
                 {
                     return PromptView("/admin/demo", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
