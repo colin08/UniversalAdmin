@@ -52,49 +52,27 @@ namespace Universal.Web.Framework
                 string oauth = monsterApiKeyHeaderValues.First();
                 if (string.IsNullOrWhiteSpace(oauth))
                     return requestCancel(request, cancellationToken, "缺少授权参数");
-                
+
                 Tools.Crypto3DES des = new Tools.Crypto3DES(SiteKey.DES3KEY);
-                string[] vals = des.DESDeCode(oauth).Split('&');
+                string[] vals = des.DESDeCode(oauth).Split('!');
                 if (vals.Length != 2)
                     return requestCancel(request, cancellationToken, "授权格式错误");
-                
+
                 if (!vals[0].Equals(site_config.WebAPIMixer))
                     return requestCancel(request, cancellationToken, "授权数据错误1");
-                
-                #region 不校验时间
 
-                //var thread_key = "请求线程中的标识";
-                //var userNameClaim = new Claim(ClaimTypes.Name, thread_key);
-                //var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
-                //var principal = new ClaimsPrincipal(identity);
-                //Thread.CurrentPrincipal = principal;
-
-                //if (System.Web.HttpContext.Current != null)
-                //    System.Web.HttpContext.Current.User = principal;
-
-                #endregion
-
-                #region 同时校验时间
 
                 DateTime dt_now = DateTime.Now;
                 DateTime dt_old = Tools.WebHelper.GetTime(vals[1], dt_now);
-                double diff = Tools.WebHelper.DateTimeDiff(dt_old, dt_now, "as");
-                int ss = 10;
-                if (request.Headers.UserAgent.ToString() == "Fiddler")
-                    ss = 100000;
-                if (diff >= ss || diff == 0) //10秒前的数据，则失败
-                    return requestCancel(request, cancellationToken, "超时");
-                
-                var thread_key = "请求线程中的标识";
-                var userNameClaim = new Claim(ClaimTypes.Name, thread_key);
-                var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
-                var principal = new ClaimsPrincipal(identity);
-                Thread.CurrentPrincipal = principal;
-
-                if (System.Web.HttpContext.Current != null)
-                    System.Web.HttpContext.Current.User = principal;
-
-                #endregion
+                double diff = Tools.WebHelper.DateTimeDiff(dt_now, dt_old, "am"); //分钟
+                if (dt_now == dt_old)
+                    return requestCancel(request, cancellationToken, "授权时间有误");//如果时间一样，则客户端传上来的时间戳不正确
+                if (site_config.WebAPITmeOut == 0) requestOK();
+                else
+                {
+                    if (diff >= site_config.WebAPITmeOut) return requestCancel(request, cancellationToken, "请求超时");
+                    else requestOK();
+                }
             }
             else
             {
@@ -102,6 +80,21 @@ namespace Universal.Web.Framework
             }
 
             return base.SendAsync(request, cancellationToken);
+        }
+
+        /// <summary>
+        /// 请求校验通过
+        /// </summary>
+        private void requestOK()
+        {
+            var thread_key = "Thread_KEY";
+            var userNameClaim = new Claim(ClaimTypes.Name, thread_key);
+            var identity = new ClaimsIdentity(new[] { userNameClaim }, "MonsterAppApiKey");
+            var principal = new ClaimsPrincipal(identity);
+            Thread.CurrentPrincipal = principal;
+
+            if (System.Web.HttpContext.Current != null)
+                System.Web.HttpContext.Current.User = principal;
         }
 
         /// <summary>
