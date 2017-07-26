@@ -214,6 +214,16 @@
                 </div>
                 <div class="hr-line-dashed"></div>
                 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITmeOut)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.WebAPITmeOut, (object)new { @class = "form-control", placeholder = "分钟" })
+                        <span class="help-block m-b-none">为0表示只校验格式，不校验时间差</span>
+                    </div>
+                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPITmeOut)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
             </div>
 
             <div id="tab-3" class="tab-pane">

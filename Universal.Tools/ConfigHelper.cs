@@ -136,12 +136,15 @@ namespace Universal.Tools
         public string WebAPITokenKey { get; set; }
         
         [Display(Name = "Token混淆字符串"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
-        public string WebAPIMixer { get; set; }        
+        public string WebAPIMixer { get; set; }
+
+        [Display(Name = "接口超时时间(分钟)"), Required(ErrorMessage = "不能为空")]
+        public int WebAPITmeOut { get; set; }
 
         #endregion
 
         #region 邮件配置
-        
+
         [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]
         public string EmailHost { get; set; }
         
