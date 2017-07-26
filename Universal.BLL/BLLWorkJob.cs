@@ -38,7 +38,7 @@ namespace Universal.BLL
                 strWhere = " where where charindex('" + search_word + "',Title) > 0";
 
             string SQLTotal = "select count(1) from (select *,1 as 'type' from WorkJob where CusUserID = " + user_id.ToString() + " UNION select *,2 as 'type' from WorkJob where ID IN(select WorkJobID from WorkJobUser where CusUserID = " + user_id.ToString() + ")) as S ";
-            string SQL = "select * from (select *,ROW_NUMBER() OVER(ORDER BY AddTime ASC) as row from (select* from (select *, 1 as 'type' from WorkJob where CusUserID = " + user_id.ToString() + " UNION select *, 2 as 'type' from WorkJob where ID IN(select WorkJobID from WorkJobUser where CusUserID = " + user_id.ToString() + ")) as S " + strWhere + ") as T) as AA where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
+            string SQL = "select * from (select *,ROW_NUMBER() OVER(ORDER BY AddTime DESC) as row from (select* from (select *, 1 as 'type' from WorkJob where CusUserID = " + user_id.ToString() + " UNION select *, 2 as 'type' from WorkJob where ID IN(select WorkJobID from WorkJobUser where CusUserID = " + user_id.ToString() + ")) as S " + strWhere + ") as T) as AA where row BETWEEN " + begin_index.ToString() + " and " + end_index + "";
             var db = new DataCore.EFDBContext();
             rowCount = db.Database.SqlQuery<int>(SQLTotal).ToList()[0];
             List<Entity.WorkJob> db_list = db.Database.SqlQuery<Entity.WorkJob>(SQL).ToList();

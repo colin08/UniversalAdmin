@@ -15,23 +15,14 @@
 
     <div class="rightBox">
         <div class="container">
-            <div class="tit1"><b>文件收藏</b><div class="search"><input type="text" id="txt_search" placeholder="请输入文件标题搜索"  onkeydown="KeyDown('data_search()')"/><input type="button" onclick="data_search()" /></div></div>
-            <input type="hidden" id="hid_temp_doc_id" value="0" />
-            <div class="file">
-                <div class="fileLt" id="menu">
-                    <h4>秘籍分类</h4>
-                    <ul id="tree_root">
-                        @Html.Raw(ViewData["TreeData"])
-                    </ul>
-                </div>
-                <div class="fileRt">
+            <div class="tit1"><b>文件收藏</b><div class="search"><input type="text" id="txt_search" placeholder="请输入文件标题搜索"  onkeydown="KeyDown('pageData(1)')"/><input type="button" onclick="pageData(1)" /></div></div>
                     <div class="projectColl">
                         <table border="0" cellspacing="0" cellpadding="0" class="table1">
                             <thead>
                                 <tr>
                                     <th width="5%"><span class="sp_a"><input type="checkbox" onclick="CheckAll(this)" /></span></th>
                                     <th width="25%">标题</th>
-                                    <th width="10%">分类</th>
+                                    <th width="15%">分类</th>
                                     <th width="8%">上传者</th>
                                     <th width="10%">上传时间</th>
                                     <th width="10%">操作</th>
@@ -58,8 +49,6 @@
                         </div>
 
                     </div>
-
-                </div>
             </div>
 
         </div>
@@ -79,30 +68,16 @@
     <script type="text/javascript">
 
         $(document).ready(function (e) {
-            pageData(1,@ViewData["DefaultID"],false)
+            pageData(1)
         });
-
-        function data_search()
-        {
-            pageData(1, $("#hid_temp_doc_id").val(), false)
-        }
-
+        
         /*******************列表 end *************************/
         //分页方法
-        function pageData(page_index, doc_id, clearbox) {
-            if (doc_id == 0)
-            {
-                return;
-            }
-            $("#hid_temp_doc_id").val(doc_id);
-            if (clearbox)
-            {
-                $("#txt_search").val("");
-            }
+        function pageData(page_index) {
             $.ajax({
                 type: "post",
                 url: "/User/DocFavoritesData",
-                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "doc_id": doc_id, "keyword": $("#txt_search").val() },
+                data: { "page_size": $("#select_page_size").val(), "page_index": page_index, "keyword": $("#txt_search").val() },
                 async: false, //同步请求
                 datatype: "json",
                 beforeSend: function () {
@@ -123,8 +98,8 @@
                         dataHtml += "<tr>";
                         dataHtml += "<td><input class=\"all_checked_but\" type=\"checkbox\" hid=\"" + item.ID + "\" /></td>"
                         dataHtml += "<td>"+CutString(item.Title,23)+"</td>";
-                        dataHtml += "<td>"+CutString(item.CategoryName,5)+"</td>";
-                        dataHtml += "<td>"+CutString(item.CategoryName,5)+"</td>";
+                        dataHtml += "<td>"+CutString(item.CategoryName,16)+"</td>";
+                        dataHtml += "<td>" + CutString(item.CusUser.NickName, 5) + "</td>";
                         dataHtml += "<td>" + ChangeDateFormat(item.LastUpdateTime) + "</td>";
                         dataHtml += "<td><div class=\"tbOpare\"><a href=\"/Info/Document?id="+item.ID+"\" class=\"alook\"><i class=\"i-look\"></i></a><a href=\"javascript:;\" onclick=\"del("+item.ID+")\" class=\"aDel\"><i class=\"i-fav\"></i></a></div></td>";
                         dataHtml += "</tr>";

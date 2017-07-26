@@ -111,7 +111,7 @@
                 var id = $(this).attr("d-id");
                 var status = $(this).find("select").val();
                 var remark = $(this).find("input[type='text']").val();
-                data_json += '{"id":' + id + ',"status":' + status + ',"remark":"' + encodeURIComponent (remark)+ '"},'
+                data_json += '{"id":' + id + ',"status":' + status + ',"remark":"' + remark+ '"},'
             })
             if (data_json.length > 1)
             {

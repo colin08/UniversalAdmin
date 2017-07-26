@@ -124,8 +124,8 @@ namespace Universal.BLL
             if (!db.ProjectFlowNodes.Any(p => p.ProjectID == project_id)) return null;
             Entity.ProjectFlowNode entity_next_node = null;
             //获取最后一个完成的节点
-            string sql = "SELECT top 1 * FROM [dbo].[ProjectFlowNode] where ProjectID = " + project_id.ToString() + " order by EndTime Desc;";
-            var last_done_node = db.ProjectFlowNodes.SqlQuery(sql).AsNoTracking().ToList()[0];
+            string sql = "SELECT top 1 * FROM [dbo].[ProjectFlowNode] where ProjectID = " + project_id.ToString() + " and EndTime is not NULL order by EndTime Desc;";
+            var last_done_node = db.ProjectFlowNodes.SqlQuery(sql).FirstOrDefault();
             if (last_done_node == null)
             {
                 //没有最后节点，则可能是没有开始,则取第一个
@@ -641,7 +641,7 @@ namespace Universal.BLL
                 parent_node.EditUserId = user_id;
                 parent_node.IsEnd = true;
                 parent_node.LastUpdateTime = DateTime.Now;
-                parent_node.EndTime = DateTime.Now;
+                parent_node.EndTime = DateTime.Now.AddMilliseconds(-5);
 
                 //条件都满足
                 entity.EditUserId = user_id;

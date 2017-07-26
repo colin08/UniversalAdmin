@@ -296,7 +296,8 @@ namespace Universal.BLL
                     GetChildNodeID(db, flow_id, node_id, child_ids);
                     if (child_ids.Length > 0)
                         child_ids.Remove(child_ids.Length - 1, 1);
-                    if(child_ids.Length>0)
+                    //Tools.IOHelper.WriteLogs(string.Format("FlowID:{0},NodeID:{1},子节点ID:{2}", flow_id, node_id, child_ids.ToString()));
+                    if (child_ids.Length > 0)
                     {
                         string strSql = "delete FlowNode where ID in(" + child_ids.ToString() + ")";
                         db.Database.ExecuteSqlCommand(strSql);
@@ -317,6 +318,13 @@ namespace Universal.BLL
             }
         }
 
+        /// <summary>
+        /// 迭代获取节点的子id
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="flow_id"></param>
+        /// <param name="node_id"></param>
+        /// <param name="ids"></param>
         public static void GetChildNodeID(DataCore.EFDBContext db, int flow_id, int node_id, System.Text.StringBuilder ids)
         {
             if (node_id == 0) return;

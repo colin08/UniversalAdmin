@@ -74,7 +74,11 @@ namespace Universal.Web.Models.Response
     /// </summary>
     public class WorkPlanItem
     {
-        
+        /// <summary>
+        /// 项ID
+        /// </summary>
+        public int item_id { get; set; }
+
         /// <summary>
         ///  标题
         /// </summary>

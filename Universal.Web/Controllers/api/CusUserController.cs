@@ -633,6 +633,7 @@ namespace Universal.Web.Controllers.api
                     model_item.status = plan_item.Status;
                     model_item.status_text = plan_item.StatusText;
                     model_item.title = plan_item.Title;
+                    model_item.item_id = plan_item.ID;
                     model_item.want_taget = plan_item.WantTaget;
                     model.plan_item.Add(model_item);
                 }
@@ -707,6 +708,48 @@ namespace Universal.Web.Controllers.api
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return WorkContext.AjaxStringEntity;
         }
+
+        /// <summary>
+        /// 编辑工作计划项
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/v1/user/workplan/modify/item")]
+        public WebAjaxEntity<string> EditJonPlanItem([FromBody]Models.Request.EditWorkPlanItem req)
+        {
+            var entity = new BLL.BaseBLL<Entity.WorkPlan>().GetModel(p => p.ID == req.id, p => p.CusUser);
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "工作计划不存在或已被删除";
+                return WorkContext.AjaxStringEntity;
+            }
+            if (entity.CusUserID != req.user_id)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "该工作计划不属于您";
+                return WorkContext.AjaxStringEntity;
+            }
+            BLL.BaseBLL<Entity.WorkPlanItem> bll = new BLL.BaseBLL<Entity.WorkPlanItem>();
+            foreach (var item in req.item)
+            {
+                var item_entity = bll.GetModel(p => p.ID == item.item_id);
+                if (item_entity == null)
+                    continue;
+                item_entity.Status = (Entity.PlanStatus)item.status;
+                item_entity.Remark = item.remark;
+                bll.Modify(item_entity, "Status", "Remark");
+            }
+            //给审核人员发送消息
+            if (entity.ApproveUserID != null)
+            {
+                int app_id = TypeHelper.ObjectToInt(entity.ApproveUserID);
+                BLL.BLLMsg.PushMsg(app_id, Entity.CusUserMessageType.planitemedit, string.Format(BLL.BLLMsgTemplate.PlanItemEdit, entity.WeekText), entity.ID, entity.CusUser.NickName);
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "保存成功";
+
+            return WorkContext.AjaxStringEntity;
+        }
+
 
         /// <summary>
         /// 审批工作计划

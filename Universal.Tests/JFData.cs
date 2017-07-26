@@ -40,13 +40,18 @@ namespace Universal.Tests
             //string msg = "";
             //var isOK = BLL.BLLFlow.SetFlowFristNode(81, 74, out msg);
 
-            StringBuilder ids = new StringBuilder();
-            var db = new DataCore.EFDBContext();
-            BLL.BLLFlow.GetChildNodeID(db, 90, 74, ids);
+            //StringBuilder ids = new StringBuilder();
+            //var db = new DataCore.EFDBContext();
+            ////BLL.BLLFlow.GetChildNodeID(db, 106, 149, ids);
 
-            var sss = ids.ToString();
+            ////var sss = ids.ToString();
 
-            db.Dispose();
+            //var ss = BLLProjectFlowNode.CheckNodeIsDone(db, 198);
+
+            //db.Dispose();
+
+            var ss = BLL.BLLProjectFlowNode.GetProjectFlow(201);
+
             Assert.AreEqual(true, true);
         }
     }

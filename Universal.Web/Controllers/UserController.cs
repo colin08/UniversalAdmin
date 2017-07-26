@@ -488,10 +488,10 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult DocFavorites()
         {
-            int default_id = 0;
-            string data = BLL.BLLDocCategory.CreateDocCategoryTreeData(out default_id);
-            ViewData["TreeData"] = data;
-            ViewData["DefaultID"] = default_id;
+            //int default_id = 0;
+            //string data = BLL.BLLDocCategory.CreateDocCategoryTreeData(out default_id);
+            //ViewData["TreeData"] = data;
+            //ViewData["DefaultID"] = default_id;
             return View();
         }
 
@@ -500,11 +500,11 @@ namespace Universal.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult DocFavoritesData(int page_size, int page_index, int doc_id, string keyword)
+        public JsonResult DocFavoritesData(int page_size, int page_index,string keyword)
         {
             List<Entity.DocPost> list = new List<Entity.DocPost>();
             int rowCount = 0;
-            list = BLL.BllCusUserFavorites.GetDocPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, doc_id);
+            list = BLL.BllCusUserFavorites.GetDocPageData(page_index, page_size, ref rowCount, WorkContext.UserInfo.ID, keyword, 0);
             WebAjaxEntity<List<Entity.DocPost>> result = new WebAjaxEntity<List<Entity.DocPost>>();
             result.msg = 1;
             result.msgbox = CalculatePage(rowCount, page_size).ToString();
