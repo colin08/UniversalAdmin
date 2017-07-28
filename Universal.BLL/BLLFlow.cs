@@ -294,12 +294,15 @@ namespace Universal.BLL
                     //迭代获取子节点自增ID
                     StringBuilder child_ids = new StringBuilder();
                     GetChildNodeID(db, flow_id, node_id, child_ids);
-                    if (child_ids.Length > 0)
-                        child_ids.Remove(child_ids.Length - 1, 1);
+                    var finan_ids = child_ids.ToString();
+                    finan_ids = finan_ids.Substring(finan_ids.IndexOf(',') + 1);
+
+                    if (finan_ids.Length > 0)
+                        finan_ids = finan_ids.Substring(0, finan_ids.Length - 1);
                     //Tools.IOHelper.WriteLogs(string.Format("FlowID:{0},NodeID:{1},子节点ID:{2}", flow_id, node_id, child_ids.ToString()));
-                    if (child_ids.Length > 0)
+                    if (finan_ids.Length > 0)
                     {
-                        string strSql = "delete FlowNode where ID in(" + child_ids.ToString() + ")";
+                        string strSql = "delete FlowNode where ID in(" + finan_ids + ")";
                         db.Database.ExecuteSqlCommand(strSql);
                     }
 
