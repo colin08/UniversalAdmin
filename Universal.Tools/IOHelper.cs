@@ -673,6 +673,33 @@ namespace Universal.Tools
             }
             return false;
         }
+        
+        /// <summary>
+        /// 清空指定的文件夹，但不删除文件夹
+        /// </summary>
+        /// <param name="dir">绝对路径</param>
+        public static void ClearFolder(string dir)
+        {
+            foreach (string d in Directory.GetFileSystemEntries(dir))
+            {
+                if (File.Exists(d))
+                {
+                    FileInfo fi = new FileInfo(d);
+                    if (fi.Attributes.ToString().IndexOf("ReadOnly") != -1)
+                        fi.Attributes = FileAttributes.Normal;
+                    File.Delete(d);//直接删除其中的文件  
+                }
+                else
+                {
+                    DirectoryInfo d1 = new DirectoryInfo(d);
+                    if (d1.GetFiles().Length != 0)
+                    {
+                        ClearFolder(d1.FullName);////递归删除子文件夹
+                    }
+                    Directory.Delete(d);
+                }
+            }
+        }
 
         /// <summary>
         /// 删除单个文件
