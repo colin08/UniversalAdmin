@@ -29,7 +29,7 @@ namespace Universal.Entity
         /// <summary>
         /// 路由地址
         /// </summary>
-        [MaxLength(30)]
+        [MaxLength(100)]
         public string Route { get; set; }
 
         /// <summary>

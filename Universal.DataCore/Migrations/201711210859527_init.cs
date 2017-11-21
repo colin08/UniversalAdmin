@@ -2,7 +2,7 @@ namespace Universal.DataCore.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class init : DbMigration
     {
         public override void Up()
@@ -117,7 +117,7 @@ namespace Universal.DataCore.Migrations
                     ID = c.Int(nullable: false, identity: true),
                     Tag = c.String(maxLength: 30),
                     IsPost = c.Boolean(nullable: false),
-                    Route = c.String(maxLength: 30),
+                    Route = c.String(maxLength: 100),
                     Desc = c.String(maxLength: 30),
                     AddTime = c.DateTime(nullable: false),
                 })
@@ -242,6 +242,7 @@ namespace Universal.DataCore.Migrations
                 })
                 .PrimaryKey(t => t.ID);
 
+
             //按照某一个Id查询它及它的所有子级成员存储过程
             string SQLGetChildCusCategory = @"
                     CREATE PROCEDURE [dbo].[sp_GetChildCusCategory] (@Id int)
@@ -365,9 +366,9 @@ namespace Universal.DataCore.Migrations
                         ";
 
             Sql(SQLFunGetChildCusCategoryStr);
-            
+
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.SysLogMethod", "SysUserID", "dbo.SysUser");
