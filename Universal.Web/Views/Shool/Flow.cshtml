@@ -28,7 +28,7 @@
 
         </div>
 
-        <div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
+        <div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备17053275号</div>
     </div>
 
 </div>
@@ -37,17 +37,24 @@
 <!--底部脚本-->
 @section foot {
 <script type="text/javascript" src="/assets/js/jf.pub.js"></script>`
-/*流程图插件↓*/
+<!--流程图插件↓-->
 <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript"	src="/assets/flowdesign/js/jquery-1.7.2.min.js?2025"></script>
 <script type="text/javascript"	src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
 <script type="text/javascript"	src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
 <script type="text/javascript"	src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
 <script type="text/javascript"	src="/assets/js/leipi.project.flowinfo.js"></script>	
-/*流程图插件↑*/	
+<!--流程图插件↑-->	
 <script type="text/javascript">
 var the_flow_id =  @ViewData["flow_id"];
 /*流程图JJF ↓*/
+
+function dlUrl(fjurl){//下载附件    
+	var elemIF = document.createElement("iframe");     
+		elemIF.src =fjurl;    
+		elemIF.style.display = "none";     
+		document.body.appendChild(elemIF);
+}
 function showNodeDetails(dataNode){//节点详情
     $("#node_details_msg").remove();
 	var node_details='<div class="node_details_out_bg" id="node_details_msg">'
@@ -89,7 +96,7 @@ function showNodeDetails(dataNode){//节点详情
 						+'<p class="l_sid">节点附件：</p>'
 						+'<div class="r_sid">';
 						for(var i=0; i<dataNode.file_list.length; i++){
-						   node_details+='<p>'+dataNode.file_list[i].file_name+'('+dataNode.file_list[i].file_size+')</p>';
+						   node_details+='<p>'+dataNode.file_list[i].file_name+'('+dataNode.file_list[i].file_size+' - <a class="download" href="javascript:;" onclick="dlUrl(\''+dataNode.file_list[i].file_path+'\')">下载</a>)</p>';
 						}
 						node_details+='</div>'
 						+'</li>';
@@ -98,11 +105,11 @@ function showNodeDetails(dataNode){//节点详情
                     node_details+='<li class="clearfix">'
                     +'<p class="l_sid">办事流程说明：</p>'
                     +'<div class="r_sid">'
-                    +'<p>';
+                    +'<pre>';
 					if(typeof dataNode.content!="null"&&dataNode.content!="null"&&dataNode.content!=null){
 					node_details+=dataNode.content;
 					}
-					node_details+='</p>'
+					node_details+='</pre>'
                     +'</div>'
                     +'</li>'
 					

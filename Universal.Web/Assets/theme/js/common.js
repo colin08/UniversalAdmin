@@ -308,7 +308,7 @@ function selUserDialog(data) {
 		set_count();
 		data.items[item.id] = item;
 	}
-	var getList = function(key) {
+	var getList = function(key,teamid) {
 		$.ajax({
 			url : '/Tools/GetUserList?search=' + key,
 			success : function(ret) {
@@ -327,6 +327,108 @@ function selUserDialog(data) {
 									});
 						});
 
+			}
+		});
+	};
+	var itemJson=[];
+	var newGetMember=function(fId){
+		$.ajax({
+			url:"/Tools/GetUserList",
+			type:"GET",
+			async:true,
+			dataType:"json",
+			data:{
+				dep_id:fId
+			},
+			success: function(dataGet){
+				var tableHtml="",posthtml='member_list_show_jjf'+fId;
+				if(dataGet.data.length>0){
+					for(var j=0; j<dataGet.data.length; j++){
+						var xxz='checked="checked"';
+						if(!data.items[dataGet.data[j].id]||data.items[dataGet.data[j].id]==""){
+							xxz='';
+						}
+						tableHtml+='<dd id="user_data_'+dataGet.data[j].id+'"><label for="u_list_id_'+dataGet.data[j].id+'">'+dataGet.data[j].nick_name+'</label><input type="checkbox" id="u_list_id_'+dataGet.data[j].id+'" value="'+dataGet.data[j].id+'" data-id="'+dataGet.data[j].id+'" '+xxz+'></dd>';
+						itemJson[dataGet.data[j].id]=dataGet.data[j];
+					}
+				}
+				else{
+					tableHtml='<dd>该分组暂无成员</dd>';
+				}
+				$("#"+posthtml).html(tableHtml);
+				$("#sel_user_box_dl2 input:checkbox").unbind("click");
+				$("#sel_user_box_dl2 input:checkbox").bind("click",function(){
+					sel_user(this,itemJson[$(this).attr("data-id")]);
+				});
+			}
+		});		
+	}
+	var searchMemberList=function(keyword){
+		if(!keyword||keyword==""){
+			newGetList();
+		}
+		else{
+			$.ajax({
+				url:"/Tools/GetUserList",
+				type:"GET",
+				async:true,
+				dataType:"json",
+				data:{
+					search:keyword
+				},
+				success: function(dataSearch){
+					var tableHtml="<li>",posthtml='sel_user_box_dl2';
+					$("#"+posthtml).html("");
+					if(dataSearch.data.length>0){
+						tableHtml+='<h5 class="member_list_title_click_jjf">搜索结果</h5><dl class="smbSec">';
+						for(var j=0; j<dataSearch.data.length; j++){
+							var xxz='checked="checked"';
+							if(!data.items[dataSearch.data[j].id]||data.items[dataSearch.data[j].id]==""){
+								xxz='';
+							}
+							tableHtml+='<dd id="user_data_'+dataSearch.data[j].id+'"><label for="u_list_id_'+dataSearch.data[j].id+'">'+dataSearch.data[j ].nick_name+'</label><input type="checkbox" id="u_list_id_'+dataSearch.data[j].id+'" value="'+dataSearch.data[j].id+'" data-id="'+dataSearch.data[j].id+'" '+xxz+'></dd>';
+							itemJson[dataSearch.data[j].id]=dataSearch.data[j];
+						}
+						tableHtml+='</dl>';
+					}
+					else{
+						tableHtml+='<dd>无匹配成员</dd>';
+					}
+					tableHtml+='</li>';
+					$("#"+posthtml).html(tableHtml);
+					$("#sel_user_box_dl2 input:checkbox").unbind("click");
+					$("#sel_user_box_dl2 input:checkbox").bind("click",function(){
+						sel_user(this,itemJson[$(this).attr("data-id")]);
+					});
+				}
+			});		
+		}
+    }
+	var newGetList=function(){
+		$.ajax({
+			url:"/Tools/GetDepartmentList",
+			type:"GET",
+			async:true,
+			dataType:"json",
+			data:{},
+			success: function(listData){
+				var html="";
+				$("#sel_user_box_dl2").html("");
+				for(var i=0; i<listData.data.length; i++){
+					html="<li>";
+					html+='<h5 class="member_list_title_click_jjf" data-id="member_list_show_jjf'+listData.data[i].department_id+'">'+listData.data[i].title+'</h5>';
+					html+='<dl class="smbSec" id="member_list_show_jjf'+listData.data[i].department_id+'" style="display:none;">';
+					html+='<dd>成员加载中...</dd>';
+					html+='</dl>';
+					html+="</li>";
+					$("#sel_user_box_dl2").append(html);		
+					newGetMember(listData.data[i].department_id);
+				}
+				$("#sel_user_box_dl2 .member_list_title_click_jjf").unbind("click");
+				$("#sel_user_box_dl2 .member_list_title_click_jjf").bind("click",function(){
+					var thisID=$(this).attr("data-id");
+					$("#"+thisID).toggle();
+				});
 			}
 		});
 	};
@@ -355,12 +457,14 @@ function selUserDialog(data) {
 			'<input type="text" id="sel_user_box_key" name="key" placeholder="搜索姓名" />')
 			.appendTo(smbSearch).keypress(function() {
 				if (event.keyCode == 13) {
-					getList($('#sel_user_box_key').val());
+					//getList($('#sel_user_box_key').val());
+					searchMemberList($('#sel_user_box_key').val());
 					switchTab(1);
 				}
 			});
 	$('<input type="button" />').appendTo(smbSearch).click(function() {
-		getList($('#sel_user_box_key').val());
+		//getList($('#sel_user_box_key').val());
+		searchMemberList($('#sel_user_box_key').val());
 		switchTab(1);
 	});
 
@@ -415,10 +519,12 @@ function selUserDialog(data) {
 
 	var smbpt2 = $('<div class="smbpt"></div>').appendTo(smbTabCon);
 	var list2 = $('<div class="smbLtlist"></div>').appendTo(smbpt2);
-	var ul = $('<ul></ul>').appendTo(list2);
+	var ul = $('<ul id="sel_user_box_dl2"></ul>').appendTo(list2);
 	var li = $('<li></li>').appendTo(ul);
+	/*
 	$('<h5 id="sel_user_box_h52"></h5>').appendTo(li).html('成员列表');
 	$('<dl class="smbSec" id="sel_user_box_dl2"></dl>').appendTo(li);
+	*/
 
 	// document.write(typeof sessionStorage.lastname);
 
@@ -463,7 +569,8 @@ function selUserDialog(data) {
 		html : box
 	});
 	set_count();
-	getList('');
+	//getList('');
+	newGetList();
 }
 
 function showSelectBox(data) {
@@ -542,42 +649,6 @@ function showSelectBox(data) {
 // {value:2,name:'女'}
 // ]});
 // });
-
-function addDownUrlJJF(itemId, data) {//首页修改下载弹框
-    // <a href="javascript:;" onclick="down('@file.FilePath','@item.Title
-    // @file.FileName')"><i class="i-downL"></i></a>
-    var box = $('#doc_' + itemId);
-    if (box.length < 1) {
-        return;
-    }
-    var a = box.find('.down_url');
-    if (data.length > 0) {
-        down_data[itemId] = [];
-        a = $('<a></a>').appendTo(box)
-		.attr('href', 'javascript:;')
-		.attr('data-id', itemId)
-		.click(function () {
-		    showDownDialogJJF(this, data);
-		});
-        $('<i class="i-downL"></i>').appendTo(a);
-    }
-}
-function showDownDialogJJF(obj, data) {//首页修改下载弹框
-    console.log(JSON.stringify(data));
-    var div = $('<div></div>').addClass('down_dialog');
-    var ul = $('<ul></ul>').appendTo(div);
-    $(data).each(function () {
-        var li = $('<li></li>').appendTo(ul);
-        var down_url = "/Tools/Down?path=" + this.FilePath + "&name=" + this.FileName;
-        var a = $('<a></a>').appendTo(li).attr('href', down_url).attr('target', '_blank');
-        $('<i></i>').appendTo(a);
-        $('<span></span>').appendTo(a).html(this.FileName);
-        $('<label></label>').appendTo(a).html(this.FileSize);
-        $('<span></span>').appendTo(a).html("&nbsp;&nbsp;&nbsp;&nbsp;下载");
-    });
-    showDialog({ title: '下载秘籍', html: div, fix: true });
-}
-
 function addDownUrl(data) {
 	// <a href="javascript:;" onclick="down('@file.FilePath','@item.Title
 	// @file.FileName')"><i class="i-downL"></i></a>
@@ -595,6 +666,40 @@ function addDownUrl(data) {
 		$('<i class="i-downL"></i>').appendTo(a);
 	}
 	down_data[data.id].push(data);
+}
+function addDownUrlJJF(itemId,data) {//首页修改下载弹框
+	// <a href="javascript:;" onclick="down('@file.FilePath','@item.Title
+	// @file.FileName')"><i class="i-downL"></i></a>
+	var box = $('#doc_' + itemId);
+	if (box.length < 1) {
+		return;
+	}
+	var a = box.find('.down_url');
+	if (data.length > 0) {
+		down_data[itemId] = [];
+		a = $('<a></a>').appendTo(box)
+		.attr('href', 'javascript:;')
+		.attr('data-id', itemId)
+		.click(function() {
+			showDownDialogJJF(this,data);
+		});
+		$('<i class="i-downL"></i>').appendTo(a);
+	}
+}
+function showDownDialogJJF(obj,data) {//首页修改下载弹框
+	//console.log(JSON.stringify(data));
+	var div=$('<div></div>').addClass('down_dialog');
+	var ul=$('<ul></ul>').appendTo(div);
+	$(data).each(function(){
+		var li=$('<li></li>').appendTo(ul);
+		var down_url = "/Tools/Down?path=" + this.FilePath + "&name=" + this.FileName;
+        var a = $('<a></a>').appendTo(li).attr('href', down_url).attr('target', '_blank');
+		$('<i></i>').appendTo(a);
+		$('<span></span>').appendTo(a).html(this.FileName);
+		$('<label></label>').appendTo(a).html(this.FileSize);
+		$('<span></span>').appendTo(a).html("&nbsp;&nbsp;&nbsp;&nbsp;下载");
+	});
+	showDialog({title:'下载秘籍',html:div,fix:true});
 }
 function showDownDialog(obj,data) {
 	if(data){
@@ -697,6 +802,8 @@ function accRound(arg, len) { //len 为保留小数点后几位
     return arg3;
 }
 
+
+
 //删除项目
 function delProject(id) {
     layer.confirm('删除项目后该项目内的备注、文件等资料也会一并删除，确定要删除吗？', { icon: 3 }, function (index) {
@@ -754,7 +861,6 @@ function importProject(id) {
         }
     })
 }
-
 
 function KeyDown(funcStr) {
     if (event.keyCode == 13) {

@@ -67,7 +67,7 @@
                                             var str_json = Newtonsoft.Json.JsonConvert.SerializeObject(item.ConfrimFiles.ToList());
                                             var contnet = item.ConfirmText;
 
-                                            <a>完成情况</a>
+                                            <a href="javascript:;" onclick="finishFunc(@str_json,'@contnet')">完成情况</a>
                                         }
                                     </li>
 
@@ -120,7 +120,29 @@
 @section foot
 {
     <script type="text/javascript">
-        
+	    function finishFunc(dataJson,content){
+			var html='<div class="down_dialog">';
+			    html+='<ul>';
+				for(var i=0; i<dataJson.length; i++){
+					html+='<li>';
+					html+='<a href="'+dataJson[i].FilePath+'" target="_blank">';
+					html+='<i></i>';
+					html+='<span>'+dataJson[i].FileName+'</span>';
+					html+='<label>'+dataJson[i].FileSize+'</label>';
+					html+='<span>&nbsp;&nbsp;&nbsp;&nbsp;下载</span>';
+					html+='</a>';
+					html+='</li>';
+				}
+			    html+='</ul>';
+				html+='<p>'+content+'</p>';
+			    html+='</div>';
+			if(!content||content==''){
+			   content="暂无内容显示"
+			}	
+		       showDialog({title:'完成详情',html:html,fix:true});
+		}
+        $(function(){
+		})
     </script>
 
 }

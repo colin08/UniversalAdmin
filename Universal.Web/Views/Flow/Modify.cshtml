@@ -68,7 +68,7 @@ ViewData["tabTop"] = "manager"; }
 
 
 
-		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
+		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备17053275号</div>
 	</div>
 
 </div>
@@ -172,9 +172,27 @@ function postSameNode(nodeId,parentId){//添加父级
 			   warmMsgFunc(0);	   
 			   if(data.msg==1){
 				  if(flowPId==-1){
-				     warmMsgFunc(1,'添加第一个节点需要更多耐心，请稍候...');
-					 window.location.href='/Flow/Modify?id='+data.total;
-					 return false;
+				      warmMsgFunc(1,'添加第一个节点需要更多耐心，请稍候...');
+					  flowPId=data.total;
+					  $.ajax({
+						  type:'get',
+						  dataType:'json',
+						  async:true,
+						  url:'/Tools/SetFristNode',
+						  data:{
+							 flow_id:flowPId,
+							 node_id:nodeId,
+						  },
+						  timeout:5000,
+						  success:function(data){	
+							  window.location.href='/Flow/Modify?id='+flowPId;
+							  return false;
+						  },
+						  error:function(XMLHttpRequest, textStatus, errorThrown){
+							  warmMsgFunc(0);
+							  operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+						  }
+					  });	
 				  }
 				  makeNodeList(flowPId);
 			   }

@@ -80,7 +80,7 @@
 	line-height: 20px;
 	padding: 10px;
 	display: block;
-	width: 90%;
+	width: 95%;
 }
 
 .usTextarea {
@@ -990,6 +990,7 @@ a.newplan:hover {
 	margin-bottom: 10px;
 	padding: 10px 20px;
 	float: left;
+	position:relative;
 }
 
 .bmList dl dd .bmBox b {

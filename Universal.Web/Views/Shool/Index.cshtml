@@ -68,7 +68,7 @@
 
 
 
-		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
+		<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备17053275号</div>
 	</div>
 </div>
 
@@ -97,7 +97,7 @@
         /*******************列表 end *************************/
         //分页方法
         function pageData(page_index, doc_id, clearbox) {
-            var word = $("#txt_search").val();
+			var word = $("#txt_search").val();
             if(word.length == 0)
             {
                 if (doc_id == 0)
@@ -108,7 +108,6 @@
             {
                 doc_id = 0;
             }
-
             $("#hid_temp_doc_id").val(doc_id);
             if (clearbox)
             {

@@ -7,7 +7,7 @@
 <!--头部脚本-->
 @section head
 {
-
+<link rel="stylesheet" type="text/css" href="/assets/css/process_page.css?von=2017041401" />
 }
 <!--头部脚本 end-->
 <div class="wapper">
@@ -17,10 +17,11 @@
         <div class="container">
             <div class="tit1">
                 <b>流程效果</b>
-                <a href="" title="Back" class="add_lc fr">返回</a>
+				<a href="javascript:;" class="process_page_but_public compact_step_save" onclick="keepNodePosition()">保存</a>
+                <a href="/Flow/Modify?id=@ViewData["flow_id"]" title="Back" class="add_lc fr">返回</a>
             </div>
 
-
+            <div class="container mini-layout" id="flowdesign_canvas"></div>
 
 
             <!--do something-->
@@ -29,7 +30,7 @@
 
 
         </div>
-        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备17053275号</div>
     </div>
 
 </div>
@@ -37,13 +38,108 @@
 <!--底部脚本-->
 @section foot
 {
-    <script type="text/javascript">
-        //流程ID
-        var flow_id = @ViewData["flow_id"];
+<script type="text/javascript" src="/assets/js/jf.pub.js"></script>
+/*流程图插件↓*/
+<link rel="stylesheet" type="text/css" href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
+<link rel="stylesheet" type="text/css" href="/assets/flowdesign/css/site.css" />
+<link rel="stylesheet" type="text/css"	href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
+<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript"	src="/assets/flowdesign/js/jquery-1.7.2.min.js?2025"></script>
+<script type="text/javascript"	src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
+<script type="text/javascript"	src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
+<script type="text/javascript"	src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
+<script type="text/javascript"	src="/assets/js/leipi.self.js"></script>
+/*流程图插件↑*/	
+<script type="text/javascript">
+//流程ID
+var flow_id = @ViewData["flow_id"];
+function getNodeJson(){
+    var jsonPost='[';
+    $("#flowdesign_canvas .process-step").each(function(index, element){	
+	   if(index!=0){
+	      jsonPost+=',';
+	   }
+	   jsonPost+='{"project_flow_node_id":"'+$(this).attr("process_id")+'",'
+	            +'"node_id":"'+$(this).attr("data-nodeId")+'",'
+	            +'"node_title":"'+$(this).attr("data-nodeTt")+'",'
+	            +'"node_is_fator":"'+$(this).attr("data-nodeFa")+'",'
+	            +'"process_to":"'+$(this).attr("process_to")+'",'
+	            +'"piece":"'+$(this).attr("data-piece")+'",'
+	            +'"left":"'+$(this).css("left").replace("px","")+'",'
+	            +'"top":"'+$(this).css("top").replace("px","")+'",'
+	            +'"color":"'+$(this).attr("data-color")+'",'
+	            +'"icon":"'+$(this).attr("data-icon")+'",'
+	            +'"is_end":"'+$(this).attr("data-isend")+'"}';
+	});
+	jsonPost+=']';
+	return jsonPost.replace(/\undefined/g, "");
+}
+function keepNodePosition(){    
+    warmMsgFunc(1,'数据保存中，请稍候...');
+	$.ajax({
+		type:'post',
+		dataType:'json',
+		async:true,
+		url:'/Tools/SaveFlowCompact',
+		data:getNodeJson(),
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){
+			   location.reload();
+			}
+			else{
+			   warmMsgFunc(2,'页面加载错误：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			warmMsgFunc(2,'页面加载错误：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});	
+}
+$(function(){
+    warmMsgFunc(1,'页面初始化中，请稍候...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Tools/GetFlowCompact',
+		data:{
+		   flow_id:flow_id
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){
+				  var _canvas = $("#flowdesign_canvas").Flowdesign({
+					  "processData":data
+					  ,//这是连接线路的绘画样式
+					  connectorPaintStyle : {
+						  lineWidth:3,
+						  strokeStyle:"#49afcd",
+						  joinstyle:"round"
+					  },//鼠标经过样式
+					  connectorHoverStyle : {
+						  lineWidth:3,
+						  strokeStyle:"#da4f49"
+					  }
+				  });
+			}
+			else{
+			   warmMsgFunc(2,'页面加载错误：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			warmMsgFunc(2,'页面加载错误：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});		
+});
 
-
-
-    </script>
+</script>
 
 }
 <!--底部脚本 end-->

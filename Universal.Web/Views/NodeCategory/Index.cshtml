@@ -148,7 +148,7 @@
             else {
                 ids = id;
             }
-            layer.confirm('确定删除？', { icon: 3 }, function (index) {
+            layer.confirm('删除之后，涉及的节点和流程以及流程对应的项目都无法正常使用，是否确认删除？', { icon: 3 }, function (index) {
                 layer.close(index);
                 $.ajax({
                     type: "post",

@@ -159,6 +159,8 @@
     <Content Include="App_Data\mailtemplate\demo.html" />
     <Content Include="App_Data\Universal.Web.XML" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Assets\arr1.jpg" />
+    <Content Include="Assets\arr2.jpg" />
     <Content Include="Assets\bootstrap\bootstrap-fileinput\css\fileinput.css" />
     <Content Include="Assets\bootstrap\bootstrap-fileinput\css\fileinput.min.css" />
     <Content Include="Assets\bootstrap\bootstrap-fileinput\img\loading-sm.gif" />
@@ -303,6 +305,7 @@
     <Content Include="Assets\css\jquery.multiselect.css" />
     <Content Include="Assets\css\jquery.multiselect.filter.css" />
     <Content Include="Assets\css\login.min.css" />
+    <Content Include="Assets\css\node.h5.css" />
     <Content Include="Assets\css\patterns\header-profile-skin-1.png" />
     <Content Include="Assets\css\patterns\header-profile-skin-3.png" />
     <Content Include="Assets\css\patterns\header-profile.png" />
@@ -315,6 +318,7 @@
     <Content Include="Assets\css\plugins\toastr\toastr.min.css" />
     <Content Include="Assets\css\plugins\zoom\zoom.css" />
     <Content Include="Assets\css\prettify.css" />
+    <Content Include="Assets\css\process_page.css" />
     <Content Include="Assets\css\style.min.css" />
     <Content Include="Assets\error\ie.html" />
     <Content Include="Assets\flash\avatar.swf" />
@@ -379,6 +383,11 @@
     <Content Include="Assets\fonts\fontawesome-webfont.svg" />
     <Content Include="Assets\img\default_avatar.jpg" />
     <Content Include="Assets\img\favicon.ico" />
+    <Content Include="Assets\img\process_icon01.jpg" />
+    <Content Include="Assets\img\process_icon02.jpg" />
+    <Content Include="Assets\img\process_icon03.jpg" />
+    <Content Include="Assets\img\process_list01.jpg" />
+    <Content Include="Assets\img\process_tt01.jpg" />
     <Content Include="Assets\js\bootstrap.min.js" />
     <Content Include="Assets\js\category.js" />
     <Content Include="Assets\js\contabs.min.js" />
@@ -387,6 +396,7 @@
     <Content Include="Assets\js\html5shiv.js" />
     <Content Include="Assets\js\IE6_MAXMIX.js" />
     <Content Include="Assets\js\IE6_PNG.js" />
+    <Content Include="Assets\js\jf.pub.js" />
     <Content Include="Assets\js\jquery-1.11.1.js" />
     <Content Include="Assets\js\jquery-ui-1.10.4.min.js" />
     <Content Include="Assets\js\jquery-ui.custom.min.js" />
@@ -397,6 +407,9 @@
     <Content Include="Assets\js\jquery.multiselect.js" />
     <Content Include="Assets\js\jquery.multiselect.min.js" />
     <Content Include="Assets\js\jquery.validate.min.js" />
+    <Content Include="Assets\js\leipi.h5.js" />
+    <Content Include="Assets\js\leipi.project.flowinfo.js" />
+    <Content Include="Assets\js\leipi.self.js" />
     <Content Include="Assets\js\plugins\Highcharts-4.2.1\index.htm" />
     <Content Include="Assets\js\plugins\Highcharts-4.2.1\js\adapters\standalone-framework.js" />
     <Content Include="Assets\js\plugins\Highcharts-4.2.1\js\adapters\standalone-framework.src.js" />
@@ -1019,10 +1032,10 @@
     <Compile Include="Models\Request\AddProject.cs" />
     <Compile Include="Models\Request\ApproveWorkPlan.cs" />
     <Compile Include="Models\Request\BasePage.cs" />
-    <Compile Include="Models\Request\EditWorkPlanItem.cs" />
-    <Compile Include="Models\Request\FeebBack.cs" />
     <Compile Include="Models\Request\DocumentList.cs" />
     <Compile Include="Models\Request\EditProject.cs" />
+    <Compile Include="Models\Request\EditWorkPlanItem.cs" />
+    <Compile Include="Models\Request\FeebBack.cs" />
     <Compile Include="Models\Request\MessageList.cs" />
     <Compile Include="Models\Request\ModelUserLogin.cs" />
     <Compile Include="Models\Request\ProjectApprove.cs" />
@@ -1032,6 +1045,7 @@
     <Compile Include="Models\Request\RemoveFav.cs" />
     <Compile Include="Models\Request\UserPushTrun.cs" />
     <Compile Include="Models\Request\WorkJob.cs" />
+    <Compile Include="Models\Request\WorkJobConfrim.cs" />
     <Compile Include="Models\Request\WorkMeeting.cs" />
     <Compile Include="Models\Request\WorkPlan.cs" />
     <Compile Include="Models\Response\DocumentInfo.cs" />
@@ -1046,7 +1060,6 @@
     <Compile Include="Models\Response\StatcticsCondition.cs" />
     <Compile Include="Models\Response\TreeData.cs" />
     <Compile Include="Models\Response\WorkJob.cs" />
-    <Compile Include="Models\Request\WorkJobConfrim.cs" />
     <Compile Include="Models\Response\WorkJobConfrimUserFile.cs" />
     <Compile Include="Models\Response\WorkMeeting.cs" />
     <Compile Include="Models\Response\WorkPlan.cs" />
@@ -1249,7 +1262,6 @@
     <Folder Include="Areas\h5\Models\" />
     <Folder Include="Areas\h5\Views\Shared\" />
     <Folder Include="Views\DownLoad\" />
-    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">

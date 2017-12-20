@@ -27,7 +27,25 @@
     <div class="clear"></div>
     <div class="homeWrap">
         <div class="homeLt">
+			@if (Model.JobTask.Count > 0)
+			{
             <div class="homeBox">
+                <div class="titH"><i class="i-lm8"></i><span>我的待办</span><a href="/User/Message" title="更多" class="btn25 red fr"><i class="i-wplus"></i><em>更多</em></a></div>
+                <div class="homelist">
+                    <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
+                        <tbody id="">
+						 @foreach (var item in Model.JobTask)
+                         { 
+						  <tr>
+						     <td><a href="@item.LinkUrl" title="@item.Content">@(Universal.Tools.StringHelper.CutString(item.Content, 50))</a></td>
+						  </tr>
+						  }
+						</tbody>
+                    </table>
+                </div>
+            </div>
+			}
+            <div class="homeBox mt_20">
                 <div class="titH"><i class="i-lm5"></i><span>项目动态</span><a href="/Project/Index" title="更多" class="btn25 red fr"><i class="i-wplus"></i><em>更多</em></a></div>
                 <div class="homelist">
                     <table border="0" cellspacing="0" cellpadding="0" class="homeTable">
@@ -83,6 +101,7 @@
                 </div>
             </div>
         </div>
+		<!--
         <div class="homeRt">
             <div class="titH"><i class="i-lm8"></i><span>我的待办</span> </div>
             <div class="homeRlist">
@@ -108,12 +127,13 @@
                 <a href="/User/Message" title="#" class="loadMore"><i class="i-arrR"></i>查看更多</a>
             </div>
         </div>
+		-->
     </div>
 
 </div>
 
 
-<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备17053275号</div>
 
 
 <!--底部脚本-->

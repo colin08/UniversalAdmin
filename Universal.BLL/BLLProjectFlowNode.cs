@@ -224,6 +224,62 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 获取下一级节点
+        /// </summary>
+        /// <param name="project_id"></param>
+        /// <param name="project_flow_node_id"></param>
+        /// <returns></returns>
+        public static List<Model.ProjectFlowNode> GetNextFlowNode(DataCore.EFDBContext db, int project_id, int project_flow_node_id)
+        {
+            List<Model.ProjectFlowNode> response_entity = new List<Model.ProjectFlowNode>();
+            if (project_id <= 0)
+                return response_entity;
+            var entity_project = db.Projects.Find(project_id);
+            if (entity_project == null)
+                return response_entity;
+
+            var entity_project_node = db.ProjectFlowNodes.Find(project_flow_node_id);
+            if (entity_project_node == null)
+                return response_entity;
+            if (string.IsNullOrWhiteSpace(entity_project_node.ProcessTo))
+                return response_entity;
+
+            string strSql = "SELECT * FROM [dbo].[ProjectFlowNode] where charindex(','+ltrim(ID)+',','," + entity_project_node.ProcessTo + ",') > 0";
+            var next_list = db.ProjectFlowNodes.SqlQuery(strSql).AsNoTracking().ToList();
+            foreach (var item in next_list)
+            {
+                var entity_node = db.Nodes.Where(p => p.ID == item.NodeID).AsNoTracking().FirstOrDefault();
+                if (entity_node == null)
+                    continue;
+                var entity_user = db.CusUsers.Where(p => p.ID == item.EditUserId).AsNoTracking().FirstOrDefault();
+                if (entity_user == null)
+                    continue;
+                var node_file_list = db.ProjectFlowNodeFiles.Where(p => p.ProjectFlowNodeID == item.ID).AsNoTracking().ToList();
+
+                Model.ProjectFlowNode model = new Model.ProjectFlowNode();
+                model.icon = item.ICON;
+                model.piece = item.Piece;
+                model.process_to = item.ProcessTo;
+                model.node_id = item.NodeID;
+                model.last_update_time = item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                model.node_title = entity_node.Title;
+                model.node_is_fator = entity_node.IsFactor;
+                model.color = item.Color;
+                model.remark = Tools.WebHelper.UrlDecode(item.Remark == null ? "" : item.Remark);
+                model.user_name = entity_user.NickName;
+                model.left = item.Left;
+                model.top = item.Top;
+                model.is_end = item.IsEnd;
+                model.is_frist = item.IsFrist;
+                model.project_flow_node_id = item.ID;
+                model.status = item.Status;
+                model.BuildFileList(node_file_list);
+                response_entity.Add(model);
+            }
+            return response_entity;
+        }
+
+        /// <summary>
         /// 导出项目附件
         /// </summary>
         /// <param name="project_id"></param>
@@ -527,11 +583,11 @@ namespace Universal.BLL
                 var entity = db.ProjectFlowNodes.Include(p => p.Node).Where(p => p.ID == project_flow_node_id).FirstOrDefault();
                 if (entity == null)
                     return false;
+
                 entity.EditUserId = user_id;
                 entity.IsEnd = true;
                 entity.LastUpdateTime = DateTime.Now;
                 entity.EndTime = DateTime.Now;
-
                 var entity_project = db.Projects.AsNoTracking().Where(p => p.ID == entity.ProjectID).FirstOrDefault();
 
                 if (entity_project != null)
@@ -553,8 +609,43 @@ namespace Universal.BLL
                     string ids = string.Join(",", user_list.ToArray());
                     var telphone_list = db.Database.SqlQuery<string>("select Telphone from CusUser where id in (" + ids + ")").ToList();
                     Tools.JPush.PushALl(string.Join(",", telphone_list.ToArray()), content, (int)Entity.CusUserMessageType.favdocupdate, entity.ProjectID.ToString());
+
                 }
+                //查找下级节点
+                var next_node = GetNextFlowNode(db, entity.ProjectID, project_flow_node_id);
+                if (next_node.Count == 0) return true;
+
+                if (!next_node[0].is_end) return true;
+                //下级节点是已完成状态,则重新进行这个循环
+                ReStartFlow(db, entity.ProjectID, project_flow_node_id, next_node[0].project_flow_node_id);
+                string strSql = "update ProjectFlowNode set IsEnd=0,IsSelect=0 where ID= " + project_flow_node_id;
+                //Tools.IOHelper.WriteLogs(strSql);
+                db.Database.ExecuteSqlCommand(strSql);
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 递归修改节点
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="start_pfn_id">开始节点</param>
+        /// <param name="project_flow_node_id">当前处理的节点</param>
+        /// <returns></returns>
+        public static void ReStartFlow(DataCore.EFDBContext db, int project_id,int start_pfn_id, int project_flow_node_id)
+        {
+            if (start_pfn_id == project_flow_node_id) return;
+            var list = GetNextFlowNode(db, project_id, project_flow_node_id);
+            if (list.Count == 0) return;
+            foreach (var item in list)
+            {
+                if (item.is_end)
+                {
+                    string strSql = "update ProjectFlowNode set IsEnd=0,IsSelect=0 where ID= " + project_flow_node_id;
+                    //Tools.IOHelper.WriteLogs(strSql);
+                    db.Database.ExecuteSqlCommand(strSql);
+                    ReStartFlow(db, project_id, start_pfn_id, item.project_flow_node_id);
+                }
             }
         }
 
@@ -650,6 +741,18 @@ namespace Universal.BLL
                 entity.EndTime = DateTime.Now;
                 entity.IsSelect = true;
                 db.SaveChanges();
+
+                //查找下级节点
+                var next_node = GetNextFlowNode(db, entity.ProjectID, project_flow_node_id);
+                if (next_node.Count == 0) return true;
+
+                if (!next_node[0].is_end) return true;
+                //下级节点是已完成状态,则重新进行这个循环
+                ReStartFlow(db, entity.ProjectID, project_flow_node_id, next_node[0].project_flow_node_id);
+                string strSql = "update ProjectFlowNode set IsEnd=0,IsSelect=0 where ID= " + project_flow_node_id;
+                //Tools.IOHelper.WriteLogs(strSql);
+                db.Database.ExecuteSqlCommand(strSql);
+
                 return true;
             }
         }

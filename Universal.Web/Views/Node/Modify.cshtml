@@ -122,7 +122,7 @@
 
 
 
-        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备17053275号</div>
     </div>
 
 </div>
@@ -144,11 +144,11 @@
             }else if(Model.Msg == 3)
             {
                 @:alert("数据验证失败");
-            }else if(Model.Msg ==4)
-            {
-                @:alert("@Model.MsgBox");
-                @:location.href = "/Node/Index";
-            }
+            }else if(Model.Msg == 4)
+                {
+                    @:alert("@Model.MsgBox");
+                    @:location.href = "/Node/Index";
+                }
         });
 
         function RemoveUp(obj)

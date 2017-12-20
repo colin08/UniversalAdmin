@@ -67,7 +67,7 @@
                                     @Html.HiddenFor(p => p.job_id)
                                     <input type="text" value="@Model.job_title" id="job_name" class="usInput" placeholder="" /><a href="javascript:" onclick="selPosition(this)" class="addBtn">选择职位</a>
                                 </div>
-                                <div class="litip">@Html.ValidationMessageFor(p => p.job_id)</div>
+                                <div class="litip"></div>
                             </li>
                             <li>
                                 <div class="lilt">邮箱</div>
@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="litip">@Html.ValidationMessageFor(p => p.password)</div>
                             </li>
-                            <li>
+							<li>
                                 <div class="lilt">状态</div>
                                 <div class="limd">
                                     <span>
@@ -207,7 +207,7 @@
                 </div>
             </form>
         </div>
-        <div class="footer">Copyright &copy;  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright &copy;  深圳市诚泰城市更新咨询服务有限公司  粤ICP备17053275号</div>
     </div>
 
 </div>
@@ -291,12 +291,11 @@
                 {
                     @:alert("数据验证失败");
                 }
-                else if(Model.Msg == 4)
+				else if(Model.Msg == 4)
                 {
                     @:alert("@Model.MsgBox");
                     @:location.href = "/AdminUser/Index";
                 }
-
             });
 
             function next_2() {

@@ -9,7 +9,7 @@
 {
 
 <style type="text/css">
-.l-box{width:1000px;margin:0 auto;height:700px;position:relative;}
+.l-box{width:1000px;margin:0 auto; position:relative; padding:30px 0;}
 .circle {
     width: 140px;
     height: 140px;
@@ -17,11 +17,12 @@
     -moz-border-radius: 70px;
     -webkit-border-radius: 70px;
     border-radius: 70px;
-    position:absolute;
-    left:100px;
+    position:relative;
     color:#fff;
     text-align:center;line-height:140px;
-    
+    display:inline-block;
+    margin:30px 55px;
+    vertical-align:top;
 }
 .circle{
 	-webkit-transition: -webkit-transform 0.4s ease-out;
@@ -32,8 +33,9 @@
 	-moz-transform: rotate(360deg);
 	transform: rotate(360deg);}
 .circle .l-title{font-size:30px;
-    font-weight:700}
+    font-weight:700; line-height:42px; padding-top:28px; display:inline-block;}
 .circle a,.circle a:hover{color:#fff;text-decoration: none}
+/*
 .circle0{background: #df3043;left:50%;top:50%;margin-left:-70px;margin-top:-100px}
 .circle1{background:#44a7ec;left:50%;top:50%;margin-left:-70px;margin-top:-290px}
 .circle2{background:#1ec37c;left:50%;top:50%;margin-left:-240px;margin-top:-190px}
@@ -41,11 +43,16 @@
 .circle4{background:#37b9d6;left:50%;top:50%;margin-left:-70px;margin-top:90px}
 .circle5{background:#fb6549;left:50%;top:50%;margin-left:100px;margin-top:20px}
 .circle6{background:#f4b262;left:50%;top:50%;margin-left:100px;margin-top:-170px}
-
+.circle7{}
+.circle8{}
+.circle9{}
+.circle10{}
+.circle11{}
+*/
 .circle ul{position:absolute;line-height:20px;color:#666;width:210px;height:400px;
 /*  border:1px solid red; */
  display:none;
-left:-130px;top:-130px}
+left:-130px;top:-130px; z-index:103;}
 .circle li{width: 100px;
     height: 100px;
     background:#fff;
@@ -105,7 +112,7 @@ left:-130px;top:-130px}
 
 
 
-<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备17053275号</div>
 
 
 
@@ -125,7 +132,12 @@ left:-130px;top:-130px}
     		})
     		$(items[0]).each(function(i){
     			var div=$('<div class="circle"></div>').appendTo($('.l-box'));
-    			div.addClass('circle'+i);
+    			/*div.addClass('circle'+i);
+				var x=Math.floor(Math.random()*3+1)*30;
+				var y=Math.floor(Math.random()*3+1)*30;
+				div.css("margin",x+"px "+y+"px");*/
+				var bgColor='#'+Math.floor((0.1+0.02*i)*16777215).toString(16); 
+				div.css("background-color",bgColor);
     			$('<a class="l-title"></a>').appendTo(div).html(this.title).attr('href','Users?d='+this.department_id+'&page=1');
     			if(typeof items[this.department_id]!='undefined' && i>0){
     				var ul=$('<ul></ul>').appendTo(div);

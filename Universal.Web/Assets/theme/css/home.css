@@ -7,7 +7,7 @@
 
 .homeLt .i-favG,.i-fav,.homeLt .i-downL,.homeLt .i-share{ margin: 0 8px;}
 .homeRt{ width: 22%; float: right;border: 1px solid #e8edf6;}
-.homeLt{ width: 75%; float: left;}
+.homeLt{ width:95%; margin:0 auto;}
 
 .homeTable{ border: none;}
 .homeTable td{ line-height: 24px; padding: 8px 10px 8px 15px; border-left: 0px; border-right: 0; border-bottom: 1px solid #e8edf6; font-size: 14px; word-break: break-all;}

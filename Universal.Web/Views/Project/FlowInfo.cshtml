@@ -1,607 +1,488 @@
-﻿@{
-    ViewBag.Title = "项目流程信息";
-    ViewData["tabTop"] = "project";
-}
+﻿@{ ViewBag.Title = "项目流程信息"; ViewData["tabTop"] = "project"; }
 
 <!--头部脚本-->
-@section head
-{
-<link rel="stylesheet" type="text/css"
-	href="/assets/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css"
-	href="/assets/bootstrap/css/bootstrap.min.css" />
-
+@section head {
+<link rel="stylesheet" type="text/css" href="/assets/css/process_page.css?von=05" />
 }
 <!--头部脚本 end-->
 
 <div class="clear"></div>
 <!--wrapper [[-->
-<div class="container" style="width:100%">
-    <div class="new-head mb-40 clearfix">
-        <a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
-        <b class="f20">项目详情</b>
-        <span class="fr">
-            <a href="javascript:;" onclick="importProject(@Model.ID)" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
+<div class="container" style="width: 100%">
+	<div class="new-head mb-40 clearfix">
+		<a href="/Project/Index" class="fl f16 go-prev"><i class="i-back"></i><span>项目管理</span></a>
+		<b class="f20">项目详情</b>
+		<div class="fr">
+		<a href="javascript:;" onclick="importProject(@Model.ID)" title="一键导出"><i class="i-redbb"></i><span>一键导出</span></a>
             <a href="javascript:;" onclick="delProject(@Model.ID)" title="删除"><i class="i-barrel"></i><span>删除项目</span></a>
-        </span>
-    </div>
+		</div>
+	</div>
 
-    <ul class="new-tab  clearfix">
-        <li class="current"><a href="/Project/FlowInfo?id=@ViewData["project_id"]">流程节点</a></li>
-        <li><a href="/Project/Info?id=@ViewData["project_id"]">项目信息</a></li>
-        <li><a href="/Project/BasicInfo?id=@ViewData["project_id"]">基本信息</a></li>
-        <li><a href="/Project/StageInfo?id=@ViewData["project_id"]">拆迁概况</a></li>
-    </ul>
-            <div id="flowdesign_canvas" class="mini-layout"
-				style="min-height: 1200px"></div>
+	<ul class="new-tab clearfix" id="getForIdYouKnow">
+		<li class="current"><a href="/Project/FlowInfo?id=@ViewData["project_id"]">流程节点</a></li>
+		<li><a href="/Project/Info?id=@ViewData["project_id"]">项目信息</a></li>
+		<li><a href="/Project/BasicInfo?id=@ViewData["project_id"]">基本信息</a></li>
+		<li><a href="/Project/StageInfo?id=@ViewData["project_id"]">拆迁概况</a></li>
+	</ul>
+    <div class="container mini-layout" id="flowdesign_canvas">
+	</div>
 </div>
 <!--wrapper ]]-->
+<div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备17053275号</div>
 
 
-<div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+<div class="process_page_out_bg" id="process_page_out_bg">
+   <div class="process_page_out_box">
+       <div class="process_page_out_tt">
+          <a href="javascript:;" onclick="$('#process_page_out_bg').hide();">×</a>
+          <span id="process_page_out_tt">条件节点</span>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">选择节点</p>
+          <div class="process_page_out_border" id="node_list_pt">
+             <!--
+             <ul class="process_page_out_node_list">
+                <li class="tt"><i class="scd"></i>计划申报前期准备</li>
+                <li class="sun"><label for="radio_get_id"><i class="process_page_out_icon fr"><input type="radio" name="node_get" value="zm" id="radio_get_id" checked="checked" /></i>出具证明</label></li>
+             </ul>
+             -->
+          </div>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">&nbsp;</p>
+          <div class="fl">
+                <a href="javascript:;" class="process_page_but_public" id="process_page_out_submit">确定</a>
+                <a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$('#process_page_out_bg').hide();">取消</a>     
+          </div>
+       </div>
+   </div>
+</div>
 
-
-
-
-
-
+<div class="process_page_out_bg" id="medify_box">
+   <div class="process_page_out_box">
+       <div class="process_page_out_tt">
+          <a href="javascript:;" onclick="$('#medify_box').hide();">×</a>
+          <span id="process_page_out_tt">修改备注</span>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">备注</p>
+          <textarea class="process_page_out_border" id="medify_input"></textarea>
+       </div>
+       <div class="process_page_out_pdt clearfix">
+          <p class="process_page_out_ls">&nbsp;</p>
+          <div class="fl">
+                <a href="javascript:;" class="process_page_but_public" id="medify_remark_submit">确定</a>
+                <a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$('#medify_box').hide();">取消</a>     
+          </div>
+       </div>
+   </div>
+</div>
 <!--底部脚本-->
-@section foot
-{
-
-<script type="text/javascript"
-	src="/assets/bootstrap/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" type="text/css"
-	href="/assets/flowdesign/js/flowdesign/flowdesign.css" />
-<link rel="stylesheet" type="text/css"
-	href="/assets/flowdesign/js/jquery.multiselect2side/css/jquery.multiselect2side.css" />
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery-ui/jquery-ui-1.9.2-min.js?2025"></script>
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jsPlumb/jquery.jsPlumb-1.3.16-all-min.js?2025"></script>
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery.contextmenu.r2.js?2025"></script>
-<!--select 2-->
-<script type="text/javascript"
-	src="/assets/flowdesign/js/jquery.multiselect2side/js/jquery.multiselect2side.js?2025"></script>
-<!--flowdesign-->
-<script type="text/javascript"
-	src="/assets/flowdesign/js/flowdesign/leipi.flowdesign.v32.js?2025"></script>
-	<div id="attributeModal_box">
-<div class="modal fade" id="attributeModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title">Modal title</h4>
-			</div>
-			<div class="modal-body"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary"
-					onclick="node_attr_save(this)">确定保存</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-</div>
-
-
-<div id="selNodeBox" style="display: none">
-	<table border="0" cellspacing="0" cellpadding="0" class="table1">
-		<thead>
-			<tr>
-				<th style="width: 80px">操作</th>
-				<th>节点名称</th>
-			</tr>
-		</thead>
-		<tbody id="listData">
-
-		</tbody>
-	</table>
-	<div class="listBtm">
-		<div class="page fr">
-			<span>共有<span id="span_data_total"></span>条，每页显示
-			</span> <select class="sel" id="select_page_size" style="width: auto">
-				<option value="10" selected>10</option>
-				<option value="20">20</option>
-			</select> <span>条</span>
-			<div id="pager"></div>
-		</div>
-	</div>
-
-</div>
-<!--end div-->
-<script src="/Assets/js/plugins/layer/laypage/laypage.js"></script>
-<input type="hidden" id="tmp_process_to" />
-
-<!--contextmenu div-->
-<div id="processMenu" style="display: none;">
-	<ul>
-		<li id="pmAttribute"><i class="fa fa-cog"></i>&nbsp;<span
-			class="_label">属性</span></li>
-		<li id="pmDelete"><i class="fa fa-trash"></i>&nbsp;<span
-			class="_label">删除</span></li>
-		<li id="pmEye"><i class="fa fa-eye"></i>&nbsp;<span
-			class="_label">节点详情</span></li>
-	</ul>
-</div>
-<div id="canvasMenu" style="display: none;">
-	<ul>
-		<li id="cmSave"><i class="fa fa-save"></i>&nbsp;<span
-			class="_label">保存设计</span></li>
-		<li id="selNode"><i class="fa fa-plus"></i>&nbsp;<span
-			class="_label">添加节点</span></li>
-		<li id="cmRefresh"><i class="fa fa-refresh"></i>&nbsp;<span
-			class="_label">刷新 F5</span></li>
-	</ul>
-</div>
+@section foot {
+<script type="text/javascript" src="/assets/js/jf.pub.js"></script>
+@Scripts.Render("~/bundles/layer")
 <script type="text/javascript">
-	var _canvas;
-	var the_flow_id = @ViewData["project_id"];
-	var alertModal = $('#alertModal'), attributeModal = $("#attributeModal");
-	$.browser = {};
-	$.browser.mozilla = /firefox/.test(navigator.userAgent.toLowerCase());
-	$.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
-	$.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
-	$.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-	
-	
-	
-	
-	
-	
-	$(function() {
-		function selNode(obj,item)
-		{
-			item = $.extend({title:'添加节点',id:0},item||{});
-			var mLeft = $("#jqContextMenu").css("left"), mTop = $(
-			"#jqContextMenu").css("top");
-			showDialog({
-				title :item.title,
-				html : $('#selNodeBox').show(),
-				onshow : function() {
-					getNodeList('', 1, function(obj) {
-						obj = $(obj).parent();
-						id = parseInt(obj.attr('data-id'));
-						title = obj.attr('data-title');
-						
-						hideDialog();
-						  /**
-					        * 【添加项目流程节点】
-					        * 接口地址：/Project/APIAddProjectFlowNode?project_id=项目ID&project_pieces=项目目前引用到的块id，格式如json里的reference_pieces
-					        * 请求方式：POST
-					        * 请求数据示例：{"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
-					        * 返回数据格式：result.data 为添加后的id,删除用到的这个
-					        */
-					    var url='/Project/APIAddProjectFlowNode?project_id='+the_flow_id+'&project_pieces=';
-					    var postData={"id":0,
-					    		"node_id":id,
-					    		"node_title":title,
-					    		"index":1,
-								"piece":0,
-								"status":true,
-								"is_start":false,
-								"is_end":false,
-								"top":parseInt(mTop),
-								"left":parseInt(mLeft),
-								"color":"",
-								"icon":"",
-								"process_to":""};
-					    console.log(JSON.stringify(postData));
-						$.ajax({
-							url:url,
-							type:'post',
-							data:JSON.stringify(postData),
-							success:function(ret){
-								postData.id=ret.data;
-								console.log(JSON.stringify(postData));
-								_canvas.addProcess(postData);
-							}
-						});
-						
-						
-					});
-				}
-			});
+var the_flow_id = @ViewData["project_id"];
+var can_edit="@ViewData["can_edit"]";
+var nowUserName="@WorkContext.UserInfo.NickName";
+/*流程图JJF ↓*/
+function setNodeEnd(nodeId){//关闭节点
+    $('#process_page_msg_box').remove();
+    warmMsgFunc(1,'节点设置中，请稍后...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Project/APISetEnd',
+		data:{
+		   project_flow_node_id:nodeId
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){ 
+			   $("#flowdesign_canvas").html(""); 
+			   getNodeList();
+			}
+			else{
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
 		}
-		var canvasMenus={
-				"cmSave" : function(t) {
-					doSave();
-				},
-				//刷新
-				"cmRefresh" : function(t) {
-					location.reload();
-				},
-				selNode:function(obj){
-					selNode(obj);
+	});	
+}
+function setNodeChange(nodeId){//切换节点状态
+    $('#process_page_msg_box').remove();
+    warmMsgFunc(1,'节点设置中，请稍后...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Project/APISetStatus',
+		data:{
+		   project_flow_node_id:nodeId
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){ 
+			   $("#flowdesign_canvas").html(""); 
+			   getNodeList();
+			}
+			else{
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});	
+}
+function choiseNodeFunc(nodeId){//条件节点提交
+    $("#process_page_out_bg").hide();
+    warmMsgFunc(1,'节点设置中，请稍后...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Project/APISetSelect',
+		data:{
+		   project_flow_node_id:nodeId
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){ 
+			   $("#flowdesign_canvas").html(""); 
+			   getNodeList();
+			}
+			else{
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});	    
+}
+function getNextNode(fNodeId){//获取下一节点信息 
+    var rt=false;
+	$("#node_list_pt").html("<p>数据加载中，请稍候...</p>");
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:false,
+		url:'/Project/APIGetNextFlowNode',
+		data:{
+		   project_id:the_flow_id,
+		   project_flow_node_id:fNodeId
+		},
+		timeout:5000,
+		success:function(data){
+			if(data.msg==1){
+			   if(data.data.length>0){ 
+			      rt=data.data[0].node_is_fator;
+			   }
+			   if(rt){			       
+				   var htmlN='<ul class="process_page_out_node_list">';
+				   for(var i=0; i<data.data.length; i++){
+					  htmlN+='<li class="sun"><label class="project_flowinfo_lh40" for="radio_get_id'+data.data[i].project_flow_node_id+'"><i class="process_page_out_icon fr"><input type="radio" name="node_get" id="radio_get_id'+data.data[i].project_flow_node_id+'" value="'+data.data[i].project_flow_node_id+'" /></i>'+data.data[i].node_title+'</label></li>';
+				   }
+				   htmlN+='</ul>';
+				   $("#node_list_pt").html(htmlN);
+				   var getId=0;
+				   $("#node_list_pt input[name='node_get']").unbind("change");
+				   $("#process_page_out_submit").unbind("click");
+				   $("#node_list_pt input[name='node_get']").bind("change",function(){
+					   $("#node_list_pt li").removeClass("get");
+					   $(this).parents("li").addClass("get");
+					   getId=$(this).val();
+				   });
+				   $("#process_page_out_submit").bind("click",function(){
+				       if(getId!=0){
+					      choiseNodeFunc(getId);
+					   }
+				   });
+			   }
+			}
+			else{
+			   rt=error;
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		    rt=error;
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});	
+	return rt;
+}
+function finishNode(nodeId){//节点完成
+    $('#process_page_msg_box').remove();
+    warmMsgFunc(1,'节点设置中，请稍后...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Project/APISetEnd',
+		data:{
+		   project_flow_node_id:nodeId
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){ 
+			   $("#flowdesign_canvas").html(""); 
+			   getNodeList();
+			}
+			else{
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
+		}
+	});	    
+}
+function operaTionFunc(status,activeId,nodeStatus){
+        if(status==1){//完成节点
+			var statueNext=getNextNode(activeId);
+			if(statueNext){
+				 $("#process_page_out_bg").show();
+			}
+			else{
+				var html='<div class="but">'
+				+'<a href="javascript:;" class="process_page_but_public" onclick="finishNode('+activeId+');">确定</a>'
+				+'<a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$(\'#process_page_msg_box\').remove();">取消</a>'
+				+'</div>';
+				operatingMsgFunc(html,'该节点是否已完成？');
+			}   
+		}
+		if(status==2){//关闭节点
+			var statueNext=getNextNode(activeId);
+			if(nodeStatus=="true"&&statueNext){//如果是关闭节点，并且子节点是条件节点
+				$("#process_page_out_bg").show();
+			}
+			else{//
+				var html='<div class="but">'
+				+'<a href="javascript:;" class="process_page_but_public" onclick="setNodeChange('+activeId+');">确定</a>'
+				+'<a href="javascript:;" class="process_page_but_public process_page_but_public_cola" onclick="$(\'#process_page_msg_box\').remove();">取消</a>'
+				+'</div>';
+				if(nodeStatus=="true"){
+				   operatingMsgFunc(html,'是否关闭该节点？');
 				}
-		};
-		/* $.ajax({
-			url:'/Tools/GetFlowPiece',
-			async: false,
+				else{
+				   operatingMsgFunc(html,'是否开启该节点？');
+				}
+			}
+		}
+}
+function getNowTimer(){
+	/**
+	 * 
+	 * 获取当前时间
+	 */
+	function p(s) {
+		return s < 10 ? '0' + s: s;
+	}
+	
+	var myDate = new Date();
+	//获取当前年
+	var year=myDate.getFullYear();
+	//获取当前月
+	var month=myDate.getMonth()+1;
+	//获取当前日
+	var date=myDate.getDate(); 
+	var h=myDate.getHours();       //获取当前小时数(0-23)
+	var m=myDate.getMinutes();     //获取当前分钟数(0-59)
+	var s=myDate.getSeconds();  
+	
+	return year+'-'+p(month)+"-"+p(date)+" "+p(h)+':'+p(m)+":"+p(s);
+}
+function modifyRemark(str,pfId){
+    $("#medify_remark_submit").unbind("click");
+	$("#medify_input").val('');
+    //$("#medify_input").val(decodeURI(str));//不做修改，只在上添加
+    $("#medify_box").show();
+	$("#medify_remark_submit").bind("click",function(){
+	    var nStr=$("#medify_input").val();
+		nStr=nowUserName+"("+getNowTimer()+")："+nStr+'\n'+decodeURI(str);
+		$('#medify_box').hide();
+		warmMsgFunc(1,'备注保存中，请稍后...');
+		$.ajax({
+			type:'get',
+			dataType:'json',
+			async:true,
+			url:'/Project/APISaveRemark',
+			data:{
+			   project_flow_node_id:pfId,
+			   remark:nStr
+			},
+			timeout:5000,
 			success:function(data){
-				var node=$('#selNode');
-				$(data.data).each(function(){
-					var item=this;
-					var li=$('<li></li>').attr('data-id',this.id).attr('id','add_'+this.id);
-					$('<i class="fa fa-plus"></i>').appendTo(li);
-					$('<span class="_label"></span>').appendTo(li).html(this.title).css('marginLeft','5px');
-					node.after(li);
-					node=li;
-					
-					canvasMenus['add_'+this.id]=function(obj){
-						selNode(obj,item);
-					}
-				});
-			}
-		}); */
-		
-		
-		
-		
-		
-		//消息提示
-		mAlert = function(messages, s) {
-			if (!messages)
-				messages = "";
-			if (!s)
-				s = 2000;
-			alertModal.find(".modal-body").html(messages);
-			alertModal.modal('toggle');
-			setTimeout(function() {
-				alertModal.modal("hide")
-			}, s);
-		}
-
-		
-		attributeModal.on('hidden.bs.modal', function (e) {
-			$(this).removeData("modal");//移除数据，防止缓存
-		});
-		
-		
-		//刷新页面
-		function page_reload() {
-			location.reload();
-		}
-		function getNodeList(keyword, page, selected) {
-			$
-					.ajax({
-						url : "/Tools/GetAllNode",
-						data : {
-							"page_size" : 10,
-							"page_index" : page,
-							"keyword" : keyword
-						},
-						async : false, //同步请求
-						datatype : "json",
-						beforeSend : function() {
-							//Loading....
-						},
-						complete : function() {
-							//Loading Complete
-						},
-						success : function(data) {
-							console.log(JSON.stringify(data));
-							if (data.msg == 0) {
-								alert(data.msgbox);
-								return;
-							}
-							var tbody = $('#listData').empty();
-							$
-									.each(data.data,
-											function(i, item) {
-												var tr = $('<tr></tr>')
-														.appendTo(tbody);
-												var td = $('<td></td>')
-														.appendTo(tr);
-												td.attr('data-id', this.id)
-														.attr('data-title',
-																this.title);
-												$('<button>选择</button>')
-														.appendTo(td)
-														.click(function() {
-															selected(this);
-														});
-												$('<td></td>').appendTo(tr)
-														.html(this.title);
-
-											});
-							if (data.total == 0) {
-								var tr = $('<tr></tr>').appendTo(tbody);
-								$('<td colspan="3"></td>')
-										.appendTo(tr)
-										.html(
-												'<p style="text-align:center;font-size:16px;">没有相关数据</p>');
-							}
-							$("#span_data_total").text(data.total);
-							laypage({
-								cont : $('#pager'), //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：<div id="page1"></div>
-								pages : data.msgbox, //通过后台拿到的总页数
-								curr : page || 1, //当前页
-								groups : 7, //连续显示分页数
-								skip : true, //是否开启跳页
-								jump : function(obj, first) { //触发分页后的回调
-									if (!first) { //点击跳页触发函数自身，并传递当前页：obj.curr
-										getNodeList(keyword, obj.curr, selected);
-									}
-								}
-							});
-
-						}
-					});
-
-		}
-		/*
-		php 命名习惯 单词用下划线_隔开
-		js 命名习惯：首字母小写 + 其它首字线大写
-		 */
-		/*步骤数据*/
-		function getItem()
-		{
-			$.ajax({
-				url:'/Project/APIGetProjectFlow',
-				data:{project_id:the_flow_id},
-				success:function(data){
-					make(data.data);
+				warmMsgFunc(0);
+				if(data.msg==1){ 
+				   getNodeList();
 				}
-			});
-		}
-		getItem();
-		
-		
-		function make(data){
-		 _canvas = $("#flowdesign_canvas")
-				.Flowdesign(
-						{
-							"processData" : data,
-							canvasMenus:canvasMenus,
-							processMenus : {
-								
-								"pmEye":function(t){
-									var url='/Project/FlowNodeInfo?id='+_canvas.getActiveId();
-									window.open(url);
-								},
-								"pmDelete" : function(t) {
-									if (confirm("你确定删除节点吗？")) {
-										var activeId = _canvas.getActiveId();//右键当前的ID
-										$.ajax({
-											url:'/Project/APIDelProjectFlowNode?id='+activeId+'&project_pieces=',
-											type:'post',
-											success:function(data){
-												console.log(JSON.stringify(data));
-												if(data.msg==1){
-												//_canvas.delProcess(activeId);
-												location.reload();
-												}else{
-													alert(data.msgbox);
-												}
-											}
-										});
-										
-										
-									}
-								},
-								"pmAttribute" :setAttr
-								
-							},
-							fnRepeat : function() {
-								//alert("步骤连接重复1");//可使用 jquery ui 或其它方式提示
-								mAlert("步骤连接重复了，请重新连接");
-
-							},
-							fnClick : function() {
-								var activeId = _canvas.getActiveId();
-								mAlert("查看步骤信息 " + activeId);
-							},
-							fnDbClick : setAttr
-						});
-		}
-	
-		
-		/*清除*/
-		$("#leipi_clear").bind('click', function() {
-			if (_canvas.clear()) {
-				//alert("清空连接成功");
-				mAlert("清空连接成功，你可以重新连接");
-			} else {
-				//alert("清空连接失败");
-				mAlert("清空连接失败");
+				else{
+				   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+				}
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+				warmMsgFunc(0);
+				operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+				console.log(XMLHttpRequest.status);
 			}
-		});
-		var attributeModalCallBack=false;
-		 attributeModal.on('show.bs.modal',function (e) {
-			url=$(attributeModal).attr('data-url');
-			var div= $('<div></div>').load(url ,'',attributeModalCallBack);
-			 div.appendTo( attributeModal.find(".modal-body" ).empty());
-		 });
-		ajaxModal = function(url, fn) {
-			attributeModalCallBack=fn;
-			attributeModal.find(".modal-body").html(
-					'<img src="/assets/flowdesign/images/loading.gif"/>');
-			
-			 $( ".modal-title" ).html("编辑节点");
-			 attributeModal.attr('data-url',url);
-			attributeModal.modal('show');
-		}
-		function getStyleValue(key,val){
-			if(/^width$|^height$|^line-height$|^left$|^top$/i.test(key))
-			{
-				return val==''?'':parseInt(val.replace(/[^\d+]/gi,''));
-			}else if(/^color$/gi.test(key)){
-				return val.replace(/^#/gi,'');
-			}
-			return val;
-		}
-		
-		function doSave()
-		{
-			var list = _canvas.getProcessInfo();//连接信息
-			
-			var data={project_id:the_flow_id,reference_pieces:'',list:list};
-			
-			console.log(JSON.stringify(data));
-			
-			 $.ajax({
-	                url: "/Project/APISaveALL",
-	                type: "post",
-	                dataType: "json",
-	                async:false,
-	                data: JSON.stringify(data),
-	                success: function (data) {
-	                	console.log(JSON.stringify(data));
-	                    if(data.msg ==1)
-	                    {
-	                    	alert('保存成功');
-	                        //TODO OK
-	                    }
-	                },
-	                error: function (XMLHttpRequest, textStatus, errorThrown) {
-	                    alert(XMLHttpRequest.status);
-	                    alert(XMLHttpRequest.readyState);
-	                    alert(textStatus);
-	                }
-	            });
-		}
+		});	    
 	});
-	function setStyleValue(key,val){
-		if(/^width$|^height$|^line-height$|^left$|^top$/i.test(key))
-		{
-			val=parseInt(val);
-			return isNaN(val)?"":parseInt(val);
-		}else if(/^color$/gi.test(key)){
-			return val.trim()==''?'':'#'+val.trim();
+}
+function getFileName(o) {
+	var pos = o.lastIndexOf("\\");
+	return o.substring(pos + 1);
+}
+function Upload(obj){
+      warmMsgFunc(1,'文件上传中，请稍后...');
+	  var fd = new FormData();
+	  fd.append("FileData", $(obj)[0].files[0]);
+	  $.ajax({
+		  url: '/Tools/UploadFile',
+		  type: 'POST',
+		  cache: false,
+		  contentType: "multipart/form-data",
+		  data: fd,
+		  processData: false,
+		  contentType: false
+	  }).done(function (res) {
+	      warmMsgFunc(0);
+		  if (res.msg == 1) {
+		      var dataJson=$(obj).attr("data-json");
+			  dataJson+='{"file_name":"'+getFileName($(obj).val())+'","file_path":"'+res.data+'","file_size":"'+res.msgbox+'"}';
+			  dataJson+=']';
+		      warmMsgFunc(1,'附件添加中，请稍后...');
+			  $.ajax({
+				  type:'post',
+				  dataType:'json',
+				  async:true,
+				  url:'/Project/APISaveFile?project_flow_node_id='+$(obj).attr("data-id"),
+				  data:dataJson,
+				  timeout:5000,
+				  success:function(data){
+					  warmMsgFunc(0);
+					  if(data.msg==1){ 
+						 getNodeList();
+					  }
+					  else{
+						 operatingMsgFunc(1,'操作失败：'+data.msgbox);
+					  }
+				  },
+				  error:function(XMLHttpRequest, textStatus, errorThrown){
+					  warmMsgFunc(0);
+					  operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+					  console.log(XMLHttpRequest.status);
+				  }
+			  });	
+		  } else {
+			  operatingMsgFunc(1,'添加附件失败：'+res.msgbox);
+		  }
+	  }).fail(function (XMLHttpRequest, textStatus, errorThrown) { 
+	      operatingMsgFunc(1,'添加附件失败：'+XMLHttpRequest.status);
+	  });
+}
+function getNodeList(){//读取节点列表
+    warmMsgFunc(1,'节点列表读取中，请稍后...');
+	$.ajax({
+		type:'get',
+		dataType:'json',
+		async:true,
+		url:'/Project/APIGetProjectFlow',
+		data:{
+		   project_id:the_flow_id
+		},
+		timeout:5000,
+		success:function(data){
+			warmMsgFunc(0);
+			if(data.msg==1){
+			   var html='<table class="tab_node_list" width="100%" cellpadding="0" cellspacing="0" border="1" bordercolor="#dce2ea">';
+                   html+='<tr class="tt">';
+                   html+='<td class="w10">流程节点</td>';
+                   html+='<td>备注</td>';
+                   html+='<td class="w15">操作时间</td>';
+                   html+='<td class="w15">操作人</td>';
+				   html+='<td class="w15">附件</td>';
+                   html+='<td class="w15">操作</td>';
+                   html+='</tr>';
+				   for(var i=0; i<data.data.length; i++){
+                      html+='<tr>';
+                      html+='<td class="w15"><a target="_blank" href="/Project/FlowNodeInfo?id='+data.data[i].project_flow_node_id+'">'+data.data[i].node_title+'</a></td>';
+                      html+='<td>';
+					  html+='<pre>'+data.data[i].remark+'</pre>';
+					  var remark=encodeURI(data.data[i].remark);
+					  if(can_edit!="False"){	
+					  html+='<p><a href="javascript:;" class="col_link" onclick="modifyRemark(\''+remark+'\',\''+data.data[i].project_flow_node_id+'\')">添加备注</a></p>';
+					  }
+					  html+='</td>';
+                      html+='<td class="w15">'+data.data[i].last_update_time+'</td>';
+                      html+='<td class="w15">'+data.data[i].user_name+'</td>';
+					  html+='<td class="wfj">';
+					  var jsonData='[';
+					  for(var y=0; y<data.data[i].files.length; y++){
+					     html+='<p>'+data.data[i].files[y].file_name+'&nbsp;&nbsp;&nbsp;<a href="'+data.data[i].files[y].file_path+'" class="col_link" target="_blank">下载</a></p>';
+						 jsonData+='{\'file_name\':\''+data.data[i].files[y].file_name+'\',\'file_path\':\''+data.data[i].files[y].file_path+'\',\'file_size\':\''+data.data[i].files[y].file_size+'\'},'
+					  }			
+					  if(can_edit!="False"){		  
+					  html+='<p><label class="col_link" for="file'+data.data[i].project_flow_node_id+'">上传附件<input type="file" id="file'+data.data[i].project_flow_node_id+'" onchange="Upload(this)" data-id="'+data.data[i].project_flow_node_id+'" data-json="'+jsonData+'"></label></p>';
+					  }
+					  html+='</td>';
+                      html+='<td class="w15" valign="middle">';
+					  if(!data.data[i].is_end){
+					      /*
+						  if(!data.data[i].status){
+							  html+='<a href="javascript:;" class="split" onclick="operaTionFunc(2,\''+data.data[i].project_flow_node_id+'\',\'false\')">开启</a>';
+						  }
+						  else{
+							  html+='<a href="javascript:;" class="split" onclick="operaTionFunc(1,\''+data.data[i].project_flow_node_id+'\')">完成</a>';
+							  html+='<br />';
+							  //html+='<a href="javascript:;" class="split sp_col" onclick="operaTionFunc(2,\''+data.data[i].project_flow_node_id+'\',\'true\')">关闭</a>';//不需要关闭节点
+						  }
+						  */
+						  if(data.data[i].status&&can_edit!="False"){
+						      html+='<a href="javascript:;" class="split" onclick="operaTionFunc(1,\''+data.data[i].project_flow_node_id+'\')">完成</a>';
+						  }
+					  }
+                      html+='</td>';
+                      html+='</tr>';				      
+				   }
+                   html+='</table>';
+				   $("#flowdesign_canvas").html(html);
+			}
+			else{
+			   operatingMsgFunc(1,'操作失败：'+data.msgbox);
+			}
+		},
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			warmMsgFunc(0);
+			operatingMsgFunc(1,'操作失败：'+XMLHttpRequest.status);
+			console.log(XMLHttpRequest.status);
 		}
-		return val;
-	}
-	var edit_node_item;
-	function setAttr(obj){
-		var item={};
-		$.each(obj.attributes,function(k,v){
-    		if(!/data-/gi.test(v.name)){
-    			return true;
-    		}
-    		var key=v.name.substr(5);
-    		item[key]=v.value;
-    	});
-		edit_node_item=item;
-				ajaxModal('/assets/flow_attribute2.html',function(){
-					init_flow_node_edit(obj,item);
-				});
-		
-	}
-	function node_attr_save(obj){
-		var box=$(obj).parents('.modal');
-		var tmp=get_node_edit_value();
-		if(false==tmp){
-			return;
-		}
-		var div=$('#window'+edit_node_item.id);
-		$.each(tmp,function(k,v){
-			div.attr('data-'+k,v);
-		});
-		edit_node_item=$.extend(edit_node_item,tmp);
-		console.log(JSON.stringify(edit_node_item));
-		 $.ajax({
-             url: "/Project/APISave",
-             type: "post",
-             dataType: "json",
-             async:false,
-             data: JSON.stringify(edit_node_item),
-             success: function (data) {
-                 if(data.msg ==1)
-                 {
-            	 	_canvas.setStyle(edit_node_item);
-            	 	attributeModal.modal('hide');
-                 }else{
-                	 alert(data.msgbox);
-                 }
-             },
-             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                 alert(XMLHttpRequest.status);
-                 alert(XMLHttpRequest.readyState);
-                 alert(textStatus);
-             }
-         });
-		//alert(data.join(';'));
-	}
+	});	
+}
+$(function(){
+    getNodeList();
+});
+/*流程图JJF ↑*/
 
-	
 </script>
-    <script type="text/javascript">
-        //项目ID
-       
-
-        /**
-        * 【说明】
-        * 项目里的流程节点的数据是从/Flow/拷贝的，这里独立添加编辑，不影响/Flow页面里的数据，所以数据结构有改动
-        * 这次所有保存、获取数据全部通过json格式传输，获取列表示例
-        * {"total":2,"project_id":2,"reference_pieces":"引用到要的块ID,逗号分割，前后都加逗号，示例：,1,2,3,4,","list":[
-        * {"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"},
-        * {"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
-        *  ]};
-        * 字段解释：
-        *	project_id 项目ID
-        *	reference_pieces json里有解释
-        *		id 当前流程节点在数据库保存的值，后面删除、修改功能用到的就是这个
-        *		project_flow_node_id  引用的节点的ID，是/Node/Index里面节点的值，
-        *		project_flow_node_title   引用的节点的标题，固定、不可修改
-        *       索引，整型，用户自行输入
-        *		piece  当前节点属于哪个块，如果是通过块添加的流程节点，这个就是块的id；如果是独立右键选择的节点，则传入0
-        *		status  当前节点装，0 or 1 对应开启关闭。默认为true，注意为false的情况下，is_end、is_start 不可修改
-        *		is_start 是否开始状态，只是个标识而已
-        *		is_end 是否结束状态，只是个标识而已
-        *		剩下几个就不解释了
-        **/
-
-
-
-        /**
-        * 【获取所有项目的流程节点信息】
-        * 接口地址：/Project/APIGetProjectFlowNode?project_id=项目ID
-        * 请求方式：GET
-        * 返回数据格式：如说明里的json
-        */
-
-        /**
-        * 【根据块获取流程节点信息】
-        * 接口地址：/Project/APIDelProjectFlowNode?id=项目流程ID&project_pieces=项目目前引用到的块id，格式如json里的reference_pieces
-        * 请求方式：POST
-        * 返回数据格式：/
-        * PS:如果当前节点是属于某个块，删除当前节点会有该节点是块在此流程的最后一个节点，删除时项目引用的块会发生改变，所以要传入
-        */
-
-        /**
-        * 【保存修改的节点信息】
-        * 接口地址：/Project/APISave
-        * 请求方式：POST
-        * 请求数据示例：{"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
-        * 返回数据格式：/
-        */
-
-        /**
-        * 【保存所有修改的节点信息】
-        * 接口地址：/Project/APISaveALL
-        * 请求方式：POST
-        * 请求数据示例：如说明里的json
-        * 返回数据格式：/
-        */
-
-        /**
-        * 【添加项目流程节点】
-        * 接口地址：/Project/APIAddProjectFlowNode?project_id=项目ID&project_pieces=项目目前引用到的块id，格式如json里的reference_pieces
-        * 请求方式：POST
-        * 请求数据示例：{"id":1,"project_flow_node_id":1,"project_flow_node_title":"标题","index":1,"piece":1,"status":true,"is_start":false,"is_end":false,"top":1,"left":1,"color":"对号入座","icon":"对号入座","process_to":"对号入座"}
-        * 返回数据格式：result.data 为添加后的id,删除用到的这个
-        */
-
-    </script>
 
 }
 <!--底部脚本 end-->

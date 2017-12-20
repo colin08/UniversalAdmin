@@ -92,7 +92,7 @@
                         </li>
                         <li>
                             <div class="lilt">内容:</div>
-                            <div class="limd big">
+                            <div style="width:100%;">
                                 @Html.TextAreaFor(p => p.content)
                             </div>
                             <div class="litip">@Html.ValidationMessageFor(p => p.content)</div>
@@ -106,7 +106,7 @@
             </form>
         </div>
 
-        <div class="footer">Copyright ©  深圳市诚泰城市更新咨询服务有限公司  粤ICP备13089427号-1</div>
+        <div class="footer">Copyright © 深圳市诚泰城市更新咨询服务有限公司 粤ICP备13089427号-1</div>
     </div>
 
 </div>
@@ -144,10 +144,6 @@
             }else if(Model.Msg == 3)
             {
                 @:alert("数据验证失败");
-            }else if(Model.Msg == 4)
-            {
-                @:alert("@Model.MsgBox");
-                @:location.href = "/Document/Index";
             }
         });
 

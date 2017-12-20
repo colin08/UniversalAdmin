@@ -611,7 +611,7 @@ body {
 
 .user {
 	float: right;
-	margin: 0 15px;
+	margin:0 16px;
 	position: relative;
 	z-index: 999;
 }
@@ -643,7 +643,7 @@ body {
 	width: 300px;
 	position: absolute;
 	right: 20px;
-	top: 65px;
+	top: 40px;
 	box-shadow: 0 2px 5px #ccc;
 	border: 1px solid #fff;
 	border-radius: 6px;
@@ -896,10 +896,16 @@ body {
 	background: #f7f7f7;
 }
 
-.toplink li .favPop a.allfav:hover {
+.toplink li .favPop a.allfav {
 	background: #f1f1f1;
+	line-height: 20px;
+height: 40px;
+padding: 10px 0;
 }
 
+.toplink li .favPop a.allfav:hover {
+    background: #f1f1f1;
+}
 .nofav {
 	line-height: 60px;
 	text-align: center;
@@ -909,10 +915,14 @@ body {
 
 .mbdownRt a.d-android {
 	background-image: url(../ico/ico_33.png);
+	padding:0 20px;
+	height:50px;line-height:50px;
 }
 
 .mbdownRt a.d-ios {
 	background-image: url(../ico/ico_34.png);
+	padding:0 20px;
+    height:50px;line-height:50px;
 }
 
 .toplink li .mbdownRt a.d-android:hover {
@@ -1712,7 +1722,8 @@ body {
 }
 
 .user_list_box {
-	width: 750px
+	width: 750px;
+	min-height:200px;
 }
 
 #user_list_box:after, .user_list_box:after {
@@ -1755,7 +1766,10 @@ body {
 .ebtn {
 	display: none;
 	position: absolute;
-	top: 0
+	top: 0;
+	color:#333;
+	border:solid #ccc 1px;
+	background:none
 }
 
 .down_dialog {
