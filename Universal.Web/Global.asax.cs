@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
 using System.Web.Http;
 using System.Web.Optimization;
-using System.Data.SqlClient;
 
 namespace Universal.Web
 {
     public class Global : HttpApplication
     {
-        string SqlConnection = System.Configuration.ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-
         void Application_Start(object sender, EventArgs e)
         {
             // 在应用程序启动时运行的代码
@@ -30,16 +23,14 @@ namespace Universal.Web
             //添加自定义监听器
             System.Diagnostics.Trace.Listeners.Add(new Tools.CustomTraceListener());
 
-            GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
-
-
-            SqlDependency.Start(SqlConnection);
+            //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
+            
         }
 
 
         void Application_End()
         {
-            SqlDependency.Stop(SqlConnection);
+
         }
 
 

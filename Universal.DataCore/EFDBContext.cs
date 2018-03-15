@@ -42,22 +42,7 @@ namespace Universal.DataCore
         /// 接口请求日志
         /// </summary>
         public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
-
-        /// <summary>
-        /// 系统及时消息
-        /// </summary>
-        public DbSet<Entity.SysMessage> SysMessages { get; set; }
-
-        /// <summary>
-        /// 意见反馈
-        /// </summary>
-        public DbSet<Entity.Feedback> Feedbacks { get; set; }
-
-        /// <summary>
-        /// APP版本升级管理
-        /// </summary>
-        public DbSet<Entity.AppVersion> AppVersions { get; set; }
-
+        
         /// <summary>
         /// 系统需要权限控制的路由表
         /// </summary>
@@ -87,12 +72,7 @@ namespace Universal.DataCore
         /// 无限级分类
         /// </summary>
         public DbSet<Entity.CusCategory> CusCategorys { get; set; }
-
-        /// <summary>
-        /// 数据库备份
-        /// </summary>
-        public  DbSet<Entity.SysDbBack> SysDbBacks { get; set; }
-
+        
 
         /// <summary>
         /// 
