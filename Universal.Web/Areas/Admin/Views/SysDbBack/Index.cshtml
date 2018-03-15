@@ -101,7 +101,7 @@
         </table>
 
         <div class="am-cf">
-            每页 <input type="number" cname="sysdbbackindex" value="@Model.page_size" id="txt_page_size" style="width:40px;" onchange="SetPageSize(this)" /> 条数据 共 @Model.total 条记录
+            每页 <input type="number" cname="@WorkContext.PageKeyCookie" value="@Model.page_size" id="txt_page_size" style="width:40px;" onchange="SetPageSize(this)" /> 条数据 共 @Model.total 条记录
             <div class="pull-right">
                 <div id="pager"></div>
             </div>

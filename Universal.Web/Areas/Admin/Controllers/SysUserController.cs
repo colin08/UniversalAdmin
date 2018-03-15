@@ -27,7 +27,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.role = role;
             response_model.word = word;
             //获取每页大小的Cookie
-            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysuserindex"), SiteKey.AdminDefaultPageSize);
+            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie(WorkContext.PageKeyCookie), SiteKey.AdminDefaultPageSize);
 
             Load();
 

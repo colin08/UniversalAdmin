@@ -54,6 +54,11 @@ namespace Universal.Web.Framework
         public string PageKey;
 
         /// <summary>
+        /// 页面标识符，controleraction 
+        /// </summary>
+        public string PageKeyCookie;
+
+        /// <summary>
         /// Ajax请求一般操作返回json实体对象，一般不需要data字段
         /// </summary>
         public UnifiedResultEntity<string> AjaxStringEntity;

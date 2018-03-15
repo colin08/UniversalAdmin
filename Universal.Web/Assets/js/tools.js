@@ -81,9 +81,9 @@ function SetPageSize(obj) {
     if (num != "") {
         $.post("/admin/tools/SetPageCookie", { "cname": cname, "num": num }, function (result) {
             //
+            location.reload();
         });
-        //页面刷新
-        location.href = '?page=1';
+        //location.href = '?page=1';
     }
 }
 

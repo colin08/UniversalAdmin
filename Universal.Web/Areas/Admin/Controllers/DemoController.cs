@@ -20,7 +20,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.page = page;
             response_model.word = word;
             //获取每页大小的Cookie
-            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("demoindex"), SiteKey.AdminDefaultPageSize);
+            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie(WorkContext.PageKeyCookie), SiteKey.AdminDefaultPageSize);
 
             List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
             if (!string.IsNullOrWhiteSpace(word))

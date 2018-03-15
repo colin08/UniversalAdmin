@@ -27,7 +27,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.word = word;
             response_model.type = type;
             //获取每页大小的Cookie
-            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("sysdbbackindex"), SiteKey.AdminDefaultPageSize);
+            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie(WorkContext.PageKeyCookie), SiteKey.AdminDefaultPageSize);
 
             List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
             if (type != 0)

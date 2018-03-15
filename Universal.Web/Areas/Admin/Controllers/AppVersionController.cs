@@ -22,7 +22,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             response_model.platform = platform;
 
             //获取每页大小的Cookie
-            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie("appversionindex"), SiteKey.AdminDefaultPageSize);
+            response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie(WorkContext.PageKeyCookie), SiteKey.AdminDefaultPageSize);
 
             List<BLL.FilterSearch> filters = new List<BLL.FilterSearch>();
             if (platform != 0)

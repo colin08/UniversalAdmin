@@ -45,6 +45,7 @@ namespace Universal.Web.Framework
             //设置当前动作方法名
             WorkContext.Action = RouteData.Values["action"].ToString().ToLower();
             WorkContext.PageKey = string.Format("{0}/{1}", WorkContext.Controller, WorkContext.Action).ToLower();
+            WorkContext.PageKeyCookie = ("admin" + WorkContext.Controller + WorkContext.Action).ToLower();
             //用户
             WorkContext.UserInfo = GetUserInfo();
         }
