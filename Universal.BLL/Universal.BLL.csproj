@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,10 +62,17 @@
     <Compile Include="BLLCusCategory.cs" />
     <Compile Include="BLLDemo.cs" />
     <Compile Include="BLLEmail.cs" />
+    <Compile Include="BLLMedical.cs" />
+    <Compile Include="BLLMedicalBanner.cs" />
+    <Compile Include="BLLMedicalItem.cs" />
+    <Compile Include="BLLMPUser.cs" />
+    <Compile Include="BLLMPUserState.cs" />
+    <Compile Include="BLLOrderMedical.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
     <Compile Include="Base\DynamicLinq.cs" />
     <Compile Include="Base\FilterSearch.cs" />
+    <Compile Include="BLLMpUserMedicalReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

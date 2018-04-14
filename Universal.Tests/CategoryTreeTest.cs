@@ -20,11 +20,11 @@ namespace Universal.Tests
         public void TestMethod1()
         {
             var db = new EFDBContext();
-            var category_list = db.CusCategorys.AsNoTracking().ToList();
+            //Load();var category_list = db.CusCategorys.AsNoTracking().ToList();
             db.Dispose();
 
             List<Entity.CusCategory> new_list = new List<Entity.CusCategory>();
-            GetChilds(category_list, new_list, null);
+            //GetChilds(category_list, new_list, null);
             StringBuilder tree_str = new StringBuilder();
             foreach (var item in new_list)
             {
@@ -37,28 +37,28 @@ namespace Universal.Tests
             Assert.AreEqual(1, 1);
         }
 
-        public void GetChilds(List<Entity.CusCategory> oldData, List<Entity.CusCategory> newData, int? pid)
-        {
+        //public void GetChilds(List<Entity.CusCategory> oldData, List<Entity.CusCategory> newData, int? pid)
+        //{
 
-            List<Entity.CusCategory> list = new List<Entity.CusCategory>();
-            if (pid == null)
-                list = oldData.Where(p => p.PID == null).ToList();
-            else
-                list = oldData.Where(p => p.PID == pid).ToList();
-            foreach (var item in list)
-            {
-                Entity.CusCategory entity = new Entity.CusCategory();
-                entity.AddTime = item.AddTime;
-                entity.Depth = item.Depth;
-                entity.ID = item.ID;
-                entity.PID = item.PID;
-                entity.SortNo = item.SortNo;
-                entity.Status = item.Status;
-                entity.Title = item.Title;
-                newData.Add(entity);
-                this.GetChilds(oldData, newData, item.ID);
-            }
-        }
+        //    List<Entity.CusCategory> list = new List<Entity.CusCategory>();
+        //    if (pid == null)
+        //        list = oldData.Where(p => p.PID == null).ToList();
+        //    else
+        //        list = oldData.Where(p => p.PID == pid).ToList();
+        //    foreach (var item in list)
+        //    {
+        //        Entity.CusCategory entity = new Entity.CusCategory();
+        //        entity.AddTime = item.AddTime;
+        //        entity.Depth = item.Depth;
+        //        entity.ID = item.ID;
+        //        entity.PID = item.PID;
+        //        entity.SortNo = item.SortNo;
+        //        entity.Status = item.Status;
+        //        entity.Title = item.Title;
+        //        newData.Add(entity);
+        //        this.GetChilds(oldData, newData, item.ID);
+        //    }
+        //}
 
     }
 }

@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "账户余额明细";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <style>
+        .custom-pullrefresh { top: 100px !important; }
+        .mui-pull-top-pocket { top: 0 !important; }
+
+        .top-s-amount {
+				padding-top: 6px;
+				text-align: center;
+			}
+			
+			.amount {
+				font-size: 24px;
+				color: #F5A623;
+			}
+			.data-item{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				
+			}
+			.item-text {
+				font-size: 14px;
+			}
+			.item-amount{
+				font-size: 16px;
+				color: #F5A623;
+			}
+			.no-right{
+				padding-right: 10px !important;
+			}
+    </style>
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='/MP/BasicUser/Index'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">账户余额明细</h1>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<div class="mui-content-padded" style="min-height:500px;">
+    <div class="top-s-amount">
+        <span>当前余额：</span>
+        <span class="amount">￥0</span>
+
+    </div>
+
+    <div id="pullrefresh" class="mui-content mui-scroll-wrapper custom-pullrefresh">
+        <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-chevron" id="ul_data_list" template-id="template_list" pageIndex="1">
+                <script type="text/html" id="template_list">
+                    {{each data}}
+                    <li class="mui-table-view-cell no-right">
+                        <div class="data-item">
+                            <div class="item-text">
+                                <span>{{$value.Title}}</span>
+                                <h5>{{$value.GetAddTime}}</h5>
+                            </div>
+                            <div class="item-amount">
+                                {{if $value.Type == 1}}
+                                +{{$value.Amount}}
+                                {{else}}
+                                -{{$value.Amount}}
+                                {{/if}}
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </script>
+
+
+            </ul>
+            <div id="div_nomore" class="mui-center" style="display:none;text-align:center;margin-top:20px;">没有更多数据了</div>
+            @*<div class="mui-bar-footer mui-text-center" style="width: 100%;">
+                    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+                </div>*@
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/template-web.js"></script>
+    <script>
+
+        var pageSize = 14;
+        var totalPage;//总页码
+        mui.init({
+            pullRefresh: {
+                container: '#pullrefresh',
+                down: {
+                    auto: true,//可选,默认false.首次加载自动上拉刷新一次
+                    callback: pulldownRefresh
+                },
+                up: {
+                    contentrefresh: '正在加载...',
+                    callback: pullupRefresh
+                }
+            }
+        });
+
+        /**
+		 * 下拉刷新具体业务实现
+		 */
+        function pulldownRefresh() {
+            $('#ul_data_list').attr('pageIndex', 1);
+            Ajax_Load_Pullrefresh_Data(true, "ul_data_list");
+        }
+        /**
+		 * 上拉加载具体业务实现
+		 */
+        function pullupRefresh() {
+            Ajax_Load_Pullrefresh_Data(false, "ul_data_list");
+        }
+
+        function Ajax_Load_Pullrefresh_Data(reload, ul_id) {
+            var ul_page_index = parseInt($('#' + ul_id).attr('pageIndex'));
+            if (ul_page_index == 0) ul_page_index = 1;
+            mui.ajax({
+                url: "/MP/AmountDetails/GetPageList",
+                data: { "page_size": pageSize, "page_index": ul_page_index },
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                //async:false,//同步请求
+                timeout: 10000, //超时时间设置为10秒
+                success: function (res) {
+                    mui('#pullrefresh').pullRefresh().refresh(true);
+                    if (res.msg == 0)
+                    {
+                        if (reload) {
+                            mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                        }
+                        mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+                        mui.alert("提示", res.msgbox);
+                    }
+                    else
+                    {
+                        $(".amount").text("￥" + res.msgbox);
+
+                        $('#' + ul_id).attr('pageIndex', parseInt(ul_page_index) + 1);
+                        //取返回的数据
+                        var html = template($('#' + ul_id).attr('template-id'), res);
+                        //最大页数
+                        totalPage = res.total % pageSize != 0 ? parseInt(res.total / pageSize) + 1 : res.total / pageSize;
+                        
+                        if (res.total == 0)
+                        {
+                            $(".mui-pull-bottom-pocket").removeClass("mui-visibility");
+                            $("#div_nomore").show();
+                        } else
+                        {
+                            $("#div_nomore").hide();
+                        }
+                        if (reload) {
+                            //覆盖数据
+                            $('#' + ul_id).html(html);
+                            mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                            $(".mui-pull-top-pocket").removeClass("mui-visibility");
+                        } else {
+                            //追加数据
+                            $('#' + ul_id).append(html);
+                        }
+
+                        mui('#pullrefresh').pullRefresh().endPullupToRefresh(totalPage <= ul_page_index);
+
+                    }
+
+                },
+                error: function (xhr, type, errorThrown) {
+                    //异常处理；
+                    mui('#pullrefresh').pullRefresh().refresh(true);
+                    if (reload) {
+                        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    }
+                    mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+                    mui.toast('获取数据失败，请检查网络连接');
+                }
+            });
+        };
+
+
+    </script>
+}
+<!-- MUI 页面底部脚本 END -->

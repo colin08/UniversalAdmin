@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "用户首页";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+<link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+<style>
+    .mui-table-view { margin-top: 20px; }
+
+    .head-img { width: 90px; height: 90px; }
+
+    .user-info { margin-left: 100px; }
+
+    .user-nickname { height: 32px; width: 150px; display: flex; justify-content: flex-start; align-items: center; }
+
+        .user-nickname span { width: 130px; overflow: hidden; text-overflow: ellipsis; }
+
+        .user-nickname img { width: 40px; height: 32px; }
+
+    .user-qb { height: 50px; margin-top: 4px; }
+
+        .user-qb p { width: 150px; }
+</style>
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <!--
+    <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    -->
+    <h1 class="mui-center mui-title">个人信息</h1>
+</div>
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">
+        <img class="mui-pull-left head-img" onclick="selectImg()" id="head-img" src="@WorkContext.UserInfo.GetAvatar">
+        <input type="file" id="hid_file_con" accept="image/jpeg,image/jpg,image/png" style="display:none;" />
+        <div class="user-info">
+            <div class="user-nickname" onclick="location.href='Info'">
+                <span>@WorkContext.UserInfo.RealName</span>
+                @if (WorkContext.UserInfo.Identity == Universal.Entity.MPUserIdentity.VIP)
+                {
+                    <img src="~/Assets/mui/img/icon-vip.png" />
+                }
+            </div>
+            <div class="user-qb">
+                <p class='mui-ellipsis' id="jiaoyi">账户余额：@WorkContext.UserInfo.AccountBalance.ToString("F2") 元 </p>
+                @if (WorkContext.UserInfo.Identity == Universal.Entity.MPUserIdentity.Normal)
+                {
+                    <button class="mui-btn" id="up-vip" style="margin-top: 1px;">升级VIP</button>
+                }
+            </div>
+        </div>
+
+    </li>
+</ul>
+<ul class="mui-table-view mui-table-view-chevron">
+    <li class="mui-table-view-cell">
+        <a href="Info" class="mui-navigate-right">我的资料</a>
+    </li>
+</ul>
+<ul class="mui-table-view mui-table-view-chevron">
+    <li class="mui-table-view-cell">
+        <a href="/MP/MedicalReport/Index?BackUrl=/MP/BasicUser/Index" class="mui-navigate-right">体检报告</a>
+    </li>
+</ul>
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+</div>
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+<script src="~/Assets/mui/js/jquery.min.js"></script>
+<script src="~/Assets/mui/js/mui.min.js"></script>
+<script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+<script>
+        $("#jiaoyi").on('click', function (event) {
+            event.stopPropagation();
+            location.href = "/MP/AmountDetails/Index";
+        });
+
+		function selectImg(){
+			$("#hid_file_con").click();
+		}
+
+		$("#hid_file_con").on("change", function () {
+		    var filePath = $(this).val().toLowerCase();
+		    if (filePath.indexOf("jpg") != -1 || filePath.indexOf("png") != -1 || filePath.indexOf("jpeg") != -1) {
+		        var arr = filePath.split('\\');
+		        var fileName = arr[arr.length - 1];
+		        upload();
+		    } else {
+		        mui.toast("选择的图片格式有误");
+		        return false
+		    }
+		})
+
+		function upload() {
+		    mui.showLoading("上传头像中..", "div");
+		    var fd = new FormData();
+		    fd.append("FileData", document.getElementById('hid_file_con').files[0]);
+
+		    $.ajax({
+		        url: '/MP/Tools/UploadAvatar',
+		        type: 'POST',
+		        cache: false,
+		        contentType: "multipart/form-data",
+		        data: fd,
+		        processData: false,
+		        contentType: false
+		    }).done(function (res) {
+		        mui.hideLoading();
+		        if (res.msg == 1) {
+		            $("#head-img").attr("src", res.data);
+		        } else {
+		            alert(res.msgbox);
+		        }
+		    }).fail(function (res) {
+		        mui.alert("发生错误", "请稍后重试");
+		    });
+		}
+	
+</script>
+}
+<!-- MUI 页面底部脚本 END -->

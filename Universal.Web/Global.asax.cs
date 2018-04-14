@@ -24,7 +24,8 @@ namespace Universal.Web
             System.Diagnostics.Trace.Listeners.Add(new Tools.CustomTraceListener());
 
             //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
-            
+
+            Senparc.Weixin.MP.Containers.AccessTokenContainer.Register("wxbc002fc3927e272d", "5a26dfba89b538fa60a31c97cacee3c7");
         }
 
 
@@ -33,12 +34,16 @@ namespace Universal.Web
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected void Application_BeginRequest()
         {
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected void Application_EndRequest()
         {
 

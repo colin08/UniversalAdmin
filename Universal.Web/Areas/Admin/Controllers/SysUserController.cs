@@ -9,6 +9,9 @@ using Universal.Web.Framework;
 
 namespace Universal.Web.Areas.Admin.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SysUserController : BaseAdminController
     {
         /// <summary>

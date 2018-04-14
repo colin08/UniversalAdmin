@@ -1,0 +1,306 @@
+﻿@model Universal.Entity.Medical
+@{
+    ViewBag.Title = "编辑体检套餐信息";
+}
+
+<!--头部脚本-->
+@section head
+{
+    @Styles.Render("~/Content/ztree_metroStyle")
+    @Styles.Render("~/Content/icheck")
+@Styles.Render("~/Content/simditor")
+
+<style type="text/css">
+    .ztree li ul.line { height: initial; }
+</style>
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>编辑体检套餐信息</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "Medical", new { Area = "Admin" })">体检套餐管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li><a data-toggle="tab" href="#tab-2">套餐项目</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="hid_items" name="hid_items" value="@ViewData["SelectIDS"]" />
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">套餐状态</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.Status, ViewData["StatusList"] as List<SelectListItem>, new { @class = "form-control",@style="padding:0" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.Status)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">套餐名称</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Title)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">原价</label>
+                    <div class="col-sm-10">
+                        <div class="col-md-2" style="padding-left: 0px;">
+                            <div class="input-group m-b">
+                                <span class="input-group-addon"><i class="fa fa-cny"></i></span>
+                                @Html.TextBoxFor(p => p.YPrice, new { @class = "form-control", placeholder = "原价", @Value = Model.YPrice.ToString("F2") })
+                            </div>
+                                <span class="help-block m-b-none">原价格</span>
+                        </div>
+                        <label class="col-md-3 label_msg"> @Html.ValidationMessageFor(p => p.YPrice)</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">销售价</label>
+                    <div class="col-sm-10">
+                        <div class="col-md-2" style="padding-left: 0px;">
+                            <div class="input-group m-b">
+                                <span class="input-group-addon"><i class="fa fa-cny"></i></span>
+                                @Html.TextBoxFor(p => p.Price, new { @class = "form-control", placeholder = "",@Value=Model.Price.ToString("F2") })
+                            </div>
+                                <span class="help-block m-b-none">实际结算的价格</span>
+                        </div>
+                        <label class="col-md-3 label_msg"> @Html.ValidationMessageFor(p => p.Price)</label>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">排序数字</label>
+
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(p => p.Weight, new { @class = "form-control", placeholder = "排序数字" })
+                        <span class="help-block m-b-none">数字越大越靠前</span>
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Weight)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">封面</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.ImgUrl)
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">封面预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.ImgUrl)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.ImgUrl))
+                                {
+                                    @:
+                                    <li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">套餐介绍</label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(p => p.Desc, new { @class = "form-control", placeholder = "介绍" })
+                    </div>
+                    <label class="col-sm-2 label_msg"> @Html.ValidationMessageFor(p => p.Desc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div class="form-group" style="margin-top:25px;">
+                    <label class="col-sm-2 control-label">选中总价：</label>
+
+                    <div class="col-sm-2">
+                        <span style="line-height: 30px;font-size: 18px;">￥</span> <span id="span_total_amount" style="line-height: 30px;font-size: 18px;color: #F5A623;">@ViewData["TotalAmount"]</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" style="margin-top:25px;">
+                    <div class="col-sm-1 clear"></div>
+                    <div class="col-sm-4">
+                        <!--col-sm-offset-1-->
+                        <ul id="tree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/ztree_excheck")
+    @Scripts.Render("~/bundles/icheck")
+@Scripts.Render("~/bundles/simditor");
+
+    <script>
+
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onCheck: zTreeOnCheck
+            }
+        };
+
+        var zNodes = @Html.Raw(ViewData["Tree"]);
+        
+        var code;
+
+        function setCheck() {
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.setting.check.chkboxType = { "Y": "ps", "N": "ps" };
+        }
+
+        function toDecimal(x) { 
+            var f = parseFloat(x); 
+            if (isNaN(f)) { 
+                return; 
+            } 
+            f = Math.round(x*100)/100; 
+            return f; 
+        } 
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+            //alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+
+            var str_qx = "";
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            var array = zTree.getCheckedNodes(true);
+            var total_amount =0;
+            
+            for (var i = 0; i < array.length; i++) {
+                if(!array[i].isParent)
+                {
+                    str_qx = str_qx + array[i].id + ",";
+                    total_amount +=  toDecimal(array[i].price);
+                }
+            }
+            if (str_qx.length > 0)
+            {
+                str_qx = str_qx.substring(0, str_qx.length - 1);
+            }
+            $("#span_total_amount").text(total_amount);
+            $("#hid_items").val(str_qx);
+        };
+
+        function upload() {
+            var total = $(".@Html.NameFor(p=>p.ImgUrl)List").size();
+            if (total >= 1) {
+                layer.msg("已有封面，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "medical", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.ImgUrl), Area = "Admin" })', 'no']
+            });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").append(img_te);
+        }
+    }
+
+
+        $(function () {
+
+            $.fn.zTree.init($("#tree"), setting, zNodes);
+            setCheck();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            InitTextArea("Desc");
+
+            @if(!ViewData.ModelState.IsValid)
+            {
+                @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+            }
+    });
+    </script>
+}
+<!--底部脚本 end-->

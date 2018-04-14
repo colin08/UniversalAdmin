@@ -107,6 +107,9 @@ namespace Universal.Tools
         [Display(Name ="公司名称"),Required(ErrorMessage ="不能为空"),MaxLength(30,ErrorMessage = "不能超过30个字符")]
         public string CompanyName { get; set; }
 
+        [Display(Name = "版权声明"), Required(ErrorMessage = "不能为空"), MaxLength(100, ErrorMessage = "不能超过100个字符")]
+        public string CopyrightNotice { get; set; }
+
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
 
@@ -158,7 +161,40 @@ namespace Universal.Tools
         public string EmailFrom { get; set; }
         
         [Display(Name = "账户密码"),Required(ErrorMessage ="不能为空"),MaxLength(255,ErrorMessage ="不能超过255个字符")]
-        public string EmailPwd { get; set; }       
+        public string EmailPwd { get; set; }
+
+        #endregion
+
+        #region 微信支付参数
+
+        [Display(Name = "微信支付AppID"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string WeChatPayAppID { get; set; }
+
+        [Display(Name = "微信支付AppSecret"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string WeChatPayAppSecret { get; set; }
+
+        [Display(Name = "微信支付商户ID"), Required(ErrorMessage = "不能为空"), MaxLength(20, ErrorMessage = "不能超过20个字符")]
+        public string WeChatPayMchid { get; set; }
+        
+        [Display(Name = "微信支付商户APPID"), Required(ErrorMessage = "不能为空"), MaxLength(20, ErrorMessage = "不能超过20个字符")]
+        public string WeChatPayMchAppID { get; set; }
+        
+        [Display(Name = "微信支付PayKey"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string WeChatPayPayKey { get; set; }
+        
+
+        #endregion
+
+        #region 微信公众号设置
+
+        [Display(Name = "appID"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
+        public string WXAppID { get; set; }
+
+        [Display(Name = "appsecret"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
+        public string WXAppSecret { get; set; }
+
+        [Display(Name = "token"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
+        public string WXToken { get; set; }
 
         #endregion
 

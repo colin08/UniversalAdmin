@@ -1,0 +1,168 @@
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelMPUserList
+@{
+    ViewBag.Title = "微信用户列表";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+<!-- Panel -->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>微信用户列表</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+
+}
+<!--Panel end-->
+<!--路径导航-->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/MPUser/Index">微信用户管理</a></li>
+            <li><strong>用户列表</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+
+<div class="row">
+    <div class="col-sm-2">
+        @if (CheckAdminPower("MPUser/del", true))
+        {
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/MPUser/Del',1)"><i class="glyphicon glyphicon-ban-circle"></i> 禁用</a>
+        }
+    </div>
+    <div class="col-sm-4">
+        <p></p>
+    </div>
+    <div class="col-sm-2">
+        @Html.DropDownListFor(p => p.role, ViewData["IdentityList"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "RoleChange(this)" })
+    </div>
+    <div class="col-sm-4">
+        <div class="input-group">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
+            </span>
+        </div>
+    </div>
+</div>
+
+<br />
+
+@if (Model.DataList.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" onclick="CheckAll(this)" txt="全选">
+                    </th>
+                    <td>头像</td>
+                    <th>OpenID</th>
+                    <th>是否完善资料</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>用户类别</th>
+                    <th>状态</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DataList)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="datacheck" hid="@item.ID">
+                        </td>
+                        <td><img src="@item.GetAvatar" width="60" height="60" /></td>
+                        <td>@item.OpenID</td>
+                        <td><i class="glyphicon glyphicon-@(item.IsFullInfo ? "ok": "minus")"></i></td>
+                        <td>@item.RealName</td>
+                        <td>@item.GetGenderStr</td>
+                        <td>@item.GetIdentityStr</td>
+                        <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "ban-circle")"></i></td>
+                        <td>@item.AddTime</td>
+                        <td>
+                            <a class="btn btn-sm btn-white" href="/Admin/MPUser/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="am-cf">
+            每页 <input type="number" cname="@WorkContext.PageKeyCookie" value="@Model.page_size" id="txt_page_size" style="width:40px;" onchange="SetPageSize(this)" /> 条数据 共 @Model.total 条记录
+            <div class="pull-right">
+                <div id="pager"></div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p id="pager"><h2>没有相关数据</h2></p>
+}
+<!-- Main Body end -->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/laypage")
+    <script type="text/javascript">
+    function RoleChange(dp)
+    {
+        if(dp.value ==0)
+        {
+            location.href = "?page=1";
+        }
+        else{
+            location.href = "?page=1&role="+dp.value;
+        }
+    }
+
+    function WordSearch()
+    {
+        if($("#txt_word").val().length==0)
+        {
+            location.href = "?page=1";
+        }
+        else
+        {
+            location.href = "?page=1&role=0&word="+encodeURIComponent($("#txt_word").val());
+        }
+
+    }
+
+    laypage({
+        cont: 'pager',
+        pages: @Model.total_page,
+        skin:"#0e90d2",
+        curr: function () {
+            var page = location.search.match(/page=(\d+)/);
+            return page ? page[1] : 1;
+        }(),
+        jump: function (e, first) { //触发分页后的回调
+            if (!first) { //一定要加此判断，否则初始时会无限刷新
+                location.href = '?page=' + e.curr;
+            }
+        }
+    });
+    </script>
+}
+
+<!--底部脚本 end-->

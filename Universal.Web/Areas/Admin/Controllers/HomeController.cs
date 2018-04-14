@@ -21,6 +21,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            ViewData["Copyright"] = WebSite.CopyrightNotice;
             var viewModelLogin = new Models.ViewModelLogin();
             if (WorkContext.UserInfo != null)
                 return RedirectToAction("Index");
@@ -123,11 +124,13 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("其他", "后台管理首页")]
         public ActionResult Index()
         {
+            ViewData["Copyright"] = WebSite.CopyrightNotice;
             return View();
         }
                 
         public ActionResult Center()
         {
+            ViewData["Copyright"] = WebSite.CopyrightNotice;
             return View();
         }
 
@@ -164,10 +167,14 @@ namespace Universal.Web.Areas.Admin.Controllers
                 long FreeSpace = disk_list[0].FreeSpace;
                 //总大小
                 long TotalSize = disk_list[0].Size;
+
+                //已用
+                long YiYong = TotalSize - FreeSpace;
+
                 entity.DiskName = DiskNameArr[0].ToString();
                 entity.DiskAvailable = WebHelper.ByteToGB(FreeSpace);
                 entity.PhysicalDisk = WebHelper.ByteToGB(TotalSize);
-                entity.DiskScale = (int)(((float)FreeSpace / (float)TotalSize) * 100);
+                entity.DiskScale = (int)(((float)YiYong / (float)TotalSize) * 100);
             }
             List<SystemInfo_ProcessInfo> process_list = sys.GetProcessInfo().OrderByDescending(p => p.WorkingSet64).Take(10).ToList();
             List<Models.ViewModelSysTopList> top_list = new List<Models.ViewModelSysTopList>();

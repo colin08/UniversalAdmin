@@ -1,0 +1,69 @@
+﻿@model Universal.Web.Framework.PromptModel
+@{
+    ViewBag.Title = "提示信息";
+}
+
+@section htmlhead{    
+    
+    <style type="text/css">
+        .content { display: flex; justify-content: center; flex-wrap: nowrap; flex-direction: column; align-content: center; align-items: center; margin-top: 60%; }
+        h5 { margin-top: 15px; }
+    </style>
+
+    @if (Model.IsAutoLink)
+    {
+        if (Model.CountdownModel == 0)
+        {
+            <meta http-equiv="refresh" content="@Model.CountdownTime;URL=@Model.LinkUrl" />
+        }
+        else
+        {
+            <script type="text/javascript">
+        window.onload = function(){
+            var time = @Model.CountdownTime; //设置时间为几秒
+            var timer = document.getElementById('timer'); //获取ID为timer的对象
+            timer.innerHTML = time; //初始化显示秒数
+            time = time - 1;
+            var g = window.setInterval(function(){
+                if(time<0){
+                    window.clearTimeout(g); //清除动画
+                    window.location.href = '@Model.LinkUrl'; //跳转到指定地址
+        } else {
+            showTime();
+        }
+        },1000);
+            //显示函数
+            function showTime(){
+                timer.innerHTML = time;
+                time--;
+            }
+        };
+            </script>
+        }
+    }
+
+
+}
+
+<div class="content">
+    <h4>@Html.Raw(Model.Details)</h4>
+    @if (Model.IsAutoLink)
+        {
+        <text>
+            <h5>
+                此页面将在@{
+                    if (Model.CountdownModel == 0)
+                    { @Model.CountdownTime}
+                    else
+                    {<span id="timer">@Model.CountdownTime</span>}}秒后跳转
+            </h5>
+        </text>
+                    }
+    @if (Model.IsShowLink)
+        {
+        <button type="button" onclick="javascript:location.href='@Model.LinkUrl'" class="mui-btn" style="margin-top: 20px;">点击继续</button>
+    }
+
+</div>
+
+

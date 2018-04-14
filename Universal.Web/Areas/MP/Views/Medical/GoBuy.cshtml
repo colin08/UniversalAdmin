@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "购买体检套餐";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+<style>
+    /**
+     *介绍性文本格式
+     */
+    .kr-article-article { font-size: 15px; padding: 0 15px; color: #000; }
+
+        .kr-article-article ol { margin: 0 0 0 20px; padding: 0; }
+
+        .kr-article-article p { color: #000; font-size: 15px; line-height: 23px; }
+    .price { text-decoration: line-through; }
+
+    .price-yh { font-size: 18px; }
+    .custom-card { margin: 10px 5px !important; }
+
+    .mui-card-footer a { color: #000000; }
+
+    .tt-item { display: flex; align-items: center; justify-content: space-between; }
+
+        .tt-item img { margin-left: 5px; width: 20px; height: 20px; }
+
+    .content-title { margin-top: 10px; }
+    .bar-left label{
+        color:#F5A623;
+    }
+
+    .fixed-group-buttom { height: 50px; width: 100%; background: white; padding: 1px 10px; position: fixed; display: flex; justify-content: space-between; align-items: center; }
+</style>
+
+
+}
+<!-- 头部Style等 END -->
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <button type="button" onclick="javascript:location.href='@Html.Raw(ViewData["BackUrl"])'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    <h1 class="mui-center mui-title">套餐购买</h1>
+</div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+
+@{ 
+    var entity_medical = (Universal.Entity.Medical)ViewData["Medical"];
+    var have_order = ViewData["HaveOrder"].ToString() == "1";
+    Universal.Entity.OrderMedical entity_order = null;
+    if(have_order)
+    {
+        entity_order = (Universal.Entity.OrderMedical)ViewData["TempOrder"];
+    }
+}
+
+@if (have_order)
+{
+    <div class="mui-card custom-card">
+        <div class="mui-card-header">@entity_order.Title</div>
+        <div class="mui-card-header mui-card-media" style="height:40vw;background-image:url(@entity_order.ImgUrl)"></div>
+        <div class="mui-card-content">
+        </div>
+        <div class="mui-card-footer">
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_order.MPrice.ToString("F2")</span>&nbsp;<span class="price">￥@entity_order.MYPrice.ToString("F2")</span></a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="mui-card custom-card">
+        <div class="mui-card-header">@entity_medical.Title</div>
+        <div class="mui-card-header mui-card-media" style="height:40vw;background-image:url(@entity_medical.ImgUrl.Replace("_thumb",""))"></div>
+        <div class="mui-card-content">
+        </div>
+        <div class="mui-card-footer">
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_medical.Price.ToString("F2")</span>&nbsp;<span class="price">￥@entity_medical.YPrice.ToString("F2")</span></a>
+        </div>
+    </div>
+}
+
+<div class="mui-content-padded" style="margin-bottom:60px;">
+
+    @if (have_order)
+    {
+        <p class="content-title">增加项(@entity_order.OrderMedicalItems.Where(p => p.Type == Universal.Entity.OrderMedicalItemType.额外自选).ToList().Count()项)</p>
+
+        <ul class="mui-table-view">
+            @foreach (var item in entity_order.OrderMedicalItems.Where(p=>p.Type == Universal.Entity.OrderMedicalItemType.额外自选))
+            {
+                <li class="mui-table-view-cell">
+                    <div class="tt-item">
+                        <span>@item.Title</span>
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.Desc',this)" />
+                    </div>
+                </li>
+            }            
+        </ul>
+    }
+    
+    @if(have_order)
+    {
+    <p class="content-title">套餐内项目(@entity_order.OrderMedicalItems.Where(p => p.Type == Universal.Entity.OrderMedicalItemType.套餐内).ToList().Count()项)</p>
+
+    }else
+    {
+        <p class="content-title">套餐内项目(@entity_medical.MedicalItems.ToList().Count()项)</p>
+    }
+    <ul class="mui-table-view">
+        @if(have_order)
+        {
+            foreach (var item in entity_order.OrderMedicalItems.Where(p=>p.Type == Universal.Entity.OrderMedicalItemType.套餐内))
+            {
+                <li class="mui-table-view-cell">
+                    <div class="tt-item">
+                        <span>@item.Title</span>
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.Desc',this)" />
+                    </div>
+                </li>
+            }
+        }
+        else
+        {
+            foreach (var item in entity_medical.MedicalItems.ToList())
+            {
+                <li class="mui-table-view-cell">
+                    <div class="tt-item">
+                        <span>@item.Title</span>
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Medical" onclick="showTips('@item.Desc',this)" />
+                    </div>
+                </li>
+            }
+        }
+        
+    </ul>
+
+    <div class="mui-bar-footer mui-text-center" style="width: 100%;margin-top: 20px;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+</div>
+
+
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer fixed-group-buttom">
+    <div class="bar-left">
+        @if(have_order)
+        {
+            <span>总金额:<label>￥@entity_order.RelAmount.ToString("F2")</label></span>
+        }else
+        {
+            <span>总金额:<label>￥@entity_medical.Price.ToString("F2")</label></span>
+        }
+    </div>
+    <div class="bar-right">
+        <button class="mui-btn-mini" onclick="javascript:location.href='@Html.Raw(ViewData["GoSelectItem"])'">加项</button>
+        <button class="mui-btn-blue" onclick="javascript:location.href='@Html.Raw(ViewData["NextUrl"])'">下一步</button>
+    </div>
+</div>
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+<script src="~/Assets/mui/js/jquery.min.js"></script>
+<script src="~/Assets/js/plugins/layer/layer.js"></script>
+<script>
+        function showTips(text,obj)
+        {
+            layer.tips(text, obj, 5);
+        }
+</script>
+
+}
+<!-- MUI 页面底部脚本 END -->
+

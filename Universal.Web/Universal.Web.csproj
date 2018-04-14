@@ -73,14 +73,6 @@
       <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -100,6 +92,14 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Senparc.Weixin, Version=4.20.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.4.20.2\lib\net45\Senparc.Weixin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Senparc.Weixin.MP, Version=14.10.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.14.10.3\lib\net45\Senparc.Weixin.MP.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
@@ -162,7 +162,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\WebSite.config" />
+    <None Include="App_Data\WebSite.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="App_Data\mailtemplate\demo.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Assets\css\admin.css" />
@@ -501,7 +503,7 @@
     <Content Include="Assets\js\plugins\layer\laydate\need\laydate.css" />
     <Content Include="Assets\js\plugins\layer\laydate\skins\default\icon.png" />
     <Content Include="Assets\js\plugins\layer\laydate\skins\default\laydate.css" />
-    <Content Include="Assets\js\plugins\layer\layer.min.js" />
+    <Content Include="Assets\js\plugins\layer\layer.js" />
     <Content Include="Assets\js\plugins\layer\laypage\laypage.js" />
     <Content Include="Assets\js\plugins\layer\laypage\skin\laypage.css" />
     <Content Include="Assets\js\plugins\layer\skin\default\icon-ext.png" />
@@ -518,6 +520,12 @@
     <Content Include="Assets\js\plugins\layer\skin\default\xubox_loading3.gif" />
     <Content Include="Assets\js\plugins\layer\skin\default\xubox_title0.png" />
     <Content Include="Assets\js\plugins\layer\skin\layer.css" />
+    <Content Include="Assets\js\plugins\layer\theme\default\icon-ext.png" />
+    <Content Include="Assets\js\plugins\layer\theme\default\icon.png" />
+    <Content Include="Assets\js\plugins\layer\theme\default\layer.css" />
+    <Content Include="Assets\js\plugins\layer\theme\default\loading-0.gif" />
+    <Content Include="Assets\js\plugins\layer\theme\default\loading-1.gif" />
+    <Content Include="Assets\js\plugins\layer\theme\default\loading-2.gif" />
     <Content Include="Assets\js\plugins\markdown\bootstrap-markdown.js" />
     <Content Include="Assets\js\plugins\markdown\bootstrap-markdown.zh.js" />
     <Content Include="Assets\js\plugins\markdown\markdown.js" />
@@ -595,6 +603,45 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.js" />
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
+    <Content Include="Assets\mui\css\moblie.css" />
+    <Content Include="Assets\mui\css\mui.css" />
+    <Content Include="Assets\mui\css\mui.dtpicker.css" />
+    <Content Include="Assets\mui\css\mui.ext.loading.css" />
+    <Content Include="Assets\mui\css\mui.indexedlist.css" />
+    <Content Include="Assets\mui\css\mui.min.css" />
+    <Content Include="Assets\mui\css\mui.picker.min.css" />
+    <Content Include="Assets\mui\css\public.css" />
+    <Content Include="Assets\mui\css\swiper-4.2.0.min.css" />
+    <Content Include="Assets\mui\img\default-avatar.jpg" />
+    <Content Include="Assets\mui\img\demo\1.png" />
+    <Content Include="Assets\mui\img\demo\2.png" />
+    <Content Include="Assets\mui\img\demo\3.png" />
+    <Content Include="Assets\mui\img\demo\4.png" />
+    <Content Include="Assets\mui\img\demo\tel-1.jpg" />
+    <Content Include="Assets\mui\img\demo\tel-2.jpg" />
+    <Content Include="Assets\mui\img\demo\tel-3.jpg" />
+    <Content Include="Assets\mui\img\icon-cancel.png" />
+    <Content Include="Assets\mui\img\icon-gth-big.png" />
+    <Content Include="Assets\mui\img\icon-info-gray.png" />
+    <Content Include="Assets\mui\img\icon-info.png" />
+    <Content Include="Assets\mui\img\icon-ok-big.png" />
+    <Content Include="Assets\mui\img\icon-ok.png" />
+    <Content Include="Assets\mui\img\icon-vip.png" />
+    <Content Include="Assets\mui\img\logo.png" />
+    <Content Include="Assets\mui\img\upload-add.png" />
+    <Content Include="Assets\mui\js\jquery.limitTextarea.js" />
+    <Content Include="Assets\mui\js\jquery.min.js" />
+    <Content Include="Assets\mui\js\mui.dtpicker.js" />
+    <Content Include="Assets\mui\js\mui.ext.loading.js" />
+    <Content Include="Assets\mui\js\mui.indexedlist.js" />
+    <Content Include="Assets\mui\js\mui.min.js" />
+    <Content Include="Assets\mui\js\mui.picker.min.js" />
+    <Content Include="Assets\mui\js\mui.pullToRefresh.js" />
+    <Content Include="Assets\mui\js\mui.pullToRefresh.material.js" />
+    <Content Include="Assets\mui\js\mui.view.js" />
+    <Content Include="Assets\mui\js\public.js" />
+    <Content Include="Assets\mui\js\swiper-4.2.0.min.js" />
+    <Content Include="Assets\mui\js\template-web.js" />
     <Content Include="Global.asax" />
     <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
     <Content Include="Web.config" />
@@ -602,6 +649,8 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\MPHelper\TemplateMessage.cs" />
+    <Compile Include="App_Start\MPHelper\WXPay.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Selector\WebApiNotFound.cs" />
     <Compile Include="App_Start\Startup.cs" />
@@ -610,6 +659,11 @@
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MedicalBannerController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MedicalController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MedicalItemController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MPUserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OrderMedicalController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
@@ -620,10 +674,15 @@
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMedicalItemList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMedicalBannerList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelOrderMedicalList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMedicalList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelDemo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMPUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
@@ -654,9 +713,23 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\MP\Controllers\AmountDetailsController.cs" />
+    <Compile Include="Areas\MP\Controllers\AuthController.cs" />
+    <Compile Include="Areas\MP\Controllers\BasicUserController.cs" />
+    <Compile Include="Areas\MP\Controllers\DoctorsController.cs" />
+    <Compile Include="Areas\MP\Controllers\MedicalController.cs" />
+    <Compile Include="Areas\MP\Controllers\MedicalReportController.cs" />
+    <Compile Include="Areas\MP\Controllers\PayController.cs" />
+    <Compile Include="Areas\MP\Controllers\TestController.cs" />
+    <Compile Include="Areas\MP\Controllers\ToolsController.cs" />
+    <Compile Include="Areas\MP\Models\MedicalSelectItem.cs" />
+    <Compile Include="Areas\MP\Models\OrderMedicalInfo.cs" />
+    <Compile Include="Areas\MP\MPAreaRegistration.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IntranetController.cs" />
+    <Compile Include="Controllers\PayNotifyController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -728,8 +801,42 @@
     <Content Include="Assets\css\plugins\simditor\editor.scss" />
     <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
     <Content Include="Assets\css\plugins\simditor\simditor.scss" />
+    <Content Include="Areas\MP\Views\web.config" />
+    <Content Include="Areas\MP\Views\Shared\Prompt.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\Test.cshtml" />
+    <Content Include="Areas\MP\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\MP\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\MP\Views\Shared\BaseTemplate.cshtml" />
+    <Content Include="Areas\MP\Views\BasicUser\Index.cshtml" />
+    <Content Include="Assets\mui\fonts\mui.ttf" />
+    <Content Include="Assets\mui\img\华汉门诊体检报告.pdf" />
+    <Content Include="Areas\MP\Views\Shared\_Copyright.cshtml" />
+    <Content Include="Areas\MP\Views\BasicUser\Info.cshtml" />
+    <Content Include="Areas\MP\Views\BasicUser\Modify.cshtml" />
+    <Content Include="Areas\MP\Views\MedicalReport\Index.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\Index.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\Info.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\GoBuy.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\SelectItem.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\AddMInfo.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\OrderMedical.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\StatusOrderMedical.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\OrderList.cshtml" />
+    <Content Include="Areas\MP\Views\Medical\OrderInfo.cshtml" />
+    <Content Include="Areas\Admin\Views\MPUser\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MPUser\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalItem\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalItem\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Medical\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Medical\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalBanner\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalBanner\Edit.cshtml" />
+    <Content Include="Areas\MP\Views\AmountDetails\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\OrderMedical\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\OrderMedical\Info.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
+    <None Include="Properties\PublishProfiles\houde.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -738,7 +845,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\MP\Views\Auth\" />
+    <Folder Include="Areas\MP\Views\Doctors\" />
+    <Folder Include="Areas\MP\Views\Test\" />
+    <Folder Include="Areas\MP\Views\Tools\" />
+    <Folder Include="Assets\js\plugins\layer\laydate\theme\" />
+    <Folder Include="Assets\js\plugins\layer\mobile\" />
     <Folder Include="Views\File\" />
+    <Folder Include="Views\Intranet\" />
+    <Folder Include="Views\PayNotifyController\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">

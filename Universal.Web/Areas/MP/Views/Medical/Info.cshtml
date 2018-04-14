@@ -1,0 +1,119 @@
+﻿@model Universal.Entity.Medical
+@{
+    ViewBag.Title = "套餐详情";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+<style>
+    /**
+         *介绍性文本格式
+         */
+    .kr-article-article { font-size: 15px; padding: 0 15px; color: #000; }
+
+        .kr-article-article ol { margin: 0 0 0 20px; padding: 0; }
+
+        .kr-article-article p { color: #000; font-size: 15px; line-height: 23px; }
+    .price { text-decoration: line-through; }
+
+    .price-yh { color: red; font-size: 18px; }
+    .custom-card { margin: 10px 5px !important; }
+
+    .mui-card-footer a { color: #000000; }
+
+    .tt-item { display: flex; align-items: center; justify-content:space-between;}
+
+        .tt-item img { margin-left: 5px; width: 20px; height: 20px; }
+
+    .content-title { margin-top: 10px; }
+
+    .fixed-group-buttom { height: 50px; width: 100%; background: white; padding: 1px 10px; position: fixed; display: flex; justify-content: space-between; align-items: center; }
+</style>
+
+
+
+}
+<!-- 头部Style等 END -->
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <button type="button" onclick="javascript:location.href='index'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    <h1 class="mui-center mui-title">套餐详情</h1>
+</div>
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+
+<div class="mui-card custom-card">
+    <div class="mui-card-header">@Model.Title</div>
+    <div class="mui-card-header mui-card-media" style="height:40vw;background-image:url(@Model.ImgUrl.Replace("_thumb",""))"></div>
+    <div class="mui-card-content">
+    </div>
+</div>
+
+<div class="mui-content-padded" style="margin-bottom:60px;">
+    <p class="content-title">套餐介绍</p>
+    <div class="kr-article-article">
+        @Html.Raw(Model.Desc)
+    </div>
+
+    <p class="content-title">套餐内项目(@Model.MedicalItems.ToList().Count()项)</p>
+    <ul class="mui-table-view">
+        @foreach (var item in Model.MedicalItems.ToList())
+        {
+            <li class="mui-table-view-cell">
+                <div class="tt-item">
+                    <span>@item.Title</span>
+                    <img src="~/Assets/mui/img/icon-info-gray.png" onclick="showTips('@item.Desc',this)" />
+                </div>
+            </li>
+        }
+                
+    </ul>
+
+    <div class="mui-bar-footer mui-text-center" style="width: 100%;margin-top: 20px;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+</div>
+
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer fixed-group-buttom">
+    <div class="bar-left">
+        优惠价:<span class="price-yh">￥@Model.Price.ToString("F2")</span>&nbsp;<span class="price">￥@Model.YPrice.ToString("F2")</span>
+    </div>
+    <div class="bar-right">
+        <button class="mui-btn-red" onclick="javascript:location.href='GoBuy?mid=@Model.ID'">立即购买</button>
+    </div>
+</div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+<script src="~/Assets/mui/js/jquery.min.js"></script>
+<script src="~/Assets/js/plugins/layer/layer.js"></script>
+    <script>
+        function showTips(text,obj)
+        {
+            layer.tips(text, obj, 5);
+        }
+    </script>
+
+}
+<!-- MUI 页面底部脚本 END -->
+

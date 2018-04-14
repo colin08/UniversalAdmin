@@ -96,11 +96,11 @@ function del(url, type) {
         }
     })
     if (ids == "") {
-        layer.msg('请先选中要删除的数据', { icon: 5 });
+        layer.msg('请先选中要操作的数据', { icon: 5 });
         return;
     }
     ids = ids.substring(0, ids.length - 1);
-    layer.confirm('将同时删除所关联的数据，且不可恢复，是否继续？', { icon: 3 }, function (index) {
+    layer.confirm('确认操作？', { icon: 3 }, function (index) {
         layer.close(index);
         $.ajax({
             type: "post",

@@ -17,6 +17,8 @@ namespace Universal.Web.Areas.Admin.Models
 
         public bool open { get; set; }
 
+        public decimal price { get; set; }
+
         //指定序列化成员名称
         [DataMember(Name = "checked")] 
         public bool is_checked { get; set; }

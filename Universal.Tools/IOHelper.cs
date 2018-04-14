@@ -152,6 +152,113 @@ namespace Universal.Tools
             }
         }
 
+        /// <summary>
+        /// 单纯的压缩图片
+        /// </summary>
+        /// <param name="imagePath">图片路径</param> 
+        public static void GenerateThumb_YS(string imagePath)
+        {
+            Image image = Image.FromFile(imagePath);
+
+            string extension = imagePath.Substring(imagePath.LastIndexOf(".")).ToLower();
+            ImageFormat imageFormat = null;
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    imageFormat = ImageFormat.Jpeg;
+                    break;
+                case ".bmp":
+                    imageFormat = ImageFormat.Bmp;
+                    break;
+                case ".png":
+                    imageFormat = ImageFormat.Png;
+                    break;
+                case ".gif":
+                    imageFormat = ImageFormat.Gif;
+                    break;
+                default:
+                    imageFormat = ImageFormat.Jpeg;
+                    break;
+            }
+
+            string save_folder = imagePath.Substring(0, imagePath.LastIndexOf('\\')) + "\\"; //保存的路径
+            string save_name = imagePath.Substring(imagePath.LastIndexOf('\\') + 1, imagePath.LastIndexOf('.') - imagePath.LastIndexOf('\\') - 1) + "_thumb"; //保存的文件名，不包含拓展名
+            string save_io_path = save_folder + save_name + extension;//保存的最终路径
+
+            int toWidth = image.Width;
+            int toHeight = image.Height;
+
+            int x = 0;
+            int y = 0;
+            int ow = image.Width;
+            int oh = image.Height;
+
+            //款为原来的 1/3
+            //toHeight = image.Height * toWidth / image.Width;
+
+            //新建一个bmp
+            Image bitmap = new Bitmap(toWidth, toHeight);
+
+            //新建一个画板
+            Graphics g = Graphics.FromImage(bitmap);
+
+            //设置高质量插值法
+            g.InterpolationMode = InterpolationMode.High;
+
+            //设置高质量,低速度呈现平滑程度
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            //清空画布并以透明背景色填充
+            g.Clear(Color.Transparent);
+
+            //在指定位置并且按指定大小绘制原图片的指定部分
+            g.DrawImage(image,
+                        new Rectangle(0, 0, toWidth, toHeight),
+                        new Rectangle(x, y, ow, oh),
+                        GraphicsUnit.Pixel);
+            g.Dispose();
+
+            EncoderParameters ep = new EncoderParameters();
+            long[] qy = new long[1];
+            qy[0] = 70;//设置压缩的比例1-100
+            EncoderParameter eParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qy);
+            ep.Param[0] = eParam;
+
+            try
+            {
+                ImageCodecInfo[] arrayICI = ImageCodecInfo.GetImageEncoders();
+                ImageCodecInfo jpegICIinfo = null;
+                for (int i = 0; i < arrayICI.Length; i++)
+                {
+                    if (arrayICI[i].FormatDescription.Equals("JPEG"))
+                    {
+                        jpegICIinfo = arrayICI[i];
+                        break;
+                    }
+                }
+                if (jpegICIinfo != null)
+                {
+                    bitmap.Save(save_io_path, jpegICIinfo, ep);
+                }
+                else
+                    bitmap.Save(save_io_path, imageFormat);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (g != null)
+                    g.Dispose();
+                if (bitmap != null)
+                    bitmap.Dispose();
+                if (image != null)
+                    image.Dispose();
+            }
+        }
+
 
         /// <summary>
         /// 获得文件物理路径

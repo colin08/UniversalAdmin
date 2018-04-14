@@ -14,7 +14,7 @@ namespace Universal.Tools
         /// </summary>
         private EmailTemplateHelper()
         {
-            // TODO: Add constructor logic here
+
         }
 
         /// <summary>

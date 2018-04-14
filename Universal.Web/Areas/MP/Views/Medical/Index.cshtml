@@ -1,0 +1,168 @@
+﻿@model List<Universal.Entity.Medical>
+@{
+    ViewBag.Title = "优惠体检套餐";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+<style>
+    .custom-card { margin: 10px 5px !important; }
+
+    #slider { margin-top: 5px; }
+
+    .mui-card-footer a { color: #000000; }
+
+    .price { text-decoration: line-through; }
+
+    .price-yh { color: red; font-size: 18px; }
+</style>
+
+
+
+}
+<!-- 头部Style等 END -->
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <!--
+    <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    -->
+    <h1 class="mui-center mui-title">优惠体检套餐</h1>
+    <button type="button" onclick="javascript: location.href = '/MP/Medical/OrderList'" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">我的订单</button>
+</div>
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+
+@{
+    List<Universal.Entity.MedicalBanner> banner_list = (List<Universal.Entity.MedicalBanner>)ViewData["BannerList"];
+    var banner_total = banner_list.Count;
+    var frist_banner = banner_list.First();
+    var last_banner = banner_list.Last();
+}
+@if (banner_total != 0)
+{
+
+<div id="slider" class="mui-slider">
+    <div class="mui-slider-group mui-slider-loop">
+        <!--
+            作者：litdev@outlook.com
+            时间：2018-03-24
+            描述：图片顺序为：4、1、2、3、4、1
+        -->
+        <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+
+        <div class="mui-slider-item mui-slider-item-duplicate">
+            <a 
+               @if(last_banner.LinkType == Universal.Entity.MedicalBannerLinkType.Medical)
+               {
+                   @: href="Info?mid=@last_banner.LinkVal"
+               }else
+               {
+                   @: hreflang="@last_banner.LinkVal" target="_blank"
+               }
+               >
+                <img src="@last_banner.ImgUrl.Replace("_thumb","")">
+                <p class="mui-slider-title">@last_banner.Title</p>
+            </a>
+        </div>
+        @foreach (var item in banner_list)
+        {
+            <div class="mui-slider-item">
+                <a 
+                   @if(item.LinkType == Universal.Entity.MedicalBannerLinkType.Medical)
+                   {
+                       @: href="Info?mid=@item.LinkVal"
+                   }else
+                   {
+                       @: hreflang="@item.LinkVal" target="_blank"
+                   }
+                   >
+                    <img src="@item.ImgUrl.Replace("_thumb","")">
+                    <p class="mui-slider-title">@item.Title</p>
+                </a>
+            </div>
+        }
+        
+        <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+        <div class="mui-slider-item mui-slider-item-duplicate">
+            <a 
+               @if(frist_banner.LinkType == Universal.Entity.MedicalBannerLinkType.Medical)
+               {
+                   @: href="Info?mid=@frist_banner.LinkVal"
+               }else
+               {
+                   @: hreflang="@frist_banner.LinkVal" target="_blank"
+               }
+               >
+                <img src="@frist_banner.ImgUrl.Replace("_thumb","")">
+                <p class="mui-slider-title">@frist_banner.Title</p>
+            </a>
+        </div>
+    </div>
+    <div class="mui-slider-indicator mui-text-right">
+        @for (int i = 1; i <= banner_total; i++)
+        {
+            if(i == 1)
+            {
+                @:<div class="mui-indicator mui-active"></div>
+            }else
+            {
+                @:<div class="mui-indicator"></div>
+            }
+        }
+        
+    </div>
+</div>
+
+}
+
+@foreach (var item in Model)
+{
+    <div class="mui-card custom-card">
+        <div class="mui-card-header" onclick="location.href = 'Info?mid=@item.ID'">@item.Title</div>
+        <div class="mui-card-header mui-card-media" onclick="location.href='Info?mid=@item.ID'" style="height:40vw;background-image:url(@item.ImgUrl)"></div>
+        <div class="mui-card-content">
+        </div>
+        <div class="mui-card-footer">
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@item.Price.ToString("F2")</span>&nbsp;<span class="price">￥@item.YPrice.ToString("F2")</span></a>
+            <button class="mui-btn-red" onclick="location.href='GoBuy?mid=@item.ID&back=Index'">立即购买</button>
+        </div>
+    </div>
+}
+
+
+<div class="mui-bar-footer mui-text-center" style="width: 100%;">
+    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+</div>
+
+
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<script src="~/Assets/mui/js/mui.min.js"></script>
+
+    <script>
+        var slider = mui("#slider").slider({
+            interval: 5000
+        });
+    </script>
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+
+}
+<!-- MUI 页面底部脚本 END -->
+

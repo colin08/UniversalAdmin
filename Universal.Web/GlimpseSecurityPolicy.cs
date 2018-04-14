@@ -24,12 +24,14 @@ namespace Universal.Web
             off_path.Add("/admin/home/index");
             off_path.Add("/admin/tools/uploadfile");
             off_path.Add("/admin/home/center");
-            if (off_path.Contains(now_path))
-            {
-                return RuntimePolicy.Off;
-            }
+            //if (off_path.Contains(now_path))
+            //{
+            //    return RuntimePolicy.Off;
+            //}
 
-            return RuntimePolicy.On;
+            //return RuntimePolicy.On;
+
+            return RuntimePolicy.Off;
         }
 
         public RuntimeEvent ExecuteOn

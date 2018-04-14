@@ -11,7 +11,7 @@ namespace Universal.Web.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            app.MapSignalR();
+
         }
     }
 }

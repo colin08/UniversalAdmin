@@ -11,7 +11,10 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            //TODO 手动设置openid
+            //BLL.BLLMPUserState.SetOpenID("abcd");
+            return Redirect("/Admin/Home/");
+            //return View();
         }
         
         [BasicAuth]

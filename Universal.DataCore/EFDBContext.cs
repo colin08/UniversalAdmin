@@ -38,10 +38,10 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.SysLogException> SysLogExceptions { get; set; }
 
-        /// <summary>
-        /// 接口请求日志
-        /// </summary>
-        public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
+        ///// <summary>
+        ///// 接口请求日志
+        ///// </summary>
+        //public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
         
         /// <summary>
         /// 系统需要权限控制的路由表
@@ -53,26 +53,85 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.SysRoleRoute> SysRoleRoutes { get; set; }
 
-        /// <summary>
-        /// 测试
-        /// </summary>
-        public DbSet<Entity.Demo> Demo { get; set; }
+        ///// <summary>
+        ///// 测试
+        ///// </summary>
+        //public DbSet<Entity.Demo> Demo { get; set; }
+
+        ///// <summary>
+        ///// 测试相册
+        ///// </summary>
+        //public DbSet<Entity.DemoAlbum> DemoAlbums { get; set; }
+
+        ///// <summary>
+        ///// 测试成员
+        ///// </summary>
+        //public DbSet<Entity.DemoDept> DemoDepts { get; set; }
+
+        ///// <summary>
+        ///// 无限级分类
+        ///// </summary>
+        //public DbSet<Entity.CusCategory> CusCategorys { get; set; }
 
         /// <summary>
-        /// 测试相册
+        /// 微信用户
         /// </summary>
-        public DbSet<Entity.DemoAlbum> DemoAlbums { get; set; }
+        public DbSet<Entity.MPUser> MPUsers { get; set; }
 
         /// <summary>
-        /// 测试成员
+        /// 微信拓展医生资料用户
         /// </summary>
-        public DbSet<Entity.DemoDept> DemoDepts { get; set; }
+        public DbSet<Entity.MPUserDoctors> MPUserDoctors { get; set; }
 
         /// <summary>
-        /// 无限级分类
+        /// 体检套餐订单
         /// </summary>
-        public DbSet<Entity.CusCategory> CusCategorys { get; set; }
+        public DbSet<Entity.OrderMedical> OrderMedicals { get; set; }
+
+        /// <summary>
+        /// 体检套餐订单项
+        /// </summary>
+        public DbSet<Entity.OrderMedicalItem> OrderMedicalItems { get; set; }
+
+        /// <summary>
+        /// 诊所
+        /// </summary>
+        public DbSet<Entity.Clinic> Clinics { get; set; }
+
+        /// <summary>
+        /// 诊所科室
+        /// </summary>
+        public DbSet<Entity.ClinicDepartment> ClinicDepartments { get; set; }
+
+        /// <summary>
+        /// 医生特长标签
+        /// </summary>
+        public DbSet<Entity.DoctorsSpecialty> DoctorsSpecialtys { get; set; }
+
+        /// <summary>
+        /// 用户体检报告
+        /// </summary>
+        public DbSet<Entity.MpUserMedicalReport> MpUserMedicalReports { get; set; }
+
+        /// <summary>
+        /// 体检套餐轮播图
+        /// </summary>
+        public DbSet<Entity.MedicalBanner> MedicalBanners { get; set; }
         
+        /// <summary>
+        /// 体检套餐
+        /// </summary>
+        public DbSet<Entity.Medical> Medicals { get; set; }
+
+        /// <summary>
+        /// 体检套餐项
+        /// </summary>
+        public DbSet<Entity.MedicalItem> MedicalItems { get; set; }
+
+        /// <summary>
+        /// 账户支出明细
+        /// </summary>
+        public DbSet<Entity.MPUserAmountDetails> MPUserAmountDetails { get; set; }
 
         /// <summary>
         /// 
@@ -81,6 +140,7 @@ namespace Universal.DataCore
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Configurations.Add(new MPUserDoctorsMapping());
         }
 
     }

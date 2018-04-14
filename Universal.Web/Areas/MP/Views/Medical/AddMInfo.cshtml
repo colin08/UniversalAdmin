@@ -1,0 +1,212 @@
+﻿@model Universal.Web.Areas.MP.Models.OrderMedicalInfo
+@{
+    ViewBag.Title = "填写预约信息";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+<link href="~/Assets/mui/css/mui.dtpicker.css" rel="stylesheet" />
+<link href="~/Assets/mui/css/mui.picker.min.css" rel="stylesheet" />
+<link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+<style type="text/css">
+    .radio_inline { display: inline-block; width: 65%; }
+
+        .radio_inline label { width: 20%; padding-left: 40px; padding-right: 40px; }
+
+        .radio_inline input[type=radio] { width: 15%; right: auto; }
+</style>
+
+}
+<!-- 头部Style等 END -->
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <button type="button" onclick="javascript:location.href='@ViewData["BackUrl"]'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    <h1 class="mui-center mui-title">填写预约信息</h1>
+</div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+
+<div class="mui-content-padded">
+    <p>请仔细填写以下内容</p>
+    <div class="mui-input-group">
+        <div class="mui-input-row">
+            <label>姓名</label>
+            <input type="text" class="mui-input-clear" name="txt_realname" id="txt_realname" value="@Model.RealName" placeholder="请输入您的真实姓名" />
+        </div>
+        <div class="mui-input-row">
+            <label>身份证号</label>
+            <input type="text" class="mui-input-clear" name="txt_idnumber" id="txt_idnumber" value="@Model.IDNumber" placeholder="18位身份证编码" />
+        </div>
+        <div class="mui-input-row">
+            <label>手机号</label>
+            <input type="text" class="mui-input-clear" name="txt_telphone" id="txt_telphone" value="@Model.Telphone" placeholder="联系手机号" />
+        </div>
+        <div class="mui-input-row ">
+            <label>性别</label>
+            <span class="radio_inline mui-radio">
+                <input name="rd_gender" type="radio" id="radio_man" 
+                       @if(Model.Gender == 1)
+                       {
+                           @:checked
+                       }
+                       value="1">
+                <label for="radio_man">男</label>
+                <input name="rd_gender" type="radio" id="radio_woman"
+                       @if(Model.Gender == 2)
+                       {
+                           @:checked
+                       }
+
+                       value="2">
+                <label for="radio_woman">女</label>
+            </span>
+        </div>
+        <div class="mui-input-row ">
+            <label>生日</label>
+            <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1950,"endYear":2018}' value="@Model.Brithday.ToString("yyyy-MM-dd")" />
+        </div>
+        <div id="" class="mui-input-row">
+            <label>体检日期</label>
+            <input type="text" name="text_time" id="text_time" readonly="readonly" value="@Model.YuYueStr" placeholder="点击选择体检日期" />
+        </div>
+
+    </div>
+    <button type="button" id="btn_save" data-loading-text="保存中" data-loading-icon="mui-spinner mui-spinner-custom" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">确认并前往支付</button>
+</div>
+
+
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+</div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+<script src="~/Assets/mui/js/jquery.min.js"></script>
+<script src="~/Assets/mui/js/mui.min.js"></script>
+<script src="~/Assets/mui/js/mui.dtpicker.js"></script>
+<script src="~/Assets/mui/js/mui.picker.min.js"></script>
+<script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+
+<script type="text/javascript">
+		(function($$) {
+			$$.init();
+			$$("#btn_save")[0].addEventListener('tap', function() {
+				var btn = this;
+				var realname = $("#txt_realname").val();
+				var idnumber = $("#txt_idnumber").val();
+				var telphone = $("#txt_telphone").val();
+				var gender = $("input[name='rd_gender']:checked").val();
+				var bri = $("#txt_bri").val();
+				var yuyue =$("#text_time").val();
+
+				$$(btn).button('loading');
+				$$.showLoading("保存中", "div");
+				mui.ajax('/mp/Medical/ModifyOrderUserInfo', {
+				    data: {
+				        o:'@ViewData["OrderNum"]',
+				        realname: realname,
+				        idnumber: idnumber,
+				        telphone: telphone,
+				        gender: gender,
+				        bri: bri,
+				        yuyue:yuyue
+				    },
+				    dataType: 'json',
+				    type: 'post',
+				    timeout: 10000,
+				    headers: { 'Content-Type': 'application/json' },
+				    success: function (data) {
+				        $$.hideLoading();
+				        $$(btn).button('reset');
+				        if (data.msg == 1) {
+				            $$.toast("用户信息保存成功");
+				            setTimeout(function () {
+				                setTimeout(function () {
+				                    location.href = '@Html.Raw(ViewData["NextUrl"])';
+				                }.bind(btn), 1000);
+				            })
+				        } else {
+				            mui.alert('错误消息', data.msgbox);
+				        }
+				    },
+				    error: function (xhr, type, errorThrown) {
+				        //异常处理；
+				        $$.hideLoading();
+				        $$(btn).button('reset');
+				        mui.alert('网络异常', "请检查联网是否通畅");
+				    }
+				});
+
+			});
+			$$("#txt_bri")[0].addEventListener('tap', function () {
+			    var _self = this;
+			    if (_self.picker) {
+			        _self.picker.show(function (rs) {
+			            console.log('选择结果: ' + rs.text);
+			            _self.picker.dispose();
+			            _self.picker = null;
+			        });
+			    } else {
+			        var optionsJson = this.getAttribute('data-options') || '{}';
+			        var options = JSON.parse(optionsJson);
+			        var id = this.getAttribute('id');
+			        _self.picker = new $$.DtPicker(options);
+			        _self.picker.show(function (rs) {
+			            _self.value = rs.text;
+			            _self.picker.dispose();
+			            _self.picker = null;
+			        });
+			    }
+			});
+			$$("#text_time")[0].addEventListener('tap', function() {
+				var _self = this;
+				if(_self.picker) {
+					_self.picker.show(function(rs) {
+						console.log('选择结果: ' + rs.text);
+						_self.picker.dispose();
+						_self.picker = null;
+					});
+				} else {
+				    //首先获取到当前的年月日
+				    var year = new Date().getFullYear();
+				    var month = new Date().getMonth() + 1;
+				    var day = new Date().getDate();
+
+
+				    //var optionsJson = this.getAttribute('data-options') || '{}';
+				    var optionJson = {"type":"hour","beginYear":year,"endYear":2018,"beginMonth":month,"beginDay":day,"customData":{"h":[{"text":"上午","value":"上午"},{"text":"下午","value":"下午"}]},"labels":["年", "月", "日", "时段", "分"]};
+				    //var options = JSON.parse(optionJson);
+					var id = this.getAttribute('id');
+					_self.picker = new $$.DtPicker(optionJson);
+					_self.picker.show(function(rs) {
+						_self.value = rs.text;
+						_self.picker.dispose();
+						_self.picker = null;
+					});
+				}
+			})
+		})(mui);
+</script>
+
+}
+<!-- MUI 页面底部脚本 END -->
+

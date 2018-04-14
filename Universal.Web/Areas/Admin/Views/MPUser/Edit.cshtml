@@ -1,0 +1,264 @@
+﻿@model Universal.Entity.MPUser
+@{
+    ViewBag.Title = "编辑微信用户资料";
+}
+
+<!--头部脚本-->
+@section head
+{
+    @Styles.Render("~/Content/icheck")
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>编辑微信用户资料</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "MPUser", new { Area = "Admin" })">微信用户管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p=>p.OpenID)
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">身份类别</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.Identity, ViewData["IdentityList"] as List<SelectListItem>, new { @class = "form-control",@style="padding:0" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.Identity)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.RealName, new { @class = "form-control", placeholder = "用户真实姓名" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.RealName)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">身份证号码</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.IDCardNumber, new { @class = "form-control", placeholder = "身份证号码" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.IDCardNumber)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号码</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Telphone, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Telphone)</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">生日</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Brithday, new { @class = "form-control", placeholder = "", @Value = Model.Brithday.ToString("yyyy-MM-dd") })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Brithday)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.Avatar)
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.Avatar)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.Avatar))
+                                {
+                                    @:
+                                    <li><img src="@Model.Avatar" ids="0" class="@Html.NameFor(p => p.Avatar)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.Avatar)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别 </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "1", Model.Gender == Universal.Entity.MPUserGenderType.male ? (object)new { id = "rb_gender_1", @checked = true } : (object)new { id = "rb_gender_1" }) <i></i> 男</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "2", Model.Gender == Universal.Entity.MPUserGenderType.female ? (object)new { id = "rb_gender_2", @checked = true } : (object)new { id = "rb_gender_2" }) <i></i> 女</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "0", Model.Gender == Universal.Entity.MPUserGenderType.unknown ? (object)new { id = "rb_gender_0", @checked = true } : (object)new { id = "rb_gender_0" }) <i></i> 未知</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态 </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, true, new { @id = "rb_status_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, false, new { @id = "rb_status_2" }) <i></i> 禁用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/laydate")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/icheck")
+
+    <script type="text/javascript">
+        
+        laydate.render({
+            elem: '#Brithday',
+            max: getNowFormatDate()
+        });
+
+        //获取当前时间，格式YYYY-MM-DD
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+
+    function upload() {
+        var total = $(".@Html.NameFor(p=>p.Avatar)List").size();
+        if (total >= 1) {
+            layer.msg("已有头像，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "mpavatar", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.Avatar), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.Avatar)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.Avatar)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.Avatar)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.Avatar)ListData").append(img_te);
+        }
+    }
+
+
+    $(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

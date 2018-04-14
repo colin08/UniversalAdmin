@@ -122,27 +122,27 @@ namespace Universal.Web.Framework
 
                 //if (file_type == SiteEnums.UploadType.image)
                 //{
-                //如果是上传图片
+                //    如果是上传图片
                 //if (file_size > SiteConfig.ImgSize * 1024)
-                //{ 
-                //    //如果超出了限制，则进行压缩
-                //    ImgThumbnail ya = new ImgThumbnail();
-                //    //获取图片的宽高
-                //    Hashtable hash =IOHelper.GetImageWidthHeight(filePath + saveName);
-                //    //临时文件名
-                //    string saveTempName = guid+"_temp."+fileExt;
-                //    if (ya.Thumbnail(filePath + saveName, filePath + saveTempName, TypeHelper.ObjectToInt(hash["w"]), TypeHelper.ObjectToInt(hash["h"]), 20, ImgThumbnail.ImgThumbnailType.H))
                 //    {
-                //        //压缩成功,删掉大文件
-                //        IOHelper.DeleteIOFile(filePath + saveName);
-                //        saveName = saveTempName;//把文件指向新压缩的文件
+                //        //如果超出了限制，则进行压缩
+                //        ImgThumbnail ya = new ImgThumbnail();
+                //        //获取图片的宽高
+                //        Hashtable hash = IOHelper.GetImageWidthHeight(filePath + saveName);
+                //        //临时文件名
+                //        string saveTempName = guid + "_temp." + fileExt;
+                //        if (ya.Thumbnail(filePath + saveName, filePath + saveTempName, TypeHelper.ObjectToInt(hash["w"]), TypeHelper.ObjectToInt(hash["h"]), 20, ImgThumbnail.ImgThumbnailType.H))
+                //        {
+                //            //压缩成功,删掉大文件
+                //            IOHelper.DeleteIOFile(filePath + saveName);
+                //            saveName = saveTempName;//把文件指向新压缩的文件
+                //        }
+                //        else
+                //        {
+                //            response_entity.msgbox = "图片太大，压缩失败";
+                //            return response_entity;
+                //        }
                 //    }
-                //    else
-                //    {
-                //        response_entity.msgbox = "图片太大，压缩失败";
-                //        return response_entity;
-                //    }
-                //}
                 //}
                 //获取MD5值
                 string md5 = IOHelper.GetMD5HashFromFile(filePath + saveName);
@@ -154,20 +154,21 @@ namespace Universal.Web.Framework
                 {
                     System.IO.File.Move(filePath + saveName, filePath + md5 + "." + fileExt); //给文件改名
                 }
-
-                //if (IsThumb)
-                //{
-                //    string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
-                //    if (img_arr.Contains(fileExt))
-                //    {
-                //        //如果是图片，就压缩
-                //        IOHelper.GenerateThumb_ME(IOHelper.GetMapPath(ServerPath + md5 + "." + fileExt));
-                //    }
-                //}
+                string result_path = ServerPath + md5 + "." + fileExt;
+                if (IsThumb)
+                {
+                    string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
+                    if (img_arr.Contains(fileExt))
+                    {
+                        //如果是图片，就压缩
+                        IOHelper.GenerateThumb_ME(IOHelper.GetMapPath(ServerPath + md5 + "." + fileExt));
+                        result_path = ServerPath + md5 + "_thumb." + fileExt;
+                    }
+                }
 
                 response_entity.msg = 1;
                 response_entity.msgbox = "上传成功";
-                response_entity.data = ServerPath + md5 + "." + fileExt;
+                response_entity.data = result_path;
                 return response_entity;
             }
             catch (Exception ex)

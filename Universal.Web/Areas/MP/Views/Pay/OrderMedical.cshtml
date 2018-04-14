@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "订单支付";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+
+
+}
+<!-- 头部Style等 END -->
+<link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+<style>
+    h4 { color: #F5A623; text-align: center; }
+</style>
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <button type="button" onclick="javascript:location.href='@Html.Raw(ViewData["BackUrl"])'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>
+    </button>
+    <h1 class="mui-center mui-title">订单支付</h1>
+</div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+<div class="mui-card">
+    <div class="mui-card-header">@ViewData["product"] </div>
+    <div class="mui-card-content">
+        <div class="mui-card-content-inner">
+            <h4>￥ @ViewData["price"]</h4>
+        </div>
+    </div>
+    <div class="mui-card-footer">订单号:@ViewData["OrderNum"]</div>
+</div>
+<div class="mui-content-padded">
+    <button type="button" id="btn_save" data-loading-text="保存中" data-loading-icon="mui-spinner mui-spinner-custom" onclick="pay()" class="mui-btn mui-btn-warning mui-btn-block" style="margin-top: 20px;">立即支付</button>
+</div>
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+</div>
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+<script src="~/Assets/mui/js/mui.min.js"></script>
+<script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+<script type="text/javascript">
+		(function($$) {
+			$$.init();
+			$$("#btn_save")[0].addEventListener('tap', function() {
+				var btn = this;
+				$$(btn).button('loading');
+				$$.showLoading("支付中..", "div");
+				
+				WeixinJSBridge.invoke('getBrandWCPayRequest', {
+				    "appId": "@ViewData["appId"]", //公众号名称，由商户传入
+                    "timeStamp": "@ViewData["timeStamp"]", //时间戳
+                    "nonceStr": "@ViewData["nonceStr"]", //随机串
+                    "package": "@Html.Raw(ViewData["package"])",//扩展包
+                    "signType": "MD5", //微信签名方式:MD5
+                    "paySign": "@ViewData["paySign"]" //微信签名
+				}, function (res) {
+				    $$.hideLoading();
+				    $$(btn).button('reset');
+				    if (res.err_msg == "get_brand_wcpay_request:ok") {
+				        $$.toast("支付完毕，请稍后..");
+			            setTimeout(function () {
+			                setTimeout(function () {
+			                    location.href = '@Html.Raw(ViewData["NextUrl"])';
+			                }.bind(btn), 3000);
+			            })
+			        }
+			    });
+			});
+		})(mui);
+</script>
+
+
+}
+<!-- MUI 页面底部脚本 END -->
+
