@@ -17,7 +17,7 @@ namespace Universal.Web
             bundles.Add(new ScriptBundle("~/bundles/admin_base").Include(
                         "~/Assets/js/jquery.min.js",
                         "~/Assets/js/bootstrap.min.js",
-                        "~/Assets/js/plugins/layer/layer.min.js",
+                        "~/Assets/js/plugins/layer/layer.js",
                         "~/Assets/js/plugins/pace/pace.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
@@ -44,7 +44,7 @@ namespace Universal.Web
                         "~/Assets/js/plugins/chosen/chosen.jquery.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/layer").Include(
-                      "~/Assets/js/plugins/layer/layer.min.js"));
+                      "~/Assets/js/plugins/layer/layer.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/laypage").Include(
                       "~/Assets/js/plugins/layer/laypage/laypage.js"));
