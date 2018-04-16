@@ -27,7 +27,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var state = "HouDe-" + DateTime.Now.Millisecond;//随机数，用于识别请求可靠性
             Session["Auth-State"] = state;
             string rediecturl = WorkContext.WebSite.SiteUrl + "/mp/auth/callback?returnUrl=" + returnUrl;
-            string auth_url = OAuthApi.GetAuthorizeUrl(WorkContext.WebSite.WXAppID, rediecturl, state, Senparc.Weixin.MP.OAuthScope.snsapi_base);
+            string auth_url = OAuthApi.GetAuthorizeUrl(WorkContext.WebSite.WeChatAppID, rediecturl, state, Senparc.Weixin.MP.OAuthScope.snsapi_base);
             return Redirect(auth_url);
         }
 
@@ -47,7 +47,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 return PromptView("验证失败！请从正规途径进入！");
             }
             //通过，用code换取access_token
-            var result = OAuthApi.GetAccessToken(WorkContext.WebSite.WXAppID, WorkContext.WebSite.WXAppSecret, code);
+            var result = OAuthApi.GetAccessToken(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatAppSecret, code);
             if (result.errcode != ReturnCode.请求成功)
             {
                 return PromptView(result.errmsg);

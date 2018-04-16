@@ -100,10 +100,7 @@ namespace Universal.Tools
 
         [Display(Name = "站点URL"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^(http|https)\://.+$", ErrorMessage = "URL格式错误")]
         public string SiteUrl { get; set; }
-
-        [Display(Name ="附件地址")]
-        public string FileUrl { get; set; }
-
+        
         [Display(Name ="公司名称"),Required(ErrorMessage ="不能为空"),MaxLength(30,ErrorMessage = "不能超过30个字符")]
         public string CompanyName { get; set; }
 
@@ -112,10 +109,7 @@ namespace Universal.Tools
 
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
-
-        [Display(Name = "数据库备份目录"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^[C-Zc-z]:(\\\w+)*\\$", ErrorMessage = "目录格式有误，Ps:C:\\db\\"), MaxLength(100, ErrorMessage = "不能超过100个字符")]
-        public string DbBackPath { get; set; }
-
+        
         [Display(Name = "页面耗时统计")]
         public bool WebExecutionTime { get; set; }
 
@@ -126,26 +120,7 @@ namespace Universal.Tools
         public bool LogExceptionInDB { get; set; }
 
         #endregion
-
-        #region 接口配置
-
-        [Display(Name = "接口验证是否开启")]
-        public bool WebAPIAuthentication { get; set; }
-
-        [Display(Name = "是否启用请求信息记录")]
-        public bool WebAPITracker { get; set; }
         
-        [Display(Name = "Token的KEY名"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
-        public string WebAPITokenKey { get; set; }
-        
-        [Display(Name = "Token混淆字符串"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
-        public string WebAPIMixer { get; set; }
-
-        [Display(Name = "接口超时时间(分钟)"), Required(ErrorMessage = "不能为空")]
-        public int WebAPITmeOut { get; set; }
-
-        #endregion
-
         #region 邮件配置
 
         [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]
@@ -165,13 +140,13 @@ namespace Universal.Tools
 
         #endregion
 
-        #region 微信支付参数
+        #region 微信参数
 
-        [Display(Name = "微信支付AppID"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
-        public string WeChatPayAppID { get; set; }
+        [Display(Name = "微信AppID"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string WeChatAppID { get; set; }
 
-        [Display(Name = "微信支付AppSecret"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
-        public string WeChatPayAppSecret { get; set; }
+        [Display(Name = "微信AppSecret"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string WeChatAppSecret { get; set; }
 
         [Display(Name = "微信支付商户ID"), Required(ErrorMessage = "不能为空"), MaxLength(20, ErrorMessage = "不能超过20个字符")]
         public string WeChatPayMchid { get; set; }
@@ -182,20 +157,6 @@ namespace Universal.Tools
         [Display(Name = "微信支付PayKey"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
         public string WeChatPayPayKey { get; set; }
         
-
-        #endregion
-
-        #region 微信公众号设置
-
-        [Display(Name = "appID"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
-        public string WXAppID { get; set; }
-
-        [Display(Name = "appsecret"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
-        public string WXAppSecret { get; set; }
-
-        [Display(Name = "token"), Required(ErrorMessage = "不能为空"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
-        public string WXToken { get; set; }
-
         #endregion
 
     }

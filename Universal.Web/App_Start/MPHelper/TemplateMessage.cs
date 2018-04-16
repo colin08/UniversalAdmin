@@ -28,7 +28,7 @@ namespace Universal.Web.MPHelper
                 keyword5=new TemplateDataItem(DateTime.Now.ToString()),
                 remark=new TemplateDataItem(remark)
             };
-            var result = TemplateApi.SendTemplateMessage(WebSite.WXAppID, open_id, templateId, "http://www.baidu.com", test_data);
+            var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, open_id, templateId, "http://www.baidu.com", test_data);
             return result.errcode == Senparc.Weixin.ReturnCode.请求成功;
         }
     }

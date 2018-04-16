@@ -843,7 +843,6 @@
     <Content Include="Areas\Admin\Views\OrderMedical\Index.cshtml" />
     <Content Include="Areas\Admin\Views\OrderMedical\Info.cshtml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
-    <None Include="Properties\PublishProfiles\LocalProfile.pubxml" />
     <None Include="Properties\PublishProfiles\WebFTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

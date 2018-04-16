@@ -48,7 +48,7 @@ namespace Universal.Web.MPHelper
             string outRefundNo = "OutRefunNo-" + DateTime.Now.Ticks;
             int totalFee = (int)(total_fee * 100);
             int refundFee = (int)(refund_fee * 100);
-            var dataInfo = new TenPayV3RefundRequestData(WebSite.WeChatPayAppID, WebSite.WeChatPayMchid, WebSite.WeChatPayPayKey,
+            var dataInfo = new TenPayV3RefundRequestData(WebSite.WeChatAppID, WebSite.WeChatPayMchid, WebSite.WeChatPayPayKey,
                 null, nonceStr, null, order_num, outRefundNo, totalFee, refundFee, WebSite.WeChatPayMchid, null);
             //TODO 退款证书位置设置
             var cert = IOHelper.GetMapPath("/App_Data/wechat_shijingcheng.p12");// @"D:\cert\apiclient_cert_SenparcRobot.p12";//根据自己的证书位置修改

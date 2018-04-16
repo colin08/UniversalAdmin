@@ -29,16 +29,16 @@ namespace Universal.Web.Areas.MP.Controllers
             var price = 1;
             string notify_url = WorkContext.WebSite.SiteUrl + "/PayNotify/WeChatPay";
             string attach = ((int)MPHelper.PayAttach.账户充值).ToString();//额外自定义参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatPayAppID, WorkContext.WebSite.WeChatPayMchid, body, sp_billno, price, Request.UserHostAddress, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr, null, null, null, null, attach);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatPayMchid, body, sp_billno, price, Request.UserHostAddress, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr, null, null, null, null, attach);
             var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
             var package = string.Format("prepay_id={0}", result.prepay_id);
             ViewData["product"] = "这里是商品名称";
             ViewData["price"] = price;
-            ViewData["appId"] = WorkContext.WebSite.WeChatPayAppID;
+            ViewData["appId"] = WorkContext.WebSite.WeChatAppID;
             ViewData["timeStamp"] = timeStamp;
             ViewData["nonceStr"] = nonceStr;
             ViewData["package"] = package;
-            ViewData["paySign"] = TenPayV3.GetJsPaySign(WorkContext.WebSite.WeChatPayAppID, timeStamp, nonceStr, package, WorkContext.WebSite.WeChatPayPayKey);
+            ViewData["paySign"] = TenPayV3.GetJsPaySign(WorkContext.WebSite.WeChatAppID, timeStamp, nonceStr, package, WorkContext.WebSite.WeChatPayPayKey);
             //订单号放到Session里
             Session["TEMPORDERNUM"] = sp_billno;
 
@@ -88,16 +88,16 @@ namespace Universal.Web.Areas.MP.Controllers
             var price = (int)(entity_order.RelAmount * 100);
             string notify_url = WorkContext.WebSite.SiteUrl + "/PayNotify/WeChatPay";
             string attach = ((int)MPHelper.PayAttach.体检套餐).ToString();//额外自定义参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatPayAppID, WorkContext.WebSite.WeChatPayMchid, body, o, price, Request.UserHostAddress, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr, null, null, null, null, attach);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatPayMchid, body, o, price, Request.UserHostAddress, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr, null, null, null, null, attach);
             var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
             var package = string.Format("prepay_id={0}", result.prepay_id);
             ViewData["product"] = entity_order.Title;
             ViewData["price"] = entity_order.RelAmount.ToString("F2");
-            ViewData["appId"] = WorkContext.WebSite.WeChatPayAppID;
+            ViewData["appId"] = WorkContext.WebSite.WeChatAppID;
             ViewData["timeStamp"] = timeStamp;
             ViewData["nonceStr"] = nonceStr;
             ViewData["package"] = package;
-            ViewData["paySign"] = TenPayV3.GetJsPaySign(WorkContext.WebSite.WeChatPayAppID, timeStamp, nonceStr, package, WorkContext.WebSite.WeChatPayPayKey);
+            ViewData["paySign"] = TenPayV3.GetJsPaySign(WorkContext.WebSite.WeChatAppID, timeStamp, nonceStr, package, WorkContext.WebSite.WeChatPayPayKey);
             //订单号放到Session里
             Session["TEMPORDERNUM"] = o;
             return View();
