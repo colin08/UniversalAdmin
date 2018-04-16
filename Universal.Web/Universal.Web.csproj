@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +30,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <DocumentationFile>bin\Universal.Web.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -642,6 +643,13 @@
     <Content Include="Assets\mui\js\public.js" />
     <Content Include="Assets\mui\js\swiper-4.2.0.min.js" />
     <Content Include="Assets\mui\js\template-web.js" />
+    <Content Include="bin\Universal.BLL.dll" />
+    <Content Include="bin\Universal.DataCore.dll" />
+    <Content Include="bin\Universal.Entity.dll" />
+    <Content Include="bin\Universal.Tools.dll" />
+    <Content Include="bin\Universal.Web.dll" />
+    <Content Include="bin\Universal.Web.Framework.dll" />
+    <Content Include="bin\Universal.Web.XML" />
     <Content Include="Global.asax" />
     <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
     <Content Include="Web.config" />
@@ -834,9 +842,9 @@
     <Content Include="Areas\MP\Views\AmountDetails\Index.cshtml" />
     <Content Include="Areas\Admin\Views\OrderMedical\Index.cshtml" />
     <Content Include="Areas\Admin\Views\OrderMedical\Info.cshtml" />
-    <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
-    <None Include="Properties\PublishProfiles\houde.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\WebFTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -853,7 +861,6 @@
     <Folder Include="Assets\js\plugins\layer\mobile\" />
     <Folder Include="Views\File\" />
     <Folder Include="Views\Intranet\" />
-    <Folder Include="Views\PayNotifyController\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">
