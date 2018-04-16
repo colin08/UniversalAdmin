@@ -48,7 +48,7 @@
                         </div>
                     </li>
                     <li>
-                        <a class="J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
+                        <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
 					@if (CheckAdminPower("Sysuser/Index", false))
                     {
@@ -57,12 +57,12 @@
 							<span class="ng-scope">User</span>
 						</li>
 						<li>
-							<a class="J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
+							<a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
 						</li>
 						if (CheckAdminPower("SysRole/Index", false))
 						{
 							<li>
-								<a class="J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
+								<a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
 							</li>
 						}
 					}
@@ -73,7 +73,7 @@
 							<span class="ng-scope">Category</span>
 						</li>
 						<li>
-							<a class="J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>        
+							<a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>        
 						</li>                   	
 					}
 					<li class="line dk"></li>
@@ -81,7 +81,7 @@
                         <span class="ng-scope">Demo</span>
                     </li>
                     <li>
-                        <a class="J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
+                        <a class="nav-link J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
                     </li>
 
 					@if(CheckAdminPower("SysConfig/Sys", false))
@@ -97,32 +97,32 @@
 								<ul class="nav nav-second-level">
 									@if (CheckAdminPower("SysLog/LogMethod", false))
 									{
-										<li><a class="J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
+										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
 									}
 									@if (CheckAdminPower("SysLog/LogException", false))
 									{
-										<li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
+										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
 									}
 									@if (CheckAdminPower("SysLog/LogApiAction", false))
 									{
-									<li><a class="J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
+									<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
 									}
 								</ul>
 							</li>
                         }
-                        <li><a class="J_menuItem" href="/Admin/SysMessage/Index"><i class="fa fa-bell"></i> <span class="nav-label">系统消息管理</span></a></li>
+                        <li><a class="nav-link J_menuItem" href="/Admin/SysMessage/Index"><i class="fa fa-bell"></i> <span class="nav-label">系统消息管理</span></a></li>
                         if (CheckAdminPower("SysDbBack/Index", false))
                         {
-							<li><a class="J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a></li>
+							<li><a class="nav-link J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a></li>
 						}
 						if (CheckAdminPower("SysConfig/Modify", false))
 						{
-							<li><a class="J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
+							<li><a class="nav-link J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
 						}
 						if (CheckAdminPower("AppVersion/Index", false))
 						{
 							<li>
-								<a class="J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
+								<a class="nav-link J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
 							</li>
 						}
 					}
@@ -181,7 +181,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <div class="text-center link-block">
-                                        <a class="J_menuItem" href="mailbox.html">
+                                        <a class="nav-link J_menuItem" href="mailbox.html">
                                             <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
                                         </a>
                                     </div>
@@ -196,7 +196,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-alerts" id="sys_msg_list">
                                 @*<li>
-                                    <a href="http://www.baidu.com" class="J_menuItem">
+                                    <a href="http://www.baidu.com" class="nav-link J_menuItem">
                                         <div>
                                             <i class="fa fa-times-circle" onclick="setMsgRead(2)"></i> &nbsp;&nbsp;
                                             出现了异常出现了异常出现了异常出现了异常出现了异常出现了异常
@@ -217,7 +217,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <div class="text-center link-block">
-                                        <a class="J_menuItem" href="notifications.html">
+                                        <a class="nav-link J_menuItem" href="notifications.html">
                                             <strong>查看所有 </strong>
                                             <i class="fa fa-angle-right"></i>
                                         </a>
@@ -290,7 +290,7 @@
                         $("#sys_msg_total").text('');
                         lis.push('<li style="text-align:center;">没有消息</li><li class="divider"></li>');
                     }
-                    lis.push('<li><div class="text-center link-block"><a class="J_menuItem" href="javascript:(0);" onclick="to_msg_list()"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
+                    lis.push('<li><div class="text-center link-block"><a class="nav-link J_menuItem" href="javascript:(0);" onclick="to_msg_list()"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
                     $list.append(lis.join(''));
                 }
             });
