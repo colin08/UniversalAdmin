@@ -48,7 +48,7 @@
                         </div>
                     </li>
                     <li>
-                        <a class="J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
+                        <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
 
                     @if (CheckAdminPower("Medical/Index", false))
@@ -58,20 +58,20 @@
                             <span class="ng-scope">体检套餐</span>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="/Admin/Medical/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检套餐管理</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/Medical/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检套餐管理</span></a>
                         </li>
 
                         if (CheckAdminPower("MedicalItem/Index", false))
                         {
                             <li>
-                                <a class="J_menuItem" href="/Admin/MedicalItem/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检项管理</span></a>
+                                <a class="nav-link J_menuItem" href="/Admin/MedicalItem/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检项管理</span></a>
                             </li>
                         }
 
                         if (CheckAdminPower("MedicalBanner/Index", false))
                         {
                             <li>
-                                <a class="J_menuItem" href="/Admin/MedicalBanner/Index"><i class="fa fa-bars"></i> <span class="nav-label">轮播图管理</span></a>
+                                <a class="nav-link J_menuItem" href="/Admin/MedicalBanner/Index"><i class="fa fa-bars"></i> <span class="nav-label">轮播图管理</span></a>
                             </li>
                         }
                     }
@@ -82,7 +82,7 @@
                     @if (CheckAdminPower("OrderMedical/Index", false))
                     {
                         <li>
-                            <a class="J_menuItem" href="/Admin/OrderMedical/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检套餐订单</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/OrderMedical/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检套餐订单</span></a>
                         </li>
                     }
 
@@ -93,7 +93,7 @@
                             <span class="ng-scope">微信用户</span>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="/Admin/MPUser/Index"><i class="fa fa-bars"></i> <span class="nav-label">微信用户列表</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/MPUser/Index"><i class="fa fa-bars"></i> <span class="nav-label">微信用户列表</span></a>
                         </li>
                     }
 
@@ -104,12 +104,12 @@
 							<span class="ng-scope">系统用户</span>
 						</li>
 						<li>
-							<a class="J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
+							<a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
 						</li>
 						if (CheckAdminPower("SysRole/Index", false))
 						{
 							<li>
-								<a class="J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
+								<a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
 							</li>
 						}
 					}
@@ -127,18 +127,18 @@
 								<ul class="nav nav-second-level">
 									@if (CheckAdminPower("SysLog/LogMethod", false))
 									{
-										<li><a class="J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
+										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
 									}
 									@if (CheckAdminPower("SysLog/LogException", false))
 									{
-										<li><a class="J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
+										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
 									}
 								</ul>
 							</li>
                         } 
 						if (CheckAdminPower("SysConfig/Modify", false))
 						{
-							<li><a class="J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
+							<li><a class="nav-link J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
 						}
 					}
 					<li style="height: 100px;">
@@ -196,7 +196,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <div class="text-center link-block">
-                                        <a class="J_menuItem" href="mailbox.html">
+                                        <a class="nav-link J_menuItem" href="mailbox.html">
                                             <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
                                         </a>
                                     </div>
@@ -211,7 +211,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-alerts" id="sys_msg_list">
                                 @*<li>
-                                    <a href="http://www.baidu.com" class="J_menuItem">
+                                    <a href="http://www.baidu.com" class="nav-link J_menuItem">
                                         <div>
                                             <i class="fa fa-times-circle" onclick="setMsgRead(2)"></i> &nbsp;&nbsp;
                                             出现了异常出现了异常出现了异常出现了异常出现了异常出现了异常
@@ -232,7 +232,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <div class="text-center link-block">
-                                        <a class="J_menuItem" href="notifications.html">
+                                        <a class="nav-link J_menuItem" href="notifications.html">
                                             <strong>查看所有 </strong>
                                             <i class="fa fa-angle-right"></i>
                                         </a>
