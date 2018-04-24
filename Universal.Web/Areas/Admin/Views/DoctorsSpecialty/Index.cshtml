@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "医生特长标签";
+}
+
+<!--头部脚本-->
+@section head
+{
+    <link href="~/Assets/js/plugins/jqcloud/jqcloud.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+<!-- Panel -->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>医生特长标签</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+}
+<!-- Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/DoctorsSpecialty/Index">特长标签</a></li>
+            <li><strong>标签云</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<br />
+
+<!--Main Body-->
+<div class="pull-center">
+    <button type="button" class="btn btn-white" onclick="add()"><i class="glyphicon glyphicon-plus"></i> 添加</button>
+
+</div>
+<div id="my_favorite_latin_words" style="width: 100%; height: 500px; border: 1px solid #ccc;"></div>
+
+<!-- Main Body end -->
+
+@section foot
+{
+    <script src="~/Assets/js/plugins/jqcloud/jqcloud-1.0.4.min.js"></script>
+    <script>
+
+        var word_list =@Html.Raw(ViewData["JSON"]);
+        $(function () {
+            $("#my_favorite_latin_words").jQCloud(word_list);
+        });
+
+        function add() {
+            layer.prompt({ title: '输入特长标签', formType: 0 }, function (text, index) {
+                layer.close(index);
+                var reg = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
+                if (!reg.test(text)) {
+                    layer.msg("只能输入字母或汉字", { icon: 2 });
+                    return;
+                }
+                if (text.length > 10) {
+                    layer.msg("不能超过10个字符", { icon: 2 });
+                    return;
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "/Admin/DoctorsSpecialty/Add",
+                    data: { "title": text },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("添加成功", { icon: 1 });
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 500);
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+
+            });
+        }
+
+        function modify(id, old_text) {
+            layer.prompt({ title: '【' + old_text + '】输入新的名称', formType: 0 }, function (text, index) {
+                layer.close(index);
+                var reg = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
+                if (!reg.test(text)) {
+                    layer.msg("只能输入字母或汉字", { icon: 2 });
+                    return;
+                }
+                if (text.length > 10) {
+                    layer.msg("不能超过10个字符", { icon: 2 });
+                    return;
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "/Admin/DoctorsSpecialty/Modify",
+                    data: { "id":id,"title": text },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("修改成功", { icon: 1 });
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 500);
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+
+            });
+        }
+
+        
+    </script>
+}

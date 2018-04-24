@@ -59,12 +59,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="BLLClinic.cs" />
+    <Compile Include="BLLClinicDepartment.cs" />
     <Compile Include="BLLCusCategory.cs" />
     <Compile Include="BLLDemo.cs" />
+    <Compile Include="BLLDoctorsSpecialty.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLMedical.cs" />
+    <Compile Include="BLLClinicArea.cs" />
     <Compile Include="BLLMedicalBanner.cs" />
     <Compile Include="BLLMedicalItem.cs" />
+    <Compile Include="BLLMPDoctor.cs" />
     <Compile Include="BLLMPUser.cs" />
     <Compile Include="BLLMPUserState.cs" />
     <Compile Include="BLLOrderMedical.cs" />

@@ -37,9 +37,11 @@ namespace Universal.Web.Framework
                     }
                     else
                     {
-                        //跳回用户首页
-                        filterContext.Result = new RedirectResult("/MP/BasicUser/Index");
-
+                        //当前访问的URL
+                        string request_url = filterContext.RequestContext.HttpContext.Request.Url.AbsolutePath.ToLower();
+                        UserDocRouteMap map = new UserDocRouteMap();
+                        //跳到对应用户页面
+                        filterContext.Result = new RedirectResult(map.GetMapUrl(false, request_url));
                     }
                 }
             }

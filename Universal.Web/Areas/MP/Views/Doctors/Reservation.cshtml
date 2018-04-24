@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "医生个人中心";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <style>
+        .mui-table-view { margin-top: 10px; }
+
+        .head-img { width: 90px; height: 90px; }
+
+        .user-info { margin-left: 100px; }
+
+        .user-nickname { height: 32px; width: 150px; display: flex; justify-content: flex-start; align-items: center; }
+
+            .user-nickname span { width: 130px; overflow: hidden; text-overflow: ellipsis; }
+
+            .user-nickname img { width: 40px; height: 32px; }
+
+        .user-qb { height: 50px; margin-top: 4px; }
+    </style>
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='Index'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">预约列表</h1>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<div class="mui-content-padded">
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" href="javascript:;" onclick="location.href='预约用户详情.html'">
+                <img class="mui-pull-left head-img" id="head-img" src="../img/default-avatar.jpg">
+                <div class="user-info">
+                    <div class="user-nickname">
+                        <span>HelloWorld</span>
+                        <label>男&nbsp;  26岁</label>
+                    </div>
+                    <div class="user-qb">
+                        <p class='mui-ellipsis' id="jiesuan">03-24 上午08:30-09:00</p>
+                        <p class="mui-ellipsis">这里是病情描述这里是病情描述这里是病情描述</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" href="javascript:;" onclick="location.href='预约用户详情.html'">
+                <img class="mui-pull-left head-img" id="head-img" src="../img/default-avatar.jpg">
+                <div class="user-info">
+                    <div class="user-nickname">
+                        <span>HelloWorld</span>
+                        <label>男&nbsp;  26岁</label>
+                    </div>
+                    <div class="user-qb">
+                        <p class='mui-ellipsis' id="jiesuan">03-24 上午08:30-09:00</p>
+                        <p class="mui-ellipsis">这里是病情描述这里是病情描述这里是病情描述</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" href="javascript:;" onclick="location.href='预约用户详情.html'">
+                <img class="mui-pull-left head-img" id="head-img" src="../img/default-avatar.jpg">
+                <div class="user-info">
+                    <div class="user-nickname">
+                        <span>HelloWorld</span>
+                        <label>男&nbsp;  26岁</label>
+                    </div>
+                    <div class="user-qb">
+                        <p class='mui-ellipsis' id="jiesuan">03-24 上午08:30-09:00</p>
+                        <p class="mui-ellipsis">这里是病情描述这里是病情描述这里是病情描述</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" href="javascript:;" onclick="location.href='预约用户详情.html'">
+                <img class="mui-pull-left head-img" id="head-img" src="../img/default-avatar.jpg">
+                <div class="user-info">
+                    <div class="user-nickname">
+                        <span>HelloWorld</span>
+                        <label>男&nbsp;  26岁</label>
+                    </div>
+                    <div class="user-qb">
+                        <p class='mui-ellipsis' id="jiesuan">03-24 上午08:30-09:00</p>
+                        <p class="mui-ellipsis">这里是病情描述这里是病情描述这里是病情描述</p>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+
+</div>
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+    <div class="mui-bar-footer mui-text-center" style="width: 100%;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+
+
+}
+<!-- MUI 页面底部脚本 END -->

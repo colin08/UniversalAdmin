@@ -91,7 +91,7 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">支付时间</label>
-                    <label class="col-sm-3 label_msg">@Model.GetPayTimeStr</label>                   
+                    <label class="col-sm-3 label_msg">@Model.GetPayTimeStr</label>
                 </div>
 
                 <div class="hr-line-dashed"></div>
@@ -162,7 +162,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">出生年月日</label>
 
-                    <label class="col-sm-3 label_msg">@Model.Brithday.ToString("yyyy-MM-dd")</label>
+                    <label class="col-sm-3 label_msg">@Model.GetBrithday</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -179,39 +179,48 @@
                     <label class="col-sm-3 label_msg">@Model.Telphone</label>
                 </div>
                 <div class="hr-line-dashed"></div>
-                                
+
             </div>
 
             <div id="tab-3" class="tab-pane">
                 <div style="margin-top:20px;"></div>
                 @foreach (var item in Model.OrderMedicalItems.Where(p => p.Type == Universal.Entity.OrderMedicalItemType.套餐内).ToList())
-                {
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">项名称</label>
+        {
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项名称</label>
 
-                        <label class="col-sm-3 label_msg">@item.Title</label>
-                    </div>
+                <label class="col-sm-3 label_msg">@item.Title</label>
+            </div>
 
-                    <div class="hr-line-dashed"></div>
-                }
+            <div class="hr-line-dashed"></div>
+}
 
             </div>
 
             <div id="tab-4" class="tab-pane">
                 <div style="margin-top:20px;"></div>
-                @foreach (var item in Model.OrderMedicalItems.Where(p=>p.Type == Universal.Entity.OrderMedicalItemType.额外自选).ToList())
-                {
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">项名称</label>
+                @foreach (var item in Model.OrderMedicalItems.Where(p => p.Type == Universal.Entity.OrderMedicalItemType.额外自选).ToList())
+        {
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项名称</label>
 
-                        <label class="col-sm-3 label_msg">@item.Title</label>
-                    </div>
-
-                    <div class="hr-line-dashed"></div>
-                }
-
+                <label class="col-sm-3 label_msg">@item.Title</label>
             </div>
 
+            <div class="hr-line-dashed"></div>
+}
+
+            </div>
+            @if(Model.CanDone)
+            {                
+                <text>
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-info" type="button" onclick="setDone()">设置完成</button>
+                    </div>
+                </div>
+                </text>
+            }
 
         </div>
     </form>
@@ -222,7 +231,39 @@
 @section foot
 {
     <script>
+        function setDone() {
 
+            layer.confirm('确认设置完成？', { icon: 3 }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    url: "/MP/OrderMedical/SetDone",
+                    data: { "id": @Model.ID },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("设置成功", { icon: 1 });
+                            window.setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+            });
+
+        }
     </script>
 }
 <!--底部脚本 end-->

@@ -72,7 +72,7 @@
         </div>
         <div class="mui-input-row ">
             <label>生日</label>
-            <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1950,"endYear":2018}' value="@Model.Brithday.ToString("yyyy-MM-dd")" />
+            <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1950,"endYear":2018,"value":"1970-01-01"}' value="@Model.Brithday" />
         </div>
         <div id="" class="mui-input-row">
             <label>体检日期</label>
@@ -116,7 +116,29 @@
 				var telphone = $("#txt_telphone").val();
 				var gender = $("input[name='rd_gender']:checked").val();
 				var bri = $("#txt_bri").val();
-				var yuyue =$("#text_time").val();
+                var yuyue = $("#text_time").val();
+
+                if (realname.length == 0) {
+                    $$.toast("请填写真实姓名");
+                    return;
+                }
+                if (idnumber.length == 0) {
+                    $$.toast("请填写身份证号码");
+                    return;
+                }
+                if (telphone.length == 0) {
+                    $$.toast("请填写手机号码");
+                    return;
+                }
+                if (bri.length == 0) {
+                    $$.toast("请选择生日");
+                    return;
+                }
+                if (yuyue.length == 0) {
+                    $$.toast("请选择预约日期");
+                    return;
+                }
+                
 
 				$$(btn).button('loading');
 				$$.showLoading("保存中", "div");
@@ -193,7 +215,7 @@
 
 
 				    //var optionsJson = this.getAttribute('data-options') || '{}';
-				    var optionJson = {"type":"hour","beginYear":year,"endYear":2018,"beginMonth":month,"beginDay":day,"customData":{"h":[{"text":"上午","value":"上午"},{"text":"下午","value":"下午"}]},"labels":["年", "月", "日", "时段", "分"]};
+                    var optionJson = { "type": "hour", "beginYear": year, "endYear": year,"beginMonth":month,"beginDay":day,"customData":{"h":[{"text":"上午","value":"上午"},{"text":"下午","value":"下午"}]},"labels":["年", "月", "日", "时段", "分"]};
 				    //var options = JSON.parse(optionJson);
 					var id = this.getAttribute('id');
 					_self.picker = new $$.DtPicker(optionJson);

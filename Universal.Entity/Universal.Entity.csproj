@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="BaseAdminEntity.cs" />
     <Compile Include="Category\CusCategory.cs" />
+    <Compile Include="ClinicArea.cs" />
     <Compile Include="Clinic.cs" />
     <Compile Include="ClinicDepartment.cs" />
     <Compile Include="Demo\Demo.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
+    <Compile Include="ViewModel\MPUserDoctors.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

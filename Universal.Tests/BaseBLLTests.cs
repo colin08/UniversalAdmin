@@ -48,10 +48,29 @@ namespace Universal.BLL.Tests
             //string msg = "";
             //var sss = BLL.BLLOrderMedical.ModifyOrderItem("668801", "1,2,3,4,5,6,7,8,9,10", out msg);
 
-            DateTime dt_1 = Tools.TypeHelper.ObjectToDateTime("1993-05-10");
-            var ss = DateTime.Now.Year - dt_1.Year;
-            var sss = DateTime.Now - dt_1;
-            Assert.AreEqual(1,1);
+            //DateTime dt_1 = Tools.TypeHelper.ObjectToDateTime("1993-05-10");
+            //var ss = DateTime.Now.Year - dt_1.Year;
+            //var sss = DateTime.Now - dt_1;
+            //Assert.AreEqual(1,1);
+
+            //int total = 0;
+            //var ss = BLL.BLLMPDoctor.GetPageList(10, 1, 0, "", out total);
+
+            //var model = BLL.BLLMPDoctor.GetModel(1);
+            //if (model.DoctorsInfo == null)
+            //    model.DoctorsInfo = new Entity.MPUserDoctors();
+            //model.RealName = "杨习友";
+            //model.DoctorsInfo.ClinicID = 1;
+            //model.DoctorsInfo.CanAdvisory = true;
+            //model.DoctorsInfo.AdvisoryPrice = 22;
+            //model.DoctorsInfo.ShowMe = "医生介绍信息2";
+            //model.DoctorsInfo.TouXian = "主治医师2";
+            //BLL.BLLMPDoctor.Modify(model, "5,6,7,8", "6,7,8");
+
+            //BLL.BLLMPDoctor.SetAdvisoryStatus("abcd", 1);
+            BLL.BLLMPDoctor.SetAdvisoryPrice("abcd", 99);
+
+            Assert.AreEqual(1, 1);
             //Assert.AreEqual(msg, "ok");
         }
 

@@ -77,6 +77,10 @@ function ConvertBtteToMB(byteSize) {
 //设置分页大小(非Ajax方式)
 function SetPageSize(obj) {
     var num = $(obj).val();
+    if (parseInt(num) <= 3) {
+        layer.msg('单页数据必须大于3', { icon: 5 });
+        return;
+    }
     var cname = $(obj).attr("cname");
     if (num != "") {
         $.post("/admin/tools/SetPageCookie", { "cname": cname, "num": num }, function (result) {

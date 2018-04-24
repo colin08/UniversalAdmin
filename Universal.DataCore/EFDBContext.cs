@@ -94,6 +94,11 @@ namespace Universal.DataCore
         public DbSet<Entity.OrderMedicalItem> OrderMedicalItems { get; set; }
 
         /// <summary>
+        /// 诊所地区
+        /// </summary>
+        public DbSet<Entity.ClinicArea> ClinicAreas { get; set; }
+
+        /// <summary>
         /// 诊所
         /// </summary>
         public DbSet<Entity.Clinic> Clinics { get; set; }

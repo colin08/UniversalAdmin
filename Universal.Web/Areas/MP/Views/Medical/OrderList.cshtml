@@ -40,7 +40,7 @@
                 <a onclick="location.href = 'OrderInfo?o=@item.OrderNum'">@item.Title</a>
                 @if(item.Status == Universal.Entity.OrderStatus.临时订单)
                 {
-                    <button class="mui-btn-success mui-btn-outlined" onclick="location.href='GoBuy?mid=@item.MedicalID&o=@item.OrderNum&back=/MP/Medical/OrderList'">继续操作</button>
+                    <button class="mui-btn-success mui-btn-outlined" onclick="location.href='GoBuy?mid=@item.MedicalID&o=@item.OrderNum&back=/MP/Medical/OrderList'">继续下单</button>
                 }
                 else if (item.Status == Universal.Entity.OrderStatus.已取消)
                 {

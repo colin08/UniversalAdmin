@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "医生个人中心";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <link href="~/Assets/mui/css/mui.indexedlist.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+
+    <style>
+        html,
+        body { height: 100%; overflow: hidden; }
+
+        .mui-bar { -webkit-box-shadow: none; box-shadow: none; }
+
+        #done.mui-disabled { color: gray; }
+
+        .fixed-group-buttom { font-size: 14px; height: 44px; width: 100%; background: white; padding: 1px 10px; position: fixed; display: flex; justify-content: space-between; align-items: center; }
+            .fixed-group-buttom label { font-size: 16px; color: #F5A623; }
+    </style>
+
+
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+
+    <header class="mui-bar mui-bar-nav">
+        <a id="back_btn" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">选择科室</h1>
+        <a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue">@ViewData["BtnText"]</a>
+    </header>
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<div id='list' class="mui-indexed-list">
+    <div class="mui-indexed-list-search mui-input-row mui-search">
+        <input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索科室">
+    </div>
+    <div class="mui-indexed-list-bar">
+        @foreach (var item in (List<string>)ViewData["SZMList"])
+        {
+            <a>@item</a>
+        }
+    </div>
+    <div class="mui-indexed-list-alert"></div>
+    <div class="mui-indexed-list-inner">
+        <div class="mui-indexed-list-empty-alert">没有数据</div>
+        <ul class="mui-table-view">
+            @foreach (var SZM in (List<string>)ViewData["SZMList"])
+            {
+                <li data-group="@SZM" class="mui-table-view-divider mui-indexed-list-group">@SZM</li>
+
+                var temp_db_list = (List<Universal.Web.Areas.MP.Models.MedicalSelectItem>)ViewData["DBSelectItem"];
+                temp_db_list = temp_db_list.Where(p => p.SZM == SZM).OrderByDescending(p => p.Weight).ToList();
+                foreach (var item in temp_db_list)
+                {
+                    <li data-value="@item.MedicalID" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+                        @if (item.type == 2)
+                        {
+                            <input type="checkbox" data-id="@item.MedicalID" checked />@item.Title
+                        }
+                        else
+                        {
+
+                            <input type="checkbox" data-id="@item.MedicalID" />@item.Title
+                        }
+                    </li>
+                }
+
+            }
+
+
+        </ul>
+    </div>
+
+</div>
+
+
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/mui.indexedlist.js"></script>
+    <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+    <script src="~/Assets/mui/js/js.cookie.js"></script>
+
+    <script type="text/javascript" charset="UTF-8">
+        //这个框架距离底部距离
+        var index_buttom_height = 0;
+        mui.init();
+        mui.ready(function () {
+            var header = document.querySelector('header.mui-bar');
+            var list = document.getElementById('list');
+            var done = document.getElementById('done');
+            var back = document.getElementById('back_btn');
+            //calc hieght
+            list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+            //create
+            window.indexedList = new mui.IndexedList(list);
+            //返回事件
+            back.addEventListener('tap', function () {
+                location.href = 'Modify?f=1';
+            }, false);
+
+            //done event
+            done.addEventListener('tap', function () {
+                var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
+                var checkedValues = [];
+                var checkedIDs = [];
+                checkboxArray.forEach(function (box) {
+                    if (box.checked) {
+                        checkedValues.push(box.parentNode.innerText);
+                        checkedIDs.push(parseInt(box.getAttribute("data-id")));
+                    }
+                });
+                var ids_str = checkedIDs.join(',');
+                Cookies.set('doc_keshi_ids', '' + ids_str + '');
+                location.href = 'Modify?f=1';
+
+            }, false);
+            mui('.mui-indexed-list-inner').on('change', 'input', function () {
+                var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+                var value = count ? "完成(" + count + ")" : "完成";
+                done.innerHTML = value;
+
+                //if(count) {
+                //	if(done.classList.contains("mui-disabled")) {
+                //		done.classList.remove("mui-disabled");
+                //	}
+                //} else {
+                //	if(!done.classList.contains("mui-disabled")) {
+                //		done.classList.add("mui-disabled");
+                //	}
+                //}
+            });
+        });
+    </script>
+}
+<!-- MUI 页面底部脚本 END -->

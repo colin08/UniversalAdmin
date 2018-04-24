@@ -14,7 +14,6 @@ namespace Universal.Entity
         public DoctorsSpecialty()
         {
             this.AddTime = DateTime.Now;
-            this.DoctorsList = new List<MPUserDoctors>();
         }
 
         public int ID { get; set; }
@@ -24,6 +23,12 @@ namespace Universal.Entity
         /// </summary>
         [Required(ErrorMessage = "必填"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
         public string Title { get; set; }
+
+        /// <summary>
+        /// 首字母
+        /// </summary>
+        [MaxLength(30)]
+        public string SZM { get; set; }
 
         /// <summary>
         /// 添加时间

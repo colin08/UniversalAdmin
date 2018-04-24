@@ -49,13 +49,13 @@
         <p></p>
     </div>
     <div class="col-sm-2">
-        @Html.DropDownListFor(p => p.type, ViewData["LogMethod_Type"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "SelectChange(this)" })
+        @Html.DropDownListFor(p => p.type, ViewData["LogMethod_Type"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "Search()" })
     </div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('WordSearch()')" class="input-sm form-control">
+            <input type="text" id="txt_word" value="@Model.word" placeholder="关键字" onkeydown="KeyDown('Search()')" class="input-sm form-control">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-info" onclick="WordSearch()"> 搜索</button>
+                <button type="button" class="btn btn-sm btn-info" onclick="Search()"> 搜索</button>
             </span>
         </div>
     </div>
@@ -119,28 +119,9 @@ else
 {
 @Scripts.Render("~/bundles/laypage")
 <script>
-    function SelectChange(dp)
-    {
-        if(dp.value ==0)
-        {
-            location.href = "?page=1";
-        }
-        else{
-            location.href = "?page=1&type="+dp.value;
-        }
-    }
-
     function WordSearch()
     {
-        if($("#txt_word").val().length==0)
-        {
-            location.href = "?page=1";
-        }
-        else
-        {
-            location.href = "?page=1&type=0&word="+encodeURIComponent($("#txt_word").val());
-        }
-
+        location.href = "?page=1&type=" + $("#type").val() + "&word=" + encodeURIComponent($("#txt_word").val());
     }
 
     laypage({

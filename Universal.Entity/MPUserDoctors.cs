@@ -16,8 +16,6 @@ namespace Universal.Entity
             this.AddTime = DateTime.Now;
             this.CanAdvisory = true;
             this.AdvisoryPrice = 99;
-            this.ClinicDepartmentList = new List<ClinicDepartment>();
-            this.DoctorsSpecialtyList = new List<DoctorsSpecialty>();
         }
 
         /// <summary>
@@ -40,7 +38,20 @@ namespace Universal.Entity
         /// 所属诊所数据
         /// </summary>
         public virtual Clinic Clinic { get; set; }
-                
+        
+        /// <summary>
+        /// 获取诊所名称
+        /// </summary>
+        [NotMapped]
+        public string GetClinicTitle
+        {
+            get
+            {
+                if (Clinic == null) return "";
+                return Clinic.Title;
+            }
+        }
+
         /// <summary>
         /// 所属科室、会有多个
         /// </summary>

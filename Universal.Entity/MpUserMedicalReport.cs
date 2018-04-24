@@ -18,12 +18,9 @@ namespace Universal.Entity
 
         public int ID { get; set; }
 
-        /// <summary>
-        /// 所属用户
-        /// </summary>
-        public int MPUserID { get; set; }
 
-        public virtual MPUser MPUser { get; set; }
+        [MaxLength(30)]
+        public string IDCardNumber { get; set; }
 
         /// <summary>
         /// 报告标题

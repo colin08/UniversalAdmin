@@ -15,12 +15,12 @@ namespace Universal.Entity
         临时订单 = 0,//加项使用
         [Description("待支付")]
         等待支付 = 1,
-        [Description("已支付")]
-        已支付 = 2,
-        [Description("已完成")]
-        已完成 = 3,
         [Description("已取消")]
-        已取消 = 4
+        已取消,
+        [Description("已完成")]
+        已完成,
+        [Description("已支付")]
+        已支付
     }
 
     /// <summary>
@@ -193,7 +193,16 @@ namespace Universal.Entity
         /// 体检用户-生日
         /// </summary>
         [Column(TypeName = "Date")]
-        public DateTime Brithday { get; set; }
+        public DateTime? Brithday { get; set; }
+
+        public string GetBrithday
+        {
+            get
+            {
+                if (Brithday == null) return "";
+                return Tools.TypeHelper.ObjectToDateTime(Brithday).ToString("yyyy-MM-dd");
+            }
+        }
 
         /// <summary>
         /// 预约体检日期

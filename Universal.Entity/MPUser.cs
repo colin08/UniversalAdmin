@@ -58,7 +58,8 @@ namespace Universal.Entity
             this.LastLoginTime = DateTime.Now;
             this.Gender = MPUserGenderType.unknown;
             this.AddTime = DateTime.Now;
-            this.Brithday = DateTime.Now;
+            this.Brithday = null;
+            this.IDCardType = MPUserIDCardType.IDCard;
             this.AccountBalance = 0;
             this.IsFullInfo = false;
             this.Weight = 99;
@@ -126,13 +127,13 @@ namespace Universal.Entity
         /// <summary>
         /// 身份证号码
         /// </summary>
-        [MaxLength(30)]
+        [MaxLength(30),Index(IsUnique =true)]
         public string IDCardNumber { get; set; }
 
         /// <summary>
         /// 电话，大陆+86，香港+852，澳门+853
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(50), Index(IsUnique = true)]
         public string Telphone { get; set; }
 
         /// <summary>
@@ -155,7 +156,16 @@ namespace Universal.Entity
         /// 生日
         /// </summary>
         [Column(TypeName = "Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Brithday { get; set; }
+        public DateTime? Brithday { get; set; }
+
+        public string GetBrithday
+        {
+            get
+            {
+                if (Brithday == null) return "";
+                return Tools.TypeHelper.ObjectToDateTime(Brithday).ToString("yyyy-MM-dd");
+            }
+        }
 
         /// <summary>
         /// 根据生日获取年龄
@@ -164,9 +174,11 @@ namespace Universal.Entity
         {
             get
             {
+                if (Brithday == null) return 0;
                 DateTime now = DateTime.Now;
-                int age = now.Year - Brithday.Year;
-                if (now.Month < Brithday.Month || (now.Month == Brithday.Month && now.Day < Brithday.Day))
+                var bri = Tools.TypeHelper.ObjectToDateTime(Brithday);
+                int age = now.Year - bri.Year;
+                if (now.Month < bri.Month || (now.Month == bri.Month && now.Day < bri.Day))
                 {
                     age--;
                 }
@@ -210,6 +222,21 @@ namespace Universal.Entity
         /// 医生信息
         /// </summary>
         public virtual MPUserDoctors DoctorsInfo { get; set; }
+
+
+        /// <summary>
+        /// 获取医生所属诊所名称
+        /// </summary>
+        [NotMapped]
+        public string GetClinicTitle
+        {
+            get
+            {
+                if (DoctorsInfo == null) return "";
+                if (DoctorsInfo.Clinic == null) return "";
+                return DoctorsInfo.Clinic.Title;
+            }
+        }
 
     }
 }

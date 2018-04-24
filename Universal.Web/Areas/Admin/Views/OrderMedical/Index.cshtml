@@ -104,7 +104,7 @@
                         <td>
                             @if (item.CanDone)
                             {
-                                <a class="btn btn-sm btn-white" href="/Admin/OrderMedical/Info?id=@item.ID"><i class="glyphicon glyphicon-add"></i> 设置完成</a>
+                                <a class="btn btn-sm btn-white" href="javascript:void(0);" onclick="setDone(@item.ID)"><i class="glyphicon glyphicon-ok"></i> 设置完成</a>
                             }
                             <a class="btn btn-sm btn-white" href="/Admin/OrderMedical/Info?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 详情</a>
                         </td>
@@ -131,10 +131,49 @@ else
 {
     @Scripts.Render("~/bundles/laypage")
     <script type="text/javascript">
+
+        function setDone(id) {
+            if (id <= 0) {
+                layer.msg('非法参数', { offset: 0, shift: 6 });
+            }
+
+            layer.confirm('确认设置完成？', { icon: 3 }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    url: "/MP/OrderMedical/SetDone",
+                    data: { "id": id },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("设置成功", { icon: 1 });
+                            window.setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+            });
+
+        }
+
     function Search()
     {
-        location.href = "?page=1&role="+$("#role1").val()+"&role2="+$("#role2").val()+"&word="+encodeURIComponent($("#txt_word").val());
+        location.href = "?page=1&role=" + $("#role").val()+"&role2="+$("#role2").val()+"&word="+encodeURIComponent($("#txt_word").val());
     }
+
 
     laypage({
         cont: 'pager',

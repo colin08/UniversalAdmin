@@ -50,7 +50,7 @@
         <p>订单状态：
                 @if(Model.Status == Universal.Entity.OrderStatus.临时订单)
                 {
-                    <button class="mui-btn-success mui-btn-outlined" onclick="location.href='GoBuy?mid=@Model.MedicalID&o=@Model.OrderNum&back=/MP/Medical/OrderInfo?o=@Model.OrderNum'">继续操作</button>
+            <button class="mui-btn-success mui-btn-outlined" onclick="location.href='GoBuy?mid=@Model.MedicalID&o=@Model.OrderNum&back=/MP/Medical/OrderInfo?o=@Model.OrderNum'">继续下单</button>
                 }
                 else if (Model.Status == Universal.Entity.OrderStatus.已取消)
                 {

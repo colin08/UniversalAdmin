@@ -19,26 +19,23 @@ namespace Universal.Web.Areas.MP.Controllers
         /// 首页
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index(string backUrl,string user_id)
+        public ActionResult Index(string backUrl,string idnumber)
         {
             if(string.IsNullOrWhiteSpace(backUrl))
             {
                 return PromptView("返回地址不明确");
             }
-            int u_id = WorkContext.UserInfo.ID;
-            if (!string.IsNullOrWhiteSpace(user_id)) u_id = Tools.TypeHelper.ObjectToInt(user_id, 0);
-            if(u_id == 0)
-            {
-                return PromptView(backUrl, "非法用户参数");
-            }
+            string id_card_number = WorkContext.UserInfo.IDCardNumber;
+            if (!string.IsNullOrWhiteSpace(idnumber)) id_card_number = idnumber;
             ViewData["BackUrl"] = backUrl;
-            ViewData["UID"] = u_id;
+            ViewData["IDNumber"] = id_card_number;
             BLL.BaseBLL<Entity.MPUser> bll = new BLL.BaseBLL<Entity.MPUser>();
-            var model = bll.GetModel(p => p.ID == u_id, "ID DESC");
-            if (model == null) return PromptView(backUrl,"用户不存在");
-            ViewData["RealName"] = model.RealName;
-            //BLL.BaseBLL<Entity.MpUserMedicalReport> bll_report = new BLL.BaseBLL<Entity.MpUserMedicalReport>();
-            //var db_list = bll_report.GetListBy(20, p => p.MPUserID == u_id, "AddTime DESC");
+            var model = bll.GetModel(p => p.IDCardNumber == id_card_number, "ID DESC");
+            if (model == null)
+            {
+                ViewData["RealName"] = "";
+            }
+            ViewData["RealName"] = model.RealName + " - ";
             return View();
         }
 
@@ -49,7 +46,7 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <param name="page_index"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetPageList(int page_size,int page_index)
+        public JsonResult GetPageList(int page_size,int page_index,string id_number)
         {
             UnifiedResultEntity<List<Entity.MpUserMedicalReport>> result = new UnifiedResultEntity<List<Entity.MpUserMedicalReport>>();
             if(page_size<=0 || page_index <= 0)
@@ -57,11 +54,16 @@ namespace Universal.Web.Areas.MP.Controllers
                 result.msgbox = "非法参数";
                 return Json(result);
             }
+            if(string.IsNullOrWhiteSpace(id_number))
+            {
+                result.msgbox = "非法参数2";
+                return Json(result);
+            }
 
             BLL.BaseBLL<Entity.MpUserMedicalReport> bll = new BLL.BaseBLL<Entity.MpUserMedicalReport>();
             int row_count = 0;
             int user_id = WorkContext.UserInfo.ID;
-            var db_list = bll.GetPagedList(page_index, page_size, ref row_count, p => p.MPUserID == user_id, "AddTime DESC");
+            var db_list = bll.GetPagedList(page_index, page_size, ref row_count, p => p.IDCardNumber == id_number, "AddTime DESC");
             result.msg = 1;
             result.msgbox = "ok";
             result.data = db_list;

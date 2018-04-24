@@ -41,15 +41,9 @@ namespace Universal.BLL
             }
             using (var db=new DataCore.EFDBContext())
             {
-                var entity_user = db.MPUsers.Where(p => p.IDCardNumber == id_number).AsNoTracking().FirstOrDefault();
-                if(entity_user == null)
-                {
-                    msg = "找不到相关用户";
-                    return false;
-                }
                 Entity.MpUserMedicalReport entity_report = new Entity.MpUserMedicalReport();
                 entity_report.FilePath = file_path;
-                entity_report.MPUserID = entity_user.ID;
+                entity_report.IDCardNumber = id_number;
                 entity_report.Title = title;
                 db.MpUserMedicalReports.Add(entity_report);
                 db.SaveChanges();

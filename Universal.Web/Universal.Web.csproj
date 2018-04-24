@@ -497,6 +497,8 @@
     <Content Include="Assets\js\plugins\gritter\jquery.gritter.css" />
     <Content Include="Assets\js\plugins\gritter\jquery.gritter.min.js" />
     <Content Include="Assets\js\plugins\iCheck\icheck.min.js" />
+    <Content Include="Assets\js\plugins\jqcloud\jqcloud-1.0.4.min.js" />
+    <Content Include="Assets\js\plugins\jqcloud\jqcloud.css" />
     <Content Include="Assets\js\plugins\jquery-ui\jquery-ui.min.js" />
     <Content Include="Assets\js\plugins\jsTree\jstree.js" />
     <Content Include="Assets\js\plugins\jsTree\jstree.min.js" />
@@ -507,6 +509,8 @@
     <Content Include="Assets\js\plugins\layer\layer.js" />
     <Content Include="Assets\js\plugins\layer\laypage\laypage.js" />
     <Content Include="Assets\js\plugins\layer\laypage\skin\laypage.css" />
+    <Content Include="Assets\js\plugins\layer\mobile\layer.js" />
+    <Content Include="Assets\js\plugins\layer\mobile\need\layer.css" />
     <Content Include="Assets\js\plugins\layer\skin\default\icon-ext.png" />
     <Content Include="Assets\js\plugins\layer\skin\default\icon.png" />
     <Content Include="Assets\js\plugins\layer\skin\default\icon_ext.png" />
@@ -632,6 +636,7 @@
     <Content Include="Assets\mui\img\upload-add.png" />
     <Content Include="Assets\mui\js\jquery.limitTextarea.js" />
     <Content Include="Assets\mui\js\jquery.min.js" />
+    <Content Include="Assets\mui\js\js.cookie.js" />
     <Content Include="Assets\mui\js\mui.dtpicker.js" />
     <Content Include="Assets\mui\js\mui.ext.loading.js" />
     <Content Include="Assets\mui\js\mui.indexedlist.js" />
@@ -650,9 +655,22 @@
     <Content Include="bin\Universal.Web.dll" />
     <Content Include="bin\Universal.Web.Framework.dll" />
     <Content Include="bin\Universal.Web.XML" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
     <Content Include="Web.config" />
+    <Content Include="Areas\MP\Views\Doctors\Index.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\Info.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\Modify.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\Reservation.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\ReservationSetting.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\Advisory.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\AdvisoryClear.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\SelectDepart.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\SelectSpec.cshtml" />
+    <None Include="Web.WebFTP.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -664,12 +682,17 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\ClinicAreaController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ClinicController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ClinicDepartmentController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DoctorsSpecialtyController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalBannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalItemController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MPDoctorController.cs" />
     <Compile Include="Areas\Admin\Controllers\MPUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\OrderMedicalController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
@@ -679,11 +702,16 @@
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelClinicDepartmentList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelClinicList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelCloudTags.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalItemList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalBannerList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelClinicAreaList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMPDoctorList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelOrderMedicalList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
@@ -730,6 +758,7 @@
     <Compile Include="Areas\MP\Controllers\PayController.cs" />
     <Compile Include="Areas\MP\Controllers\TestController.cs" />
     <Compile Include="Areas\MP\Controllers\ToolsController.cs" />
+    <Compile Include="Areas\MP\Models\DoctorsInfo.cs" />
     <Compile Include="Areas\MP\Models\MedicalSelectItem.cs" />
     <Compile Include="Areas\MP\Models\OrderMedicalInfo.cs" />
     <Compile Include="Areas\MP\MPAreaRegistration.cs" />
@@ -843,6 +872,15 @@
     <Content Include="Areas\Admin\Views\OrderMedical\Index.cshtml" />
     <Content Include="Areas\Admin\Views\OrderMedical\Info.cshtml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
+    <Content Include="Areas\Admin\Views\ClinicArea\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ClinicArea\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Clinic\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Clinic\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ClinicDepartment\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ClinicDepartment\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MPDoctor\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MPDoctor\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\DoctorsSpecialty\Index.cshtml" />
     <None Include="Properties\PublishProfiles\WebFTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -853,11 +891,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\MP\Views\Auth\" />
-    <Folder Include="Areas\MP\Views\Doctors\" />
     <Folder Include="Areas\MP\Views\Test\" />
     <Folder Include="Areas\MP\Views\Tools\" />
     <Folder Include="Assets\js\plugins\layer\laydate\theme\" />
-    <Folder Include="Assets\js\plugins\layer\mobile\" />
     <Folder Include="Views\File\" />
     <Folder Include="Views\Intranet\" />
   </ItemGroup>

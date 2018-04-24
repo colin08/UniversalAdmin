@@ -37,8 +37,18 @@ namespace Universal.Web.Areas.MP.Controllers
         /// 修改用户资料
         /// </summary>
         /// <returns></returns>
-        public ActionResult Modify()
-        {            
+        public ActionResult Modify(string back)
+        {
+            if (string.IsNullOrWhiteSpace(back))
+            {
+                ViewData["BackTxt"] = "修改个人资料";
+                ViewData["BackUrl"] = "/mp/BasicUser/Info";
+            }
+            else
+            {
+                ViewData["BackTxt"] = "完善个人资料";
+                ViewData["BackUrl"] = back;
+            }
             return View();
         }
 
@@ -51,9 +61,9 @@ namespace Universal.Web.Areas.MP.Controllers
         {
             #region 数据验证
 
-            if (realname.Length > 10 || realname.Length == 0)
+            if (realname.Length > 5 || realname.Length == 0)
             {
-                WorkContext.AjaxStringEntity.msgbox = "姓名长度在0~10之间";
+                WorkContext.AjaxStringEntity.msgbox = "姓名长度在0~5之间";
                 return Json(WorkContext.AjaxStringEntity);
             }
             if (idnumber.Length > 18 || idnumber.Length == 0)
@@ -125,7 +135,7 @@ namespace Universal.Web.Areas.MP.Controllers
             entity.Gender = (Entity.MPUserGenderType)gender;
             entity.Brithday = brithday;
             entity.IsFullInfo = true;
-            bll.Modify(entity, "RealName", "IDCardNumber", "Telphone", "Gender", "Brithday", "IsFullInfo");
+            bll.Modify(entity, "RealName", "NickName", "IDCardNumber", "Telphone", "Gender", "Brithday", "IsFullInfo");
             //更新Session中的用户信息
             BLL.BLLMPUserState.SetLogin(entity.OpenID);
             WorkContext.AjaxStringEntity.msg = 1;

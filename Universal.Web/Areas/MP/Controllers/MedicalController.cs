@@ -102,7 +102,7 @@ namespace Universal.Web.Areas.MP.Controllers
             if (entity.Status == MedicalStatus.Down) return PromptView("/MP/Medical/Index", "该套餐已下架");
             ViewData["MID"] = mid;
             ViewData["Medical"] = entity;
-
+            ViewData["MPrice"] = entity.Price.ToString("F2");
             if (string.IsNullOrWhiteSpace(o))
             {
                 //添加订单
@@ -122,6 +122,10 @@ namespace Universal.Web.Areas.MP.Controllers
             ViewData["BackUrl"] = "/MP/Medical/GoBuy?mid=" + mid.ToString() + "&o=" + o;
 
             LoadAllSelectItem(model);
+
+            decimal select_price = Tools.TypeHelper.ObjectToDecimal(ViewData["SelectPrice"], 0);
+            var TotalPrice = select_price + entity.Price;
+            ViewData["TotalPrice"] = TotalPrice.ToString("F2");
             return View(model);
         }
 
@@ -169,7 +173,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 if (model.Gender != MPUserGenderType.unknown) result_model.Gender = (int)model.Gender;
                 result_model.Telphone = model.Telphone;
                 result_model.YuYueDate = model.YuYueDate;
-                result_model.Brithday = model.Brithday;
+                result_model.Brithday = model.GetBrithday;
                 result_model.YuYueStr = model.YuYueDate.ToString("yyyy-MM-dd");
                 if (model.YuYueDate.Hour < 13) result_model.YuYueStr += " 上午";
                 else result_model.YuYueStr += " 下午";
@@ -182,7 +186,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 result_model.Telphone = WorkContext.UserInfo.Telphone;
                 if (WorkContext.UserInfo.Gender != MPUserGenderType.unknown) result_model.Gender = (int)WorkContext.UserInfo.Gender;
                 result_model.YuYueDate = DateTime.Now.AddDays(1);
-                result_model.Brithday = WorkContext.UserInfo.Brithday;
+                result_model.Brithday = WorkContext.UserInfo.GetBrithday;
                 result_model.YuYueStr = result_model.YuYueDate.ToString("yyyy-MM-dd") + " 上午";
             }
             return View(result_model);
@@ -328,6 +332,8 @@ namespace Universal.Web.Areas.MP.Controllers
             var db_list = BLL.BLLMedical.LoadAllSelectList(out SZMList);
             var order_medical_item = entity_order.OrderMedicalItems.ToList();
             var SelectItem = new List<Universal.Web.Areas.MP.Models.MedicalSelectItem>();
+            int select_total = 0;
+            decimal select_price = 0;
             foreach (var item in db_list)
             {
                 Models.MedicalSelectItem model = new Models.MedicalSelectItem();
@@ -336,13 +342,29 @@ namespace Universal.Web.Areas.MP.Controllers
                 var mach_entity = order_medical_item.Find(p => p.MedicalID == db_mecal_id);
                 if (mach_entity != null) model.type = (int)mach_entity.Type;
                 else model.type = 0;
+                if(model.type == 2)
+                {
+                    select_total++;
+                    select_price += item.Price;
+                }
                 model.MedicalID = item.ID;
                 model.OnlyID = item.OnlyID;
                 model.SZM = item.SZM;
                 model.Title = item.Title;
                 model.Weight = item.Weight;
+                model.price = item.Price.ToString("F2");
                 SelectItem.Add(model);
             }
+            if (select_total == 0)
+            {
+                ViewData["BtnText"] = "完成";
+            }
+            else
+            {
+                ViewData["BtnText"] = "完成(" + select_total.ToString() + ")";
+            }
+            ViewData["SelectTotal"] = select_total;
+            ViewData["SelectPrice"] = select_price.ToString("F2");
             ViewData["DBSelectItem"] = SelectItem;
             ViewData["SZMList"] = SZMList;
         }

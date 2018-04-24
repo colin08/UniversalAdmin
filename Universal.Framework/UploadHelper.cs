@@ -84,7 +84,7 @@ namespace Universal.Web.Framework
         /// <param name="ServerPath">保存的文件地址相对路径</param>
         /// <param name="IsThumb">是否生成缩略图</param>
         /// <returns></returns>
-        public UnifiedResultEntity<String> Upload(HttpPostedFileBase fileData, string ServerPath, bool IsThumb = true)
+        public UnifiedResultEntity<String> Upload(HttpPostedFileBase fileData, string ServerPath, bool IsThumb = false)
         {
 
             UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();

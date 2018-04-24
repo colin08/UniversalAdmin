@@ -23,7 +23,7 @@ namespace Universal.Web.Areas.MP.Models
 
         public int Gender { get; set; }
 
-        public DateTime Brithday { get; set; }
+        public string Brithday { get; set; }
 
         public DateTime YuYueDate { get; set; }
 

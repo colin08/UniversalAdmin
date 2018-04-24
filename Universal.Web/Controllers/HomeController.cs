@@ -13,7 +13,8 @@ namespace Universal.Web.Controllers
         {
             //TODO 手动设置openid
             //BLL.BLLMPUserState.SetOpenID("abcd");
-            return Redirect("/Admin/Home/");
+            //return Redirect("/Admin/Home/");
+            return Content("");
             //return View();
         }
         

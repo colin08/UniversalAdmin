@@ -1,0 +1,307 @@
+﻿@model Universal.Web.Areas.MP.Models.DoctorsInfo
+@{
+    ViewBag.Title = "医生个人中心";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <link href="~/Assets/mui/css/mui.dtpicker.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/mui.picker.min.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+    <style>
+        .radio_inline { display: inline-block; width: 65%; }
+
+            .radio_inline label { width: 20%; padding-left: 40px; padding-right: 40px; }
+
+            .radio_inline input[type=radio] { width: 15%; right: auto; }
+        textarea.noscrollbars { overflow: hidden; }
+    </style>
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='Info'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">个人资料修改</h1>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+    <div class="mui-content-padded">
+        <p>基本资料</p>
+        <div class="mui-input-group">
+            <div class="mui-input-row">
+                <label>姓名</label>
+                <input type="text" id="txt_realname" maxlength="5" value="@Model.name" />
+            </div>
+            <div class="mui-input-row ">
+                <label>性别</label>
+                <span class="radio_inline mui-radio">
+                    <input name="rd_gender" type="radio" id="radio_man"
+                           @if (Model.gender == "男" || Model.gender == "未知") { @: checked
+                           }
+                           value="1">
+                    <label for="radio_man">男</label>
+                    <input name="rd_gender" type="radio" id="radio_woman"
+                           @if (Model.gender == "女") { @: checked
+                           }
+                           value="2">
+                    <label for="radio_woman">女</label>
+                </span>
+            </div>
+            <div class="mui-input-row ">
+                <label>生日</label>
+                <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1949,"endYear":2018,"value":"1970-01-01"}' value="@Model.brithday" />
+            </div>
+            <div class="mui-input-row">
+                <label>身份证号</label>
+                <input type="text" id="txt_idnumber" maxlength="20" value="@Model.idnumber" />
+            </div>
+            <div class="mui-input-row">
+                <label>手机号</label>
+                <input type="text" id="txt_telphone" maxlength="11" value="@Model.telphone" />
+            </div>
+        </div>
+
+        <p style="margin-top: 10px;">专业资料</p>
+        <div class="mui-input-group">
+            <div class="mui-input-row">
+                <label>诊所</label>
+                <input type="hidden" id="hid_zhensuo" value="@Model.zhensuo_id" />
+                <input type="text" id="txt_zhensuo" readonly value="@Model.zhensuo" />
+            </div>
+            <div class="mui-input-row ">
+                <label>科室</label>
+                <input type="hidden" id="hid_keshi" value="@Model.keshi_ids" />
+                <input type="text" id="txt_keshi" readonly value="@Model.keshi" />
+            </div>
+            <div class="mui-input-row">
+                <label>头衔</label>
+                <input type="text" id="txt_touxian" maxlength="10" value="@Model.touxian" />
+            </div>
+            <div class="mui-input-row">
+                <label>擅长</label>
+                <input type="hidden" id="hid_shanchang" value="@Model.shanchang_ids" />
+                <input type="text" id="txt_shanchang" readonly value="@Model.shanchang" />
+            </div>
+            <div class="mui-input-row" id="div_textarea">
+                <label>简介</label>
+                <textarea id="txt_remark" class="noscrollbars" onkeyup="autoGrow(this)">@Html.Raw(Model.jianjie)</textarea>
+            </div>
+        </div>
+
+        <button type="button" id="btn_save" data-loading-text="保存中" data-loading-icon="mui-spinner mui-spinner-custom" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">保   存</button>
+    </div>
+
+<div id="window_box" style="display:none"></div>
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+    <div class="mui-bar-footer mui-text-center" style="width: 100%;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/mui.picker.min.js"></script>
+    <script src="~/Assets/mui/js/mui.dtpicker.js"></script>
+    <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+    <script src="~/Assets/mui/js/js.cookie.js"></script>
+    <script type="text/javascript">
+
+        (function ($$) {
+            $$.init();
+            $$("#btn_save")[0].addEventListener('tap', function () {
+                var btn = this;
+                var realname = $("#txt_realname").val();
+                var idnumber = $("#txt_idnumber").val();
+                var telphone = $("#txt_telphone").val();
+                var gender = $("input[name='rd_gender']:checked").val();
+                var bri = $("#txt_bri").val();
+
+                var zhensuo_id = $("#hid_zhensuo").val();
+                var keshi_ids = $("#hid_keshi").val();
+                var shanchang_ids = $("#hid_shanchang").val();
+                var touxian = $("#txt_touxian").val();
+                var reamrk = $("#txt_remark").val();
+                //console.log(realname);
+                //console.log(idnumber);
+                //console.log(telphone);
+                //console.log(gender);
+                //console.log(bri);
+
+                if (realname.length == 0) {
+                    $$.toast("请填写真实姓名");
+                    return;
+                }
+                if (bri.length == 0) {
+                    $$.toast("请选择生日");
+                    return;
+                }
+                if (idnumber.length == 0) {
+                    $$.toast("请填写身份证号码");
+                    return;
+                }
+                if (telphone.length == 0) {
+                    $$.toast("请填写手机号码");
+                    return;
+                }
+
+                $$(btn).button('loading');
+                $$.showLoading("保存中", "div");
+
+                mui.ajax('/mp/Doctors/Modify', {
+                    data: {
+                        realname: realname,
+                        idnumber: idnumber,
+                        telphone: telphone,
+                        gender: gender,
+                        bri: bri,
+                        clinic_id: zhensuo_id,
+                        keshi_ids: keshi_ids,
+                        touxian: touxian,
+                        shanchang_ids: shanchang_ids,
+                        jianjie: reamrk
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    timeout: 10000,
+                    headers: { 'Content-Type': 'application/json' },
+                    success: function (data) {
+                        $$.hideLoading();
+                        $$(btn).button('reset');
+                        if (data.msg == 1) {
+                            $$.toast("资料修改成功");
+                            setTimeout(function () {
+                                setTimeout(function () {
+                                    location.href = "Index";
+                                }.bind(btn), 1000);
+                            })
+                        } else {
+                            mui.alert('错误消息', data.msgbox);
+                        }
+                    },
+                    error: function (xhr, type, errorThrown) {
+                        //异常处理；
+                        mui.alert('网络异常', "请检查联网是否通畅");
+                    }
+                });
+
+
+            });
+
+            //诊所点击去选择
+            $$("#txt_keshi")[0].addEventListener('tap', function () {
+                var zhensuo_id = $("#hid_zhensuo").val();
+                if (zhensuo_id == undefined) {
+                    $$.toast("请先选择诊所");
+                    return;
+                }
+                var keshi_ids = $("#hid_keshi").val();
+                if (zhensuo_id <= 0) {
+                    $$.toast("诊所数据不正常");
+                    return;
+                }
+                CacheDataCookie();
+                location.href = "SelectDepart?clinic_id=" + zhensuo_id + "&de_ids=" + keshi_ids;
+            });
+
+            //特长点击去选择
+            $$("#txt_shanchang")[0].addEventListener('tap', function () {
+                CacheDataCookie();
+                location.href = "SelectSpec?de_ids=" + $("#hid_shanchang").val();
+            });
+
+            $$("#txt_zhensuo")[0].addEventListener('tap', function () {
+                var picker = new mui.PopPicker();
+                picker.setData(@Html.Raw(ViewData["ClinicJson"]));
+                picker.pickers[0].setSelectedValue(@Model.zhensuo_id);
+                picker.show(function (selectItems) {
+                    $("#txt_zhensuo").val(selectItems[0].text);
+                    $("#hid_zhensuo").val(selectItems[0].value);
+                    //诊所改变
+                    if (selectItems[0].value != @Model.zhensuo_id) {
+                        //清空科室
+                        $("#hid_keshi").val("");
+                        $("#txt_keshi").val("点击选择科室");
+                    } else {
+                        //还原科室
+                        $("#hid_keshi").val("@Model.keshi_ids");
+                        $("#txt_keshi").val("@Model.keshi");
+                    }
+                })
+            });
+
+            $$("#txt_bri")[0].addEventListener('tap', function () {
+                var _self = this;
+                if (_self.picker) {
+                    _self.picker.show(function (rs) {
+                        console.log('选择结果: ' + rs.text);
+                        _self.picker.dispose();
+                        _self.picker = null;
+                    });
+                } else {
+                    var optionsJson = this.getAttribute('data-options') || '{}';
+                    var options = JSON.parse(optionsJson);
+                    var id = this.getAttribute('id');
+                    _self.picker = new $$.DtPicker(options);
+                    _self.picker.show(function (rs) {
+                        _self.value = rs.text;
+                        _self.picker.dispose();
+                        _self.picker = null;
+                    });
+                }
+            })
+
+        })(mui);
+
+        function CacheDataCookie() {
+            var zhensuo_id = $("#hid_zhensuo").val();
+            var keshi_ids = $("#hid_keshi").val();
+            var shanchang_ids = $("#hid_shanchang").val();
+            var realname = $("#txt_realname").val();
+            var idnumber = $("#txt_idnumber").val();
+            var telphone = $("#txt_telphone").val();
+            var gender = $("input[name='rd_gender']:checked").val();
+            var bri = $("#txt_bri").val();
+            var touxian = $("#txt_touxian").val();
+            var reamrk = $("#txt_remark").val();
+
+            Cookies.set('doc_name', realname);
+            Cookies.set('doc_gender', gender);
+            Cookies.set('doc_brithday', bri);
+            Cookies.set('doc_idnumber', idnumber);
+            Cookies.set('doc_telphone', telphone);
+            Cookies.set('doc_zhensuo_id', zhensuo_id);
+            Cookies.set('doc_keshi_ids', keshi_ids);
+            Cookies.set('doc_shanchang_ids', shanchang_ids);
+            Cookies.set('doc_touxian', touxian);
+            Cookies.set('doc_jianjie', reamrk);
+        }
+
+        window.onload = function () {
+            autoGrow(document.getElementById('txt_remark'));
+        };
+
+        function autoGrow(oField) {
+            var div_area = document.getElementById('div_textarea');
+            if (oField.scrollHeight > oField.clientHeight) {
+                var new_height = oField.scrollHeight + "px";
+                oField.style.height = new_height;
+                div_area.style.height = new_height;
+            }
+        }
+    </script>
+
+}
+<!-- MUI 页面底部脚本 END -->

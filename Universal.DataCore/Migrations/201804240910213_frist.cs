@@ -3,10 +3,22 @@ namespace Universal.DataCore.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class frist : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.ClinicArea",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 50),
+                        Status = c.Boolean(nullable: false),
+                        Weight = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
             CreateTable(
                 "dbo.ClinicDepartment",
                 c => new
@@ -15,6 +27,8 @@ namespace Universal.DataCore.Migrations
                         ClinicID = c.Int(nullable: false),
                         Title = c.String(nullable: false, maxLength: 100),
                         Desc = c.String(maxLength: 255),
+                        Status = c.Boolean(nullable: false),
+                        SZM = c.String(maxLength: 30),
                         Weight = c.Int(nullable: false),
                         AddTime = c.DateTime(nullable: false),
                     })
@@ -27,7 +41,7 @@ namespace Universal.DataCore.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        City = c.Byte(nullable: false),
+                        ClinicAreaID = c.Int(nullable: false),
                         Title = c.String(nullable: false, maxLength: 100),
                         ICON = c.String(maxLength: 255),
                         WorkHours = c.String(maxLength: 255),
@@ -37,9 +51,12 @@ namespace Universal.DataCore.Migrations
                         FuWuYuYan = c.String(maxLength: 300),
                         ChengCheLuXian = c.String(maxLength: 1000),
                         Weight = c.Int(nullable: false),
+                        Status = c.Boolean(nullable: false),
                         AddTime = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => t.ID);
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.ClinicArea", t => t.ClinicAreaID, cascadeDelete: true)
+                .Index(t => t.ClinicAreaID);
             
             CreateTable(
                 "dbo.MPUserDoctors",
@@ -65,6 +82,7 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Title = c.String(nullable: false, maxLength: 50),
+                        SZM = c.String(maxLength: 30),
                         AddTime = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.ID);
@@ -83,7 +101,7 @@ namespace Universal.DataCore.Migrations
                         IDCardNumber = c.String(maxLength: 30),
                         Telphone = c.String(maxLength: 50),
                         Gender = c.Byte(nullable: false),
-                        Brithday = c.DateTime(nullable: false, storeType: "date"),
+                        Brithday = c.DateTime(storeType: "date"),
                         AccountBalance = c.Decimal(nullable: false, storeType: "money"),
                         IsFullInfo = c.Boolean(nullable: false),
                         Weight = c.Int(nullable: false),
@@ -92,7 +110,9 @@ namespace Universal.DataCore.Migrations
                         LastLoginTime = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.ID)
-                .Index(t => t.OpenID, unique: true);
+                .Index(t => t.OpenID, unique: true)
+                .Index(t => t.IDCardNumber, unique: true)
+                .Index(t => t.Telphone, unique: true);
             
             CreateTable(
                 "dbo.MedicalBanner",
@@ -161,14 +181,12 @@ namespace Universal.DataCore.Migrations
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        MPUserID = c.Int(nullable: false),
+                        IDCardNumber = c.String(maxLength: 30),
                         Title = c.String(maxLength: 255),
                         FilePath = c.String(),
                         AddTime = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.MPUser", t => t.MPUserID, cascadeDelete: true)
-                .Index(t => t.MPUserID);
+                .PrimaryKey(t => t.ID);
             
             CreateTable(
                 "dbo.OrderMedicalItem",
@@ -210,7 +228,7 @@ namespace Universal.DataCore.Migrations
                         IDCardNumber = c.String(maxLength: 30),
                         Telphone = c.String(maxLength: 50),
                         Gender = c.Byte(nullable: false),
-                        Brithday = c.DateTime(nullable: false, storeType: "date"),
+                        Brithday = c.DateTime(storeType: "date"),
                         YuYueDate = c.DateTime(nullable: false),
                         PayTime = c.DateTime(),
                         AddTime = c.DateTime(nullable: false),
@@ -355,7 +373,6 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.SysRoleRoute", "SysRoleID", "dbo.SysRole");
             DropForeignKey("dbo.OrderMedicalItem", "OrderMedicalID", "dbo.OrderMedical");
             DropForeignKey("dbo.OrderMedical", "MPUserID", "dbo.MPUser");
-            DropForeignKey("dbo.MpUserMedicalReport", "MPUserID", "dbo.MPUser");
             DropForeignKey("dbo.MPUserAmountDetails", "MPUserID", "dbo.MPUser");
             DropForeignKey("dbo.MedicalMedicalItem", "MedicalItem_ID", "dbo.MedicalItem");
             DropForeignKey("dbo.MedicalMedicalItem", "Medical_ID", "dbo.Medical");
@@ -366,6 +383,7 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.MPUserDoctorsClinicDepartment", "MPUserDoctors_ID", "dbo.MPUserDoctors");
             DropForeignKey("dbo.MPUserDoctors", "ClinicID", "dbo.Clinic");
             DropForeignKey("dbo.ClinicDepartment", "ClinicID", "dbo.Clinic");
+            DropForeignKey("dbo.Clinic", "ClinicAreaID", "dbo.ClinicArea");
             DropIndex("dbo.MedicalMedicalItem", new[] { "MedicalItem_ID" });
             DropIndex("dbo.MedicalMedicalItem", new[] { "Medical_ID" });
             DropIndex("dbo.DoctorsSpecialtyMPUserDoctors", new[] { "MPUserDoctors_ID" });
@@ -381,11 +399,13 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.OrderMedical", new[] { "MPUserID" });
             DropIndex("dbo.OrderMedical", new[] { "OrderNum" });
             DropIndex("dbo.OrderMedicalItem", new[] { "OrderMedicalID" });
-            DropIndex("dbo.MpUserMedicalReport", new[] { "MPUserID" });
             DropIndex("dbo.MPUserAmountDetails", new[] { "MPUserID" });
+            DropIndex("dbo.MPUser", new[] { "Telphone" });
+            DropIndex("dbo.MPUser", new[] { "IDCardNumber" });
             DropIndex("dbo.MPUser", new[] { "OpenID" });
             DropIndex("dbo.MPUserDoctors", new[] { "ClinicID" });
             DropIndex("dbo.MPUserDoctors", new[] { "ID" });
+            DropIndex("dbo.Clinic", new[] { "ClinicAreaID" });
             DropIndex("dbo.ClinicDepartment", new[] { "ClinicID" });
             DropTable("dbo.MedicalMedicalItem");
             DropTable("dbo.DoctorsSpecialtyMPUserDoctors");
@@ -408,6 +428,7 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.MPUserDoctors");
             DropTable("dbo.Clinic");
             DropTable("dbo.ClinicDepartment");
+            DropTable("dbo.ClinicArea");
         }
     }
 }

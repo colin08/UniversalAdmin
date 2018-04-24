@@ -4,37 +4,36 @@
 }
 
 <!-- 头部Style等 -->
-@section htmlhead{   
-<link href="~/Assets/mui/css/mui.indexedlist.css" rel="stylesheet" />
-<link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+@section htmlhead{
+    <link href="~/Assets/mui/css/mui.indexedlist.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
 
-<style>
-    html,
-    body { height: 100%; overflow: hidden; }
+    <style>
+        html,
+        body { height: 100%; overflow: hidden; }
 
-    .mui-bar { -webkit-box-shadow: none; box-shadow: none; }
+        .mui-bar { -webkit-box-shadow: none; box-shadow: none; }
 
-    #done.mui-disabled { color: gray; }
-</style>
+        #done.mui-disabled { color: gray; }
+
+        .fixed-group-buttom { font-size:14px; height: 44px; width: 100%; background: white; padding: 1px 10px; position: fixed; display: flex; justify-content: space-between; align-items: center; }
+            .fixed-group-buttom label { font-size:16px; color: #F5A623; }
+    </style>
 
 
 
 }
 <!-- 头部Style等 END -->
-
-
 <!-- MUI 头部导航栏设置 -->
 @section muiheader{
-    
-<header class="mui-bar mui-bar-nav">
-    <a id="back_btn" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-    <h1 class="mui-title">选择体检项</h1>
-    <a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">完成</a>
-</header>
+
+    <header class="mui-bar mui-bar-nav">
+        <a id="back_btn" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">选择体检项</h1>
+        <a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">@ViewData["BtnText"]</a>
+    </header>
 }
 <!-- MUI 头部导航栏设置 END -->
-
-
 <!-- Body -->
 
 <div id='list' class="mui-indexed-list">
@@ -56,53 +55,61 @@
                 <li data-group="@SZM" class="mui-table-view-divider mui-indexed-list-group">@SZM</li>
 
                 var temp_db_list = (List<Universal.Web.Areas.MP.Models.MedicalSelectItem>)ViewData["DBSelectItem"];
-                temp_db_list = temp_db_list.Where(p => p.SZM == SZM).OrderByDescending(p=>p.Weight).ToList();
+                temp_db_list = temp_db_list.Where(p => p.SZM == SZM).OrderByDescending(p => p.Weight).ToList();
                 foreach (var item in temp_db_list)
                 {
-                        <li data-value="@item.MedicalID" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-                            @if (item.type == 1)
-                            {
-                                <input type="checkbox" disabled /><span style="color:#aaa;">@item.Title</span> @:<span style="font-size:12px;color:#aaa;">(套餐内包含)</span>
-                            }else if(item.type == 2)
-                            {
-                                <input type="checkbox" data-id="@item.MedicalID" checked />@item.Title
-                            }else
-                            {
+                    <li data-value="@item.MedicalID" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
+                        @if (item.type == 1)
+                        {
+                            <input type="checkbox" disabled /><span style="color:#aaa;">@item.Title</span> @:<span style="font-size:12px;color:#aaa;">(套餐内包含)</span>
+                        }
+                        else if (item.type == 2)
+                        {
+                            <input type="checkbox" data-id="@item.MedicalID" data-price="@item.price" checked />@item.Title
+                        }
+                        else
+                        {
 
-                                <input type="checkbox" data-id="@item.MedicalID" />@item.Title
-                            }
-                        </li>
-                    }
-                
+                            <input type="checkbox" data-id="@item.MedicalID" data-price="@item.price" />@item.Title
+                        }
+                    </li>
+                }
+
             }
 
-            
+
         </ul>
     </div>
+
 </div>
 
 
 
 <!-- Body END -->
-
-
 <!-- MUI 底部导航栏设置 -->
 @section muifooter{
 
-
+<div class="mui-bar-footer fixed-group-buttom">
+    <div class="bar-left">
+        <span>套餐价:<label>￥@ViewData["MPrice"]</label> 增加 <label id="footer_total"> @ViewData["SelectTotal"] </label> 项 <label id="footer_select_price">￥@ViewData["SelectPrice"]</label></span>
+    </div>
+    <div class="bar-right">
+        <span>总:<label id="footer_total_price">￥@ViewData["TotalPrice"]</label></span>
+    </div>
+</div>
 }
 <!-- MUI 底部导航栏设置 END -->
-
-
-
 <!-- MUI 页面底部脚本 -->
 @section htmlfoot{
-<script src="~/Assets/mui/js/mui.min.js"></script>
-<script src="~/Assets/mui/js/mui.indexedlist.js"></script>
-<script src="~/Assets/mui/js/mui.ext.loading.js"></script>
-<script type="text/javascript" charset="UTF-8">
-		mui.init();
-		mui.ready(function() {
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/mui.indexedlist.js"></script>
+    <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        //这个框架距离底部距离
+        var index_buttom_height = 45;
+        mui.init();
+        mui.ready(function () {
 			var header = document.querySelector('header.mui-bar');
 			var list = document.getElementById('list');
 			var done = document.getElementById('done');
@@ -120,13 +127,13 @@
 			done.addEventListener('tap', function() {
 				var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
 				var checkedValues = [];
-				var checkedIDs = [];
+                var checkedIDs = [];
 				checkboxArray.forEach(function(box) {
 					if(box.checked) {
 					    checkedValues.push(box.parentNode.innerText);
-					    checkedIDs.push(parseInt(box.getAttribute("data-id")));
+                        checkedIDs.push(parseInt(box.getAttribute("data-id")));
 					}
-				});
+                });
 				if (checkedValues.length == 0)
 				{
 				    location.href = '@Html.Raw(ViewData["BackUrl"])';
@@ -134,7 +141,7 @@
 				} else
 				{
 				    var ids_str= checkedIDs.join(',');
-				    mui.showLoading("体检项修改中..");
+				    mui.showLoading("项目添加中..");
 				    mui.ajax('/mp/Medical/ModifySelectItem', {
 				        data: {
 				            o: @Model.OrderNum,
@@ -147,7 +154,7 @@
 				        success: function (data) {
 				            mui.hideLoading();
 				            if (data.msg == 1) {
-				                mui.toast("项目修改成功");
+				                mui.toast("所选项目添加成功");
 				                setTimeout(function () {
 				                    setTimeout(function () {
 				                        location.href = '@Html.Raw(ViewData["BackUrl"])';
@@ -163,11 +170,23 @@
 				        }
 				    });
 				}
-				
+
 			}, false);
 			mui('.mui-indexed-list-inner').on('change', 'input', function() {
-				var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-				var value = count ? "完成(" + count + ")" : "完成";
+                var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+                var value = count ? "完成(" + count + ")" : "完成";
+                $("#footer_total").text(count ? count : "0");
+                var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
+                var select_price = 0.00;
+                checkboxArray.forEach(function (box) {
+                    if (box.checked) {
+                        var item_price = parseFloat(box.getAttribute("data-price"));
+                        select_price += item_price;
+                    }
+                });
+                $("#footer_select_price").text("￥"+select_price);
+                var mprice = parseFloat("@ViewData["MPrice"]");
+                $("#footer_total_price").text("￥"+(mprice + select_price));
 				done.innerHTML = value;
 				if(count) {
 					if(done.classList.contains("mui-disabled")) {
@@ -180,7 +199,6 @@
 				}
 			});
 		});
-</script>
+    </script>
 }
 <!-- MUI 页面底部脚本 END -->
-

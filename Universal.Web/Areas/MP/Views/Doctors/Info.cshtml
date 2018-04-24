@@ -1,0 +1,113 @@
+﻿@model Universal.Web.Areas.MP.Models.DoctorsInfo
+@{
+    ViewBag.Title = "医生个人中心";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+
+    <style>
+
+        textarea.noscrollbars { overflow: hidden; }
+		
+    </style>
+
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='Index'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">个人资料</h1>
+        <button type="button" onclick="javascript: location.href = 'Modify'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right">
+            修改
+        </button>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+    <div class="mui-content-padded">
+        <p>基本资料</p>
+        <div class="mui-input-group">
+            <div class="mui-input-row">
+                <label>姓名</label>
+                <input type="text" readonly="readonly" value="@Model.name" />
+            </div>
+            <div class="mui-input-row ">
+                <label>性别</label>
+                <input type="text" readonly="readonly" value="@Model.gender" />
+            </div>
+            <div class="mui-input-row ">
+                <label>生日</label>
+                <input type="text" readonly="readonly" value="@Model.brithday" />
+            </div>
+            <div class="mui-input-row">
+                <label>身份证号</label>
+                <input type="text" readonly="readonly" value="@Model.idnumber" />
+            </div>
+            <div class="mui-input-row">
+                <label>手机号</label>
+                <input type="text" readonly="readonly" value="@Model.telphone" />
+            </div>
+        </div>
+
+        <p style="margin-top: 10px;">专业资料</p>
+        <div class="mui-input-group">
+            <div class="mui-input-row">
+                <label>诊所</label>
+                <input type="text" readonly="readonly" value="@Model.zhensuo" />
+            </div>
+            <div class="mui-input-row">
+                <label>科室</label>
+                <input type="text" readonly="readonly" value="@Model.keshi" />
+            </div>
+            <div class="mui-input-row ">
+                <label>头衔</label>
+                <input type="text" readonly="readonly" value="@Model.touxian" />
+            </div>
+            <div class="mui-input-row">
+                <label>擅长</label>
+                <input type="text" readonly value="@Model.shanchang" />
+            </div>
+            <div class="mui-input-row" id="div_textarea">
+                <label>简介</label>
+                <textarea id="txt_remark" readonly>@Html.Raw(Model.jianjie)</textarea>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+    <div class="mui-bar-footer mui-text-center" style="margin-top:30px; width: 100%;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script>
+        window.onload = function () {
+            autoGrow(document.getElementById('txt_remark'));
+        };
+
+        function autoGrow(oField) {
+            var div_area = document.getElementById('div_textarea');
+            if (oField.scrollHeight > oField.clientHeight) {
+                var new_height = oField.scrollHeight + "px";
+                oField.style.height = new_height;
+                div_area.style.height = new_height;
+            }
+        }
+        
+
+    </script>
+    
+}
+<!-- MUI 页面底部脚本 END -->

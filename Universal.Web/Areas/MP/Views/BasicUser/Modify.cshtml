@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "修改个人资料";
+    ViewBag.Title = "个人中心";
 }
 
 <!-- 头部Style等 -->
@@ -24,10 +24,10 @@
 <!-- MUI 头部导航栏设置 -->
 @section muiheader{
 <div class="mui-navbar-inner mui-bar mui-bar-nav">
-    <button type="button" onclick="javascript:location.href='Info'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+    <button type="button" onclick="javascript:location.href='@ViewData["BackUrl"]'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
         <span class="mui-icon mui-icon-left-nav"></span>
     </button>
-    <h1 class="mui-center mui-title">个人资料</h1>
+    <h1 class="mui-center mui-title">@ViewData["BackTxt"]</h1>
 </div>
 
 }
@@ -37,19 +37,11 @@
 <!-- Body -->
 
 <div class="mui-content-padded">
-    <p>个人详细资料</p>
+    <p style="font-size:16px;">请仔细填写以下信息</p>
     <div class="mui-input-group">
         <div class="mui-input-row">
             <label>姓名</label>
-            <input type="text" id="txt_realname" value="@WorkContext.UserInfo.RealName" />
-        </div>
-        <div class="mui-input-row">
-            <label>身份证号</label>
-            <input type="text" id="txt_idnumber" value="@WorkContext.UserInfo.IDCardNumber" />
-        </div>
-        <div class="mui-input-row">
-            <label>手机号</label>
-            <input type="text" id="txt_telphone" value="@WorkContext.UserInfo.Telphone" />
+            <input type="text" id="txt_realname" maxlength="5" value="@WorkContext.UserInfo.RealName" />
         </div>
         <div class="mui-input-row ">
             <label>性别</label>
@@ -72,7 +64,15 @@
         </div>
         <div class="mui-input-row ">
             <label>生日</label>
-            <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1950,"endYear":2018}' value="@WorkContext.UserInfo.Brithday.ToString("yyyy-MM-dd")" />
+            <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1949,"endYear":2018,"value":"1970-01-01"}' value="@WorkContext.UserInfo.GetBrithday" />
+        </div>
+        <div class="mui-input-row">
+            <label>身份证号</label>
+            <input type="text" id="txt_idnumber" maxlength="20" value="@WorkContext.UserInfo.IDCardNumber" />
+        </div>
+        <div class="mui-input-row">
+            <label>手机号</label>
+            <input type="text" id="txt_telphone" maxlength="11" value="@WorkContext.UserInfo.Telphone" />
         </div>
     </div>
     <button type="button" id="btn_save" data-loading-text="保存中" data-loading-icon="mui-spinner mui-spinner-custom" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">保   存</button>
@@ -102,15 +102,39 @@
 <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
 
 <script type="text/javascript">
+    var backUrl = "@ViewData["BackUrl"]";
 		(function($$) {
 			$$.init();
-			$$("#btn_save")[0].addEventListener('tap', function() {
+            $$("#btn_save")[0].addEventListener('tap', function () {
 			    var btn = this;
 			    var realname = $("#txt_realname").val();
 			    var idnumber = $("#txt_idnumber").val();
 			    var telphone = $("#txt_telphone").val();
 			    var gender = $("input[name='rd_gender']:checked").val();
-			    var bri = $("#txt_bri").val();
+                var bri = $("#txt_bri").val();
+                //console.log(realname);
+                //console.log(idnumber);
+                //console.log(telphone);
+                //console.log(gender);
+                //console.log(bri);
+
+                if (realname.length == 0) {
+                    $$.toast("请填写真实姓名");
+                    return;
+                }
+                if (bri.length == 0) {
+                    $$.toast("请选择生日");
+                    return;
+                }
+                if (idnumber.length == 0) {
+                    $$.toast("请填写身份证号码");
+                    return;
+                }
+                if (telphone.length == 0) {
+                    $$.toast("请填写手机号码");
+                    return;
+                }
+                
 
 				$$(btn).button('loading');
 				$$.showLoading("保存中", "div");
@@ -135,7 +159,7 @@
 				            $$.toast("资料修改成功");
 				            setTimeout(function () {
 				                setTimeout(function () {
-				                    location.href = '/mp/BasicUser/Info';
+                                    location.href = backUrl;
 				                }.bind(btn), 1000);
 				            })
 				        }else

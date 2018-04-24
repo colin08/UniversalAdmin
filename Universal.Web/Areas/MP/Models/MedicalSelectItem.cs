@@ -40,5 +40,10 @@ namespace Universal.Web.Areas.MP.Models
         /// </summary>
         public int Weight { get; set; }
 
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public string price { get; set; }
+
     }
 }

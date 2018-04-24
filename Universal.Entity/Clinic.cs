@@ -8,19 +8,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Universal.Entity
 {
     /// <summary>
-    /// 诊所类别
-    /// </summary>
-    public enum ClinicCity : byte
-    {
-        [Description("深圳")]
-        Futian=1,
-        [Description("香港")]
-        HK =2,
-        [Description("澳门")]
-        MO =3
-    }
-
-    /// <summary>
     /// 诊所列表
     /// </summary>
     public class Clinic
@@ -28,15 +15,21 @@ namespace Universal.Entity
         public Clinic()
         {
             this.AddTime = DateTime.Now;
-            this.Weight = 0;
+            this.Weight = 99;
+            this.Status = true;
         }
 
         public int ID { get; set; }
 
         /// <summary>
-        /// 所属区域
+        /// 所属地区
         /// </summary>
-        public ClinicCity City { get; set; }
+        public int ClinicAreaID { get; set; }
+
+        /// <summary>
+        /// 地区信息
+        /// </summary>
+        public virtual ClinicArea ClinicArea { get; set; }
 
         /// <summary>
         /// 诊所名称
@@ -90,6 +83,11 @@ namespace Universal.Entity
         /// 排序数字
         /// </summary>
         public int Weight { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public bool Status { get; set; }
 
         /// <summary>
         /// 添加时间

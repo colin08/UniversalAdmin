@@ -7,13 +7,13 @@ namespace Universal.DataCore.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class init : IMigrationMetadata
+    public sealed partial class frist : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(frist));
         
         string IMigrationMetadata.Id
         {
-            get { return "201804140639535_init"; }
+            get { return "201804240910213_frist"; }
         }
         
         string IMigrationMetadata.Source

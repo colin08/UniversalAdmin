@@ -14,8 +14,8 @@ namespace Universal.Entity
         public ClinicDepartment()
         {
             this.AddTime = DateTime.Now;
-            this.Weight = 0;
-            this.DoctorsList = new List<MPUserDoctors>();
+            this.Weight = 99;
+            this.Status = true;
         }
 
         public int ID { get; set; }
@@ -41,6 +41,15 @@ namespace Universal.Entity
         /// </summary>
         [MaxLength(255)]
         public string Desc { get; set; }
+
+
+        public bool Status { get; set; }
+
+        /// <summary>
+        /// 首字母
+        /// </summary>
+        [MaxLength(30)]
+        public string SZM { get; set; }
 
         /// <summary>
         /// 排序数字，越大越靠前

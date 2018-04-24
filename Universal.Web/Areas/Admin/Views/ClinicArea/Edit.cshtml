@@ -1,0 +1,138 @@
+﻿@model Universal.Entity.ClinicArea
+@{
+    ViewBag.Title = "编辑诊所地区";
+}
+
+<!--头部脚本-->
+@section head
+{
+    @Styles.Render("~/Content/icheck")
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>编辑诊所地区</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "ClinicArea", new { Area = "Admin" })">诊所地区列表</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">地区名称</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Title)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">排序数字</label>
+
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(p => p.Weight, new { @class = "form-control", placeholder = "排序数字" })
+                        <span class="help-block m-b-none">数字越大越靠前</span>
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Weight)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态</label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, true, new { @id = "rb_status_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, false, new { @id = "rb_status_2" }) <i></i> 禁用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/icheck")
+
+    <script>
+
+    $(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

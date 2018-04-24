@@ -53,7 +53,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.OrderMedical> bll = new BLL.BaseBLL<Entity.OrderMedical>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "PayTime DESC,AddTime DESC");
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "Status DESC,PayTime DESC,AddTime DESC");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -75,6 +75,33 @@ namespace Universal.Web.Areas.Admin.Controllers
                 return PromptView("/admin/OrderMedical", "404", "Not Found", "信息不存在或已被删除", 5);
             }
             return View(entity);
+        }
+
+        /// <summary>
+        /// 设置订单完成
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetDone(int id)
+        {
+            BLL.BaseBLL<Entity.OrderMedical> bll = new BLL.BaseBLL<Entity.OrderMedical>();
+            var entity = bll.GetModel(p => p.ID == id, "ID DESC");
+            if (entity == null)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "订单不存在";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if(!entity.CanDone)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "不可设置为已完成";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            entity.Status = Entity.OrderStatus.已完成;
+            bll.Modify(entity, "Status");
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "OK";
+            return Json(WorkContext.AjaxStringEntity);
         }
 
 

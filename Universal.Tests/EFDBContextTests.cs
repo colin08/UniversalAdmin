@@ -71,21 +71,23 @@ namespace Universal.Tests
             //db.Clinics.Add(entity_clinic);
 
             ////诊所科室
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    var entity_dep = new Entity.ClinicDepartment();
-            //    entity_dep.ClinicID = 1;
-            //    entity_dep.Desc = "科室说明";
-            //    entity_dep.Title = "科室名称-" + (i + 1);
-            //    db.ClinicDepartments.Add(entity_dep);
-            //}
+            for (int i = 0; i < 10; i++)
+            {
+                var entity_dep = new Entity.ClinicDepartment();
+                entity_dep.ClinicID = 1;
+                entity_dep.Desc = "科室说明";
+                entity_dep.SZM = "K";
+                entity_dep.Title = "科室名称-" + (i + 1);
+                db.ClinicDepartments.Add(entity_dep);
+            }
             ////医生特长
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    var entity_sss = new Entity.DoctorsSpecialty();
-            //    entity_sss.Title = "特长-" + (i + 1);
-            //    db.DoctorsSpecialtys.Add(entity_sss);
-            //}
+            for (int i = 0; i <= 50; i++)
+            {
+                var entity_sss = new Entity.DoctorsSpecialty();
+                entity_sss.Title = "特长-" + (i + 1);
+                entity_sss.SZM = "T";
+                db.DoctorsSpecialtys.Add(entity_sss);
+            }
 
             //var entity_mpuser = new Entity.MPUser();
             //entity_mpuser.OpenID = "abcd";
@@ -114,49 +116,69 @@ namespace Universal.Tests
             //    db.MpUserMedicalReports.Add(entity_medicalreport);
             //}
 
-            var entity_user = db.MPUsers.Find(1);
-            entity_user.AccountBalance = 1499;
-            for (int i = 0; i < 30; i++)
-            {
-                var entity_details = new Entity.MPUserAmountDetails();
-                entity_details.Amount = 155 + i;
-                entity_details.MPUserID = 1;
-                entity_details.Title = "这里是交易的文字说明-"+i.ToString();
-                if(i % 2 ==0)
-                {
-                    entity_details.Type = Entity.MPUserAmountDetailsType.Add;
-                }
-                else
-                {
-                    entity_details.Type = Entity.MPUserAmountDetailsType.Less;
-                }
-                db.MPUserAmountDetails.Add(entity_details);
-            }
-
-            //for (int i = 1; i <= 4; i++)
+            //var entity_user = db.MPUsers.Find(1);
+            //entity_user.AccountBalance = 1499;
+            //for (int i = 0; i < 30; i++)
             //{
-            //    var entity = new Entity.Medical();
-            //    entity.Desc = "这里是套餐的介绍内容，应该是富文本";
-            //    entity.ImgUrl = "/Assets/mui/img/demo/" + i.ToString() + ".png";
-            //    entity.YPrice = 1999;
-            //    entity.Price = 1499;
-            //    entity.Title = "体检套餐-" + i.ToString();
-            //    int skie = i + 3;
-            //    int take = i + 5;
-            //    var item_list = db.MedicalItems.Where(p => p.ID > 0).OrderBy(p => p.ID).Skip(skie).Take(take).ToList();
-            //    entity.MedicalItems = item_list;
-            //    db.Medicals.Add(entity);
+            //    var entity_details = new Entity.MPUserAmountDetails();
+            //    entity_details.Amount = 155 + i;
+            //    entity_details.MPUserID = 1;
+            //    entity_details.Title = "这里是交易的文字说明-"+i.ToString();
+            //    if(i % 2 ==0)
+            //    {
+            //        entity_details.Type = Entity.MPUserAmountDetailsType.Add;
+            //    }
+            //    else
+            //    {
+            //        entity_details.Type = Entity.MPUserAmountDetailsType.Less;
+            //    }
+            //    db.MPUserAmountDetails.Add(entity_details);
             //}
 
-            //for (int i = 1; i < 5; i++)
+            for (int i = 1; i < 30; i++)
+            {
+                var entity = new Entity.MedicalItem();
+                entity.OnlyID = "231"+i.ToString();
+                entity.Desc = "这里是项目的备注说明";
+                entity.Price = 10 + i;
+                entity.Status = true;
+                entity.Title = "测试项目" + i.ToString();
+                entity.SZM = "C";
+                db.MedicalItems.Add(entity);
+            }
+            db.SaveChanges();
+
+            for (int i = 1; i <= 4; i++)
+            {
+                var entity = new Entity.Medical();
+                entity.Desc = "这里是套餐的介绍内容，应该是富文本";
+                entity.ImgUrl = "/Assets/mui/img/demo/" + i.ToString() + ".png";
+                entity.YPrice = 1999;
+                entity.Price = 1499;
+                entity.Title = "体检套餐-" + i.ToString();
+                int skie = i + 3;
+                int take = i + 5;
+                var item_list = db.MedicalItems.Where(p => p.ID > 0).OrderBy(p => p.ID).Skip(skie).Take(take).ToList();
+                entity.MedicalItems = item_list;
+                db.Medicals.Add(entity);
+            }
+
+            for (int i = 1; i < 5; i++)
+            {
+                var entity = new Entity.MedicalBanner();
+                entity.LinkType = Entity.MedicalBannerLinkType.Medical;
+                entity.LinkVal = "4";
+                entity.Status = true;
+                entity.ImgUrl = "/Assets/mui/img/demo/2.png";
+                entity.Title = "常规体检套餐大优惠" + i.ToString() + "！";
+                db.MedicalBanners.Add(entity);
+            }
+
+            //for (int i = 31; i <= 50; i++)
             //{
-            //    var entity = new Entity.MedicalBanner();
-            //    entity.LinkType = Entity.MedicalBannerLinkType.Medical;
-            //    entity.LinkVal = "4";
-            //    entity.Status = true;
-            //    entity.ImgUrl = "/Assets/mui/img/demo/2.png";
-            //    entity.Title = "常规体检套餐大优惠" + i.ToString() + "！";
-            //    db.MedicalBanners.Add(entity);
+            //    var entity = new Entity.DoctorsSpecialty();
+            //    entity.Title = "测试特长" + i.ToString();
+            //    db.DoctorsSpecialtys.Add(entity);
             //}
 
             db.SaveChanges();

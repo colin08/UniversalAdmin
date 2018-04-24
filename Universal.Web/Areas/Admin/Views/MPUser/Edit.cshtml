@@ -91,7 +91,7 @@
                     <label class="col-sm-2 control-label">生日</label>
 
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.Brithday, new { @class = "form-control", placeholder = "", @Value = Model.Brithday.ToString("yyyy-MM-dd") })
+                        @Html.TextBoxFor(p => p.Brithday, new { @class = "form-control", placeholder = "", @Value = Model.GetBrithday })
                     </div>
                     <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Brithday)</label>
                 </div>

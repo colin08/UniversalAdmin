@@ -25,6 +25,8 @@ namespace Universal.Web
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                       "~/Assets/js/jquery-ui-1.10.4.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/multiselect").Include(
+                      "~/Assets/js/plugins/multiselect/bootstrap-multiselect.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Assets/js/plugins/validate/jquery.validate.min.js",
@@ -94,6 +96,9 @@ namespace Universal.Web
 
             bundles.Add(new StyleBundle("~/Content/webuploader").Include(
                       "~/Assets/js/plugins/webuploader/webuploader.css"));
+
+            bundles.Add(new StyleBundle("~/Content/multiselect").Include(
+                      "~/Assets/css/plugins/multiselect/bootstrap-multiselect.css"));
 
             bundles.Add(new StyleBundle("~/Content/icheck").Include(
                       "~/Assets/css/plugins/iCheck/custom.css"));
