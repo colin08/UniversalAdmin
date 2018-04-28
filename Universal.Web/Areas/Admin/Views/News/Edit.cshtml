@@ -1,0 +1,314 @@
+﻿@model Universal.Entity.News
+@{
+    ViewBag.Title = "编辑医学通识";
+}
+
+<!--头部脚本-->
+@section head
+{
+    @Styles.Render("~/Content/simditor")
+    @Styles.Render("~/Content/icheck")
+    @Styles.Render("~/Content/chosen")
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>编辑医学通识</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "News", new { Area = "Admin" })">医学通识管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">文章标题</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Title)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">所属分类</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownListFor(p => p.NewsCategoryID, ViewData["CategoryList"] as List<SelectListItem>, new { @class = "form-control", @style = "padding:0",@onchange= "loadTags()" })
+                    </div>
+                    <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.NewsCategoryID)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">来源</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.TResource, new { @class = "form-control", placeholder = "厚德医疗" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.TResource)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">标签</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" id="hid_tag_ids" name="hid_tag_ids" value="@ViewData["TagSelectID"]" />
+                        <select id="select_tags" data-placeholder="选择标签" multiple style="width:350px;" tabindex="1">
+                            @Html.Raw(ViewData["DefaultOption"])
+                        </select>
+                        <span class="help-block m-b-none">先选分类，再选标签</span>
+                    </div>
+                    <label class="col-sm-4 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">跳转地址</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.LinkUrl, new { @class = "form-control", placeholder = "" })
+                        <span class="help-block m-b-none">填写则详情直接跳转，否则显示文章内容</span>
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.LinkUrl)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">排序数字</label>
+
+                    <div class="col-sm-2">
+                        @Html.TextBoxFor(p => p.Weight, new { @class = "form-control", placeholder = "排序数字" })
+                        <span class="help-block m-b-none">数字越大越靠前</span>
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Weight)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态</label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, true, new { @id = "rb_status_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, false, new { @id = "rb_status_2" }) <i></i> 禁用</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">封面</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.ImgUrl)
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">封面预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.ImgUrl)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.ImgUrl))
+                                {
+                                    @:<li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">内容简介</label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(p => p.Summary, new { @class = "form-control", placeholder = "简介",rows="3" })
+                    </div>
+                    <label class="col-sm-2 label_msg"> @Html.ValidationMessageFor(p => p.Summary)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">文章内容</label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(p => p.Content, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-2 label_msg"> @Html.ValidationMessageFor(p => p.Content)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/icheck")
+    @Scripts.Render("~/bundles/simditor");
+    @Scripts.Render("~/bundles/chosen");
+
+    <script type="text/javascript">
+        //根据分类动态获取
+        function loadTags() {
+            //清空选中的标签
+            $("#hid_tag_ids").val("");
+            $("#select_tags").empty();
+            var category_id = $("#NewsCategoryID").val();
+            if (category_id <= 0) return;
+            var layer_loading = null;
+            $.ajax({
+                type: "post",
+                url: "/admin/News/LoadTags",
+                data: { "category_id": category_id},
+                async: false,
+                beforeSend: function () {
+                    layer_loading = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                complete: function () {
+                    layer.close(layer_loading);
+                },
+                success: function (data) {
+                    if (data.msg == 1) {
+                        $("#select_tags").removeAttr("disabled");
+                        var select_html = "<option value=\"\"></option>";
+                        $.each(data.data, function (index, ele) {
+                            select_html += "<option value=\"" + ele.ID+"\">"+ele.Title+"</option>";
+                        });
+                        console.log(select_html);
+                        $("#select_tags").html(select_html);
+                        $("#select_tags").trigger("chosen:updated");
+                    }
+                    else {
+                        layer.msg(data.msgbox, { icon: 2 });
+                    }
+                },
+                error: function () {
+                    layer.msg("操作失败，请检查网络", { icon: 5 });
+                }
+            })
+
+        }
+
+        $("#select_tags").chosen({ no_results_text: "找不到标签",max_selected_options: 3 });
+
+        //标签选中事件
+        $("#select_tags").chosen().change(function () {
+            var values = $("#select_tags").val();
+            $("#hid_tag_ids").val(values.join(','));
+        });
+        
+    function upload() {
+        var total = $(".@Html.NameFor(p=>p.ImgUrl)List").size();
+        if (total >= 1) {
+            layer.msg("已有封面，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "newsbanber", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.ImgUrl), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").append(img_te);
+        }
+    }
+
+
+    $(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        InitTextArea("Content");
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

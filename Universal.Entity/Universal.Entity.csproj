@@ -66,6 +66,10 @@
     <Compile Include="MPUserAmountDetails.cs" />
     <Compile Include="MPUserDoctors.cs" />
     <Compile Include="MpUserMedicalReport.cs" />
+    <Compile Include="NewsCategory.cs" />
+    <Compile Include="News.cs" />
+    <Compile Include="NewsBanner.cs" />
+    <Compile Include="NewsTag.cs" />
     <Compile Include="OrderMedicalItem.cs" />
     <Compile Include="OrderMedical.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,6 +81,8 @@
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
     <Compile Include="ViewModel\MPUserDoctors.cs" />
+    <Compile Include="ViewModel\News.cs" />
+    <Compile Include="ViewModel\NewsTags.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -103,7 +103,7 @@ namespace Universal.Web.Framework
 
             try
             {
-                //int file_size = fileData.ContentLength; //获取文件大小 KB
+                int file_size = fileData.ContentLength; //获取文件大小 KB
                 string fileExt = IOHelper.GetFileExt(fileData.FileName).ToLower(); //文件扩展名，不含“.”
                 //if (!CheckFileExt("*." + fileExt, file_type))
                 //{
@@ -155,7 +155,8 @@ namespace Universal.Web.Framework
                     System.IO.File.Move(filePath + saveName, filePath + md5 + "." + fileExt); //给文件改名
                 }
                 string result_path = ServerPath + md5 + "." + fileExt;
-                if (IsThumb)
+                int max_size = 300 * 1024;//超过300KB的就压缩
+                if (IsThumb && file_size > max_size)
                 {
                     string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
                     if (img_arr.Contains(fileExt))

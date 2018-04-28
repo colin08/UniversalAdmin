@@ -668,6 +668,16 @@
     <Content Include="Areas\MP\Views\Doctors\AdvisoryClear.cshtml" />
     <Content Include="Areas\MP\Views\Doctors\SelectDepart.cshtml" />
     <Content Include="Areas\MP\Views\Doctors\SelectSpec.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsBanner\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsBanner\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsCategory\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsCategory\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsTag\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\News\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\News\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\NewsTag\Modify.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\Detail.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -687,8 +697,12 @@
     <Compile Include="Areas\Admin\Controllers\ClinicDepartmentController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NewsTagController.cs" />
     <Compile Include="Areas\Admin\Controllers\DoctorsSpecialtyController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NewsCategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NewsBannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalBannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalController.cs" />
     <Compile Include="Areas\Admin\Controllers\MedicalItemController.cs" />
@@ -708,10 +722,14 @@
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelNewsList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelNewsCategoryList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelNewsBannerList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalItemList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalBannerList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelClinicAreaList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMPDoctorList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelNewsTagList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelOrderMedicalList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelMedicalList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
@@ -766,12 +784,14 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IntranetController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PayNotifyController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ModelAllHouse.cs" />
+    <Compile Include="Models\NewsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

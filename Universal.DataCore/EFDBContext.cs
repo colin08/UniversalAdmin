@@ -139,6 +139,26 @@ namespace Universal.DataCore
         public DbSet<Entity.MPUserAmountDetails> MPUserAmountDetails { get; set; }
 
         /// <summary>
+        /// 医学通识文章
+        /// </summary>
+        public DbSet<Entity.News> News { get; set; }
+
+        /// <summary>
+        /// 医学通识分类
+        /// </summary>
+        public DbSet<Entity.NewsCategory> NewsCategorys { get; set; }
+
+        /// <summary>
+        /// 医学通识标签
+        /// </summary>
+        public DbSet<Entity.NewsTag> NewsTags { get; set; }
+
+        /// <summary>
+        /// 医学通识轮播图
+        /// </summary>
+        public DbSet<Entity.NewsBanner> NewsBanners { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="modelBuilder"></param>

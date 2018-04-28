@@ -1,0 +1,102 @@
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelNewsTagList
+@{
+    ViewBag.Title = "医学通识标签";
+}
+
+<!--头部脚本-->
+@section head
+{
+    <link href="~/Assets/js/plugins/jqcloud/jqcloud.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+<!-- Panel -->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>医学通识标签</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+}
+<!-- Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/NewsTag/Index">医学通识标签</a></li>
+            <li><strong>标签云</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<br />
+
+<!--Main Body-->
+<div class="row">
+    <div class="col-sm-2">
+        @if (CheckAdminPower("NewsTag/add", true))
+        {
+            @:<a class="btn btn-white"  onclick="add()"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+        }
+    </div>
+    <div class="col-sm-4">
+        <p></p>
+    </div>
+    <div class="col-sm-2">
+        @Html.DropDownListFor(p => p.role, ViewData["CategoryList"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "Search()" })
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+</div>
+
+<br />
+
+<div id="my_favorite_latin_words" style="width: 100%; height: 500px; border: 1px solid #ccc;"></div>
+
+<!-- Main Body end -->
+
+@section foot
+{
+    <script src="~/Assets/js/plugins/jqcloud/jqcloud-1.0.4.min.js"></script>
+    <script>
+        function Search() {
+            location.href = "?role=" + $("#role").val();
+        }
+
+        var word_list =@Html.Raw(ViewData["JSON"]);
+        $(function () {
+            $("#my_favorite_latin_words").jQCloud(word_list);
+        });
+
+        function add() {
+            layer.open({
+                type: 2,
+                title: '添加标签',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['700px', '600px'],
+                content: '/admin/NewsTag/Modify?id=0'
+            });
+        }
+
+        function modify(id) {
+            layer.open({
+                type: 2,
+                title: '添加标签',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['700px', '600px'],
+                content: '/admin/NewsTag/Modify?id=' + id
+            });
+        }
+
+
+    </script>
+}

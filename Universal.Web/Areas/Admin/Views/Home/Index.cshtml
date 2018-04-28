@@ -126,6 +126,35 @@
                         </li>
                     }
 
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">医学通识</span>
+                    </li>
+                    @if (CheckAdminPower("News/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/News/Index"><i class="fa fa-bars"></i> <span class="nav-label">文章列表</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("NewsCategory/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/NewsCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">文章分类</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("NewsTag/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/NewsTag/Index"><i class="fa fa-bars"></i> <span class="nav-label">文章标签</span></a>
+                        </li>
+                    }
+                     @if (CheckAdminPower("NewsBanner/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/NewsBanner/Index"><i class="fa fa-bars"></i> <span class="nav-label">轮播图</span></a>
+                        </li>
+                    }
+
 					@if (CheckAdminPower("Sysuser/Index", false))
                     {
 						<li class="line dk"></li>

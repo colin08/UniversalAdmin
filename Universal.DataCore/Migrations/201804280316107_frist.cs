@@ -189,6 +189,64 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID);
             
             CreateTable(
+                "dbo.News",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        NewsCategoryID = c.Int(nullable: false),
+                        Title = c.String(nullable: false, maxLength: 255),
+                        TResource = c.String(nullable: false, maxLength: 30),
+                        ImgUrl = c.String(maxLength: 255),
+                        Status = c.Boolean(nullable: false),
+                        Weight = c.Int(nullable: false),
+                        Summary = c.String(maxLength: 500),
+                        Content = c.String(),
+                        LinkUrl = c.String(maxLength: 500),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.NewsCategory", t => t.NewsCategoryID, cascadeDelete: true)
+                .Index(t => t.NewsCategoryID);
+            
+            CreateTable(
+                "dbo.NewsCategory",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 10),
+                        Status = c.Boolean(nullable: false),
+                        Weight = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
+                "dbo.NewsTag",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 10),
+                        Weight = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
+                "dbo.NewsBanner",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 20),
+                        ImgUrl = c.String(maxLength: 255),
+                        Status = c.Boolean(nullable: false),
+                        LinkType = c.Byte(nullable: false),
+                        LinkVal = c.String(maxLength: 500),
+                        Weight = c.Int(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
                 "dbo.OrderMedicalItem",
                 c => new
                     {
@@ -363,6 +421,32 @@ namespace Universal.DataCore.Migrations
                 .Index(t => t.Medical_ID)
                 .Index(t => t.MedicalItem_ID);
             
+            CreateTable(
+                "dbo.NewsTagNewsCategory",
+                c => new
+                    {
+                        NewsTag_ID = c.Int(nullable: false),
+                        NewsCategory_ID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.NewsTag_ID, t.NewsCategory_ID })
+                .ForeignKey("dbo.NewsTag", t => t.NewsTag_ID, cascadeDelete: true)
+                .ForeignKey("dbo.NewsCategory", t => t.NewsCategory_ID, cascadeDelete: true)
+                .Index(t => t.NewsTag_ID)
+                .Index(t => t.NewsCategory_ID);
+            
+            CreateTable(
+                "dbo.NewsTagNews",
+                c => new
+                    {
+                        NewsTag_ID = c.Int(nullable: false),
+                        News_ID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.NewsTag_ID, t.News_ID })
+                .ForeignKey("dbo.NewsTag", t => t.NewsTag_ID, cascadeDelete: true)
+                .ForeignKey("dbo.News", t => t.News_ID, cascadeDelete: true)
+                .Index(t => t.NewsTag_ID)
+                .Index(t => t.News_ID);
+            
         }
         
         public override void Down()
@@ -373,6 +457,11 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.SysRoleRoute", "SysRoleID", "dbo.SysRole");
             DropForeignKey("dbo.OrderMedicalItem", "OrderMedicalID", "dbo.OrderMedical");
             DropForeignKey("dbo.OrderMedical", "MPUserID", "dbo.MPUser");
+            DropForeignKey("dbo.News", "NewsCategoryID", "dbo.NewsCategory");
+            DropForeignKey("dbo.NewsTagNews", "News_ID", "dbo.News");
+            DropForeignKey("dbo.NewsTagNews", "NewsTag_ID", "dbo.NewsTag");
+            DropForeignKey("dbo.NewsTagNewsCategory", "NewsCategory_ID", "dbo.NewsCategory");
+            DropForeignKey("dbo.NewsTagNewsCategory", "NewsTag_ID", "dbo.NewsTag");
             DropForeignKey("dbo.MPUserAmountDetails", "MPUserID", "dbo.MPUser");
             DropForeignKey("dbo.MedicalMedicalItem", "MedicalItem_ID", "dbo.MedicalItem");
             DropForeignKey("dbo.MedicalMedicalItem", "Medical_ID", "dbo.Medical");
@@ -384,6 +473,10 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.MPUserDoctors", "ClinicID", "dbo.Clinic");
             DropForeignKey("dbo.ClinicDepartment", "ClinicID", "dbo.Clinic");
             DropForeignKey("dbo.Clinic", "ClinicAreaID", "dbo.ClinicArea");
+            DropIndex("dbo.NewsTagNews", new[] { "News_ID" });
+            DropIndex("dbo.NewsTagNews", new[] { "NewsTag_ID" });
+            DropIndex("dbo.NewsTagNewsCategory", new[] { "NewsCategory_ID" });
+            DropIndex("dbo.NewsTagNewsCategory", new[] { "NewsTag_ID" });
             DropIndex("dbo.MedicalMedicalItem", new[] { "MedicalItem_ID" });
             DropIndex("dbo.MedicalMedicalItem", new[] { "Medical_ID" });
             DropIndex("dbo.DoctorsSpecialtyMPUserDoctors", new[] { "MPUserDoctors_ID" });
@@ -399,6 +492,7 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.OrderMedical", new[] { "MPUserID" });
             DropIndex("dbo.OrderMedical", new[] { "OrderNum" });
             DropIndex("dbo.OrderMedicalItem", new[] { "OrderMedicalID" });
+            DropIndex("dbo.News", new[] { "NewsCategoryID" });
             DropIndex("dbo.MPUserAmountDetails", new[] { "MPUserID" });
             DropIndex("dbo.MPUser", new[] { "Telphone" });
             DropIndex("dbo.MPUser", new[] { "IDCardNumber" });
@@ -407,6 +501,8 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.MPUserDoctors", new[] { "ID" });
             DropIndex("dbo.Clinic", new[] { "ClinicAreaID" });
             DropIndex("dbo.ClinicDepartment", new[] { "ClinicID" });
+            DropTable("dbo.NewsTagNews");
+            DropTable("dbo.NewsTagNewsCategory");
             DropTable("dbo.MedicalMedicalItem");
             DropTable("dbo.DoctorsSpecialtyMPUserDoctors");
             DropTable("dbo.MPUserDoctorsClinicDepartment");
@@ -418,6 +514,10 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.SysLogException");
             DropTable("dbo.OrderMedical");
             DropTable("dbo.OrderMedicalItem");
+            DropTable("dbo.NewsBanner");
+            DropTable("dbo.NewsTag");
+            DropTable("dbo.NewsCategory");
+            DropTable("dbo.News");
             DropTable("dbo.MpUserMedicalReport");
             DropTable("dbo.MPUserAmountDetails");
             DropTable("dbo.Medical");

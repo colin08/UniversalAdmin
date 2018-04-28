@@ -67,11 +67,15 @@
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLMedical.cs" />
     <Compile Include="BLLClinicArea.cs" />
+    <Compile Include="BLLNews.cs" />
+    <Compile Include="BLLNewsCategory.cs" />
+    <Compile Include="BLLNewsBanner.cs" />
     <Compile Include="BLLMedicalBanner.cs" />
     <Compile Include="BLLMedicalItem.cs" />
     <Compile Include="BLLMPDoctor.cs" />
     <Compile Include="BLLMPUser.cs" />
     <Compile Include="BLLMPUserState.cs" />
+    <Compile Include="BLLNewsTag.cs" />
     <Compile Include="BLLOrderMedical.cs" />
     <Compile Include="BLLSysRole.cs" />
     <Compile Include="BLLSysRoute.cs" />
