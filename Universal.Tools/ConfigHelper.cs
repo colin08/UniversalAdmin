@@ -107,6 +107,11 @@ namespace Universal.Tools
         [Display(Name = "版权声明"), Required(ErrorMessage = "不能为空"), MaxLength(100, ErrorMessage = "不能超过100个字符")]
         public string CopyrightNotice { get; set; }
 
+
+        [Display(Name ="升为VIP所需充值金额"),Required(ErrorMessage ="不能为空")]
+        public decimal VIPAmount { get; set; }
+
+
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
         

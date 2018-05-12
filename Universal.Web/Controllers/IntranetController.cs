@@ -10,10 +10,33 @@ using Universal.Web.Framework;
 namespace Universal.Web.Controllers
 {
     /// <summary>
-    /// 供门诊系统调用的接口
+    /// 供内网调用的接口
     /// </summary>
     public class IntranetController : Controller
     {
+
+        
+        /// <summary>
+        /// 退款操作
+        /// </summary>
+        /// <param name="type">类别，1:咨询</param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ContentResult DoRefund(int type,string id)
+        {
+            if(type == 1)
+            {
+                int c_id = TypeHelper.ObjectToInt(id);
+                decimal money = 0;
+                string order_num = BLL.BLLConsultation.CloseAndRefundOnDocNoReply(c_id,out money);
+                if (!string.IsNullOrWhiteSpace(order_num)) MPHelper.WXPay.Refund(order_num, money, money);
+                else return Content("Error");
+                //TODO 咨询超时退款，同时移除定时任务
+            }
+
+            return Content("ok");
+        }
+
         /// <summary>
         /// 用户体检报告
         /// </summary>

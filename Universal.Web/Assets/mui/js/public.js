@@ -21,7 +21,7 @@ function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id
 		success: function(res) {
 			mui.hideLoading();
 			//取返回的数据
-			var html = template(template_id, template_data);
+            var html = template(template_id, res);
 
 			if(reload) {
 				//覆盖数据
@@ -41,25 +41,6 @@ function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id
 		error: function(xhr, type, errorThrown) {
 			//异常处理；
 			mui.toast('获取数据失败，请检查网络连接');
-			//取返回的数据
-			var html = template(template_id, template_data);
-			setTimeout(function() {
-				mui.hideLoading();
-				if(reload) {
-					//覆盖数据
-					$('#' + ul_id).html(html);
-				} else {
-					//追加数据
-					$('#' + ul_id).append(html);
-				}
-
-				if($('#' + ul_id) && $('#' + ul_id).attr('pageIndex') != '') {
-					$('#' + ul_id).attr('pageIndex', parseInt(pageIndex) + 1);
-				}
-				if($('#' + ul_id) && $('#' + ul_id).attr('dataTotal') != '') {
-					$('#' + ul_id).attr('dataTotal', 2)
-				}
-			}, 1000);
 		}
 	});
 };

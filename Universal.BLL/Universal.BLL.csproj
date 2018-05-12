@@ -61,13 +61,17 @@
     <Compile Include="Base\BaseBLL.cs" />
     <Compile Include="BLLClinic.cs" />
     <Compile Include="BLLClinicDepartment.cs" />
+    <Compile Include="BLLConsultation.cs" />
+    <Compile Include="BLLConsultationSettlement.cs" />
     <Compile Include="BLLCusCategory.cs" />
     <Compile Include="BLLDemo.cs" />
     <Compile Include="BLLDoctorsSpecialty.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLMedical.cs" />
     <Compile Include="BLLClinicArea.cs" />
+    <Compile Include="BLLMPUserAmountOrder.cs" />
     <Compile Include="BLLNews.cs" />
+    <Compile Include="BLLConsultationDisease.cs" />
     <Compile Include="BLLNewsCategory.cs" />
     <Compile Include="BLLNewsBanner.cs" />
     <Compile Include="BLLMedicalBanner.cs" />

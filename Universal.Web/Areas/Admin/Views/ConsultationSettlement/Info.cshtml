@@ -1,0 +1,168 @@
+﻿@model Universal.Entity.ConsultationSettlement
+@{
+    ViewBag.Title = "在线咨询结算申请详情";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+    <style type="text/css">
+        .label_msg { color: #000000 !important; }
+        .clients-list { margin-top: 0 !important; }
+    </style>
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>在线咨询结算申请详情</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "ConsultationSettlement", new { Area = "Admin" })">在线咨询结算申请列表</a></li>
+            <li><strong>申请结算详情</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">预约用户资料</a></li>
+    </ul>
+    <form class="form-horizontal">
+
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态</label>
+
+                    <label class="col-sm-3 label_msg">@Model.GetStatusStr</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">订单金额</label>
+
+                    <label class="col-sm-3 label_msg">@Model.Amount.ToString("F2")</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">实付金额</label>
+
+                    <label class="col-sm-3 label_msg">@Model.RelAmount.ToString("F2")</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">预约用户姓名</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">预约日期</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">出生年月日</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">身份证号码</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号码</label>
+
+                    <label class="col-sm-3 label_msg"></label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    <script>
+        function setDone() {
+
+            layer.confirm('确认设置完成？', { icon: 3 }, function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: "post",
+                    url: "/MP/OrderMedical/SetDone",
+                    data: { "id": @Model.ID },
+                    async: false,
+                    beforeSend: function () {
+
+                    },
+                    complete: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.msg == 1) {
+                            layer.msg("设置成功", { icon: 1 });
+                            window.setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                        else {
+                            layer.msg(data.msgbox, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("操作失败，请检查网络", { icon: 5 });
+                    }
+                })
+            });
+
+        }
+    </script>
+}
+<!--底部脚本 end-->

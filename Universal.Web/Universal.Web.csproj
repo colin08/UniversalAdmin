@@ -658,7 +658,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\MP\Views\Doctors\Index.cshtml" />
     <Content Include="Areas\MP\Views\Doctors\Info.cshtml" />
     <Content Include="Areas\MP\Views\Doctors\Modify.cshtml" />
@@ -678,6 +680,12 @@
     <Content Include="Areas\Admin\Views\NewsTag\Modify.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\News\Detail.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\AdvisoryInfo.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\AdvisoryClearHostory.cshtml" />
+    <Content Include="Areas\Admin\Views\ConsultationDisease\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ConsultationDisease\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ConsultationSettlement\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ConsultationSettlement\Info.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -695,6 +703,8 @@
     <Compile Include="Areas\Admin\Controllers\ClinicAreaController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClinicController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClinicDepartmentController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ConsultationDiseaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ConsultationSettlementController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
@@ -719,9 +729,11 @@
     <Compile Include="Areas\Admin\Models\ViewModelClinicDepartmentList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelClinicList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelCloudTags.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelConsultationSettlementList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelConsultationDiseaseList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsCategoryList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsBannerList.cs" />

@@ -14,15 +14,15 @@ namespace Universal.Web.Areas.Admin.Controllers
     /// </summary>
     public class SysConfigController : BaseAdminController
     {
-        /// <summary>
-        /// 建这个Controller只是为了添加一项权限
-        /// </summary>
-        /// <returns></returns>
-        [AdminPermission("系统操作","查看高级信息")]
-        public ActionResult Sys()
-        {
-            return Content("没有意义");
-        }
+        ///// <summary>
+        ///// 建这个Controller只是为了添加一项权限
+        ///// </summary>
+        ///// <returns></returns>
+        //[AdminPermission("系统操作","查看高级信息")]
+        //public ActionResult Sys()
+        //{
+        //    return Content("没有意义");
+        //}
 
         /// <summary>
         /// 
@@ -62,18 +62,18 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
 
-        [AdminPermission("站点配置文件","回收应用程序池")]
-        [HttpPost]
-        public JsonResult AppPoolRecycle()
-        {
-            var is_ok = IISHelper.AppPool(IISHelperAppPoolMethod.Recycle, WebSite.AppPoolName);
-            if(is_ok)
-            {
-                AddAdminLogs(Entity.SysLogMethodType.Resotre, "回收应用程序池");
-                WorkContext.AjaxStringEntity.msg = 1;
-            }
-            return Json(WorkContext.AjaxStringEntity);
-        }
+        //[AdminPermission("站点配置文件","回收应用程序池")]
+        //[HttpPost]
+        //public JsonResult AppPoolRecycle()
+        //{
+        //    var is_ok = IISHelper.AppPool(IISHelperAppPoolMethod.Recycle, WebSite.AppPoolName);
+        //    if(is_ok)
+        //    {
+        //        AddAdminLogs(Entity.SysLogMethodType.Resotre, "回收应用程序池");
+        //        WorkContext.AjaxStringEntity.msg = 1;
+        //    }
+        //    return Json(WorkContext.AjaxStringEntity);
+        //}
 
     }
 }

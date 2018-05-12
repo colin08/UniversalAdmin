@@ -64,7 +64,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View(response_model);
         }
 
-        [AdminPermission("日志", "接口日志列表")]
+        //[AdminPermission("日志", "接口日志列表")]
         public ActionResult LogApiAction(int page = 1, string word = "")
         {
             word = WebHelper.UrlDecode(word);
@@ -136,7 +136,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [AdminPermissionAttribute("日志", "删除接口日志")]
+        //[AdminPermissionAttribute("日志", "删除接口日志")]
         public JsonResult DelApiAction(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

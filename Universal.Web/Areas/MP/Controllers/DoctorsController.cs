@@ -29,6 +29,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 ViewData["AdvisoryStatus"] = "";
                 ViewData["AdvisoryPrice"] = "0";
             }
+            ViewData["KJS"] = BLL.BLLConsultation.GetKJSAmount(WorkContext.UserInfo.ID).ToString("F2");
             return View();
         }
 
@@ -224,6 +225,41 @@ namespace Universal.Web.Areas.MP.Controllers
         }
 
         /// <summary>
+        /// 获取咨询列表分页json数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetAdvisoryPageList(int page_size, int page_index, int type)
+        {
+            UnifiedResultEntity<List<Entity.ViewModel.ConsultationDoctor>> result = new UnifiedResultEntity<List<Entity.ViewModel.ConsultationDoctor>>();
+            if (type != 1 && type != 2)
+            {
+                result.msgbox = "非法类别";
+                return Json(result);
+            }
+            int total = 0;
+            var db_list = BLL.BLLConsultation.GetDoctorsMsgList(page_size, page_index, WorkContext.UserInfo.ID, type, out total);
+            result.msg = 1;
+            result.msgbox = "ok";
+            result.data = db_list;
+            result.total = total;
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 咨询详情
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AdvisoryInfo(int id)
+        {
+            Universal.Entity.ViewModel.ConsultationDetail entity = BLL.BLLConsultation.GetConsultationInfo(id);
+            return View(entity);
+        }
+
+        /// <summary>
         /// 咨询结算
         /// </summary>
         /// <returns></returns>
@@ -231,6 +267,94 @@ namespace Universal.Web.Areas.MP.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// 获取咨询结算列表分页json数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetAdvisoryClearPageList(int page_size, int page_index, int type)
+        {
+            UnifiedResultEntity<List<Entity.ViewModel.ConsultationDoctor>> result = new UnifiedResultEntity<List<Entity.ViewModel.ConsultationDoctor>>();
+            if (type != 1 && type != 2 && type != 3)
+            {
+                result.msgbox = "非法类别";
+                return Json(result);
+            }
+            int total = 0;
+            var db_list = BLL.BLLConsultation.GetDoctorsMsgStteList(page_size, page_index, WorkContext.UserInfo.ID, type, out total);
+            result.msg = 1;
+            result.msgbox = "ok";
+            result.data = db_list;
+            result.total = total;
+            return Json(result);
+        }
+        
+
+        /// <summary>
+        /// 提交结算申请
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult ToAdvisoryClear(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "请选择需要结算的咨询";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            string msg = "";
+            var status = BLL.BLLConsultationSettlement.Add(WorkContext.UserInfo.ID, ids, out msg);
+            if(!status)
+            {
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "结算申请提交成功";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 申请咨询结算历史
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AdvisoryClearHostory()
+        {
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// 获取咨询结算历史列表分页json数据
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetAdvisoryClearHostoryPageList(int page_size, int page_index, int type)
+        {
+            UnifiedResultEntity<List<Entity.ViewModel.Settlement>> result = new UnifiedResultEntity<List<Entity.ViewModel.Settlement>>();
+            if (type != 1 && type != 2 && type != 3)
+            {
+                result.msgbox = "非法类别";
+                return Json(result);
+            }
+            int total = 0;
+            var db_list = BLL.BLLConsultationSettlement.GetPageList(page_size, page_index, WorkContext.UserInfo.ID, type, out total);
+            result.msg = 1;
+            result.msgbox = "ok";
+            result.data = db_list;
+            result.total = total;
+            return Json(result);
+        }
+
 
 
         private void LoadData()

@@ -59,6 +59,18 @@ namespace Universal.Entity
         public string OrderNum { get; set; }
 
         /// <summary>
+        /// 微信订单号
+        /// </summary>
+        [MaxLength(50)]
+        public string OrderNumWX { get; set; }
+
+        /// <summary>
+        /// 支付用户的open_id
+        /// </summary>
+        [MaxLength(100)]
+        public string OpenID { get; set; }
+
+        /// <summary>
         /// 订单状态
         /// </summary>
         public OrderStatus Status { get; set; }
@@ -222,6 +234,22 @@ namespace Universal.Entity
                 else return Tools.TypeHelper.ObjectToDateTime(PayTime).ToString("yyyy-MM-dd HH:mm");
             }
         }
+        
+        /// <summary>
+        /// 操作管理员ID
+        /// </summary>
+        public int? SysUserID { get; set; }
+
+        /// <summary>
+        /// 操作管理员信息
+        /// </summary>
+        public virtual SysUser SysUserInfo { get; set; }
+
+        /// <summary>
+        /// 管理员操作时间
+        /// </summary>
+        public DateTime? AdminTime { get; set; }
+
 
         public DateTime AddTime { get; set; }
 

@@ -49,12 +49,13 @@ namespace Universal.Web.Controllers
                 {
                     case MPHelper.PayAttach.账户充值:
                         //对订单执行操作
+                        ExcRecharge(out_trade_no, transaction_id, open_id);
                         break;
                     case MPHelper.PayAttach.咨询支付:
                         //对订单执行操作
                         break;
                     case MPHelper.PayAttach.体检套餐:
-                        ExcMedicalOrder(out_trade_no);
+                        ExcMedicalOrder(out_trade_no, transaction_id, open_id);
                         break;
                     default:
                         break;
@@ -73,29 +74,19 @@ namespace Universal.Web.Controllers
         #region 支付对应订单的处理
 
         /// <summary>
-        /// 处理场景订单
+        /// 处理充值订单
         /// <param name="order_num">订单号</param>
         /// </summary>
-        private void ExcSceneOrder(string order_num)
+        private void ExcRecharge(string order_num,string wx_order,string open_id)
         {
-            //BLL.BaseBLL<Entity.OrderScene> bll_order = new BLL.BaseBLL<Entity.OrderScene>();
-            //var entity_order = bll_order.GetModel(p => p.OrderNum == order_num, "ID ASC", "Machine", "Scene");
-            //if (entity_order.Status)
-            //{
-            //    System.Diagnostics.Trace.WriteLine("场景支付回调通知,订单已是支付状态，订单号：" + order_num);
-            //    return;
-            //}
-            //entity_order.Status = true;
-            //entity_order.PayTime = DateTime.Now;
-            //bll_order.Modify(entity_order, "Status", "PayTime");
-            
+            BLL.BLLMPUserAmountOrder.SetPayOK(order_num, wx_order, open_id, WebSite.VIPAmount);
         }
 
         /// <summary>
         /// 处理体检套餐订单
         /// <param name="order_num">订单号</param>
         /// </summary>
-        private void ExcMedicalOrder(string order_num)
+        private void ExcMedicalOrder(string order_num,string wx_order,string open_id)
         {
             BLL.BaseBLL<Entity.OrderMedical> bll_order = new BLL.BaseBLL<Entity.OrderMedical>();
             var entity_order = bll_order.GetModel(p => p.OrderNum == order_num, "ID ASC");
@@ -103,7 +94,9 @@ namespace Universal.Web.Controllers
             if (entity_order.Status != Entity.OrderStatus.等待支付) return;
             entity_order.Status = Entity.OrderStatus.已支付;
             entity_order.PayTime = DateTime.Now;
-            bll_order.Modify(entity_order, "Status", "PayTime");
+            entity_order.OrderNumWX = wx_order;
+            entity_order.OpenID = open_id;
+            bll_order.Modify(entity_order, "Status", "PayTime", "OrderNumWX", "OpenID");
         }
 
         #endregion

@@ -7,12 +7,13 @@ using System.Web.Mvc;
 using Universal.Tools;
 using Universal.Web.Framework;
 
+
 namespace Universal.Web.Areas.Admin.Controllers
 {
     /// <summary>
-    /// 医学通识分类轮播图
+    /// 在线咨询病症类型
     /// </summary>
-    public class NewsCategoryController : BaseAdminController
+    public class ConsultationDiseaseController : BaseAdminController
     {
         /// <summary>
         /// 分页列表
@@ -21,11 +22,11 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <param name="role"></param>
         /// <param name="word">筛选：关键字</param>
         /// <returns></returns>
-        [AdminPermissionAttribute("医学通识分类轮播图", "医学通识分类轮播图首页")]
-        public ActionResult Index(int page = 1,string word = "")
+        [AdminPermissionAttribute("在线咨询疾病类型", "在线咨询疾病类型首页")]
+        public ActionResult Index(int page = 1, string word = "")
         {
             word = WebHelper.UrlDecode(word);
-            Models.ViewModelNewsCategoryList response_model = new Models.ViewModelNewsCategoryList();
+            Models.ViewModelConsultationDiseaseList response_model = new Models.ViewModelConsultationDiseaseList();
             response_model.page = page;
             response_model.word = word;
             //获取每页大小的Cookie
@@ -38,7 +39,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
 
 
-            BLL.BaseBLL<Entity.NewsCategory> bll = new BLL.BaseBLL<Entity.NewsCategory>();
+            BLL.BaseBLL<Entity.ConsultationDisease> bll = new BLL.BaseBLL<Entity.ConsultationDisease>();
             var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "Weight desc");
             response_model.DataList = list;
             response_model.total = total;
@@ -50,7 +51,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 禁用
         /// </summary>
         [HttpPost]
-        [AdminPermissionAttribute("医学通识分类轮播图", "首页禁用医学通识分类轮播图")]
+        [AdminPermissionAttribute("在线咨询疾病类型", "首页禁用在线咨询疾病类型")]
         public JsonResult Del(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
@@ -60,8 +61,8 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             var id_list = Array.ConvertAll<string, int>(ids.Split(','), int.Parse);
             var db_ids = string.Join(",", id_list);
-            BLL.BLLNewsCategory.DisEnble(db_ids);
-            AddAdminLogs(Entity.SysLogMethodType.Delete, "禁用医学通识分类轮播图：" + ids + "");
+            BLL.BLLConsultationDisease.DisEnble(db_ids);
+            AddAdminLogs(Entity.SysLogMethodType.Delete, "禁用在线咨询疾病类型：" + ids + "");
 
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "success";
@@ -73,18 +74,18 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id">用户ID</param>
         /// <returns></returns>
-        [AdminPermissionAttribute("医学通识分类轮播图", "医学通识分类轮播图编辑页面")]
+        [AdminPermissionAttribute("在线咨询疾病类型", "在线咨询疾病类型编辑页面")]
         public ActionResult Edit(int? id)
         {
-            BLL.BaseBLL<Entity.NewsCategory> bll = new BLL.BaseBLL<Entity.NewsCategory>();
-            Entity.NewsCategory entity = new Entity.NewsCategory();
+            BLL.BaseBLL<Entity.ConsultationDisease> bll = new BLL.BaseBLL<Entity.ConsultationDisease>();
+            Entity.ConsultationDisease entity = new Entity.ConsultationDisease();
             int num = TypeHelper.ObjectToInt(id, 0);
             if (num != 0)
             {
                 entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                 {
-                    return PromptView("/admin/NewsCategory", "404", "Not Found", "信息不存在或已被删除", 5);
+                    return PromptView("/admin/ConsultationDisease", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
             }
             return View(entity);
@@ -97,11 +98,11 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AdminPermissionAttribute("医学通识分类轮播图", "保存医学通识分类轮播图编辑信息")]
-        public ActionResult Edit(Entity.NewsCategory entity)
+        [AdminPermissionAttribute("在线咨询疾病类型", "保存在线咨询疾病类型编辑信息")]
+        public ActionResult Edit(Entity.ConsultationDisease entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
-            BLL.BaseBLL<Entity.NewsCategory> bll = new BLL.BaseBLL<Entity.NewsCategory>();
+            BLL.BaseBLL<Entity.ConsultationDisease> bll = new BLL.BaseBLL<Entity.ConsultationDisease>();
             //数据验证
             if (isAdd)
             {
@@ -112,10 +113,10 @@ namespace Universal.Web.Areas.Admin.Controllers
             }
             else
             {
-                //如果要编辑的用户不存在
+                //如果要编辑的数据不存在
                 if (!bll.Exists(p => p.ID == entity.ID))
                 {
-                    return PromptView("/admin/NewsCategory", "404", "Not Found", "信息不存在或已被删除", 5);
+                    return PromptView("/admin/ConsultationDisease", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
 
             }
@@ -136,7 +137,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     bll.Modify(model);
                 }
 
-                return PromptView("/admin/NewsCategory", "OK", "Success", "操作成功", 5);
+                return PromptView("/admin/ConsultationDisease", "OK", "Success", "操作成功", 5);
             }
             else
                 return View(entity);

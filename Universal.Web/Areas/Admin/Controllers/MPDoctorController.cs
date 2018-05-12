@@ -136,7 +136,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 禁用用户
         /// </summary>
         [HttpPost]
-        [AdminPermissionAttribute("医生管理", "首页禁用用户")]
+        [AdminPermissionAttribute("医生管理", "首页禁用医生")]
         public JsonResult Del(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

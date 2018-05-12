@@ -55,6 +55,12 @@
     <Compile Include="ClinicArea.cs" />
     <Compile Include="Clinic.cs" />
     <Compile Include="ClinicDepartment.cs" />
+    <Compile Include="Consultation.cs" />
+    <Compile Include="ConsultationDisease.cs" />
+    <Compile Include="ConsultationFile.cs" />
+    <Compile Include="ConsultationList.cs" />
+    <Compile Include="ConsultationSettlement.cs" />
+    <Compile Include="ConsultationSettlementItem.cs" />
     <Compile Include="Demo\Demo.cs" />
     <Compile Include="Demo\DemoAlbum.cs" />
     <Compile Include="Demo\DemoDept.cs" />
@@ -64,6 +70,7 @@
     <Compile Include="MedicalItem.cs" />
     <Compile Include="MPUser.cs" />
     <Compile Include="MPUserAmountDetails.cs" />
+    <Compile Include="MPUserAmountOrder.cs" />
     <Compile Include="MPUserDoctors.cs" />
     <Compile Include="MpUserMedicalReport.cs" />
     <Compile Include="NewsCategory.cs" />
@@ -80,9 +87,12 @@
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
+    <Compile Include="ViewModel\ConsultationDetail.cs" />
+    <Compile Include="ViewModel\ConsultationDoctor.cs" />
     <Compile Include="ViewModel\MPUserDoctors.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsTags.cs" />
+    <Compile Include="ViewModel\Settlement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

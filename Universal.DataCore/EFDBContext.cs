@@ -42,7 +42,7 @@ namespace Universal.DataCore
         ///// 接口请求日志
         ///// </summary>
         //public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
-        
+
         /// <summary>
         /// 系统需要权限控制的路由表
         /// </summary>
@@ -94,6 +94,11 @@ namespace Universal.DataCore
         public DbSet<Entity.OrderMedicalItem> OrderMedicalItems { get; set; }
 
         /// <summary>
+        /// 用户充值订单
+        /// </summary>
+        public DbSet<Entity.MPUserAmountOrder> MPUserAmountOrders { get; set; }
+
+        /// <summary>
         /// 诊所地区
         /// </summary>
         public DbSet<Entity.ClinicArea> ClinicAreas { get; set; }
@@ -122,7 +127,7 @@ namespace Universal.DataCore
         /// 体检套餐轮播图
         /// </summary>
         public DbSet<Entity.MedicalBanner> MedicalBanners { get; set; }
-        
+
         /// <summary>
         /// 体检套餐
         /// </summary>
@@ -157,6 +162,48 @@ namespace Universal.DataCore
         /// 医学通识轮播图
         /// </summary>
         public DbSet<Entity.NewsBanner> NewsBanners { get; set; }
+
+        #region 在线咨询 BBS
+
+        /// <summary>
+        /// 咨询主贴
+        /// </summary>
+        public DbSet<Entity.Consultation> Consultations { get; set; }
+
+        /// <summary>
+        /// 主贴的附件
+        /// </summary>
+        public DbSet<Entity.ConsultationFile> ConsultationFiles { get; set; }
+
+        /// <summary>
+        /// 咨询的回复内容
+        /// </summary>
+        public DbSet<Entity.ConsultationList> ConsultationLists { get; set; }
+
+        /// <summary>
+        /// 咨询的回复内容附件
+        /// </summary>
+        public DbSet<Entity.ConsultationListFile> ConsultationListFiles { get; set; }
+
+        /// <summary>
+        /// 咨询疾病类型
+        /// </summary>
+        public DbSet<Entity.ConsultationDisease> ConsultationDiseases { get; set; }
+
+        
+        /// <summary>
+        /// 咨询结算
+        /// </summary>
+        public DbSet<Entity.ConsultationSettlement> ConsultationSettlements { get; set; }
+
+
+        /// <summary>
+        /// 咨询结算具体的咨询列表
+        /// </summary>
+        public DbSet<Entity.ConsultationSettlementItem> ConsultationSettlementItems { get; set; }
+
+        #endregion
+
 
         /// <summary>
         /// 

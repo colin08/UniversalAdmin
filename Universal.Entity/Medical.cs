@@ -76,6 +76,12 @@ namespace Universal.Entity
         /// </summary>
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
+        
+        /// <summary>
+        /// VIP价格（预留）
+        /// </summary>
+        [Column(TypeName = "money")]
+        public decimal VIPPrice { get; set; }
 
         /// <summary>
         /// 套餐介绍

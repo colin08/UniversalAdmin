@@ -13,15 +13,15 @@
 
         .user-info { margin-left: 100px; }
 
-        .user-nickname { height: 32px; width: 150px; display: flex; justify-content: flex-start; align-items: center; }
+        .user-nickname { height: 32px; display: flex; justify-content: flex-start; align-items: center; }
 
-            .user-nickname span { width: 130px; overflow: hidden; text-overflow: ellipsis; }
+            .user-nickname span { overflow: hidden; text-overflow: ellipsis; }
 
             .user-nickname img { width: 40px; height: 32px; }
 
         .user-qb { height: 50px; margin-top: 4px; }
         .mui-control-item { width: 33% !important; }
-
+        .ss-money { margin-left: 5px; color: #007aff; }
         .fixed-group-buttom { height: 50px; width: 100%; background: white; padding: 1px 10px; position: fixed; display: flex; z-index: 999; justify-content: space-between; align-items: center; }
         .js-price { color: #007aff; font-size: 18px; }
         .js-remark { font-size: 14px; color: rgba(0,0,0,0.7); }
@@ -35,6 +35,9 @@
             <span class="mui-icon mui-icon-left-nav"></span>
         </button>
         <h1 class="mui-center mui-title">咨询结算</h1>
+        <button type="button" onclick="location.href='AdvisoryClearHostory'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right">
+            结算历史
+        </button>
     </div>
 
 }
@@ -61,46 +64,37 @@
                 <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
                     <div id="scroll1" class="mui-scroll-wrapper">
                         <div class="mui-scroll">
-                            <!--
-                            作者：litdev@outlook.com
-                            时间：2018-03-29
-                            描述：pageIndex：当前选项卡加载到第几页数据
-                                  dataTotal:接口返回的总数据
-                                  template-id: 使用的模板ID
-                                  ajaxUrl: 请求URL
-                        -->
-                            <ul class="mui-table-view" id="ul_kejiesuan" pageIndex='1' dataTotal='' template-id="template_kejiesuan" ajaxUrl="http://shop.model-me.cn/wxopen/VideoList?id=2">
+                            <ul class="mui-table-view" id="ul_kejiesuan" pageIndex='1' dataTotal='' data-type="1" template-id="template_kejiesuan" ajaxUrl="/MP/Doctors/GetAdvisoryClearPageList">
 
                                 <script type="text/html" id="template_kejiesuan">
-                                    {{each info}}
-
-                                    <li class="mui-table-view-cell li-check" data-index="{{$index}}" data-link="http://www.baidu.com">
-                                        <img class="mui-pull-left head-img" id="head-img" src="../img/default-avatar.jpg">
-                                        <div class="user-info">
-                                            <div class="user-nickname">
-                                                <span>{{$value.name}}</span>
-                                                <label>{{$value.gender}}</label>
-                                                <label>￥100</label>
-                                                <div class="mui-input-row mui-checkbox">
-                                                    <label></label>
-                                                    <input name="ck-jiesuan" onchange="checkChange()" class="jiesuanck" data-id="{{$index}}" value="100" type="checkbox" style="top: 0 !important;">
+                                    {{each data}}
+                                    <li class="mui-table-view-cell" data-index="{{$value.id}}">
+                                        <a class="mui-navigate-right li-a" href="javascript:void(0)">
+                                            <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                            <div class="user-info">
+                                                <div class="user-nickname">
+                                                    <span>{{$value.nick_name}} {{$value.gender}} {{$value.age}}岁</span>
+                                                    <label class="ss-money">￥{{$value.price}}</label>
+                                                    <div class="mui-input-row mui-checkbox">
+                                                        <label></label>
+                                                        <input name="ck-jiesuan" onchange="checkChange()" class="jiesuanck" data-id="{{$value.id}}" value="{{$value.price}}" type="checkbox" style="top: 0 !important;">
+                                                    </div>
+                                                </div>
+                                                <div class="user-qb">
+                                                    <p class='mui-ellipsis'>最后回复：{{$value.last_reply_time_str}}</p>
+                                                    <p class="mui-ellipsis">
+                                                        {{if $value.last_replay_user == 2}}
+                                                        我说
+                                                        {{else}}
+                                                        Ta说
+                                                        {{/if}}
+                                                        :{{$value.last_reply_content}}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div class="user-qb">
-                                                <p class='mui-ellipsis'>最新回复时间：{{$value.time}}</p>
-                                                <p class="mui-ellipsis">
-                                                    {{if $value.is_doc}}
-                                                    我说
-                                                    {{else}}
-                                                    Ta说
-                                                    {{/if}}
-                                                    :{{$value.desc}}
-                                                </p>
-                                            </div>
-                                        </div>
+                                        </a>
                                     </li>
-
-                                    {{/each}}
+                                {{/each}}
                                 </script>
 
                             </ul>
@@ -111,12 +105,26 @@
                 <div id="item2mobile" class="mui-slider-item mui-control-content">
                     <div class="mui-scroll-wrapper">
                         <div class="mui-scroll">
-                            <ul class="mui-table-view" id="ul_bujiesuan" pageIndex='1' dataTotal='' template-id="template_bujiesuan" ajaxUrl="http://shop.model-me.cn/wxopen/VideoList?id=2">
+                            <ul class="mui-table-view" id="ul_bujiesuan" pageIndex='1' dataTotal=''data-type="2" template-id="template_bujiesuan" ajaxUrl="/MP/Doctors/GetAdvisoryClearPageList">
 
                                 <script type="text/html" id="template_bujiesuan">
-                                    {{each info}}
+                                    {{each data}}
                                     <li class="mui-table-view-cell">
-                                        【不可结算】索引：{{$index + 1}},姓名：{{$value.name}},年龄：{{$value.age}}
+                                        <a class="mui-navigate-right li-a" href="javascript:void(0)">
+                                            <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                            <div class="user-info">
+                                                <div class="user-nickname">
+                                                    <span>{{$value.nick_name}} {{$value.gender}} {{$value.age}}岁 {{$value.disease}}</span>
+                                                
+                                                </div>
+                                                <div class="user-qb">
+                                                    <p class='mui-ellipsis'>最后回复：{{$value.last_reply_time_str}}</p>
+                                                    <p class="mui-ellipsis">
+                                                        不可结算原因:{{$value.sett_desc}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </li>
                                     {{/each}}
                                 </script>
@@ -128,12 +136,26 @@
                 <div id="item3mobile" class="mui-slider-item mui-control-content">
                     <div class="mui-scroll-wrapper">
                         <div class="mui-scroll">
-                            <ul class="mui-table-view" id="ul_yijiesuan" pageIndex='1' dataTotal='' template-id="template_yijiesuan" ajaxUrl="http://shop.model-me.cn/wxopen/VideoList?id=2">
+                            <ul class="mui-table-view" id="ul_yijiesuan" pageIndex='1' dataTotal='' data-type="3" template-id="template_yijiesuan" ajaxUrl="/MP/Doctors/GetAdvisoryClearPageList">
 
                                 <script type="text/html" id="template_yijiesuan">
-                                    {{each info}}
+                                    {{each data}}
                                     <li class="mui-table-view-cell">
-                                        【已结算】索引：{{$index + 1}},姓名：{{$value.name}},年龄：{{$value.age}}
+                                        <a class="mui-navigate-right li-a" href="javascript:void(0)">
+                                            <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                            <div class="user-info">
+                                                <div class="user-nickname">
+                                                    <span>{{$value.nick_name}} {{$value.gender}} {{$value.age}}岁 {{$value.disease}}</span>
+                                                
+                                                </div>
+                                                <div class="user-qb">
+                                                    <p class='mui-ellipsis'>最后回复：{{$value.last_reply_time_str}}</p>
+                                                    <p class="mui-ellipsis">
+                                                        结算状态:{{$value.sett_desc}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </li>
                                     {{/each}}
                                 </script>
@@ -156,7 +178,7 @@
             <input type="hidden" id="hid-js-ids" value="" />
         </div>
         <div class="bar-right">
-            <button id="btn_goto" onclick="location.href='咨询结算-完毕.html'" class="mui-btn-blue">提交结算申请</button>
+            <button id="btn_goto" onclick="Ajax_To_Clear()" class="mui-btn-blue">提交结算申请</button>
         </div>
     </div>
 
@@ -170,7 +192,6 @@
     <script src="~/Assets/mui/js/mui.pullToRefresh.material.js"></script>
     <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
     <script src="~/Assets/mui/js/template-web.js"></script>
-    <script src="~/Assets/mui/js/public.js"></script>
 
     <script>
         mui.init();
@@ -200,7 +221,7 @@
         (function ($$) {
             //阻尼系数
             var deceleration = mui.os.ios ? 0.003 : 0.0009;
-            var pageSize = 2;
+            var pageSize = 5;
             var count = 0;
 
             $$('.mui-scroll-wrapper').scroll({
@@ -208,8 +229,7 @@
                 indicators: true, //是否显示滚动条
                 deceleration: deceleration
             });
-
-
+            
 
             //滑动数据初始化
             document.querySelector('.mui-slider').addEventListener('slide', function (event) {
@@ -219,7 +239,8 @@
                     var template_id = ul.attr('template-id');
                     var ajaxUrl = ul.attr('ajaxUrl');
                     var ul_id = ul.attr('id');
-                    var params_data = { "pageIndex": parseInt(pageIndex), "PageSize": pageSize };
+                    var d_type = ul.attr('data-type');
+                    var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                     Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
                     $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                 }
@@ -243,7 +264,8 @@
                         if (pageIndex == '1') {
                             var ajaxUrl = ul.getAttribute('ajaxUrl');
                             var ul_id = ul.getAttribute('id');
-                            var params_data = { "pageIndex": parseInt(pageIndex), "PageSize": pageSize };
+                            var d_type = ul.getAttribute('data-type');
+                            var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                             Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
                             $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                         }
@@ -252,18 +274,19 @@
                     $$(pullRefreshEl).pullToRefresh({
                         down: {
                             callback: function () {
-                                console.log('下拉刷新')
-                                var self = this;
                                 var self = this;
                                 var ul = self.element.querySelector('.mui-table-view');
-                                var pageIndex = ul.getAttribute('pageIndex');
+                                var pageIndex = 1;//ul.getAttribute('pageIndex');
                                 var template_id = ul.getAttribute('template-id');
                                 var ajaxUrl = ul.getAttribute('ajaxUrl');
                                 var ul_id = ul.getAttribute('id');
-                                var params_data = { "pageIndex": parseInt(pageIndex), "PageSize": pageSize };
+                                var d_type = ul.getAttribute('data-type');
+                                var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                                 Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize)
-                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                                 self.endPullDownToRefresh();
+                                //如果之前上拉没数据了，这里重新启用上拉刷新
+                                self.refresh(true);
+                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
 
                             }
                         },
@@ -271,18 +294,20 @@
                             contentrefresh: '正在加载...',
                             contentnomore: '没有更多数据了',
                             callback: function () {
-                                console.log('上拉加载数据')
                                 var self = this;
                                 var ul = self.element.querySelector('.mui-table-view');
                                 var pageIndex = ul.getAttribute('pageIndex');
                                 var template_id = ul.getAttribute('template-id');
                                 var ajaxUrl = ul.getAttribute('ajaxUrl');
                                 var ul_id = ul.getAttribute('id');
-                                var params_data = { "pageIndex": parseInt(pageIndex), "PageSize": pageSize };
+                                var d_type = ul.getAttribute('data-type');
+                                var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                                 Ajax_Load_Pullrefresh_Data(false, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize)
                                 var data_total = ul.getAttribute('dataTotal');
-                                var pullSize = data_total / 2;
-                                self.endPullUpToRefresh(++count > pullSize);
+                                var pullSize = data_total / pageSize;
+                                var is_end = ++count > pullSize;
+                                self.endPullUpToRefresh(is_end);
+                                console.log("数据量：" + data_total + ",最大页：" + pullSize + ",是否最大：" + is_end);
                                 $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                             }
                         }
@@ -291,34 +316,78 @@
             });
         })(mui);
 
-        var template_data = {
-            info: [{
-                name: "刘强 ",
-                age: 23,
-                gender: "男",
-                is_doc: false,
-                desc: "张医生啊，这可咋整啊",
-                time: "2018-03-25 22:32"
-            },
-            {
-                name: "黄冲冲 ",
-                age: 26,
-                gender: "女",
-                is_doc: true,
-                desc: "这位朋友不要激动，抽根烟压压惊先",
-                time: "2018-03-23 12:22"
-            },
-            {
-                name: "熊斌 ",
-                age: 22,
-                gender: "男",
-                is_doc: false,
-                desc: "张医生啊，你帮我看看咋回事",
-                time: "2018-04-02 09:14"
-            }
-            ]
+        function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id, pageIndex, pageSize) {
+            mui.showLoading('数据加载中...', 'div');
+            mui.ajax({
+                url: url,
+                data: params_data,
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                async: false,//同步请求
+                timeout: 6000, //超时时间设置为6秒
+                success: function (res) {
+                    mui.hideLoading();
+                    if (res.msg == 0) {
+                        //提前置为0，不再上拉加载
+                        $('#' + ul_id).attr('dataTotal', 0);
+                        mui.alert(res.msgbox);
+                        return;
+                    }
+                    //取返回的数据
+                    var html = template(template_id, res);
+                    if (reload) {
+                        //覆盖数据
+                        $('#' + ul_id).html(html);
+                    } else {
+                        //追加数据
+                        $('#' + ul_id).append(html);
+                    }
+                    if ($('#' + ul_id) && $('#' + ul_id).attr('pageIndex') != '') {
+                        $('#' + ul_id).attr('pageIndex', parseInt(pageIndex) + 1);
+                    }
+                    if ($('#' + ul_id)) {
+                        $('#' + ul_id).attr('dataTotal', res.total)
+                    }
+                },
+                error: function (xhr, type, errorThrown) {
+                    mui.hideLoading();
+                    //异常处理；
+                    mui.alert("获取数据失败，请检查网络连接");
+                }
+            });
         };
 
+        function Ajax_To_Clear() {
+            var ids = $("#hid-js-ids").val();
+            if (ids.length == 0) {
+                mui.alert("请选择需要结算的咨询");
+                return;
+            }
+            mui.showLoading('申请提交中...', 'div');
+            mui.ajax({
+                url: "/MP/Doctors/ToAdvisoryClear",
+                data: {"ids":ids},
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                async: false,//同步请求
+                timeout: 6000, //超时时间设置为6秒
+                success: function (res) {
+                    mui.hideLoading();
+                    mui.toast(res.msgbox);
+                    if (res.msg == 1) {
+                        window.setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function (xhr, type, errorThrown) {
+                    mui.hideLoading();
+                    //异常处理；
+                    mui.alert("获取数据失败，请检查网络连接");
+                }
+            });
+        };
+        
     </script>
 
 }

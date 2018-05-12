@@ -50,9 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFDBContext.cs" />
-    <Compile Include="Migrations\201804280316107_frist.cs" />
-    <Compile Include="Migrations\201804280316107_frist.Designer.cs">
-      <DependentUpon>201804280316107_frist.cs</DependentUpon>
+    <Compile Include="Migrations\201805120858224_frist.cs" />
+    <Compile Include="Migrations\201805120858224_frist.Designer.cs">
+      <DependentUpon>201805120858224_frist.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Mapping\MPUserDoctorsMapping.cs" />
@@ -73,8 +73,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201804280316107_frist.resx">
-      <DependentUpon>201804280316107_frist.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201805120858224_frist.resx">
+      <DependentUpon>201805120858224_frist.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

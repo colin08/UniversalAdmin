@@ -79,6 +79,7 @@
     <Compile Include="TreeTests.cs" />
     <Compile Include="CategoryTreeTest.cs" />
     <Compile Include="AutoMapperTests.cs" />
+    <Compile Include="ConsultationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Universal.BLL\Universal.BLL.csproj">

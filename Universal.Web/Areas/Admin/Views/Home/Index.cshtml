@@ -128,6 +128,23 @@
 
                     <li class="line dk"></li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">在线咨询</span>
+                    </li>
+                    @if (CheckAdminPower("ConsultationSettlement/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/ConsultationSettlement/Index"><i class="fa fa-bars"></i> <span class="nav-label">结算申请列表</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("ConsultationDisease/INdex", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/ConsultationDisease/Index"><i class="fa fa-bars"></i> <span class="nav-label">疾病类别管理</span></a>
+                        </li>
+                    }
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">医学通识</span>
                     </li>
                     @if (CheckAdminPower("News/INdex", false))

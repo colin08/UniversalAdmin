@@ -127,13 +127,13 @@ namespace Universal.Entity
         /// <summary>
         /// 身份证号码
         /// </summary>
-        [MaxLength(30),Index(IsUnique =true)]
+        [MaxLength(30)]
         public string IDCardNumber { get; set; }
 
         /// <summary>
         /// 电话，大陆+86，香港+852，澳门+853
         /// </summary>
-        [MaxLength(50), Index(IsUnique = true)]
+        [MaxLength(50)]
         public string Telphone { get; set; }
 
         /// <summary>

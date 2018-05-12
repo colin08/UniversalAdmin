@@ -68,7 +68,12 @@ namespace Universal.BLL.Tests
             //BLL.BLLMPDoctor.Modify(model, "5,6,7,8", "6,7,8");
 
             //BLL.BLLMPDoctor.SetAdvisoryStatus("abcd", 1);
-            BLL.BLLMPDoctor.SetAdvisoryPrice("abcd", 99);
+            //BLL.BLLMPDoctor.SetAdvisoryPrice("abcd", 99);
+
+            //BLL.BLLMPUser.AddUserInfo("abc123", "测试用于1", "", 1);
+            //BLL.BLLMPUser.AddUserInfo("abcd", "医生用户1", "", 1);
+            int total = 0;
+            var ss = BLL.BLLConsultationSettlement.GetPageList(10, 1, 4, 1, out total);
 
             Assert.AreEqual(1, 1);
             //Assert.AreEqual(msg, "ok");
