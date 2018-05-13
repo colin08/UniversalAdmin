@@ -35,6 +35,8 @@ namespace Universal.Web.Areas.MP.Models
 
         public string jianjie { get; set; }
 
+        public string code { get; set; }
+
     }
 
 }

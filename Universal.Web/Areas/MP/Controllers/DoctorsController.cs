@@ -79,6 +79,11 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <returns></returns>
         public ActionResult Modify(string f)
         {
+            //if (WorkContext.UserInfo.IsFullInfo)
+            //{
+            //    return PromptView("/MP/BasicUser/Info", "资料不能再修改了");
+            //}
+
             LoadData();
             if (string.IsNullOrWhiteSpace(f))
             {
@@ -97,8 +102,15 @@ namespace Universal.Web.Areas.MP.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Modify(string realname, string idnumber, string telphone, int gender, string bri, int clinic_id, string keshi_ids, string touxian, string shanchang_ids, string jianjie)
+        public JsonResult Modify(string realname, string idnumber, string telphone, int gender, string bri, int clinic_id, string keshi_ids, string touxian, string shanchang_ids, string jianjie,string code)
         {
+
+            //if (WorkContext.UserInfo.IsFullInfo)
+            //{
+            //    WorkContext.AjaxStringEntity.msgbox = "资料不能再修改";
+            //    return Json(WorkContext.AjaxStringEntity);
+            //}
+
             #region 数据验证
 
             if (realname.Length > 5 || realname.Length == 0)
@@ -143,6 +155,17 @@ namespace Universal.Web.Areas.MP.Controllers
                 return Json(WorkContext.AjaxStringEntity);
             }
 
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "请输入验证码";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (code.Length != 4)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "验证码只有4位";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             #endregion
 
             var old_model = BLL.BLLMPDoctor.GetModel(WorkContext.UserInfo.ID);
@@ -157,6 +180,15 @@ namespace Universal.Web.Areas.MP.Controllers
             old_model.DoctorsInfo.TouXian = touxian;
             old_model.DoctorsInfo.ClinicID = clinic_id;
             string msg = "";
+
+            string ver_msg = "";
+            var ver_s = BLL.BLLVerificationCode.VerCode(telphone, Entity.VerificationCodeType.FullInfo, code, out ver_msg);
+            if (!ver_s)
+            {
+                WorkContext.AjaxStringEntity.msgbox = ver_msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             bool status = BLL.BLLMPDoctor.Modify(old_model, shanchang_ids, keshi_ids, out msg);
             if (!status)
             {
@@ -552,6 +584,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var shanchang_ids = HttpUtility.UrlDecode(Tools.WebHelper.GetCookie("doc_shanchang_ids"));
             var touxian = HttpUtility.UrlDecode(Tools.WebHelper.GetCookie("doc_touxian"));
             var jianjie = HttpUtility.UrlDecode(Tools.WebHelper.GetCookie("doc_jianjie"));
+            var code = HttpUtility.UrlDecode(Tools.WebHelper.GetCookie("doc_code"));
 
             Models.DoctorsInfo model = new Models.DoctorsInfo();
             model.name = name;
@@ -561,6 +594,7 @@ namespace Universal.Web.Areas.MP.Controllers
             model.idnumber = idnumber;
             model.touxian = touxian;
             model.jianjie = jianjie;
+            model.code = code;
 
             //组装科室数据
             if (!string.IsNullOrWhiteSpace(keshi_ids))

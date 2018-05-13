@@ -204,6 +204,10 @@ namespace Universal.DataCore
 
         #endregion
 
+        /// <summary>
+        /// 验证码
+        /// </summary>
+        public DbSet<Entity.VerificationCode> VerificationCodes { get; set; }
 
         /// <summary>
         /// 

@@ -86,6 +86,7 @@
     <Compile Include="Base\DynamicLinq.cs" />
     <Compile Include="Base\FilterSearch.cs" />
     <Compile Include="BLLMpUserMedicalReport.cs" />
+    <Compile Include="BLLVerificationCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

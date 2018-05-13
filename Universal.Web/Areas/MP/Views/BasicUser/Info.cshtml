@@ -18,9 +18,12 @@
         <span class="mui-icon mui-icon-left-nav"></span>
     </button>
     <h1 class="mui-center mui-title">个人资料</h1>
-    <button type="button" onclick="javascript: location.href = 'Modify'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right">
-        修改
-    </button>
+    @if (!WorkContext.UserInfo.IsFullInfo)
+    {
+        <button type="button" onclick="javascript: location.href = 'Modify'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right">
+            修改
+        </button>
+    }
 </div>
 
 }

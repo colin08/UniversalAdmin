@@ -39,6 +39,11 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <returns></returns>
         public ActionResult Modify(string back)
         {
+            if (WorkContext.UserInfo.IsFullInfo)
+            {
+                return PromptView("/MP/BasicUser/Info", "资料不能再修改了");
+            }
+
             if (string.IsNullOrWhiteSpace(back))
             {
                 ViewData["BackTxt"] = "修改个人资料";
@@ -57,8 +62,15 @@ namespace Universal.Web.Areas.MP.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Modify(string realname,string idnumber,string telphone,int gender,string bri)
+        public JsonResult Modify(string realname,string idnumber,string telphone,int gender,string bri,string code)
         {
+
+            if (WorkContext.UserInfo.IsFullInfo)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "资料不能再修改";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             #region 数据验证
 
             if (realname.Length > 5 || realname.Length == 0)
@@ -83,6 +95,16 @@ namespace Universal.Web.Areas.MP.Controllers
             }
             var brithday = Tools.TypeHelper.ObjectToDateTime(bri, DateTime.Now);
 
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "请输入验证码";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            if (code.Length != 4)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "验证码只有4位";
+                return Json(WorkContext.AjaxStringEntity);
+            }
 
             #endregion
 
@@ -129,6 +151,14 @@ namespace Universal.Web.Areas.MP.Controllers
                     return Json(WorkContext.AjaxStringEntity);
                 }
             }
+            string ver_msg = "";
+            var ver_s = BLL.BLLVerificationCode.VerCode(telphone, Entity.VerificationCodeType.FullInfo, code, out ver_msg);
+            if (!ver_s)
+            {
+                WorkContext.AjaxStringEntity.msgbox = ver_msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
             entity.RealName = realname;
             entity.IDCardNumber = idnumber;
             entity.Telphone = telphone;

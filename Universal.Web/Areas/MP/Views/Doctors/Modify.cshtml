@@ -15,6 +15,10 @@
 
             .radio_inline input[type=radio] { width: 15%; right: auto; }
         textarea.noscrollbars { overflow: hidden; }
+
+        .mui-input-row .mui-btn { width: 26%; box-sizing: border-box; right: 15px; padding: 8px 0px; }
+        .mui-btn-outlined { margin-top: 3px; color: #00B4FF; border: 1px solid #00B4FF; }
+        .disenb { border: 1px solid #c5d2d8; color: #c5d2d8; }
     </style>
 
 }
@@ -37,7 +41,7 @@
         <div class="mui-input-group">
             <div class="mui-input-row">
                 <label>姓名</label>
-                <input type="text" id="txt_realname" maxlength="5" value="@Model.name" />
+                <input type="text" id="txt_realname" class="mui-input-clear mui-input" maxlength="5" placeholder="请输入真实姓名" value="@Model.name" />
             </div>
             <div class="mui-input-row ">
                 <label>性别</label>
@@ -56,15 +60,20 @@
             </div>
             <div class="mui-input-row ">
                 <label>生日</label>
-                <input type="text" id="txt_bri" data-options='{"type":"date","beginYear":1949,"endYear":2018,"value":"1970-01-01"}' value="@Model.brithday" />
+                <input type="text" id="txt_bri" placeholder="点击选择生日" data-options='{"type":"date","beginYear":1949,"endYear":2018,"value":"1970-01-01"}' value="@Model.brithday" />
             </div>
             <div class="mui-input-row">
                 <label>身份证号</label>
-                <input type="text" id="txt_idnumber" maxlength="20" value="@Model.idnumber" />
+                <input type="text" id="txt_idnumber" class="mui-input-clear mui-input" maxlength="18" placeholder="请输入18位身份证号码" value="@Model.idnumber" />
             </div>
             <div class="mui-input-row">
                 <label>手机号</label>
-                <input type="text" id="txt_telphone" maxlength="11" value="@Model.telphone" />
+                <input type="text" id="txt_telphone" class="mui-input-clear mui-input" maxlength="11" placeholder="请输入11位手机号码" value="@Model.telphone" />
+            </div>
+            <div class="mui-input-row">
+                <label>验证码</label>
+                <button type="button" id='btn_ver' class="mui-btn mui-btn-outlined">获取验证码</button>
+                <input type="text" style="width: 35%;" id="txt_code" class="mui-input" maxlength="4" value="@Model.code" placeholder="请输入验证码" />
             </div>
         </div>
 
@@ -72,7 +81,7 @@
         <div class="mui-input-group">
             <div class="mui-input-row">
                 <label>诊所</label>
-                <input type="hidden" id="hid_zhensuo" value="@Model.zhensuo_id" />
+                <input type="hidden" id="hid_zhensuo" placeholder="点击选择诊所" value="@Model.zhensuo_id" />
                 <input type="text" id="txt_zhensuo" readonly value="@Model.zhensuo" />
             </div>
             <div class="mui-input-row ">
@@ -82,16 +91,16 @@
             </div>
             <div class="mui-input-row">
                 <label>头衔</label>
-                <input type="text" id="txt_touxian" maxlength="10" value="@Model.touxian" />
+                <input type="text" id="txt_touxian" placeholder="请输入医师头衔" maxlength="10" value="@Model.touxian" />
             </div>
             <div class="mui-input-row">
                 <label>擅长</label>
-                <input type="hidden" id="hid_shanchang" value="@Model.shanchang_ids" />
+                <input type="hidden" id="hid_shanchang" placeholder="点击去选择擅长" value="@Model.shanchang_ids" />
                 <input type="text" id="txt_shanchang" readonly value="@Model.shanchang" />
             </div>
             <div class="mui-input-row" id="div_textarea">
                 <label>简介</label>
-                <textarea id="txt_remark" class="noscrollbars" onkeyup="autoGrow(this)">@Html.Raw(Model.jianjie)</textarea>
+                <textarea id="txt_remark" class="noscrollbars" placeholder="请填写个人简介" onkeyup="autoGrow(this)">@Html.Raw(Model.jianjie)</textarea>
             </div>
         </div>
 
@@ -117,8 +126,11 @@
     <script src="~/Assets/mui/js/mui.dtpicker.js"></script>
     <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
     <script src="~/Assets/mui/js/js.cookie.js"></script>
-    <script type="text/javascript">
+    <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="~/Assets/mui/js/vercode.js"></script>
 
+    <script type="text/javascript">
+        var send_vercode_type = 1;
         (function ($$) {
             $$.init();
             $$("#btn_save")[0].addEventListener('tap', function () {
@@ -128,6 +140,7 @@
                 var telphone = $("#txt_telphone").val();
                 var gender = $("input[name='rd_gender']:checked").val();
                 var bri = $("#txt_bri").val();
+                var code = $("#txt_code").val();
 
                 var zhensuo_id = $("#hid_zhensuo").val();
                 var keshi_ids = $("#hid_keshi").val();
@@ -156,6 +169,14 @@
                     $$.toast("请填写手机号码");
                     return;
                 }
+                if (code.length == 0) {
+                    $$.toast("请填写验证码");
+                    return;
+                }
+                if (code.length != 4) {
+                    $$.toast("验证码只有4位");
+                    return;
+                }
 
                 $$(btn).button('loading');
                 $$.showLoading("保存中", "div");
@@ -171,7 +192,8 @@
                         keshi_ids: keshi_ids,
                         touxian: touxian,
                         shanchang_ids: shanchang_ids,
-                        jianjie: reamrk
+                        jianjie: reamrk,
+                        code: code
                     },
                     dataType: 'json',
                     type: 'post',
@@ -192,6 +214,7 @@
                         }
                     },
                     error: function (xhr, type, errorThrown) {
+                        $$.hideLoading();
                         //异常处理；
                         mui.alert('网络异常', "请检查联网是否通畅");
                     }
@@ -274,12 +297,14 @@
             var telphone = $("#txt_telphone").val();
             var gender = $("input[name='rd_gender']:checked").val();
             var bri = $("#txt_bri").val();
+            var code = $("#txt_code").val();
             var touxian = $("#txt_touxian").val();
             var reamrk = $("#txt_remark").val();
 
             Cookies.set('doc_name', realname);
             Cookies.set('doc_gender', gender);
             Cookies.set('doc_brithday', bri);
+            Cookies.set('doc_code', code);
             Cookies.set('doc_idnumber', idnumber);
             Cookies.set('doc_telphone', telphone);
             Cookies.set('doc_zhensuo_id', zhensuo_id);

@@ -57,5 +57,39 @@ namespace Universal.Web.Areas.MP.Controllers
             WorkContext.AjaxStringEntity = upload_result;
             return Json(WorkContext.AjaxStringEntity);
         }
+
+        /// <summary>
+        /// 发送验证码
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SendVer(string telphone,int type)
+        {
+
+            if (string.IsNullOrWhiteSpace(telphone))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "请传入手机号";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            var tt = Entity.VerificationCodeType.FullInfo;
+            try
+            {
+                tt = (Entity.VerificationCodeType)type;
+            }
+            catch
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法类别";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            string msg = "";
+            var status = BLL.BLLVerificationCode.Add(telphone, tt, out msg);
+
+            WorkContext.AjaxStringEntity.msg = status ? 1 : 0;
+            WorkContext.AjaxStringEntity.msgbox = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
     }
 }

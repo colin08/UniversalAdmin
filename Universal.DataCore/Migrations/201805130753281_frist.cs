@@ -528,6 +528,18 @@ namespace Universal.DataCore.Migrations
                 .Index(t => t.SysUserID);
             
             CreateTable(
+                "dbo.VerificationCode",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Telphone = c.String(nullable: false, maxLength: 30),
+                        Code = c.String(nullable: false, maxLength: 20),
+                        Type = c.Byte(nullable: false),
+                        AddTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
                 "dbo.MPUserDoctorsClinicDepartment",
                 c => new
                     {
@@ -673,6 +685,7 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.MedicalMedicalItem");
             DropTable("dbo.DoctorsSpecialtyMPUserDoctors");
             DropTable("dbo.MPUserDoctorsClinicDepartment");
+            DropTable("dbo.VerificationCode");
             DropTable("dbo.SysLogMethod");
             DropTable("dbo.SysLogException");
             DropTable("dbo.OrderMedical");

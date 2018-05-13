@@ -18,68 +18,68 @@ namespace Universal.DataCore.Migrations
         protected override void Seed(Universal.DataCore.EFDBContext context)
         {
 
-            var role_list = new List<Entity.SysRole>() {
-                    new Entity.SysRole() {
-                        AddTime = DateTime.Now,
-                        RoleName = "管理员",
-                        RoleDesc = "管理员组",
-                        IsAdmin = true
-                    },
-                    new Entity.SysRole() {
-                        AddTime = DateTime.Now,
-                        RoleName = "编辑用户",
-                        RoleDesc = "编辑用户组",
-                        IsAdmin = false
-                    }
-                };
-            role_list.ForEach(p => context.SysRoles.AddOrUpdate(x => x.RoleName, p));
-            context.SaveChanges();
+            //var role_list = new List<Entity.SysRole>() {
+            //        new Entity.SysRole() {
+            //            AddTime = DateTime.Now,
+            //            RoleName = "管理员",
+            //            RoleDesc = "管理员组",
+            //            IsAdmin = true
+            //        },
+            //        new Entity.SysRole() {
+            //            AddTime = DateTime.Now,
+            //            RoleName = "编辑用户",
+            //            RoleDesc = "编辑用户组",
+            //            IsAdmin = false
+            //        }
+            //    };
+            //role_list.ForEach(p => context.SysRoles.AddOrUpdate(x => x.RoleName, p));
+            //context.SaveChanges();
 
 
-            var role_root = context.SysRoles.Where(p => p.RoleName == "管理员").FirstOrDefault();
-            string pwd = SecureHelper.MD5("admin");
-            var user_root = new Entity.SysUser()
-            {
-                LastLoginTime = DateTime.Now,
-                RegTime = DateTime.Now,
-                NickName = "超级管理员",
-                Password = pwd,
-                Status = true,
-                SysRole = role_root,
-                UserName = "admin",
-                Gender = Entity.UserGender.男,
-                Avatar = ""
-            };
-            context.SysUsers.AddOrUpdate(p => p.UserName, user_root);
-            context.SaveChanges();
+            //var role_root = context.SysRoles.Where(p => p.RoleName == "管理员").FirstOrDefault();
+            //string pwd = SecureHelper.MD5("admin");
+            //var user_root = new Entity.SysUser()
+            //{
+            //    LastLoginTime = DateTime.Now,
+            //    RegTime = DateTime.Now,
+            //    NickName = "超级管理员",
+            //    Password = pwd,
+            //    Status = true,
+            //    SysRole = role_root,
+            //    UserName = "admin",
+            //    Gender = Entity.UserGender.男,
+            //    Avatar = ""
+            //};
+            //context.SysUsers.AddOrUpdate(p => p.UserName, user_root);
+            //context.SaveChanges();
 
-            //诊所地区
-            var cli_area = new Entity.ClinicArea("深圳");
-            context.ClinicAreas.AddOrUpdate(p => p.Title, cli_area);
-            context.SaveChanges();
+            ////诊所地区
+            //var cli_area = new Entity.ClinicArea("深圳");
+            //context.ClinicAreas.AddOrUpdate(p => p.Title, cli_area);
+            //context.SaveChanges();
 
-            //诊所
-            var cli = new Entity.Clinic();
-            cli.Title = "厚德医疗";
-            cli.Address = "深圳市福田区荣超经贸中心F3";
-            cli.ClinicArea = cli_area;
-            cli.WorkHours = "周一~周五 上午9:00到下午5:30";
-            cli.Status = true;
-            cli.FuWuYuYan = "普通话,粤语";
-            cli.FuWuXiangMu = "服务项目";
-            cli.ChengCheLuXian = "乘车路线";
-            context.Clinics.AddOrUpdate(p => p.Title, cli);
-            context.SaveChanges();
+            ////诊所
+            //var cli = new Entity.Clinic();
+            //cli.Title = "厚德医疗";
+            //cli.Address = "深圳市福田区荣超经贸中心F3";
+            //cli.ClinicArea = cli_area;
+            //cli.WorkHours = "周一~周五 上午9:00到下午5:30";
+            //cli.Status = true;
+            //cli.FuWuYuYan = "普通话,粤语";
+            //cli.FuWuXiangMu = "服务项目";
+            //cli.ChengCheLuXian = "乘车路线";
+            //context.Clinics.AddOrUpdate(p => p.Title, cli);
+            //context.SaveChanges();
 
-            //诊所科室
-            var cli_de = new Entity.ClinicDepartment();
-            cli_de.Clinic = cli;
-            cli_de.Desc = "科室说明";
-            cli_de.Status = true;
-            cli_de.SZM = "K";
-            cli_de.Title = "测试科室";
-            context.ClinicDepartments.AddOrUpdate(p => p.Title, cli_de);
-            context.SaveChanges();
+            ////诊所科室
+            //var cli_de = new Entity.ClinicDepartment();
+            //cli_de.Clinic = cli;
+            //cli_de.Desc = "科室说明";
+            //cli_de.Status = true;
+            //cli_de.SZM = "K";
+            //cli_de.Title = "测试科室";
+            //context.ClinicDepartments.AddOrUpdate(p => p.Title, cli_de);
+            //context.SaveChanges();
 
             //var category_a = new Entity.CusCategory();
             //category_a.PID = null;

@@ -87,6 +87,7 @@
     <Compile Include="SysRoleRoute.cs" />
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
+    <Compile Include="VerificationCode.cs" />
     <Compile Include="ViewModel\ConsultationDetail.cs" />
     <Compile Include="ViewModel\ConsultationDoctor.cs" />
     <Compile Include="ViewModel\MPUserDoctors.cs" />

@@ -648,6 +648,7 @@
     <Content Include="Assets\mui\js\public.js" />
     <Content Include="Assets\mui\js\swiper-4.2.0.min.js" />
     <Content Include="Assets\mui\js\template-web.js" />
+    <Content Include="Assets\mui\js\vercode.js" />
     <Content Include="bin\Universal.BLL.dll" />
     <Content Include="bin\Universal.DataCore.dll" />
     <Content Include="bin\Universal.Entity.dll" />
