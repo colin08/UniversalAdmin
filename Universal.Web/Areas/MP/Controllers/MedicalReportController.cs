@@ -56,7 +56,8 @@ namespace Universal.Web.Areas.MP.Controllers
             }
             if(string.IsNullOrWhiteSpace(id_number))
             {
-                result.msgbox = "非法参数2";
+                result.msg = -1;
+                result.msgbox = "请先去完善资料";
                 return Json(result);
             }
 

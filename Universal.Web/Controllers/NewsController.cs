@@ -39,7 +39,6 @@ namespace Universal.Web.Controllers
                 }
                 result.category_list.Add(model);
             }
-            if(result.category_list.Count == 0) { return Content(""); }
             return View(result);
         }
 

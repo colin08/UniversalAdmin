@@ -119,6 +119,16 @@ namespace Universal.Entity
         [MaxLength(100)]
         public string RealName { get; set; }
 
+        public string GetShowName
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(RealName)) return NickName;
+                else return RealName;
+            }
+        }
+
+
         /// <summary>
         /// 身份证类别
         /// </summary>

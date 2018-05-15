@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "体检报告";
+    ViewBag.Title = "个人中心";
 }
 
 <!-- 头部Style等 -->
@@ -124,7 +124,12 @@
                 timeout: 10000, //超时时间设置为10秒
                 success: function (res) {
                     mui('#pullrefresh').pullRefresh().refresh(true);
-                    if (res.msg == 0)
+                    if (res.msg == -1) {
+                        mui.alert(res.msgbox, "提示", "前往", function () {
+                            location.href ="/MP/BasicUser/Modify"
+                        })
+                    }
+                    else if (res.msg == 0)
                     {
                         if (reload) {
                             mui('#pullrefresh').pullRefresh().endPulldownToRefresh();

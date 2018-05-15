@@ -431,6 +431,33 @@ namespace Universal.Tools
 
         }
 
+        /// <summary>  
+        /// 移除图片的翻转旋转设置  
+        /// </summary>  
+        /// <param name="srcPathName">原文件名</param>  
+        /// <param name="newPathName">新文件名</param>  
+        public static void RemoveRotateFlip(string srcPathName, string newPathName)
+        {
+            Image image = new Bitmap(srcPathName);//初始化图片对象  
+            foreach (var p in image.PropertyItems)
+            {
+                if (p.Id == 0x112)
+                {
+                    var rft = p.Value[0] == 6 ? RotateFlipType.Rotate90FlipNone
+                            : p.Value[0] == 3 ? RotateFlipType.Rotate180FlipNone
+                            : p.Value[0] == 8 ? RotateFlipType.Rotate270FlipNone
+                            : p.Value[0] == 1 ? RotateFlipType.RotateNoneFlipNone
+                            : RotateFlipType.RotateNoneFlipNone;
+                    p.Value[0] = 0;  //旋转属性值设置为不旋转  
+                    image.SetPropertyItem(p); //回拷进图片流  
+                    image.RotateFlip(rft);
+                }
+            }
+            image.Save(newPathName, ImageFormat.Jpeg); //重新保存为正常的图片  
+            image.Dispose(); //释放图片对象资源  
+            File.Delete(srcPathName);//这里是否删除，根据业务需要定  
+        }
+
         #region 图片旋转函数
         /// <summary>
         /// 以逆时针为方向对图像进行旋转，处理成功后会覆盖原有图片

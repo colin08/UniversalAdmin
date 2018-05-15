@@ -1,6 +1,6 @@
 ﻿@model Universal.Entity.OrderMedical
 @{
-    ViewBag.Title = "体检订单加项";
+    ViewBag.Title = "优惠体检套餐";
 }
 
 <!-- 头部Style等 -->
@@ -91,10 +91,10 @@
 
 <div class="mui-bar-footer fixed-group-buttom">
     <div class="bar-left">
-        <span>套餐价:<label>￥@ViewData["MPrice"]</label> 增加 <label id="footer_total"> @ViewData["SelectTotal"] </label> 项 <label id="footer_select_price">￥@ViewData["SelectPrice"]</label></span>
+        <span>套餐价:<label>￥@ViewData["MPrice"]</label> 增加 <label id="footer_total"> @ViewData["SelectTotal"] </label> 项 <label id="footer_select_price">￥@ViewData["SelectPrice"] </label></span>
     </div>
     <div class="bar-right">
-        <span>总:<label id="footer_total_price">￥@ViewData["TotalPrice"]</label></span>
+        <span>总:<label id="footer_total_price" style="margin-right:20px;">￥@ViewData["TotalPrice"]</label></span>
     </div>
 </div>
 }

@@ -88,8 +88,28 @@ namespace Universal.Web.Areas.MP.Controllers
             var price = (int)(entity_order.RelAmount * 100);
             string notify_url = WorkContext.WebSite.SiteUrl + "/PayNotify/WeChatPay";
             string attach = ((int)MPHelper.PayAttach.体检套餐).ToString();//额外自定义参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatPayMchid, body, o, price, Request.UserHostAddress, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr, null, null, null, null, attach);
+            string ip = Request.UserHostAddress;
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatAppID,
+                WorkContext.WebSite.WeChatPayMchid,
+                body, o, price, ip, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr,
+                null, null, null, null, attach);
+            //System.Diagnostics.Trace.WriteLine("APPID:" + WorkContext.WebSite.WeChatAppID);
+            //System.Diagnostics.Trace.WriteLine("Mchid:" + WorkContext.WebSite.WeChatPayMchid);
+            //System.Diagnostics.Trace.WriteLine("Body:" + body);
+            //System.Diagnostics.Trace.WriteLine("OrderNum:" + o);
+            //System.Diagnostics.Trace.WriteLine("Price:" + price);
+            //System.Diagnostics.Trace.WriteLine("IP:" + ip);
+            //System.Diagnostics.Trace.WriteLine("notify_url:" + notify_url);
+            //System.Diagnostics.Trace.WriteLine("trade_type:" + TenPayV3Type.JSAPI);
+            //System.Diagnostics.Trace.WriteLine("OPEN_ID:" + WorkContext.open_id);
+            //System.Diagnostics.Trace.WriteLine("KEY:" + WorkContext.WebSite.WeChatPayPayKey);
+            //System.Diagnostics.Trace.WriteLine("nonceStr:" + nonceStr);
+            //System.Diagnostics.Trace.WriteLine("attach:" + attach);
+
+            //System.Diagnostics.Trace.WriteLine("SIGN:" + xmlDataInfo.Sign);
+
             var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
+            System.Diagnostics.Trace.WriteLine(result.return_code + "--" + result.return_msg);
             var package = string.Format("prepay_id={0}", result.prepay_id);
             ViewData["product"] = entity_order.Title;
             ViewData["price"] = entity_order.RelAmount.ToString("F2");

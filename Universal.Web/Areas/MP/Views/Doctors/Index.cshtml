@@ -44,10 +44,10 @@
 <ul class="mui-table-view">
     <li class="mui-table-view-cell">
         <img class="mui-pull-left head-img" onclick="selectImg()" id="head-img" src="@WorkContext.UserInfo.GetAvatar">
-        <input type="file" id="hid_file_con" accept="image/jpeg,image/jpg,image/png" style="display:none;" />
+        <input type="file" id="hid_file_con" accept="image/*" style="display:none;" />
         <div class="user-info">
             <div class="user-nickname" onclick="location.href='Info'">
-                <span>@WorkContext.UserInfo.RealName</span>
+                <span>@WorkContext.UserInfo.GetShowName</span>
                 <label>@ViewData["TouXian"]</label>
             </div>
             <div class="user-qb">
@@ -193,7 +193,7 @@
                 var fileName = arr[arr.length - 1];
                 upload();
             } else {
-                mui.toast("选择的图片格式有误");
+                //mui.toast("选择的图片格式有误");
                 return false
             }
         })

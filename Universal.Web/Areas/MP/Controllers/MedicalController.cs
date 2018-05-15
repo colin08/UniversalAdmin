@@ -162,7 +162,7 @@ namespace Universal.Web.Areas.MP.Controllers
             if (model.MedicalID!= entity.ID) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该套餐不属于该订单");
             if (model.Status != OrderStatus.临时订单) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该订单已不能再加项");
             ViewData["BackUrl"] = "/MP/Medical/GoBuy?mid=" + mid.ToString() + "&o=" + o;
-            ViewData["NextUrl"] = "/MP/Pay/OrderMedical?o=" + o;
+            ViewData["NextUrl"] = "/mp/pay/OrderMedical?o=" + o;
             ViewData["OrderNum"] = o;
             Universal.Web.Areas.MP.Models.OrderMedicalInfo result_model = new Models.OrderMedicalInfo();
             if (!string.IsNullOrWhiteSpace(model.RealName))

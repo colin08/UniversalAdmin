@@ -43,8 +43,8 @@
 @{
     List<Universal.Entity.MedicalBanner> banner_list = (List<Universal.Entity.MedicalBanner>)ViewData["BannerList"];
     var banner_total = banner_list.Count;
-    var frist_banner = banner_list.First();
-    var last_banner = banner_list.Last();
+    var frist_banner = banner_list.FirstOrDefault();
+    var last_banner = banner_list.LastOrDefault();
 }
 @if (banner_total != 0)
 {
@@ -137,8 +137,17 @@
     </div>
 }
 
+@if(Model.Count == 0)
+{
+    @:<p style="width: 100%; text-align: center; margin-top: 30px; font-size: 20px;">没有相关套餐</p>
+}
 
-<div class="mui-bar-footer mui-text-center" style="width: 100%;">
+<div class="mui-bar-footer mui-text-center" style="width: 100%;
+@if(Model.Count == 0)
+{
+    @: position:fixed
+}
+">
     <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
 </div>
 

@@ -1,6 +1,6 @@
 ﻿@model List<Universal.Entity.OrderMedical>
 @{
-    ViewBag.Title = "我的订单列表";
+    ViewBag.Title = "优惠体检套餐";
 }
 
 <!-- 头部Style等 -->
@@ -56,7 +56,7 @@
                 }
                 else if (item.Status == Universal.Entity.OrderStatus.等待支付)
                 {
-                    <button class="mui-btn-warning mui-btn-outlined" onclick="location.href='/MP/Pay/OrderMedical?o=@item.OrderNum&back=/MP/Medical/OrderList'">前往支付</button>
+                    <button class="mui-btn-warning mui-btn-outlined" onclick="location.href='/mp/pay/OrderMedical?o=@item.OrderNum&back=/MP/Medical/OrderList'">前往支付</button>
                 }
             </div>
             <div class="mui-card-header mui-card-media" onclick="location.href = 'OrderInfo?o=@item.OrderNum'" style="height:40vw;background-image:url(@item.ImgUrl)"></div>
@@ -71,7 +71,7 @@
 }
 else
 {
-    <p style="width: 100%; text-align: center; margin-top: 30px; font-size: 20px;">没有相关数据</p>
+    <p style="width: 100%; text-align: center; margin-top: 30px; font-size: 20px;">没有相关订单</p>
 }
 
 <!-- Body END -->

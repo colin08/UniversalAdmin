@@ -66,8 +66,8 @@
 
         @{
             var banner_total = Model.banner_list.Count;
-            var frist_banner = Model.banner_list.First();
-            var last_banner = Model.banner_list.Last();
+            var frist_banner = Model.banner_list.FirstOrDefault();
+            var last_banner = Model.banner_list.LastOrDefault();
             var default_category_id = 0;
         }
         @if (banner_total > 0)

@@ -40,7 +40,7 @@ namespace Universal.Web.Areas.MP.Controllers
             //保存的目录
             string filePath = "/uploads/" + operation + "/";
             UploadHelper up_helper = new UploadHelper();
-            var upload_result = up_helper.Upload(fileData, filePath,true);
+            var upload_result = up_helper.UploadMobile(fileData, filePath);
             if(upload_result.msg==1)
             {
                 //上传成功后直接修改头像

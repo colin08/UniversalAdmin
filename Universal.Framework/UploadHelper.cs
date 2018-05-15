@@ -181,6 +181,78 @@ namespace Universal.Web.Framework
         }
 
         /// <summary>
+        /// 手机图片上传
+        /// </summary>
+        /// <param name="fileData">/uploads/avatar/  结尾必须有“/”</param>
+        /// <param name="ServerPath">保存的文件地址相对路径</param>
+        /// <param name="IsThumb">是否生成缩略图</param>
+        /// <returns></returns>
+        public UnifiedResultEntity<String> UploadMobile(HttpPostedFileBase fileData, string ServerPath)
+        {
+
+            UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();
+            response_entity.msg = 0;
+
+            if (fileData == null)
+            {
+                response_entity.msgbox = "请选择要上传的文件";
+                return response_entity;
+            }
+
+            //保存的目录
+            string filePath = IOHelper.GetMapPath(ServerPath);
+            if (!Directory.Exists(filePath))
+                Directory.CreateDirectory(filePath);
+
+            try
+            {
+                int file_size = fileData.ContentLength; //获取文件大小 KB
+                string fileExt = IOHelper.GetFileExt(fileData.FileName).ToLower(); //文件扩展名，不含“.”
+                string guid = Guid.NewGuid().ToString();
+                string saveName = guid + "." + fileExt; // 保存文件名称
+                fileData.SaveAs(filePath + saveName);
+
+                //获取MD5值
+                string md5 = IOHelper.GetMD5HashFromFile(filePath + saveName);
+                string result_path = ServerPath + md5 + "." + fileExt;
+                if (System.IO.File.Exists(filePath + md5 + "." + fileExt))
+                {
+                    System.IO.File.Delete(filePath + saveName); //把刚刚上传的给删掉，只用原有的文件
+                }
+                else //不存在，改名为md5值保存
+                {
+                    IOHelper.RemoveRotateFlip(filePath + saveName, filePath + md5 + "." + fileExt);
+
+                    int max_size = 300 * 1024;//超过300KB的就压缩
+                    if (file_size > max_size)
+                    {
+                        string[] img_arr = { "jpg", "jpeg", "bmp", "png" };
+                        if (img_arr.Contains(fileExt))
+                        {
+                            //如果是图片，就压缩
+                            IOHelper.GenerateThumb_ME(IOHelper.GetMapPath(ServerPath + md5 + "." + fileExt));
+                            result_path = ServerPath + md5 + "_thumb." + fileExt;
+                        }
+                    } 
+                }
+                
+
+                response_entity.msg = 1;
+                response_entity.msgbox = "上传成功";
+                response_entity.data = result_path;
+                return response_entity;
+            }
+            catch (Exception ex)
+            {
+                response_entity.msgbox = ex.Message;
+                return response_entity;
+            }
+
+        }
+
+        
+
+        /// <summary>
         /// 压缩包上传
         /// </summary>
         /// <param name="fileData"></param>
