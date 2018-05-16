@@ -28,8 +28,8 @@ namespace Universal.Web.Areas.MP.Controllers
                 ViewData["RechText"] = "充值";
                 ViewData["RechUrl"] = "/MP/BasicUser/Recharge";
             }
-            var user = BLL.BLLMPUser.GetUserInfoOrAdd(WorkContext.open_id);
-            ViewData["AccountBalance"] = user.AccountBalance.ToString("F2");
+            var account_balance = BLL.BLLMPUser.GetAccountBalance(WorkContext.UserInfo.ID);
+            ViewData["AccountBalance"] = account_balance > 0 ? account_balance.ToString("F2") : "0";
             return View();
         }
 

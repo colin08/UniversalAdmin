@@ -81,8 +81,13 @@ namespace Universal.Web.Areas.MP.Controllers
                 back_url = "/MP/Medical/AddMInfo?mid=" + entity_order.MedicalID + "&o=" + o;
             }
             ViewData["BackUrl"] = back_url;
-            ViewData["NextUrl"] = "MP/Pay/StatusOrderMedical";
+            ViewData["NextUrl"] = "/MP/Pay/StatusOrderMedical";
             ViewData["OrderNum"] = o;
+
+            //检查账户余额
+            var account_balance = BLL.BLLMPUser.GetAccountBalance(WorkContext.UserInfo.ID);
+            ViewData["AccountBalance"] = account_balance > 0 ? account_balance.ToString("F2") : "0";
+            ViewData["CanYue"] = account_balance >= entity_order.RelAmount ? 1 : 0;
 
             var timeStamp = TenPayV3Util.GetTimestamp();
             var nonceStr = TenPayV3Util.GetNoncestr();
@@ -126,6 +131,34 @@ namespace Universal.Web.Areas.MP.Controllers
         }
 
         /// <summary>
+        /// 使用账户余额进行支付
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult PayUseBalance(string o)
+        {
+            if (string.IsNullOrWhiteSpace(o))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            int mad_id = 0;
+            var status = BLL.BLLMPUser.PayMedicalUseBalance(WorkContext.UserInfo.ID, o, out mad_id);
+            if(!status)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "支付失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            //发送通知
+            string link_url = WorkContext.WebSite.SiteUrl + "/MP/Medical/OrderInfo?o=" + o;
+            MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
         /// 检查支付订单是否支付成功
         /// </summary>
         /// <returns></returns>
@@ -154,11 +187,11 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <returns></returns>
         public ActionResult Recharge(decimal amount)
         {
-            if (amount <=0) return PromptView("/MP/BasicUser/Recharge", "请输入正确的充值金额");
-            string sp_billno = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmss"),TenPayV3Util.BuildRandomStr(6));
+            if (amount <= 0) return PromptView("/MP/BasicUser/Recharge", "请输入正确的充值金额");
+            string sp_billno = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), TenPayV3Util.BuildRandomStr(6));
             string msg = "";
             var add_status = BLL.BLLMPUserAmountOrder.AddOrder(sp_billno, amount, WorkContext.UserInfo.ID, "账户充值", out msg);
-            if(!add_status) return PromptView("/MP/BasicUser/Recharge", "创建支付订单失败");
+            if (!add_status) return PromptView("/MP/BasicUser/Recharge", "创建支付订单失败");
 
             ViewData["NextUrl"] = "/MP/Pay/StatusRecharge";
             ViewData["OrderNum"] = sp_billno;
@@ -187,6 +220,7 @@ namespace Universal.Web.Areas.MP.Controllers
             Session["TEMPORDERNUMRecharge"] = sp_billno;
             return View();
         }
+                
 
         /// <summary>
         /// 检查支付订单是否支付成功

@@ -634,6 +634,7 @@
     <Content Include="Assets\mui\img\icon-vip.png" />
     <Content Include="Assets\mui\img\logo.png" />
     <Content Include="Assets\mui\img\upload-add.png" />
+    <Content Include="Assets\mui\img\wxpay.png" />
     <Content Include="Assets\mui\js\jquery.limitTextarea.js" />
     <Content Include="Assets\mui\js\jquery.min.js" />
     <Content Include="Assets\mui\js\js.cookie.js" />

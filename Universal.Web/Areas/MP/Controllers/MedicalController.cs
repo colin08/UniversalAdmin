@@ -223,6 +223,11 @@ namespace Universal.Web.Areas.MP.Controllers
             if (model.Gender == MPUserGenderType.male) ViewData["Gender"] = "男";
             else if (model.Gender == MPUserGenderType.female) ViewData["Gender"] = "女";
             else ViewData["Gender"] = "未知";
+
+            var show_bri = "/";
+            if(model.Brithday != null) show_bri = TypeHelper.ObjectToDateTime(model.Brithday, DateTime.Now).ToShortDateString();
+            ViewData["ShowBrithDay"] = show_bri;
+
             return View(model);
         }
 

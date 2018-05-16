@@ -56,7 +56,7 @@ namespace Universal.Web.MPHelper
             string amount = entity.Amount.ToString("F2");
             string time = entity.AddTime.ToString("yyyy-MM-dd HH:mm");
             string first = string.Format("您的帐户于{0} {1}{2}元", time, t_type, amount);
-            string keyword1 = string.Format("操作时间:{0}", time);
+            string keyword1 = string.Format("{0}", time);
             string keyword2 = entity.Title;
             string remark = "流水号:" + order_num;
 

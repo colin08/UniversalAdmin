@@ -13,6 +13,22 @@ namespace Universal.BLL
     /// </summary>
     public class BLLMPUser
     {
+
+        /// <summary>
+        /// 获取账户余额
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static decimal GetAccountBalance(int id)
+        {
+            using (var db=new DataCore.EFDBContext())
+            {
+                var entity = db.MPUsers.Where(p => p.ID == id).AsNoTracking().FirstOrDefault();
+                if (entity != null) return entity.AccountBalance;
+                else return 0M;
+            }
+        }
+
         /// <summary>
         /// 根据openid获取用户实体,如果用户不存在，则添加一个用户信息
         /// </summary>
@@ -76,6 +92,54 @@ namespace Universal.BLL
                 if (entity == null) return false;
                 return entity.IsFullInfo;
             }
+        }
+
+
+        /// <summary>
+        /// 使用账户余额支付体检订单
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <param name="order_num"></param>
+        /// <param name="mad_id">返回账户资金变动记录ID</param>
+        /// <returns></returns>
+        public static bool PayMedicalUseBalance(int user_id,string order_num,out int mad_id)
+        {
+            mad_id = 0;
+            using (var db=new DataCore.EFDBContext())
+            {
+                var entity_user = db.MPUsers.Find(user_id);
+                if (entity_user == null) return false;
+                if (!entity_user.Status) return false;
+                var entity_order = db.OrderMedicals.Where(p => p.OrderNum == order_num).FirstOrDefault();
+                if (entity_order == null) return false;
+                if (entity_order.Status != Entity.OrderStatus.等待支付) return false;
+
+                if (entity_user.AccountBalance < entity_order.RelAmount) return false;
+
+                entity_user.AccountBalance = entity_user.AccountBalance - entity_order.RelAmount;
+                entity_order.Status = Entity.OrderStatus.已支付;
+                entity_order.PayTime = DateTime.Now;
+                entity_order.PayType = Entity.OrderPayType.账户余额;
+
+                var entity_detail = new Entity.MPUserAmountDetails();
+                entity_detail.Amount = entity_order.RelAmount;
+                entity_detail.MPUserID = user_id;
+                entity_detail.Title = "支付体检订单";
+                entity_detail.Type = Entity.MPUserAmountDetailsType.Less;
+                db.MPUserAmountDetails.Add(entity_detail);
+                try
+                {
+                    db.SaveChanges();
+                    mad_id = entity_detail.ID;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine("使用账户余额支付体检订单出错：" + ex.Message);
+                    return false;
+                }
+
+            }
+            return true;
         }
 
         /// <summary>
