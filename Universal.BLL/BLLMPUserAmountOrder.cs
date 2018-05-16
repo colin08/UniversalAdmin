@@ -21,17 +21,17 @@ namespace Universal.BLL
         /// <param name="user_id"></param>
         /// <param name="desc"></param>
         /// <returns></returns>
-        public static bool AddOrder(string order_num,decimal amount,int user_id,string desc,out string msg)
+        public static bool AddOrder(string order_num, decimal amount, int user_id, string desc, out string msg)
         {
             msg = "ok";
-            if (string.IsNullOrWhiteSpace(order_num)) { msg = "订单号不能为空";return false; }
-            if (amount <= 0) { msg = "充值金额非法";return false; }
-            if (user_id <= 0) { msg = "非法用户";return false; }
-            using (var db=new DataCore.EFDBContext())
+            if (string.IsNullOrWhiteSpace(order_num)) { msg = "订单号不能为空"; return false; }
+            if (amount <= 0) { msg = "充值金额非法"; return false; }
+            if (user_id <= 0) { msg = "非法用户"; return false; }
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity_user = db.MPUsers.Where(p => p.ID == user_id).FirstOrDefault();
-                if(entity_user == null) { msg = "用户不存在";return false; }
-                if(entity_user.Identity  == Entity.MPUserIdentity.Doctors) { msg = "医生不能充值";return false; }                
+                if (entity_user == null) { msg = "用户不存在"; return false; }
+                if (entity_user.Identity == Entity.MPUserIdentity.Doctors) { msg = "医生不能充值"; return false; }
                 var entity = new Entity.MPUserAmountOrder(order_num, amount, user_id, desc);
                 db.MPUserAmountOrders.Add(entity);
                 db.SaveChanges();
@@ -47,19 +47,20 @@ namespace Universal.BLL
         /// <param name="wx_order">微信订单号</param>
         /// <param name="vip_amount">达到这个金额即升为VIP</param>
         /// <returns></returns>
-        public static bool SetPayOK(string order_num,string wx_order,string open_id,decimal vip_amount)
+        public static bool SetPayOK(string order_num, string wx_order, string open_id, decimal vip_amount,out int mad_id)
         {
-            using (var db=new DataCore.EFDBContext())
+            mad_id = 0;
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity_order = db.MPUserAmountOrders.Where(p => p.OrderNum == order_num).FirstOrDefault();
-                if(entity_order == null)
+                if (entity_order == null)
                 {
                     System.Diagnostics.Trace.WriteLine("用户充值订单置为已支付出错：订单号" + order_num + "不存在");
                     return false;
                 }
                 if (entity_order.Status)
                 {
-                    System.Diagnostics.Trace.WriteLine("用户充值订单置为已支付出错：订单号" + order_num + "已经是支付状态了");
+                    //System.Diagnostics.Trace.WriteLine("用户充值订单置为已支付出错：订单号" + order_num + "已经是支付状态了");
                     return false;
                 }
                 entity_order.Status = true;
@@ -85,10 +86,12 @@ namespace Universal.BLL
                 try
                 {
                     db.SaveChanges();
+                    mad_id = entity_details.ID;
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.WriteLine("用户充值订单置为已支付出错：" + ex.Message);
+                    return false;
                 }
             }
             return true;

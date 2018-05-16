@@ -18,7 +18,26 @@ namespace Universal.Web.Controllers
         /// 站点配置文件
         /// </summary>
         public static WebSiteModel WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
-        
+
+
+        public ActionResult Test(int type,string o)
+        {
+            if(type == 1)
+            {
+                MPHelper.WXPay.Refund(o, 0.01M, 0.01M);
+                return Content("退款");
+            }
+            else
+            {
+                return Content("央行新规，需要你开通微信支付一段时间，并且有连续一段时间的交易以后，企业付款才会开通。所以请保持正常的微信支付交易。");
+                //string msg = "";
+                //MPHelper.WXPay.Transfers(DateTime.Now.ToString("yyyyMMddHHmmss"), "oHP6jw6WoaY5MyVOBUfuRxSnWHlg", 0.01M, "备注", out msg);
+                //return Content("打款:" + msg);
+            }
+
+        }
+
+
         /// <summary>
         /// 微信支付回调
         /// </summary>
@@ -77,16 +96,19 @@ namespace Universal.Web.Controllers
         /// 处理充值订单
         /// <param name="order_num">订单号</param>
         /// </summary>
-        private void ExcRecharge(string order_num,string wx_order,string open_id)
+        private void ExcRecharge(string order_num, string wx_order, string open_id)
         {
-            BLL.BLLMPUserAmountOrder.SetPayOK(order_num, wx_order, open_id, WebSite.VIPAmount);
+            int mad_id = 0;
+            var status = BLL.BLLMPUserAmountOrder.SetPayOK(order_num, wx_order, open_id, WebSite.VIPAmount,out mad_id);
+            string msg_link = WebSite.SiteUrl + "/MP/AmountDetails/Index";
+            if (status) MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, open_id, order_num, msg_link);                
         }
 
         /// <summary>
         /// 处理体检套餐订单
         /// <param name="order_num">订单号</param>
         /// </summary>
-        private void ExcMedicalOrder(string order_num,string wx_order,string open_id)
+        private void ExcMedicalOrder(string order_num, string wx_order, string open_id)
         {
             BLL.BaseBLL<Entity.OrderMedical> bll_order = new BLL.BaseBLL<Entity.OrderMedical>();
             var entity_order = bll_order.GetModel(p => p.OrderNum == order_num, "ID ASC");

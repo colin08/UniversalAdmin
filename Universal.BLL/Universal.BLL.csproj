@@ -69,6 +69,7 @@
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLMedical.cs" />
     <Compile Include="BLLClinicArea.cs" />
+    <Compile Include="BLLMPUserAmountDetails.cs" />
     <Compile Include="BLLMPUserAmountOrder.cs" />
     <Compile Include="BLLNews.cs" />
     <Compile Include="BLLConsultationDisease.cs" />
