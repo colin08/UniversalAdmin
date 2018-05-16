@@ -55,11 +55,8 @@
                 }
             </div>
             <div class="user-qb">
-                <p class='mui-ellipsis' id="jiaoyi">账户余额：@WorkContext.UserInfo.AccountBalance.ToString("F2") 元 </p>
-                @*@if (WorkContext.UserInfo.Identity == Universal.Entity.MPUserIdentity.Normal)
-                {
-                    <button class="mui-btn" id="up-vip" style="margin-top: 1px;">升级VIP</button>
-                }*@
+                <p class='mui-ellipsis' id="jiaoyi">账户余额：@ViewData["AccountBalance"] 元 </p>
+                <button class="mui-btn" id="up-vip" style="margin-top: 1px;">@ViewData["RechText"]</button>
             </div>
         </div>
 
@@ -94,6 +91,10 @@
         $("#jiaoyi").on('click', function (event) {
             event.stopPropagation();
             location.href = "/MP/AmountDetails/Index";
+        });
+        $("#up-vip").on('click', function (event) {
+            event.stopPropagation();
+            location.href = "@ViewData["RechUrl"]";
         });
 
 		function selectImg(){

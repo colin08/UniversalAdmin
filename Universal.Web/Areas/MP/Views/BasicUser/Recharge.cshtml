@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "个人中心";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <style>
+        .help-text { display: flex; justify-content: flex-start; align-items: center; margin-top: 10px; margin-left: 10px; }
+            .help-text img { width: 18px; height: 18px; }
+        .row-custom { height: 60px !important; line-height: 60px !important; }
+            .row-custom label { line-height: 2 !important; }
+            .row-custom input { height: 60px; line-height: 2 !important; }
+    </style>
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='@ViewData["BackUrl"]'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">账户充值</h1>
+    </div>
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<div class="mui-content-padded">
+
+    @if (WorkContext.UserInfo.Identity != Universal.Entity.MPUserIdentity.VIP)
+    {
+        <p class="help-text"><img src="~/Assets/mui/img/icon-info.png" />&nbsp;首次充值>=@WorkContext.WebSite.VIPAmount.ToString("F2") 即可升级为VIP账户</p>
+    }
+    <form class="mui-input-group">
+        <div class="mui-input-row row-custom">
+            <label>充值金额</label>
+            <input type="number" id="txt_amount" value="@WorkContext.WebSite.VIPAmount.ToString("F2")" placeholder="请输入金额">
+        </div>
+    </form>
+    <button type="button" id="btn_topay" class="mui-btn mui-btn-warning mui-btn-block" style="margin-top: 20px;">前往支付</button>
+
+</div>
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+    <div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script type="text/javascript">
+
+        (function($$) {
+			$$.init();
+            $$("#btn_topay")[0].addEventListener('tap', function () {
+                var btn = this;
+                var amount = document.getElementById("txt_amount").value;
+                if (amount == "") {
+                    mui.toast("请输入充值金额");
+                    return;
+                }
+                if (amount <= 0) {
+                    mui.alert("请输入正确的充值金额");
+                    return;
+                }
+                location.href = "/mp/pay/Recharge?amount=" + amount;
+			});
+		})(mui);
+
+    </script>
+
+}
+<!-- MUI 页面底部脚本 END -->

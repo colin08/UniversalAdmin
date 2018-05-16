@@ -687,6 +687,10 @@
     <Content Include="Areas\Admin\Views\ConsultationDisease\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ConsultationSettlement\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ConsultationSettlement\Info.cshtml" />
+    <Content Include="Areas\MP\Views\BasicUser\Recharge.cshtml" />
+    <Content Include="Areas\MP\Views\BasicUser\ToVIP.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\StatusRecharge.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\Recharge.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

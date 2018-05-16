@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "优惠体检套餐";
+    ViewBag.Title = "个人中心";
 }
 
 <!-- 头部Style等 -->
@@ -38,11 +38,11 @@
             <img src="~/Assets/mui/img/icon-ok-big.png" style="height: 100px;width: 100px;" />
             <p>支付成功<span class="money">￥@ViewData["Price"]</span> 元</p>
         </div>
-        <p style="text-align: center;" onclick="location.href = '/MP/Medical/OrderList'"><span>3</span>秒后自动前往我的订单列表</p>
+        <p style="text-align: center;" onclick="location.href = '/MP/BasicUser/Index'"><span>3</span>秒后自动前往首页</p>
         <script>
             window.onload = function () {
                 setTimeout(function () {
-                    location.href = '/MP/Medical/OrderList';
+                    location.href = '/MP/BasicUser/Index';
                 }, 3000);
             }
         </script>

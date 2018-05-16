@@ -18,7 +18,18 @@ namespace Universal.Web.Areas.MP.Controllers
         // GET: MP/BasicUser
         public ActionResult Index()
         {
-
+            if(WorkContext.UserInfo.Identity == Entity.MPUserIdentity.Normal)
+            {
+                ViewData["RechText"] = "升级VIP";
+                ViewData["RechUrl"] = "/MP/BasicUser/ToVIP";
+            }
+            else
+            {
+                ViewData["RechText"] = "充值";
+                ViewData["RechUrl"] = "/MP/BasicUser/Recharge";
+            }
+            var user = BLL.BLLMPUser.GetUserInfoOrAdd(WorkContext.open_id);
+            ViewData["AccountBalance"] = user.AccountBalance.ToString("F2");
             return View();
         }
 
@@ -171,6 +182,26 @@ namespace Universal.Web.Areas.MP.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "修改成功";
             return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 升级VIP 须知
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ToVIP()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 充值
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Recharge(string back)
+        {
+            if (string.IsNullOrWhiteSpace(back)) ViewData["BackUrl"] = "/MP/BasicUser/Index";
+            else ViewData["BackUrl"] = back;
+            return View();
         }
 
     }
