@@ -69,7 +69,10 @@ namespace Universal.Web.Controllers
             var entity = bll.GetModel(p => p.ID == id, "ID ASC");
             if (entity == null) return Content("文字不存在");
             if (!entity.Status) return Content("文章已下架");
-
+            if (!string.IsNullOrWhiteSpace(entity.LinkUrl))
+            {
+                return Redirect(entity.LinkUrl);
+            }
             return View(entity);
         }
 
