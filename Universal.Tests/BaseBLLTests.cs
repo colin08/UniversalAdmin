@@ -75,6 +75,7 @@ namespace Universal.BLL.Tests
             //int total = 0;
             //var ss = BLL.BLLConsultationSettlement.GetPageList(10, 1, 4, 1, out total);
 
+            var ss = BLL.BLLMPDoctor.GetAdvisoryIndex(10, 1, 0, 0, 0, "");
             
             Assert.AreEqual(1, 1);
             //Assert.AreEqual(msg, "ok");

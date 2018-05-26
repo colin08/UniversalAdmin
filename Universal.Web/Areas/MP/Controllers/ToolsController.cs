@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Senparc.Weixin.MP.Containers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Universal.Tools;
@@ -13,6 +15,55 @@ namespace Universal.Web.Areas.MP.Controllers
     /// </summary>
     public class ToolsController : BaseMPController
     {
+
+        /// <summary>
+        /// 下载微信图片
+        /// </summary>
+        /// <param name="mediaId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> DownloadWXImages(string mediaId)
+        {
+            UnifiedResultEntity<string> result = new UnifiedResultEntity<string>();
+
+            var web_site = ConfigHelper.GetSiteModel();
+            var accessToken = AccessTokenContainer.GetAccessToken(web_site.WeChatAppID);
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                await Senparc.Weixin.MP.AdvancedAPIs.MediaApi.GetAsync(accessToken, mediaId, ms);
+                if(ms.Length == 0)
+                {
+                    result.msgbox = "图片下载失败";
+                    return Json(result);
+                }
+
+                //保存到文件
+                string file_folder = "/uploads/mpimg/";
+                string file_io_folder = IOHelper.GetMapPath(file_folder);
+                if (!System.IO.Directory.Exists(file_io_folder)) System.IO.Directory.CreateDirectory(file_io_folder);
+
+                string file_server_path = file_folder + DateTime.Now.ToFileTime() + ".jpg";
+                string file_io_path = IOHelper.GetMapPath(file_server_path);
+
+                using (System.IO.FileStream fs = new System.IO.FileStream(file_io_path, System.IO.FileMode.Create))
+                {
+                    ms.Position = 0;
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = 0;
+                    while ((bytesRead = ms.Read(buffer, 0, buffer.Length)) != 0)
+                    {
+                        fs.Write(buffer, 0, bytesRead);
+                    }
+                    fs.Flush();
+                }
+
+                result.msg = 1;
+                result.msgbox = "ok";
+                result.data = file_server_path;
+                return Json(result);
+            }
+        }
+
         /// <summary>
         /// 上传头像
         /// </summary>

@@ -1,0 +1,328 @@
+﻿
+@{
+    ViewBag.Title = "在线咨询";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+    <link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Assets/mui/css/public.css">
+    <style>
+
+        .head-img { width: 90px !important; height: 90px; }
+
+        .user-info { margin-left: 100px; }
+
+        .user-nickname { height: 32px; display: flex; justify-content: space-between; align-items: center; }
+
+            .user-nickname span { font-size: 18px; overflow: hidden; text-overflow: ellipsis; min-width: 60px; }
+            .user-nickname label { margin-left: 5px; overflow: hidden; text-overflow: ellipsis; }
+
+            .user-nickname img { width: 40px; height: 32px; }
+
+        .user-qb { height: 50px; margin-top: 4px; }
+        .mui-control-item { width: 33% !important; }
+    </style>
+}
+<!-- 头部Style等 END -->
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <h1 class="mui-center mui-title">我的咨询</h1>
+
+        <button type="button" onclick="location.href='index'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right" style="margin-right: 10px;">
+            在线咨询
+        </button>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+
+<div class="mui-content-padded">
+
+    <div id="slider" class="mui-slider mui-fullscreen">
+        <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+            <div class="mui-scroll slidertab">
+                <a class="mui-control-item mui-active" href="#item1mobile">
+                    进行中
+                </a>
+                <a class="mui-control-item" href="#item3mobile">
+                    待支付
+                </a>
+                <a class="mui-control-item" href="#item2mobile">
+                    已关闭
+                </a>
+            </div>
+        </div>
+        <div class="mui-slider-group">
+            <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+                <div id="scroll1" class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+                        <!--
+                    作者：litdev@outlook.com
+                    时间：2018-03-29
+                    描述：pageIndex：当前选项卡加载到第几页数据
+                          dataTotal:接口返回的总数据
+                          template-id: 使用的模板ID
+                          ajaxUrl: 请求URL
+
+                -->
+                        <ul class="mui-table-view" id="ul_doing" pageIndex='1' dataTotal='' data-type="1" template-id="template_doing" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
+
+                            <script type="text/html" id="template_doing">
+                                {{each data}}
+
+                                <li class="mui-table-view-cell">
+                                    <a class="mui-navigate-right li-a" href="/MP/Advisory/AdvisoryInfo?id={{$value.id}}">
+                                        <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                        <div class="user-info">
+                                            <div class="user-nickname">
+                                                <span>{{$value.user_name}}</span>
+                                            </div>
+                                            <div class="user-qb">
+                                                <p class='mui-ellipsis'>最新回复：{{$value.last_reply_time_str}}</p>
+                                                <p class="mui-ellipsis">
+                                                    {{if $value.last_replay_user == 1}}
+                                                    我说
+                                                    {{else}}
+                                                    Ta说
+                                                    {{/if}}
+                                                    :{{$value.last_reply_content}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                {{/each}}
+                            </script>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="item3mobile" class="mui-slider-item mui-control-content">
+                <div class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+                        <ul class="mui-table-view" id="ul_nopay" pageIndex='1' dataTotal='' data-type="3" template-id="template_nopay" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
+
+                            <script type="text/html" id="template_nopay">
+                                {{each data}}
+
+                                <li class="mui-table-view-cell">
+                                    <a class="mui-navigate-right li-a" href="/mp/pay/OrderAdvisory?o={{$value.order_num}}&back=/MP/Advisory/AdvisoryList">
+                                        <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                        <div class="user-info">
+                                            <div class="user-nickname">
+                                                <span>{{$value.user_name}}</span>
+                                            </div>
+                                            <div class="user-qb">
+                                                <p class='mui-ellipsis'>时间：{{$value.last_reply_time_str}}</p>
+                                                <p class="mui-ellipsis">
+                                                    支付后医生才可以回复您
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                {{/each}}
+                            </script>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="item2mobile" class="mui-slider-item mui-control-content">
+                <div class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+                        <ul class="mui-table-view" id="ul_close" pageIndex='1' dataTotal='' data-type="2" template-id="template_close" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
+
+                            <script type="text/html" id="template_close">
+                                {{each data}}
+
+                                <li class="mui-table-view-cell">
+                                    <a class="mui-navigate-right li-a" href="javascript:void(0)">
+                                        <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
+                                        <div class="user-info">
+                                            <div class="user-nickname">
+                                                <span>{{$value.user_name}}</span>
+                                            </div>
+                                            <div class="user-qb">
+                                                <p class='mui-ellipsis'>最新回复：{{$value.last_reply_time_str}}</p>
+                                                <p class="mui-ellipsis">
+                                                    关闭原因:{{$value.close_desc}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                {{/each}}
+                            </script>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+
+
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.pullToRefresh.js"></script>
+    <script src="~/Assets/mui/js/mui.pullToRefresh.material.js"></script>
+    <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+    <script src="~/Assets/mui/js/template-web.js"></script>
+
+    <script>
+        mui.init();
+        (function ($$) {
+            //阻尼系数
+            var deceleration = mui.os.ios ? 0.003 : 0.0009;
+            var pageSize = 5;
+            var count = 0;
+            $$('.mui-scroll-wrapper').scroll({
+                bounce: false,
+                indicators: true, //是否显示滚动条
+                deceleration: deceleration
+            });
+            //滑动数据初始化
+            document.querySelector('.mui-slider').addEventListener('slide', function (event) {
+                var ul = $('.mui-slider').find('.mui-slider-group').find('.mui-slider-item').eq(event.detail.slideNumber).find('.mui-table-view');
+                var pageIndex = ul.attr('pageIndex');
+                if (pageIndex == '1') {
+                    var template_id = ul.attr('template-id');
+                    var ajaxUrl = ul.attr('ajaxUrl');
+                    var ul_id = ul.attr('id');
+                    var d_type = ul.attr('data-type');
+                    var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
+                    Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
+                    $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                }
+            });
+            $$.ready(function () {
+                //循环初始化所有下拉刷新，上拉加载。
+                $$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function (index, pullRefreshEl) {
+                    //加载第一个数据
+                    if (index == '0') {
+                        var ul = this.querySelector('.mui-table-view');
+                        var pageIndex = ul.getAttribute('pageIndex');
+                        var template_id = ul.getAttribute('template-id');
+                        var ul_id = ul.getAttribute('id');
+                        if (pageIndex == '1') {
+                            var ajaxUrl = ul.getAttribute('ajaxUrl');
+                            var ul_id = ul.getAttribute('id');
+                            var d_type = ul.getAttribute('data-type');
+                            var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
+                            Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
+                            $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                        }
+                    }
+
+                    $$(pullRefreshEl).pullToRefresh({
+                        down: {
+                            callback: function () {
+                                //console.log('下拉刷新')
+                                var self = this;
+                                var ul = self.element.querySelector('.mui-table-view');
+                                var pageIndex = 1;//ul.getAttribute('pageIndex');
+                                var template_id = ul.getAttribute('template-id');
+                                var ajaxUrl = ul.getAttribute('ajaxUrl');
+                                var ul_id = ul.getAttribute('id');
+                                var d_type = ul.getAttribute('data-type');
+                                var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
+                                Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize)
+                                self.endPullDownToRefresh();
+                                //如果之前上拉没数据了，这里重新启用上拉刷新
+                                self.refresh(true);
+                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                            }
+                        },
+                        up: {
+                            contentrefresh: '正在加载...',
+                            contentnomore: '没有更多数据了',
+                            callback: function () {
+                                //console.log('上拉加载数据')
+                                var self = this;
+                                var ul = self.element.querySelector('.mui-table-view');
+                                var pageIndex = ul.getAttribute('pageIndex');
+                                var template_id = ul.getAttribute('template-id');
+                                var ajaxUrl = ul.getAttribute('ajaxUrl');
+                                var ul_id = ul.getAttribute('id');
+                                var d_type = ul.getAttribute('data-type');
+                                var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
+                                Ajax_Load_Pullrefresh_Data(false, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize)
+                                var data_total = ul.getAttribute('dataTotal');
+                                var pullSize = data_total / pageSize;
+                                var is_end = ++count > pullSize;
+                                self.endPullUpToRefresh(is_end);
+                                console.log("数据量：" + data_total + ",最大页：" + pullSize + ",是否最大：" + is_end);
+                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                            }
+                        }
+                    });
+                });
+            });
+        })(mui);
+
+
+        function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id, pageIndex, pageSize) {
+            mui.showLoading('数据加载中...', 'div');
+            mui.ajax({
+                url: url,
+                data: params_data,
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                async: false,//同步请求
+                timeout: 6000, //超时时间设置为6秒
+                success: function (res) {
+                    mui.hideLoading();
+                    if (res.msg == 0) {
+                        //提前置为0，不再上拉加载
+                        $('#' + ul_id).attr('dataTotal', 0);
+                        mui.alert(res.msgbox);
+                        return;
+                    }
+                    //取返回的数据
+                    var html = template(template_id, res);
+                    if (reload) {
+                        //覆盖数据
+                        $('#' + ul_id).html(html);
+                    } else {
+                        //追加数据
+                        $('#' + ul_id).append(html);
+                    }
+                    if ($('#' + ul_id) && $('#' + ul_id).attr('pageIndex') != '') {
+                        $('#' + ul_id).attr('pageIndex', parseInt(pageIndex) + 1);
+                    }
+                    if ($('#' + ul_id)) {
+                        $('#' + ul_id).attr('dataTotal', res.total)
+                    }
+                },
+                error: function (xhr, type, errorThrown) {
+                    mui.hideLoading();
+                    //异常处理；
+                    mui.alert("获取数据失败，请检查网络连接");
+                }
+            });
+        };
+
+    </script>
+
+}
+<!-- MUI 页面底部脚本 END -->

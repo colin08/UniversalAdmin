@@ -54,6 +54,14 @@
     <Compile Include="Migrations\201805130753281_frist.Designer.cs">
       <DependentUpon>201805130753281_frist.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805240800382_add_C_pay_type.cs" />
+    <Compile Include="Migrations\201805240800382_add_C_pay_type.Designer.cs">
+      <DependentUpon>201805240800382_add_C_pay_type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805261049255_add_con_pay_time.cs" />
+    <Compile Include="Migrations\201805261049255_add_con_pay_time.Designer.cs">
+      <DependentUpon>201805261049255_add_con_pay_time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Mapping\MPUserDoctorsMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +83,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201805130753281_frist.resx">
       <DependentUpon>201805130753281_frist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805240800382_add_C_pay_type.resx">
+      <DependentUpon>201805240800382_add_C_pay_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805261049255_add_con_pay_time.resx">
+      <DependentUpon>201805261049255_add_con_pay_time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

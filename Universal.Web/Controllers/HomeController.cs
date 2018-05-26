@@ -12,8 +12,9 @@ namespace Universal.Web.Controllers
         public ActionResult Index()
         {
             //TODO 手动设置openid
-            //BLL.BLLMPUserState.SetOpenID("abcd");
+            //BLL.BLLMPUserState.SetOpenID("oHP6jw6WoaY5MyVOBUfuRxSnWHlg");
             //return Redirect("/Admin/Home/");
+            
             return Content("");
             //return View();
         }

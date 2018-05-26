@@ -56,6 +56,7 @@ namespace Universal.BLL
                     db.ConsultationFiles.Add(item);
                 }
                 db.SaveChanges();
+                msg = order_num;
             }
             return true;
         }
@@ -78,6 +79,7 @@ namespace Universal.BLL
                 entity.Status = Entity.ConsultationStatus.已支付;
                 entity.PayWXNumber = wx_num;
                 entity.SettDesc = "等待您的回复";
+                entity.PayTime = DateTime.Now;
                 db.SaveChanges();
             }
             return true;
@@ -193,6 +195,19 @@ namespace Universal.BLL
             return true;
         }
 
+        /// <summary>
+        /// 根据订单号获取咨询实体
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public static Entity.Consultation GetModel(string order_num)
+        {
+            if (string.IsNullOrWhiteSpace(order_num)) return null;
+            using (var db=new DataCore.EFDBContext())
+            {
+                return db.Consultations.Where(p => p.PayNumber == order_num).Include(p=>p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
+            }
+        }
 
         /// <summary>
         /// 获取医生端用户咨询列表
@@ -251,6 +266,51 @@ namespace Universal.BLL
             }
             return result;
         }
+
+        /// <summary>
+        /// 获取用户端我的咨询列表
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="user_id">用户ID</param>
+        /// <param name="type">咨询类别，1：进行中，2：已关闭</param>
+        /// <returns></returns>
+        public static List<Entity.ViewModel.ConsultationUser> GetUserMsgList(int page_size, int page_index, int user_id, int type, out int total)
+        {
+            total = 0;
+            if (page_size <= 1) page_size = 8;
+            if (page_index <= 0) page_index = 1;
+
+            int begin_index = page_size * (page_index - 1) + 1;
+            int end_index = page_size * page_index;
+
+            string strWhere = " where MPUserID = " + user_id.ToString();
+            if (type == 1)
+            {
+                strWhere += " and (Status=2 or Status=3)";
+            }
+            else if(type == 2)
+            {
+                strWhere += " and (Status=4 or Status=5)";
+            }else if(type == 3)
+            {
+                strWhere += " and Status=1";
+            }
+
+            using (var db = new DataCore.EFDBContext())
+            {
+                string strSqlTotal = "select count(1) FROM [dbo].[Consultation]" + strWhere;
+                string strSql = "select * from(select *,ROW_Number() OVER(order by last_reply_time desc) as row from(select C.ID as id, " + type + " as type, U.RealName as user_name, U.Avatar as avatar, D.TouXian as touxian, C.LastReplyTime as last_reply_time, C.LastReplayType as last_replay_user, C.LastReplyContent as last_reply_content, C.CloseDesc as close_desc,C.PayNumber as order_num from(SELECT * FROM[dbo].[Consultation] " + strWhere + ") as C LEFT JOIN MPUser as U on C.MPDoctorID = U.ID LEFT JOIN MPUserDoctors as D on C.MPDoctorID = D.ID) as S) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index.ToString();
+                total = db.Database.SqlQuery<int>(strSqlTotal).FirstOrDefault();
+                var db_list = db.Database.SqlQuery<Entity.ViewModel.ConsultationUser>(strSql).ToList();
+                foreach (var item in db_list)
+                {
+                    item.last_reply_time_str = Tools.WebHelper.DateStringFromNow(item.last_reply_time);
+                }
+                return db_list;
+            }
+        }
+
 
         /// <summary>
         /// 获取医生端用户咨询结算列表

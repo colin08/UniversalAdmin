@@ -1,0 +1,329 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>在线咨询</title>
+    <link href="~/Assets/mui/css/mui.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/zx.css" rel="stylesheet" />
+    <style>
+        .mui-scroll-wrapper { top: 50px !important; }
+    </style>
+</head>
+<body>
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <h1 class="mui-center mui-title">在线咨询</h1>
+        <button type="button" onclick="location.href='AdvisoryList'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right" style="margin-right: 10px;">
+            咨询历史
+        </button>
+    </div>
+    <div class="mui-content" style="padding-top: 54px;">
+        <div id="pullrefresh" class="mui-content mui-scroll-wrapper custom-pullrefresh">
+            <div class="mui-scroll">
+
+                <div class="search-flex">
+                    <div class="mui-input-row mui-search">
+                        <input type="search" id="searchword" onfocus="onSearching()" onblur="onSearchCancel()" maxlength="15" class="mui-input-clear" placeholder="搜索医生、疾病">
+                    </div>
+                    <input type="hidden" id="hid_area" value="0" />
+                    <input type="hidden" id="hid_hospital" value="0" />
+                    <input type="hidden" id="hid_dep" value="0" />
+                    <div class="search-bar">
+                        <a href="#PopoverArea" id="a-area">全国  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAMAAAD+zz7+AAAAJ1BMVEVHcEwnJycoKCgpKSkVFRUpKSkoKCgoKCgpKSkoKCgoKCgpKSkpKSmcT7lUAAAADHRSTlMA77B/DNO/9uYyo45QDa4nAAAANElEQVR42k3JSQ4AIAgEwREVXPj/ew1KwLp1GlVLEAFIU4V1lmGvjaffWnDNmhDaUMZn+judBgIqfMrTRwAAAABJRU5ErkJggg==" /></a>
+                        <a href="#PopoverHospital" id="a-hospital">全部医院  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAMAAAD+zz7+AAAAJ1BMVEVHcEwnJycoKCgpKSkVFRUpKSkoKCgoKCgpKSkoKCgoKCgpKSkpKSmcT7lUAAAADHRSTlMA77B/DNO/9uYyo45QDa4nAAAANElEQVR42k3JSQ4AIAgEwREVXPj/ew1KwLp1GlVLEAFIU4V1lmGvjaffWnDNmhDaUMZn+judBgIqfMrTRwAAAABJRU5ErkJggg==" /></a>
+                        <a href="#PopoverDep" id="a-dep">全部科室  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAMAAAD+zz7+AAAAJ1BMVEVHcEwnJycoKCgpKSkVFRUpKSkoKCgoKCgpKSkoKCgoKCgpKSkpKSmcT7lUAAAADHRSTlMA77B/DNO/9uYyo45QDa4nAAAANElEQVR42k3JSQ4AIAgEwREVXPj/ew1KwLp1GlVLEAFIU4V1lmGvjaffWnDNmhDaUMZn+judBgIqfMrTRwAAAABJRU5ErkJggg==" /></a>
+                    </div>
+                    <div class="d-line"></div>
+                </div>
+
+                <div class="doc-list" id="div_data_list" template-id="template_doc_list" pageIndex="1">
+                    <script type="text/html" id="template_doc_list">
+                        {{each doctors_list}}
+                        <div class="doc-item" data-link="/mp/advisory/Doctor?id={{$value.id}}">
+                            <div class="doc-head">
+                                <div class="doc-left">
+                                    <div class="doc-avatar">
+                                        <img src="{{$value.avatar}}" />
+                                    </div>
+                                    <div class="doc-cont">
+                                        <span>{{$value.name}}</span>
+                                        <label>{{$value.touxian}}，{{$value.dep_names}}</label>
+                                        <label>{{$value.clinic_name}}</label>
+                                    </div>
+                                </div>
+                                <div class="doc-right">
+                                    <div class="doc-status">
+                                        {{if $value.can_adv}}
+                                        <span>￥{{$value.adv_price}}</span>
+                                        <span>在线咨询</span>
+                                        {{else}}
+                                        <span>暂停服务</span>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="doc-foot">
+                                <!--引入子模板-->
+                                {{include 'template_doc_specialt' $value}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </script>
+
+                </div>
+
+                <div id="div_nomore" class="mui-center" style="display:none;text-align:center;margin-top:20px;">没有更多数据了</div>
+            </div>
+        </div>
+    </div>
+    <!-- 医生特长子模板 -->
+    <script type="text/html" id="template_doc_specialt">
+        {{each specialt_list}}
+        <span>{{$value}}</span>
+        {{/each}}
+    </script>
+    <div id="PopoverArea" class="mui-popover">
+        <div class="mui-popover-arrow"></div>
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <ul class="mui-table-view" id="ul_area">
+                    <script type="text/html" id="template_area">
+                        {{each area_list}}
+                        <li class="mui-table-view-cell">
+                            <a href="javascript:void(0)" onclick="search_filter(this)" data-id="{{$value.id}}" data-popo="PopoverArea" data-type="1" data-a-id="a-area">{{$value.title}}</a>
+                        </li>
+                        {{/each}}
+                    </script>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="PopoverHospital" class="mui-popover">
+        <div class="mui-popover-arrow"></div>
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <ul class="mui-table-view" id="ul_hospital">
+                    <script type="text/html" id="template_hospital">
+                        {{each hospital_list}}
+                        <li class="mui-table-view-cell"><a href="javascript:void(0)" onclick="search_filter(this)" data-id="{{$value.id}}" data-popo="PopoverHospital" data-type="2" data-a-id="a-hospital">{{$value.title}}</a></li>
+                        {{/each}}
+                    </script>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="PopoverDep" class="mui-popover">
+        <div class="mui-popover-arrow"></div>
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <ul class="mui-table-view" id="ul_dep">
+                    <script type="text/html" id="template_dep">
+                        {{each dep_list}}
+                        <li class="mui-table-view-cell">
+                            <a href="javascript:void(0)" onclick="search_filter(this)" data-id="{{$value.id}}" data-popo="PopoverDep" data-type="3" data-a-id="a-dep">{{$value.title}}</a>
+                        </li>
+                        {{/each}}
+                    </script>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/template-web.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var search_img_base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAMAAAD+zz7+AAAAJ1BMVEVHcEwnJycoKCgpKSkVFRUpKSkoKCgoKCgpKSkoKCgoKCgpKSkpKSmcT7lUAAAADHRSTlMA77B/DNO/9uYyo45QDa4nAAAANElEQVR42k3JSQ4AIAgEwREVXPj/ew1KwLp1GlVLEAFIU4V1lmGvjaffWnDNmhDaUMZn+judBgIqfMrTRwAAAABJRU5ErkJggg==";
+
+        var pageSize = 6;
+        var totalPage;//总页码
+        mui.init({
+            pullRefresh: {
+                container: '#pullrefresh',
+                up: {
+                    contentrefresh: '正在加载...',
+                    callback: pullupRefresh
+                }
+            }
+        });
+
+        $(function () {
+            Ajax_Load_Pullrefresh_Data(true);
+        })
+
+        mui('.mui-scroll-wrapper').scroll();
+        mui('body').on('shown', '.mui-popover', function (e) {
+            //console.log('shown', e.detail.id);//detail为当前popover元素
+        });
+        mui('body').on('hidden', '.mui-popover', function (e) {
+            //console.log('hidden', e.detail.id);//detail为当前popover元素
+        });
+
+        document.getElementById("searchword").addEventListener('keyup', function () {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            var keyword = document.getElementById("searchword").value;
+            if (e && e.keyCode == 13) {
+                if (keyword != '') {
+                    location.href = "Search?keyword=" + keyword;
+                } else {
+                    //mui.toast('搜索关键字不能为空');
+                    document.getElementById("searchword").blur();
+                }
+            }
+        });
+
+        //搜索区域
+        function search_filter(obj) {
+            var popover_id = obj.getAttribute("data-popo");
+            var d_type = parseInt(obj.getAttribute('data-type'));
+            var d_id = obj.getAttribute("data-id");
+            var d_a_id = obj.getAttribute("data-a-id");
+            var d_text = sub_str(obj.text, 5);
+            mui('#' + popover_id + '').popover('hide');
+            var a_text = d_text + " <img src='" + search_img_base64 + "' />";
+            document.getElementById(d_a_id).innerHTML = a_text;
+            
+            switch (d_type) {
+                case 1:
+                    document.getElementById("hid_area").value = d_id;
+                    break;
+                case 2:
+                    document.getElementById("hid_hospital").value = d_id;
+                    break;
+                case 3:
+                    document.getElementById("hid_dep").value = d_id;
+                    break;
+                default:
+                    break;
+            }
+            Ajax_Load_Pullrefresh_Data(true);
+        }
+
+        /**
+     * 上拉加载具体业务实现
+     */
+        function pullupRefresh() {
+            Ajax_Load_Pullrefresh_Data(false);
+        }
+
+        function Ajax_Load_Pullrefresh_Data(reload) {
+            var ul_page_index = 1;
+            if (!reload) {
+                ul_page_index = parseInt($('#div_data_list').attr('pageIndex'));
+                if (ul_page_index == 0) ul_page_index = 1;
+            }
+            unBindTap();
+            var area_id = document.getElementById("hid_area").value;
+            var hospital_id = document.getElementById("hid_hospital").value;
+            var dep_id = document.getElementById("hid_dep").value;
+            mui.ajax({
+                url: "/MP/Advisory/GetDocData",
+                data: { "page_size": pageSize, "page_index": ul_page_index, "area_id": area_id, "hospital_id": hospital_id, "dep_id": dep_id,"keyword":"" },
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                //async:false,//同步请求
+                timeout: 10000, //超时时间设置为10秒
+                success: function (res) {
+                    mui('#pullrefresh').pullRefresh().refresh(true);
+                    if (res.msg == 0) {
+                        if (reload) {
+                            mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                        }
+                        mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+                        mui.alert("提示", res.msgbox);
+                    }
+                    else {
+                        $('#div_data_list').attr('pageIndex', parseInt(ul_page_index) + 1);
+                        //取返回的数据
+                        var html = template($('#div_data_list').attr('template-id'), res.data);
+                        //最大页数
+                        
+                        var total_data = res.data.doctors_total;
+                        totalPage = total_data % pageSize != 0 ? parseInt(total_data / pageSize) + 1 : total_data / pageSize;
+
+                        //Popo
+                        $("#ul_area").html(template("template_area", res.data));
+                        $("#ul_hospital").html(template("template_hospital", res.data));
+                        $("#ul_dep").html(template("template_dep", res.data));
+
+                        if (total_data == 0) {
+                            $(".mui-pull-bottom-pocket").removeClass("mui-visibility");
+                            $("#div_nomore").show();
+                        } else {
+                            $("#div_nomore").hide();
+                        }
+                        if (reload) {
+                            //覆盖数据
+                            $('#div_data_list').html(html);
+                            mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                            $(".mui-pull-top-pocket").removeClass("mui-visibility");
+                        } else {
+                            //追加数据
+                            $('#div_data_list').append(html);
+                        }
+                        var page_status = totalPage <= ul_page_index;
+                        mui('#pullrefresh').pullRefresh().endPullupToRefresh(page_status);
+
+                        if (page_status) {
+                            $(".mui-pull-bottom-pocket").removeClass("mui-visibility");
+                            $("#div_nomore").show();
+                        } else {
+                            $("#div_nomore").hide();
+                        }
+                        bindTap();
+                    }
+
+                },
+                error: function (xhr, type, errorThrown) {
+                    //异常处理；
+                    mui('#pullrefresh').pullRefresh().refresh(true);
+                    if (reload) {
+                        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    }
+                    mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+                    mui.toast('获取数据失败，请检查网络连接');
+                }
+            });
+        };
+
+        //取消绑定点击事件
+        function unBindTap() {
+            mui('.doc-list').off('tap', 'div');
+        }
+
+        //绑定点击事件
+        function bindTap() {
+            mui('.doc-list').on('tap', 'div', function (e) {
+                var data_link = this.getAttribute("data-link");
+                if (data_link != null) {
+                    location.href = data_link;
+                }
+            });
+        }
+
+        function onSearching() {
+            document.getElementsByClassName('search-bar')[0].style.display = "none";
+            document.getElementsByClassName('d-line')[0].style.display = "none";
+            document.getElementsByClassName('doc-list')[0].style.display = "none";
+        }
+        function onSearchCancel() {
+            document.getElementsByClassName('search-bar')[0].style.display = "";
+            document.getElementsByClassName('d-line')[0].style.display = "";
+            document.getElementsByClassName('doc-list')[0].style.display = "";
+        }
+
+        function sub_str(text, length) {
+            if (text.length > length) {
+                return text.substring(0, length) + '..';
+            } else {
+                return text;
+            }
+        }
+    </script>
+</body>
+</html>

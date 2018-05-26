@@ -16,6 +16,7 @@ namespace Universal.Entity
             this.AddTime = DateTime.Now;
             this.CanAdvisory = true;
             this.AdvisoryPrice = 99;
+            this.TouXian = "医师";
         }
 
         /// <summary>

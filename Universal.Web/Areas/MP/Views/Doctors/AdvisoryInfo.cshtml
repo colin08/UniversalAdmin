@@ -147,7 +147,7 @@
 
     </ul>
 
-    <button type="button" onclick="alert('功能正在开发')" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">回复</button>
+    <button type="button" onclick="location.href='/MP/Doctors/AdvisoryReply?id=@Model.main_id'" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">回复</button>
 
 </div>
 
@@ -230,6 +230,12 @@
             if (swiperStatus) {
                 e.preventDefault();
             }
+        })
+
+        //滚动到底部
+        $(function () {
+            var h = $(document).height() - $(window).height();
+            $(document).scrollTop(h);
         })
     </script>
 

@@ -122,26 +122,25 @@ namespace Universal.Web.Areas.Admin.Controllers
                 //添加
                 if (entity.ID == 0)
                 {
-                    
-
+                    return PromptView("/admin/MPUser", "404", "Not Found", "不允许手动添加用户", 5);
                 }
                 else //修改
                 {
-                    var user = bll.GetModel(p => p.ID == entity.ID, null);
-                    user.Brithday = entity.Brithday;
-                    user.IDCardNumber = entity.IDCardNumber;
-                    user.IsFullInfo = true;
-                    user.RealName = entity.RealName;
-                    user.Telphone = entity.Telphone;
-                    user.Weight = entity.Weight;
-                    user.Gender = entity.Gender;
-                    user.Status = entity.Status;
-                    user.Avatar = entity.Avatar;
-                    user.Identity = entity.Identity;
-                    bll.Modify(user);
+                    
+                    var status = BLL.BLLMPUser.ModifyUser(entity);
+                    if (status)
+                    {
+                        ////清除用户Session
+                        //Session.Contents.Remove("SESSION-USERINFO");
+                        return PromptView("/admin/MPUser", "OK", "Success", "修改成功", 5);
+                    }
+                    else
+                    {
+                        return PromptView("/admin/MPUser", "404", "Not Found", "修改失败", 5);
+                    }
                 }
 
-                return PromptView("/admin/MPUser", "OK", "Success", "操作成功", 5);
+                
             }
             else
                 return View(entity);

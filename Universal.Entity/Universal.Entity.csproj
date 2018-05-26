@@ -88,8 +88,10 @@
     <Compile Include="SysRoute.cs" />
     <Compile Include="SysUser.cs" />
     <Compile Include="VerificationCode.cs" />
+    <Compile Include="ViewModel\AdvisoryIndex.cs" />
     <Compile Include="ViewModel\ConsultationDetail.cs" />
     <Compile Include="ViewModel\ConsultationDoctor.cs" />
+    <Compile Include="ViewModel\DoctorSearch.cs" />
     <Compile Include="ViewModel\MPUserDoctors.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\NewsTags.cs" />

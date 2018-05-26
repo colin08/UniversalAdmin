@@ -173,5 +173,17 @@ namespace Universal.Entity.ViewModel
         /// </summary>
         public decimal AdvisoryPrice { get; set; }
 
+        /// <summary>
+        /// 获取价格，如果小数大于0，则返回小数，否则返回整形
+        /// </summary>
+        public string GetPrice
+        {
+            get
+            {
+                if ((AdvisoryPrice - (int)AdvisoryPrice) == 0) return ((int)AdvisoryPrice).ToString();
+                else return AdvisoryPrice.ToString("F2");
+            }
+        }
+
     }
 }

@@ -21,7 +21,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static decimal GetAccountBalance(int id)
         {
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.MPUsers.Where(p => p.ID == id).AsNoTracking().FirstOrDefault();
                 if (entity != null) return entity.AccountBalance;
@@ -37,9 +37,9 @@ namespace Universal.BLL
         public static Entity.MPUser GetUserInfoOrAdd(string open_id)
         {
             if (string.IsNullOrWhiteSpace(open_id)) return null;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
-                if(!db.MPUsers.Any(p=>p.OpenID == open_id))
+                if (!db.MPUsers.Any(p => p.OpenID == open_id))
                 {
                     //添加用户
                     Entity.MPUser entity_add = new Entity.MPUser();
@@ -47,7 +47,7 @@ namespace Universal.BLL
                     db.MPUsers.Add(entity_add);
                     db.SaveChanges();
                 }
-                return db.MPUsers.Where(p => p.OpenID == open_id).Include(p => p.DoctorsInfo).AsNoTracking().FirstOrDefault();                
+                return db.MPUsers.Where(p => p.OpenID == open_id).Include(p => p.DoctorsInfo).AsNoTracking().FirstOrDefault();
             }
         }
 
@@ -59,10 +59,10 @@ namespace Universal.BLL
         /// <param name="avatar"></param>
         /// <param name="sex"></param>
         /// <returns></returns>
-        public static Entity.MPUser AddUserInfo(string open_id,string nick_name,string avatar,int sex)
+        public static Entity.MPUser AddUserInfo(string open_id, string nick_name, string avatar, int sex)
         {
             if (string.IsNullOrWhiteSpace(open_id)) return null;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity_user = db.MPUsers.Where(p => p.OpenID == open_id).FirstOrDefault();
                 if (entity_user != null) return entity_user;
@@ -77,7 +77,55 @@ namespace Universal.BLL
             }
         }
 
-        
+
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool ModifyUser(Entity.MPUser model)
+        {
+            if (model == null) return false;
+            if (model.ID <= 0) return false;
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity = db.MPUsers.Where(p => p.ID == model.ID).Include(p => p.DoctorsInfo).FirstOrDefault();
+                if (entity == null) return false;
+                var old_iden = entity.Identity;
+                entity.Brithday = model.Brithday;
+                entity.IDCardNumber = model.IDCardNumber;
+                entity.IsFullInfo = true;
+                entity.RealName = model.RealName;
+                entity.Telphone = model.Telphone;
+                entity.Weight = model.Weight;
+                entity.Gender = model.Gender;
+                entity.Status = model.Status;
+                entity.Avatar = model.Avatar;
+                entity.Identity = model.Identity;
+                if (entity.Identity == Entity.MPUserIdentity.Doctors)
+                {
+                    if (entity.DoctorsInfo == null)
+                    {
+                        entity.DoctorsInfo = new Entity.MPUserDoctors();
+                    }
+                }
+                try
+                {
+                    db.SaveChanges();
+
+                    return true;
+
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+                {
+                    System.Diagnostics.Trace.WriteLine(ex.Message);
+                    return false;
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// 判断用户是否完善了资料
         /// </summary>
@@ -86,7 +134,7 @@ namespace Universal.BLL
         public static bool IsFullInfo(string open_id)
         {
             if (string.IsNullOrWhiteSpace(open_id)) return false;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity = db.MPUsers.Where(p => p.OpenID == open_id).AsNoTracking().FirstOrDefault();
                 if (entity == null) return false;
@@ -102,10 +150,10 @@ namespace Universal.BLL
         /// <param name="order_num"></param>
         /// <param name="mad_id">返回账户资金变动记录ID</param>
         /// <returns></returns>
-        public static bool PayMedicalUseBalance(int user_id,string order_num,out int mad_id)
+        public static bool PayMedicalUseBalance(int user_id, string order_num, out int mad_id)
         {
             mad_id = 0;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 var entity_user = db.MPUsers.Find(user_id);
                 if (entity_user == null) return false;
@@ -143,6 +191,56 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 使用账户余额支付在线咨询
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <param name="order_num"></param>
+        /// <param name="mad_id">返回账户资金变动记录ID</param>
+        /// <returns></returns>
+        public static bool PayAdvisoryUseBalance(int user_id, string order_num, out int mad_id)
+        {
+            mad_id = 0;
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity_user = db.MPUsers.Find(user_id);
+                if (entity_user == null) return false;
+                if (!entity_user.Status) return false;
+                var entity_order = db.Consultations.Where(p => p.PayNumber == order_num).FirstOrDefault();
+                if (entity_order == null) return false;
+                if (entity_order.Status != Entity.ConsultationStatus.待支付) return false;
+
+                if (entity_user.AccountBalance < entity_order.PayMoney) return false;
+
+                entity_user.AccountBalance = entity_user.AccountBalance - entity_order.PayMoney;
+                entity_order.Status = Entity.ConsultationStatus.已支付;
+                entity_order.PayType = Entity.OrderPayType.账户余额;
+                entity_order.PayWXNumber = "";
+                entity_order.PayTime = DateTime.Now;
+                entity_order.SettDesc = "等待您的回复";
+
+                var entity_detail = new Entity.MPUserAmountDetails();
+                entity_detail.Amount = entity_order.PayMoney;
+                entity_detail.MPUserID = user_id;
+                entity_detail.Title = "支付在线咨询";
+                entity_detail.Type = Entity.MPUserAmountDetailsType.Less;
+                db.MPUserAmountDetails.Add(entity_detail);
+                try
+                {
+                    db.SaveChanges();
+                    mad_id = entity_detail.ID;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine("使用账户余额支付在线咨询出错：" + ex.Message);
+                    return false;
+                }
+
+            }
+            return true;
+        }
+
+
+        /// <summary>
         /// 批量禁用用户
         /// </summary>
         /// <param name="ids"></param>
@@ -150,7 +248,7 @@ namespace Universal.BLL
         public static bool DisEnbleUser(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids)) return false;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 string strSql = "update MPUser set Status=0 where id in(" + ids + ")";
                 db.Database.ExecuteSqlCommand(strSql);

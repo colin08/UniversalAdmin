@@ -64,6 +64,7 @@ namespace Universal.Entity
             this.CloseDesc = "";
             this.Settlement = ConsultaionSett.不可结算;
             this.SettDesc = "未支付";
+            this.PayType = OrderPayType.微信支付;
         }
 
         public int ID { get; set; }
@@ -221,6 +222,11 @@ namespace Universal.Entity
         public ConsultaionSett Settlement { get; set; }
 
         /// <summary>
+        /// 支付方式
+        /// </summary>
+        public OrderPayType PayType { get; set; }
+
+        /// <summary>
         /// 获取结算状态文本
         /// </summary>
         [NotMapped]
@@ -277,6 +283,11 @@ namespace Universal.Entity
         /// 添加时间
         /// </summary>
         public DateTime AddTime { get; set; }
+
+        /// <summary>
+        /// 支付时间
+        /// </summary>
+        public DateTime? PayTime { get; set; }
 
         /// <summary>
         /// 最后回复者的身份

@@ -291,6 +291,62 @@ namespace Universal.Web.Areas.MP.Controllers
             return View(entity);
         }
 
+
+        /// <summary>
+        /// 继续回复
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AdvisoryReply(int id)
+        {
+            ViewData["ID"] = id;
+            ViewData["BackUrl"] = "/MP/Doctors/AdvisoryInfo?id=" + id.ToString();
+            var jssdkUiPackage = Senparc.Weixin.MP.Helpers.JSSDKHelper.GetJsSdkUiPackage(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatAppSecret, Request.Url.AbsoluteUri);
+
+            return View(jssdkUiPackage);
+        }
+
+        /// <summary>
+        /// 添加回复json
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult AdvisoryReplyJson(int id, string remark, string media_pic_ids, string voice_id)
+        {
+            List<Entity.ConsultationListFile> file_list = new List<Entity.ConsultationListFile>();
+            List<string> image_list = new List<string>();
+            if (!string.IsNullOrWhiteSpace(media_pic_ids))
+            {
+                foreach (var item in media_pic_ids.Split(','))
+                {
+                    if (string.IsNullOrWhiteSpace(item)) continue;
+                    var img_path = MPHelper.MediaApi.DownloadImage(item);
+                    if (!string.IsNullOrWhiteSpace(img_path))
+                    {
+                        file_list.Add(new Entity.ConsultationListFile(Entity.ConsultationFileType.Image, img_path));
+                    }
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(voice_id))
+            {
+                var voice_path = MPHelper.MediaApi.DownloadVoice(voice_id);
+                if (!string.IsNullOrWhiteSpace(voice_path)) file_list.Add(new Entity.ConsultationListFile(Entity.ConsultationFileType.Voice, voice_path));
+            }
+
+            string msg = "";
+            var status = BLL.BLLConsultation.AddReplay(id, remark, Entity.ReplayUserType.Doctor, file_list, out msg);
+            if (!status)
+            {
+                WorkContext.AjaxStringEntity.msgbox = msg;
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "OK";
+            WorkContext.AjaxStringEntity.data = msg;
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+
         /// <summary>
         /// 咨询结算
         /// </summary>

@@ -59,6 +59,7 @@ namespace Universal.Web.Areas.MP.Controllers
         #endregion
 
 
+        #region 体检订单支付
         /// <summary>
         /// 体检套餐支付
         /// </summary>
@@ -136,7 +137,7 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <param name="o"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult PayUseBalance(string o)
+        public JsonResult PayMedicalUseBalance(string o)
         {
             if (string.IsNullOrWhiteSpace(o))
             {
@@ -145,7 +146,7 @@ namespace Universal.Web.Areas.MP.Controllers
             }
             int mad_id = 0;
             var status = BLL.BLLMPUser.PayMedicalUseBalance(WorkContext.UserInfo.ID, o, out mad_id);
-            if(!status)
+            if (!status)
             {
                 WorkContext.AjaxStringEntity.msgbox = "支付失败";
                 return Json(WorkContext.AjaxStringEntity);
@@ -179,6 +180,118 @@ namespace Universal.Web.Areas.MP.Controllers
             return View();
         }
 
+        #endregion
+
+        #region 在线咨询支付
+        /// <summary>
+        /// 体检套餐支付
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult OrderAdvisory(string o, string back)
+        {
+            string back_url = "";
+            if (!string.IsNullOrWhiteSpace(back))
+            {
+                back_url = back;
+            }
+            else
+            {
+                back_url = "/MP/Advisory/Index";
+            }
+            if (string.IsNullOrWhiteSpace(o)) return PromptView(back, "非法参数");
+            BLL.BaseBLL<Entity.Consultation> bll_order = new BLL.BaseBLL<Entity.Consultation>();
+            var entity_order = bll_order.GetModel(p => p.PayNumber == o, "ID DESC");
+            if (entity_order == null) return PromptView(back, "咨询不存在");
+            if (entity_order.MPUserID != WorkContext.UserInfo.ID) return PromptView(back, "String");
+            if (entity_order.Status != Entity.ConsultationStatus.待支付) return PromptView(back, "该咨询已不是待支付状态");
+            ViewData["BackUrl"] = back_url;
+            ViewData["NextUrl"] = "/MP/Pay/StatusOrderAdvisory";
+            ViewData["OrderNum"] = o;
+
+            //检查账户余额
+            var account_balance = BLL.BLLMPUser.GetAccountBalance(WorkContext.UserInfo.ID);
+            ViewData["AccountBalance"] = account_balance > 0 ? account_balance.ToString("F2") : "0";
+            ViewData["CanYue"] = account_balance >= entity_order.PayMoney ? 1 : 0;
+
+            var timeStamp = TenPayV3Util.GetTimestamp();
+            var nonceStr = TenPayV3Util.GetNoncestr();
+            var body = "在线咨询";
+            var price = (int)(entity_order.PayMoney * 100);
+            string notify_url = WorkContext.WebSite.SiteUrl + "/PayNotify/WeChatPay";
+            string attach = ((int)MPHelper.PayAttach.咨询支付).ToString();//额外自定义参数
+            string ip = Request.UserHostAddress;
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WorkContext.WebSite.WeChatAppID,
+                WorkContext.WebSite.WeChatPayMchid,
+                body, o, price, ip, notify_url, TenPayV3Type.JSAPI, WorkContext.open_id, WorkContext.WebSite.WeChatPayPayKey, nonceStr,
+                null, null, null, null, attach);
+
+            var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
+            var package = string.Format("prepay_id={0}", result.prepay_id);
+            ViewData["product"] = "在线咨询";
+            ViewData["price"] = entity_order.PayMoney.ToString("F2");
+            ViewData["appId"] = WorkContext.WebSite.WeChatAppID;
+            ViewData["timeStamp"] = timeStamp;
+            ViewData["nonceStr"] = nonceStr;
+            ViewData["package"] = package;
+            ViewData["paySign"] = TenPayV3.GetJsPaySign(WorkContext.WebSite.WeChatAppID, timeStamp, nonceStr, package, WorkContext.WebSite.WeChatPayPayKey);
+            //订单号放到Session里
+            Session["TEMPORDERNUMAdvisory"] = o;
+            return View();
+        }
+
+        /// <summary>
+        /// 使用账户余额进行支付在线咨询
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult PayAdvisorUseBalance(string o)
+        {
+            if (string.IsNullOrWhiteSpace(o))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            int mad_id = 0;
+            var status = BLL.BLLMPUser.PayAdvisoryUseBalance(WorkContext.UserInfo.ID, o, out mad_id);
+            if (!status)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "支付失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            //发送通知
+            string link_url = WorkContext.WebSite.SiteUrl + "/MP/Advisory/Index";
+            //用户余额变动提醒
+            MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);
+            //医生-用户，发送提醒
+            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsOK(o);
+            WorkContext.AjaxStringEntity.msg = 1;
+            WorkContext.AjaxStringEntity.msgbox = "ok";
+            return Json(WorkContext.AjaxStringEntity);
+        }
+
+        /// <summary>
+        /// 检查支付订单是否支付成功
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult StatusOrderAdvisory()
+        {
+            string order_num = Session["TEMPORDERNUMAdvisory"] as string;
+            BLL.BaseBLL<Entity.Consultation> bll_order = new BLL.BaseBLL<Entity.Consultation>();
+            var entity_order = bll_order.GetModel(p => p.PayNumber == order_num, "ID DESC");
+            if (entity_order == null) return PromptView("/MP/Advisory/Index", "咨询不存在");
+            if (entity_order.MPUserID != WorkContext.UserInfo.ID) return PromptView("/MP/Advisory/Index", "该咨询不属于您");
+            ViewData["Price"] = entity_order.PayMoney.ToString("F2");
+            if (entity_order.Status ==  Entity.ConsultationStatus.已支付)
+            {
+                ViewData["Status"] = 1;
+            }
+            else
+                ViewData["Status"] = 0;
+            return View();
+        }
+
+        #endregion
 
         /// <summary>
         /// 账户充值

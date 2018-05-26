@@ -617,6 +617,7 @@
     <Content Include="Assets\mui\css\mui.picker.min.css" />
     <Content Include="Assets\mui\css\public.css" />
     <Content Include="Assets\mui\css\swiper-4.2.0.min.css" />
+    <Content Include="Assets\mui\css\zx.css" />
     <Content Include="Assets\mui\img\default-avatar.jpg" />
     <Content Include="Assets\mui\img\demo\1.png" />
     <Content Include="Assets\mui\img\demo\2.png" />
@@ -658,6 +659,7 @@
     <Content Include="bin\Universal.Web.Framework.dll" />
     <Content Include="bin\Universal.Web.XML" />
     <Content Include="favicon.ico" />
+    <Content Include="ffmpeg.exe" />
     <Content Include="Global.asax" />
     <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
     <Content Include="Web.config">
@@ -692,6 +694,17 @@
     <Content Include="Areas\MP\Views\BasicUser\ToVIP.cshtml" />
     <Content Include="Areas\MP\Views\Pay\StatusRecharge.cshtml" />
     <Content Include="Areas\MP\Views\Pay\Recharge.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\Index.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\Search.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\Doctor.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\ToAd.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\FristAd.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\AdvisoryList.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\AdvisoryInfo.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\OrderAdvisory.cshtml" />
+    <Content Include="Areas\MP\Views\Pay\StatusOrderAdvisory.cshtml" />
+    <Content Include="Areas\MP\Views\Advisory\Add.cshtml" />
+    <Content Include="Areas\MP\Views\Doctors\AdvisoryReply.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -699,6 +712,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\MPHelper\MediaApi.cs" />
     <Compile Include="App_Start\MPHelper\TemplateMessage.cs" />
     <Compile Include="App_Start\MPHelper\WXPay.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -785,6 +799,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\MP\Controllers\AdvisoryController.cs" />
     <Compile Include="Areas\MP\Controllers\AmountDetailsController.cs" />
     <Compile Include="Areas\MP\Controllers\AuthController.cs" />
     <Compile Include="Areas\MP\Controllers\BasicUserController.cs" />

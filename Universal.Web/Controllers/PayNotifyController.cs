@@ -71,7 +71,7 @@ namespace Universal.Web.Controllers
                         ExcRecharge(out_trade_no, transaction_id, open_id);
                         break;
                     case MPHelper.PayAttach.咨询支付:
-                        //对订单执行操作
+                        ExcAdvisory(out_trade_no, transaction_id, open_id);
                         break;
                     case MPHelper.PayAttach.体检套餐:
                         ExcMedicalOrder(out_trade_no, transaction_id, open_id);
@@ -120,6 +120,26 @@ namespace Universal.Web.Controllers
             entity_order.OpenID = open_id;
             bll_order.Modify(entity_order, "Status", "PayTime", "OrderNumWX", "OpenID");
         }
+
+
+        /// <summary>
+        /// 处理在线咨询
+        /// <param name="order_num">订单号</param>
+        /// </summary>
+        private void ExcAdvisory(string order_num, string wx_order, string open_id)
+        {
+            string msg = "";
+            var status = BLL.BLLConsultation.SetPayOK(order_num, wx_order, out msg);
+            if (!status)
+            {
+                System.Diagnostics.Trace.WriteLine("回调中设置在线咨询为已支付失败：" + msg);
+            }
+            else
+            {
+                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsOK(order_num);
+            }
+        }
+
 
         #endregion
 

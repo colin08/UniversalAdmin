@@ -1,0 +1,85 @@
+﻿@model Universal.Entity.ViewModel.DoctorSearch
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>在线咨询</title>
+    <link href="~/Assets/mui/css/mui.css" rel="stylesheet" />
+    <link href="~/Assets/mui/css/zx.css" rel="stylesheet" />
+    <style>
+        .doc-item { margin: 0 !important; padding-bottom: 0; }
+        .doc-info-head { margin-top: 50px; }
+
+        .doc-news { background-color: white; }
+            .doc-news label { color: #000; padding: 15px; display: block; width: 100%; height: 50px; border-bottom: 1px solid #E6E6E6; }
+            .doc-news p { padding: 15px; font-size: 16px; color: rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body>
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='@ViewData["BackUrl"]'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">医生主页</h1>
+        <button type="button" onclick="location.href='AdvisoryList'" class="mui-right mui-btn  mui-btn-link mui-btn-nav mui-pull-right" style="margin-right: 10px;">
+            咨询历史
+        </button>
+    </div>
+
+    <div class="doc-info-head">
+        <div class="doc-item">
+            <div class="doc-head">
+                <div class="doc-left">
+                    <div class="doc-avatar">
+                        <img src="@Model.avatar" />
+                    </div>
+                    <div class="doc-cont">
+                        <span>@Model.name</span>
+                        <label>@Model.touxian，@Model.dep_names</label>
+                        <label>@Model.clinic_name</label>
+                    </div>
+                </div>
+                <div class="doc-right">
+                </div>
+            </div>
+            <div class="doc-foot">
+                @foreach (var item in Model.specialt_list)
+                {
+                    <span>@item</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <ul class="mui-table-view mui-table-view-chevron" style="margin: 10px 0;">
+        <li class="mui-table-view-cell">
+            @if (Model.can_adv)
+            {
+                <a class="mui-navigate-right" href="@ViewData["ToLink"]">
+                    在线咨询
+                   <span class="mui-pull-right">￥@Model.GetPrice/次</span>
+                </a>
+            }
+            else
+            {
+                <a class="mui-navigate-right">
+                在线咨询
+                <span class="mui-pull-right">暂停服务</span>
+            </a>
+            }
+        </li>
+    </ul>
+
+    <div class="doc-news">
+        <label>医生简介</label>
+        <p>@Model.show_me</p>
+    </div>
+
+</body>
+</html>

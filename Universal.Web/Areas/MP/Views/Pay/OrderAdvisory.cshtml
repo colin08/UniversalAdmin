@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewBag.Title = "在线咨询";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{
+
+<link href="~/Assets/mui/css/mui.ext.loading.css" rel="stylesheet" />
+<style>
+    h4 { color: #F5A623; text-align: center; }
+    .mui-radio img { position: absolute; top: 4px; right: 20px; display: inline-block; width: 30px; height: 30px; border: 0; outline: 0 !important; background-color: transparent; -webkit-appearance: none; }
+</style>
+}
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+
+    <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" onclick="javascript:location.href='@Html.Raw(ViewData["BackUrl"])'" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+            <span class="mui-icon mui-icon-left-nav"></span>
+        </button>
+        <h1 class="mui-center mui-title">在线咨询-支付</h1>
+    </div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+<!-- Body -->
+<div class="mui-content-padded">
+    <div class="mui-card">
+        <div class="mui-card-header">@ViewData["product"] </div>
+        <div class="mui-card-content">
+            <div class="mui-card-content-inner">
+                <h4>￥ @ViewData["price"]</h4>
+            </div>
+        </div>
+        <div class="mui-card-footer">订单号:@ViewData["OrderNum"]</div>
+    </div>
+    <p>支付方式：</p>
+    <div class="mui-card">
+        <div class="mui-card-content">
+            <div class="mui-card-content-inner">
+                <div class="mui-input-row mui-radio mui-left">
+                    <label for="rd_yue">账户余额 <span style="font-size: 12px; color: rgba(0,0,0,0.5);">可用余额:@ViewData["AccountBalance"]</span></label>
+                    <input name="rd_pay" id="rd_yue" value="2" type="radio"
+                           @if (ViewData["CanYue"].ToString() == "0") { @: disabled
+                           }>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mui-card">
+        <div class="mui-card-content">
+            <div class="mui-card-content-inner">
+                <div class="mui-input-row mui-radio mui-left">
+                    <label for="rd_online">在线微信支付</label>
+                    <input name="rd_pay" value="1" id="rd_online" type="radio" checked>
+                    <img src="~/Assets/mui/img/wxpay.png" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <button type="button" id="btn_save" data-loading-text="支付中.." data-loading-icon="mui-spinner mui-spinner-custom" class="mui-btn mui-btn-warning mui-btn-block" style="margin-top: 20px; display:block;">立即支付</button>
+</div>
+<!-- Body END -->
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+    <div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+        <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+    </div>
+}
+<!-- MUI 底部导航栏设置 END -->
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+    <script src="~/Assets/mui/js/mui.min.js"></script>
+    <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
+    <script type="text/javascript">
+        var order_num = "@ViewData["OrderNum"]";
+        (function($$) {
+			$$.init();
+			$$("#btn_save")[0].addEventListener('tap', function() {
+                var btn = this;
+                var pay_type = getRadioRes('rd_pay');
+                if (pay_type == null) { mui.toast('请选择支付方式'); return; }
+
+                if (pay_type == 1) {
+                    //微信支付
+                    $$(btn).button('loading');
+				    WeixinJSBridge.invoke('getBrandWCPayRequest', {
+				        "appId": "@ViewData["appId"]", //公众号名称，由商户传入
+                        "timeStamp": "@ViewData["timeStamp"]", //时间戳
+                        "nonceStr": "@ViewData["nonceStr"]", //随机串
+                        "package": "@Html.Raw(ViewData["package"])",//扩展包
+                        "signType": "MD5", //微信签名方式:MD5
+                        "paySign": "@ViewData["paySign"]" //微信签名
+				    }, function (res) {
+				        $$(btn).button('reset');
+                        if (res.err_msg == "get_brand_wcpay_request:ok") {
+                            mui.toast("支付成功,请稍等...");
+			                setTimeout(function () {
+			                    setTimeout(function () {
+			                        location.href = '@Html.Raw(ViewData["NextUrl"])';
+			                    }.bind(btn), 3000);
+			                })
+			            }
+			        });
+                } else {
+                    $$.showLoading("支付中...", "div");
+                    mui.ajax('/mp/Pay/PayAdvisorUseBalance', {
+                        data: {
+                            o: order_num,
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        timeout: 10000,
+                        headers: { 'Content-Type': 'application/json' },
+                        success: function (data) {
+                            $$.hideLoading();
+                            if (data.msg == 1) {
+                                $$.toast("支付成功,请稍等...");
+                                setTimeout(function () {
+                                    setTimeout(function () {
+                                        location.href = '@Html.Raw(ViewData["NextUrl"])';
+                                    }.bind(btn), 1000);
+                                })
+                            } else {
+                                mui.alert('错误消息', data.msgbox);
+                            }
+                        },
+                        error: function (xhr, type, errorThrown) {
+                            $$.hideLoading();
+                            //异常处理；
+                            mui.alert('网络异常', "请检查联网是否通畅");
+                        }
+                    });
+                }
+			});
+		})(mui);
+
+        function getRadioRes(name) {
+            var rdsObj = document.getElementsByName(name);
+            var checkVal = null;
+            for (i = 0; i < rdsObj.length; i++) {
+                if (rdsObj[i].checked) { checkVal = rdsObj[i].value; }
+            }
+            return checkVal;
+        }
+
+    </script>
+
+
+}
+<!-- MUI 页面底部脚本 END -->

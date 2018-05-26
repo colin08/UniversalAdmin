@@ -79,4 +79,63 @@ namespace Universal.Entity.ViewModel
         public string sett_desc { get; set; }
 
     }
+
+    /// <summary>
+    /// 用户端我的咨询列表
+    /// </summary>
+    public class ConsultationUser
+    {
+        public int id { get; set; }
+
+
+        /// <summary>
+        /// 订单号
+        /// </summary>
+        public string order_num { get; set; }
+
+        /// <summary>
+        /// 1：进行中，2:已关闭
+        /// </summary>
+        public int type { get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string user_name { get; set; }
+
+        /// <summary>
+        /// 头衔
+        /// </summary>
+        public string touxian { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string avatar { get; set; }
+
+        /// <summary>
+        /// 最后回复时间
+        /// </summary>
+        public DateTime last_reply_time { get; set; }
+
+        /// <summary>
+        /// 最后回复时间，多少分钟前
+        /// </summary>
+        public string last_reply_time_str { get; set; }
+
+        /// <summary>
+        /// 最后回复用户类别
+        /// </summary>
+        public ReplayUserType last_replay_user { get; set; }
+
+        /// <summary>
+        /// 最后回复内容
+        /// </summary>
+        public string last_reply_content { get; set; }
+
+        /// <summary>
+        /// 关闭原因
+        /// </summary>
+        public string close_desc { get; set; }
+    }
 }

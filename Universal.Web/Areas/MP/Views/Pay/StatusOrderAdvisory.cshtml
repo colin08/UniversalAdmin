@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "在线咨询";
+}
+
+<!-- 头部Style等 -->
+@section htmlhead{   
+<style>
+    .status-text { margin-top: 10px; display: flex; justify-content: center; flex-direction: column; align-items: center; line-height: 60px; }
+
+        .status-text p { font-size: 24px; }
+
+    .money { color: #F5A623; }
+</style>
+
+
+
+}
+<!-- 头部Style等 END -->
+
+
+<!-- MUI 头部导航栏设置 -->
+@section muiheader{
+<div class="mui-navbar-inner mui-bar mui-bar-nav">
+    <h1 class="mui-center mui-title">支付结果</h1>
+</div>
+
+}
+<!-- MUI 头部导航栏设置 END -->
+
+
+<!-- Body -->
+
+<div class="mui-content-padded">
+    @if(ViewData["Status"].ToString()=="1")
+    {
+        <div class="status-text">
+            <img src="~/Assets/mui/img/icon-ok-big.png" style="height: 100px;width: 100px;" />
+            <p>支付成功<span class="money">￥@ViewData["Price"]</span> 元</p>
+        </div>
+        <p style="text-align: center;" onclick="location.href = '/MP/Advisory/AdvisoryList'"><span>3</span>秒后自动前往我的咨询列表</p>
+        <script>
+            window.onload = function () {
+                setTimeout(function () {
+                    location.href = '/MP/Advisory/AdvisoryList';
+                }, 3000);
+            }
+        </script>
+    }
+    else
+    {
+        <div class="status-text">
+            <img src="~/Assets/mui/img/icon-gth-big.png" style="height: 100px;width: 100px;" />
+            <p>支付未成功</p>
+        </div>
+        <p style="text-align: center;" onclick="window.location.reload();">点击刷新获取最新支付状态</p>
+    }
+</div>
+
+
+<!-- Body END -->
+
+
+<!-- MUI 底部导航栏设置 -->
+@section muifooter{
+<div class="mui-bar-footer mui-text-center" style="position: fixed; width: 100%;">
+    <p>@Html.Partial("~/Areas/MP/Views/Shared/_Copyright.cshtml")</p>
+</div>
+
+}
+<!-- MUI 底部导航栏设置 END -->
+
+
+
+<!-- MUI 页面底部脚本 -->
+@section htmlfoot{
+
+
+}
+<!-- MUI 页面底部脚本 END -->
+
