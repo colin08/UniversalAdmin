@@ -14,11 +14,17 @@
             .radio_inline label { width: 20%; padding-left: 40px; padding-right: 40px; }
 
             .radio_inline input[type=radio] { width: 15%; right: auto; }
-        textarea.noscrollbars { overflow: hidden; }
+
 
         .mui-input-row .mui-btn { width: 26%; box-sizing: border-box; right: 15px; padding: 8px 0px; }
         .mui-btn-outlined { margin-top: 3px; color: #00B4FF; border: 1px solid #00B4FF; }
         .disenb { border: 1px solid #c5d2d8; color: #c5d2d8; }
+
+        .custom-row-br { height: auto !important; padding: 10px; }
+            .custom-row-br textarea { width: 100% !important; overflow: hidden; padding-left: inherit !important; font-size: 16px; line-height: 22px; }
+            .custom-row-br label { padding: 11px 6px; }
+        #info { color: rgba(0,0,0,0.7); }
+
     </style>
 
 }
@@ -98,9 +104,9 @@
                 <input type="hidden" id="hid_shanchang" placeholder="点击去选择擅长" value="@Model.shanchang_ids" />
                 <input type="text" id="txt_shanchang" readonly value="@Model.shanchang" />
             </div>
-            <div class="mui-input-row" id="div_textarea">
+            <div class="mui-input-row custom-row-br">
                 <label>简介</label>
-                <textarea id="txt_remark" class="noscrollbars" placeholder="请填写个人简介" onkeyup="autoGrow(this)">@Html.Raw(Model.jianjie)</textarea>
+                <textarea id="txt_remark" data-maxNumber="150" placeholder="填写您的个人简介" rows="10">@Html.Raw(Model.jianjie)</textarea>
             </div>
         </div>
 
@@ -126,6 +132,7 @@
     <script src="~/Assets/mui/js/mui.dtpicker.js"></script>
     <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
     <script src="~/Assets/mui/js/js.cookie.js"></script>
+    <script src="~/Assets/mui/js/jquery.limitTextarea.js"></script>
     <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="~/Assets/mui/js/vercode.js"></script>
 
@@ -314,18 +321,26 @@
             Cookies.set('doc_jianjie', reamrk);
         }
 
-        window.onload = function () {
-            autoGrow(document.getElementById('txt_remark'));
-        };
 
-        function autoGrow(oField) {
-            var div_area = document.getElementById('div_textarea');
-            if (oField.scrollHeight > oField.clientHeight) {
-                var new_height = oField.scrollHeight + "px";
-                oField.style.height = new_height;
-                div_area.style.height = new_height;
-            }
-        }
+        $(function () {
+            $('#txt_remark').limitTextarea({
+                maxNumber: parseInt($('#txt_remark').attr('data-maxNumber')), //最大字数
+                position: 'bottom', //提示文字的位置，top：文本框上方，bottom：文本框下方
+                onOk: function () {
+                	$('#txt_remark').css('background-color', 'white');
+                    $('#btn_save').removeClass("mui-disabled");
+                    $('#btn_save').removeAttr("disabled");
+                    console.log('启用提交按钮')
+                }, //输入后，字数未超出时调用的函数
+                onOver: function () {
+                	$('#txt_remark').css('background-color', 'lightpink');
+                    $('#btn_save').addClass("mui-disabled");
+                    $('#btn_save').attr('disabled',true);
+                    console.log('禁用提交按钮')
+                } //输入后，字数超出时调用的函数，这里把文本区域的背景变为粉红色
+            });
+        });
+
     </script>
 
 }

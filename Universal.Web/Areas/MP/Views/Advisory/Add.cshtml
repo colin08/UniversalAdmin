@@ -113,11 +113,13 @@
                 position: 'bottom', //提示文字的位置，top：文本框上方，bottom：文本框下方
                 onOk: function () {
                     $('#txt_remark').css('background-color', 'white');
-                    console.log('启用提交按钮')
+                    $('#btn_save').removeClass("mui-disabled");
+                    $('#btn_save').removeAttr("disabled");
                 }, //输入后，字数未超出时调用的函数
                 onOver: function () {
                     $('#txt_remark').css('background-color', 'lightpink');
-                    console.log('禁用提交按钮')
+                    $('#btn_save').addClass("mui-disabled");
+                    $('#btn_save').attr('disabled', true);
                 } //输入后，字数超出时调用的函数，这里把文本区域的背景变为粉红色
             });
         });
