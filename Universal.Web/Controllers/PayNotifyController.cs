@@ -136,7 +136,8 @@ namespace Universal.Web.Controllers
             }
             else
             {
-                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsOK(order_num);
+                //发送消息
+                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsPay(order_num);                
             }
         }
 

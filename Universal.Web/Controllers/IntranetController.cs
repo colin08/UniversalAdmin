@@ -14,28 +14,27 @@ namespace Universal.Web.Controllers
     /// </summary>
     public class IntranetController : Controller
     {
-
         
-        /// <summary>
-        /// 退款操作
-        /// </summary>
-        /// <param name="type">类别，1:咨询</param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ContentResult DoRefund(int type,string id)
-        {
-            if(type == 1)
-            {
-                int c_id = TypeHelper.ObjectToInt(id);
-                decimal money = 0;
-                string order_num = BLL.BLLConsultation.CloseAndRefundOnDocNoReply(c_id,out money);
-                if (!string.IsNullOrWhiteSpace(order_num)) MPHelper.WXPay.Refund(order_num, money, money);
-                else return Content("Error");
-                //TODO 咨询超时退款，同时移除定时任务
-            }
+        ///// <summary>
+        ///// 咨询退款操作
+        ///// </summary>
+        ///// <param name="type">类别，1:咨询</param>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public ContentResult DoRefund(int type,string id)
+        //{
+        //    if(type == 1)
+        //    {
+        //        int c_id = TypeHelper.ObjectToInt(id);
+        //        decimal money = 0;
+        //        string order_num = BLL.BLLConsultation.CloseAndRefundOnDocNoReply(c_id,out money);
+        //        if (!string.IsNullOrWhiteSpace(order_num)) MPHelper.WXPay.Refund(order_num, money, money);
+        //        else return Content("Error");
+        //    }
 
-            return Content("ok");
-        }
+        //    return Content("ok");
+        //}
+        
 
         /// <summary>
         /// 用户体检报告
@@ -94,5 +93,132 @@ namespace Universal.Web.Controllers
             result.msgbox = "ok";
             return Json(result);
         }
+
+
+        #region 计划任务使用
+
+
+        /// <summary>
+        /// 设置咨询已结束
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ContentResult TaskSetAdvisoryDone(int id)
+        {
+            SetAdvisoryIsDone(id);
+            return Content("ok");
+        }
+
+
+        /// <summary>
+        /// 设置咨询超时未回复-退款操作
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ContentResult TaskSetAdvisoryRefund(int id)
+        {
+            SetAdvisoryToRefund(id);
+            return Content("ok");
+        }
+
+
+        /// <summary>
+        /// 获取3天后要设置为超时结束的咨询
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult TaskGetAdvisoryDoneIds()
+        {
+            var WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+            var db_list = BLL.BLLConsultation.TaskGetAdvisoryTimeOutIds();
+            List<Entity.TaskModel.AdvisoryTimeOut> data_list = new List<Entity.TaskModel.AdvisoryTimeOut>();
+            foreach (var item in db_list)
+            {
+                //支付时间小于设置的超时时间
+                if (WebHelper.DateTimeDiff(item.pay_time, DateTime.Now, "ah") < WebSite.AdvisoryTimeOut)
+                {
+                    //添加到列表返回出去
+                    data_list.Add(item);
+                }
+                else {
+                    //否则直接设置为已结束
+                    //设置咨询已结束
+                    SetAdvisoryIsDone(item.id);
+                }
+            }
+            Entity.TaskModel.AdvisoryTimeOutAPI result = new Entity.TaskModel.AdvisoryTimeOutAPI();
+            result.data_list = data_list;
+            result.time_out = WebSite.AdvisoryTimeOut;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取超时后未回复用户的咨询-医生
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult TaskGetAdvisoryRefundIds()
+        {
+            var WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+
+            var db_list = BLL.BLLConsultation.TaskGetAdvisoryNoNoReplyTimeOutIds();
+            List<Entity.TaskModel.AdvisoryTimeOut> data_list = new List<Entity.TaskModel.AdvisoryTimeOut>();
+            foreach (var item in db_list)
+            {
+                //支付时间小于设置的超时时间
+                if (WebHelper.DateTimeDiff(item.pay_time, DateTime.Now, "ah") < WebSite.AdvisoryNoReplyTimeOut)
+                {
+                    //添加到列表返回出去
+                    data_list.Add(item);
+                }
+                else
+                {
+                    //否则直接为用户退款
+                    SetAdvisoryToRefund(item.id);
+                }
+            }
+            Entity.TaskModel.AdvisoryTimeOutAPI result = new Entity.TaskModel.AdvisoryTimeOutAPI();
+            result.data_list = data_list;
+            result.time_out = WebSite.AdvisoryNoReplyTimeOut;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        #region 私有方法
+
+        /// <summary>
+        /// 设置咨询已结束
+        /// </summary>
+        private void SetAdvisoryIsDone(int id)
+        {
+            var WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+            var status = BLL.BLLConsultation.CloseOnTimeOut(id, WebSite.AdvisoryTimeOut.ToString() + "小时");
+            if (!status)
+            {
+                System.Diagnostics.Trace.WriteLine("设置咨询结束失败");
+                return;
+            }
+
+            //给医生和用户发送消息
+            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsDone(id, WebSite.AdvisoryTimeOut.ToString() + "小时");
+        }
+
+        /// <summary>
+        /// 设置咨询退款
+        /// </summary>
+        private void SetAdvisoryToRefund(int id)
+        {
+            var WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+
+            decimal money = 0;
+            string order_num = BLL.BLLConsultation.CloseAndRefundOnDocNoReply(id, out money);
+            if (!string.IsNullOrWhiteSpace(order_num)) MPHelper.WXPay.Refund(order_num, money, money);
+
+            //给医生和用户发送消息
+            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsRefund(id, WebSite.AdvisoryNoReplyTimeOut.ToString() + "小时");
+        }
+
+        #endregion
+
+        #endregion
+
     }
 }

@@ -81,6 +81,7 @@ namespace Universal.BLL
                 entity.SettDesc = "等待您的回复";
                 entity.PayTime = DateTime.Now;
                 db.SaveChanges();
+                msg = entity.ID.ToString();
             }
             return true;
         }
@@ -173,8 +174,9 @@ namespace Universal.BLL
                 main_entity.LastReplyContent = content;
                 main_entity.LastReplyTime = DateTime.Now;
                 main_entity.Settlement = Entity.ConsultaionSett.不可结算;
-                if (main_entity.Status == Entity.ConsultationStatus.已支付)
+                if (main_entity.Status == Entity.ConsultationStatus.已支付 && type == Entity.ReplayUserType.Doctor)
                 {
+                    msg = "TASK";
                     main_entity.Status = Entity.ConsultationStatus.进行中;
                     main_entity.SettDesc = "咨询进行中，不可结算";
                 }
@@ -206,6 +208,20 @@ namespace Universal.BLL
             using (var db=new DataCore.EFDBContext())
             {
                 return db.Consultations.Where(p => p.PayNumber == order_num).Include(p=>p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// 根据订单号获取咨询实体
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public static Entity.Consultation GetModel(int id)
+        {
+            if (id<=0) return null;
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.Consultations.Where(p => p.ID == id).Include(p => p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
             }
         }
 
@@ -452,6 +468,36 @@ namespace Universal.BLL
             }
         }
 
+
+        #region 计划任务使用
+
+        /// <summary>
+        /// 机器重启后获取要添加到超时完成咨询的咨询列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.TaskModel.AdvisoryTimeOut> TaskGetAdvisoryTimeOutIds()
+        {
+            string strSql = "SELECT ID as id,PayTime as pay_time FROM [dbo].[Consultation] where Status = 3";
+            using (var db= new DataCore.EFDBContext())
+            {
+                return db.Database.SqlQuery<Entity.TaskModel.AdvisoryTimeOut>(strSql).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 机器重启后获取要添加到超时退款的咨询列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.TaskModel.AdvisoryTimeOut> TaskGetAdvisoryNoNoReplyTimeOutIds()
+        {
+            string strSql = "SELECT ID as id,PayTime as pay_time FROM [dbo].[Consultation] where Status = 2";
+            using (var db = new DataCore.EFDBContext())
+            {
+                return db.Database.SqlQuery<Entity.TaskModel.AdvisoryTimeOut>(strSql).ToList();
+            }
+        }
+
+        #endregion
 
     }
 }

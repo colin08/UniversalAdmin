@@ -340,9 +340,14 @@ namespace Universal.Web.Areas.MP.Controllers
                 WorkContext.AjaxStringEntity.msgbox = msg;
                 return Json(WorkContext.AjaxStringEntity);
             }
+            if(msg== "TASK")
+            {
+                //设置72小时后自动结束咨询-接口中同时移除超时退款任务
+                TaskJobHelper.AddAdvisoryDone(id, DateTime.Now, WorkContext.WebSite.AdvisoryTimeOut);
+            }
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "OK";
-            WorkContext.AjaxStringEntity.data = msg;
+            WorkContext.AjaxStringEntity.data = "回复成功";
             return Json(WorkContext.AjaxStringEntity);
         }
 

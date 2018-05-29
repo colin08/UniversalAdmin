@@ -50,7 +50,7 @@ namespace Universal.Web.MPHelper
             int refundFee = (int)(refund_fee * 100);
             var dataInfo = new TenPayV3RefundRequestData(WebSite.WeChatAppID, WebSite.WeChatPayMchid, WebSite.WeChatPayPayKey,
                 null, nonceStr, null, order_num, outRefundNo, totalFee, refundFee, WebSite.WeChatPayMchid, null);
-            //TODO 退款证书位置设置
+
             var cert = IOHelper.GetMapPath("/App_Data/wxPayCert/apiclient_cert.p12");// @"D:\cert\apiclient_cert_SenparcRobot.p12";//根据自己的证书位置修改
             var result = TenPayV3.Refund(dataInfo, cert, WebSite.WeChatPayMchid);
             System.Diagnostics.Trace.WriteLine(string.Format("订单：{0} 退款状态：{1},详细信息：{2}", order_num, result.result_code, result.err_code_des));
@@ -70,11 +70,10 @@ namespace Universal.Web.MPHelper
                 WebSite.WeChatPayMchid, null, nonceStr, 
                 order_num, open_id, WebSite.WeChatPayPayKey, "NO_CHECK", "", amount, desc, "192.168.1.201");
 
-            //TODO 企业付款给个人  设置证书位置和密码
             string cert_io = IOHelper.GetMapPath("/App_Data/wxPayCert/apiclient_cert.p12");
             var result = TenPayV3.Transfers(data, cert_io, WebSite.WeChatPayMchid);
             msg = result.return_msg;
-            System.Diagnostics.Trace.WriteLine("企业支付给个人，返回结果："+result.ToJson());
+            System.Diagnostics.Trace.WriteLine("企业支付给医生，返回结果："+result.ToJson());
             return result.return_code.Equals("SUCCESS");
         }
 

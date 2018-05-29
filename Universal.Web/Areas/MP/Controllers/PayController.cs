@@ -264,7 +264,7 @@ namespace Universal.Web.Areas.MP.Controllers
             //用户余额变动提醒
             MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);
             //医生-用户，发送提醒
-            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsOK(o);
+            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsPay(o);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);

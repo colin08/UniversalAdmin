@@ -77,7 +77,7 @@ namespace Universal.Web.MPHelper
         /// </summary>
         /// <param name="order_num"></param>
         /// <returns></returns>
-        public static void SendDoctorsAndUserAdvisoryIsOK(string order_num)
+        public static void SendDoctorsAndUserAdvisoryIsPay(string order_num)
         {
             var entity = BLL.BLLConsultation.GetModel(order_num);
             if (entity == null) { System.Diagnostics.Trace.WriteLine("在线咨询-已支付-给医生发消息出错：订单号不存在"+order_num); return; }
@@ -127,6 +127,126 @@ namespace Universal.Web.MPHelper
             if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
             {
                 System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-已支付-给用户发消息出错：{0},订单号：{1}", result.errmsg, order_num));
+            }
+            //设置医生超时未回复自动退款
+            TaskJobHelper.AddAdvisoryRefund(entity.ID, TypeHelper.ObjectToDateTime(entity.PayTime,DateTime.Now), WebSite.AdvisoryNoReplyTimeOut);
+        }
+
+
+        /// <summary>
+        /// 在线咨询超时后设置结束-给用户和医生发送消息
+        /// </summary>
+        /// <param name="order_num"></param>
+        /// <returns></returns>
+        public static void SendDoctorsAndUserAdvisoryIsDone(int id,string timeStr)
+        {
+            var entity = BLL.BLLConsultation.GetModel(id);
+            if (entity == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时自动结束-给医生发消息出错：咨询不存在" + id.ToString()); return; }
+            if (entity.Status != Entity.ConsultationStatus.已完成) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时自动结束-给医生发消息出错：订单号不是已完成状态" + id.ToString()); return; }
+            if (entity.MPDoctorInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时自动结束-给医生发消息出错：医生不存在" + id.ToString()); return; }
+            if (entity.MPUserInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时自动结束-给医生发消息出错：用户不存在" + id.ToString()); return; }
+            if (entity.ConsultationDisease == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时自动结束-给医生发消息出错：咨询类型为空" + id.ToString()); return; }
+
+            //给医生发
+            string first = string.Format("{0},您好，患者咨询已结束。", entity.MPDoctorInfo.RealName);
+            string keyword1 = string.Format("超过{0},自动结束", timeStr);
+            string keyword2 = entity.MPUserInfo.RealName;
+            string keyword3 = WebHelper.CutString(entity.Content, 10);
+            string keyword4 = TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
+            string remark = "该咨询已可以进行结算，点击前往结算";
+            string link_url = WebSite + "/MP/Doctors/AdvisoryClear";
+            var templateId = "UJYpt7rtGd6AodLWeZYQ4bwvBpXbSjTqWjc3xHgLOBo";
+            var template_data = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                keyword3 = new TemplateDataItem(keyword3),
+                keyword4 = new TemplateDataItem(keyword4),
+                remark = new TemplateDataItem(remark)
+            };
+            var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPDoctorInfo.OpenID, templateId, link_url, template_data);
+            if (result.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时自动结束-给医生发消息出错：{0},咨询ID：{1}", result.errmsg, id.ToString()));
+            }
+            //给用户发消息
+            string templateId_user = "fmqOskT9csvy9ez1JmBC4NsrcTFUl3XUPMqgrnDBx94";
+            string first_user = string.Format("{0},您好，您的咨询已结束。", entity.MPUserInfo.RealName);
+            string keyword1_user = WebHelper.CutString(entity.Content, 10);
+            string keyword2_user = string.Format("超过{0},自动结束", timeStr);
+            string remark_user = "点击查看我的咨询";
+            string link_url_user = WebSite + "/MP/Advisory/AdvisoryList";
+            var template_data_user = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                remark = new TemplateDataItem(remark)
+            };
+            var result_user = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId_user, link_url_user, template_data_user);
+            if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时自动结束-给用户发消息出错：{0},订单号：{1}", result.errmsg, id.ToString()));
+            }
+        }
+
+
+        /// <summary>
+        /// 在线咨询超时超时未回复，退款操作-给用户和医生发送消息
+        /// </summary>
+        /// <param name="order_num"></param>
+        /// <returns></returns>
+        public static void SendDoctorsAndUserAdvisoryIsRefund(int id, string timeStr)
+        {
+            var entity = BLL.BLLConsultation.GetModel(id);
+            if (entity == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时未回复退款-给医生发消息出错：咨询不存在" + id.ToString()); return; }
+            if (entity.Status != Entity.ConsultationStatus.已完成) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时未回复退款-给医生发消息出错：订单号不是已完成状态" + id.ToString()); return; }
+            if (entity.MPDoctorInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时未回复退款-给医生发消息出错：医生不存在" + id.ToString()); return; }
+            if (entity.MPUserInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时未回复退款-给医生发消息出错：用户不存在" + id.ToString()); return; }
+            if (entity.ConsultationDisease == null) { System.Diagnostics.Trace.WriteLine("在线咨询-设置超时未回复退款-给医生发消息出错：咨询类型为空" + id.ToString()); return; }
+
+            //给医生发
+            string first = string.Format("{0},您好，患者咨询已结束。", entity.MPDoctorInfo.RealName);
+            string keyword1 = string.Format("超过{0}未回复,自动结束", timeStr);
+            string keyword2 = entity.MPUserInfo.RealName;
+            string keyword3 = WebHelper.CutString(entity.Content, 10);
+            string keyword4 = TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
+            string remark = "后期咨询请注意及时回复。";
+            string link_url = WebSite + "/MP/Doctors/Advisory";
+            var templateId = "UJYpt7rtGd6AodLWeZYQ4bwvBpXbSjTqWjc3xHgLOBo";
+            var template_data = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                keyword3 = new TemplateDataItem(keyword3),
+                keyword4 = new TemplateDataItem(keyword4),
+                remark = new TemplateDataItem(remark)
+            };
+            var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPDoctorInfo.OpenID, templateId, link_url, template_data);
+            if (result.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时未回复退款-给医生发消息出错：{0},咨询ID：{1}", result.errmsg, id.ToString()));
+            }
+            //给用户发消息
+            string templateId_user = "fmqOskT9csvy9ez1JmBC4NsrcTFUl3XUPMqgrnDBx94";
+            string first_user = string.Format("{0},您好，您的咨询已结束。", entity.MPUserInfo.RealName);
+            string keyword1_user = WebHelper.CutString(entity.Content, 10);
+            string keyword2_user = string.Format("医生超过{0}未回复,自动结束", timeStr);
+            string remark_user = "您的咨询费用已返回到您的支付账户，请及时查看。";
+            string link_url_user = WebSite + "/MP/Advisory/AdvisoryList";
+            var template_data_user = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                remark = new TemplateDataItem(remark)
+            };
+            var result_user = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId_user, link_url_user, template_data_user);
+            if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时未回复退款-给用户发消息出错：{0},订单号：{1}", result.errmsg, id.ToString()));
             }
         }
 

@@ -1080,9 +1080,10 @@ namespace Universal.Tools
                     reader.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Trace.WriteLine("HTTP GET 请求出错：" + ex.Message + "---" + url);
+                responseStr = string.Empty;
             }
             finally
             {

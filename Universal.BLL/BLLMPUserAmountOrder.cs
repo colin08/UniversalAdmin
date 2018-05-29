@@ -70,7 +70,7 @@ namespace Universal.BLL
                 entity_order.OpenID = open_id;
 
                 var entity_user = db.MPUsers.Where(p => p.ID == entity_order.MPUserID).FirstOrDefault();
-                //TODO 符合条件-升级为VIP 是不是应该发个通知
+                //符合条件-升级为VIP 是不是应该发个通知
                 if (entity_user.Identity == Entity.MPUserIdentity.Normal && entity_order.Amount >= vip_amount) entity_user.Identity = Entity.MPUserIdentity.VIP;
                 //修改用户账户余额
                 entity_user.AccountBalance = entity_user.AccountBalance + entity_order.Amount;

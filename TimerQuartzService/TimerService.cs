@@ -19,9 +19,7 @@ namespace TimerQuartzService
 
         protected override void OnStart(string[] args)
         {
-            string port = ConfigurationManager.AppSettings["WebAPIPort"].ToString();
-            //Services URI
-            string serveruri = "http://localhost:" + port + "/";
+            string serveruri = ConfigurationManager.AppSettings["WebAPIServerURI"].ToString();
             // Start OWIN host
             apiserver = WebApp.Start<Startup>(url: serveruri);
 
@@ -32,7 +30,6 @@ namespace TimerQuartzService
             //重新添加未完成的任务
             StartJobHelper.Start();
 
-            log.Info("定时任务重新添加成功");
         }
 
         protected override void OnStop()

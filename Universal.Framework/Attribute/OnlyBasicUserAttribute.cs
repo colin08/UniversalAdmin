@@ -68,7 +68,6 @@ namespace Universal.Web.Framework
         {
             //个人中心首页
             route_list.Add(new UserDocRouteMapEntity("/mp/basicuser/index", "/mp/doctors/index"));
-            //TODO 设置用户-医生的映射地址 我要咨询--向我咨询列表
             route_list.Add(new UserDocRouteMapEntity("/mp/advisory/index", "/mp/doctors/advisory"));
             //TODO 设置用户-医生的映射地址 预约挂号--我的预约挂号列表
         }
