@@ -19,6 +19,29 @@ namespace Universal.BLL
         private static WebSiteModel WebSite = ConfigHelper.LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
 
         /// <summary>
+        /// 发送体检套餐订单通知邮件
+        /// </summary>
+        /// <returns></returns>
+        public static bool Send_Notify_OrderMedical(string orde_number)
+        {
+            if (string.IsNullOrWhiteSpace(WebSite.EmailNotifyOrderMedical)) return false;
+            if (WebSite.EmailNotifyOrderMedical.Split(',').Length == 0) return false;
+
+            EmailHelper email = new EmailHelper();
+            email.enableSsl = WebSite.EmailEnableSsl;
+            email.host = WebSite.EmailHost;
+            email.isbodyHtml = false;
+            email.mailFrom = WebSite.EmailFrom;
+            email.mailPwd = WebSite.EmailPwd;
+            email.mailSubject = "【厚德公众号后台邮件通知】";
+            email.mailToArray = WebSite.EmailNotifyOrderMedical.Split(',');
+            email.port = WebSite.EmailPort;
+            email.mailBody = string.Format("您好，有新的用户购买了体检套餐，订单号：{0}，请登陆后台查看详情", orde_number);
+            return email.Send();
+        }
+
+
+        /// <summary>
         /// 发送测试邮件
         /// </summary>
         /// <returns></returns>

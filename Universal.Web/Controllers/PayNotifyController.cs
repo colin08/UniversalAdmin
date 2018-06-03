@@ -134,11 +134,6 @@ namespace Universal.Web.Controllers
             {
                 System.Diagnostics.Trace.WriteLine("回调中设置在线咨询为已支付失败：" + msg);
             }
-            else
-            {
-                //发送消息
-                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsPay(order_num);                
-            }
         }
 
 

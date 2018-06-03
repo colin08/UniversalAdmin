@@ -21,6 +21,7 @@
             .user-nickname img { width: 40px; height: 32px; }
 
         .user-qb { height: 50px; margin-top: 4px; }
+        
         .mui-control-item { width: 33% !important; }
     </style>
 }
@@ -47,10 +48,10 @@
                 <a class="mui-control-item mui-active" href="#item1mobile">
                     进行中
                 </a>
-                <a class="mui-control-item" href="#item3mobile">
+                <a class="mui-control-item" href="#item2mobile">
                     待支付
                 </a>
-                <a class="mui-control-item" href="#item2mobile">
+                <a class="mui-control-item" href="#item3mobile">
                     已关闭
                 </a>
             </div>
@@ -59,22 +60,13 @@
             <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
                 <div id="scroll1" class="mui-scroll-wrapper">
                     <div class="mui-scroll">
-                        <!--
-                    作者：litdev@outlook.com
-                    时间：2018-03-29
-                    描述：pageIndex：当前选项卡加载到第几页数据
-                          dataTotal:接口返回的总数据
-                          template-id: 使用的模板ID
-                          ajaxUrl: 请求URL
-
-                -->
                         <ul class="mui-table-view" id="ul_doing" pageIndex='1' dataTotal='' data-type="1" template-id="template_doing" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
 
                             <script type="text/html" id="template_doing">
                                 {{each data}}
 
                                 <li class="mui-table-view-cell">
-                                    <a class="mui-navigate-right li-a" href="/MP/Advisory/AdvisoryInfo?id={{$value.id}}">
+                                    <a class="mui-navigate-right li-a" href="javascript:void(0)" data-link="/MP/Advisory/AdvisoryInfo?id={{$value.id}}">
                                         <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
                                         <div class="user-info">
                                             <div class="user-nickname">
@@ -102,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            <div id="item3mobile" class="mui-slider-item mui-control-content">
+            <div id="item2mobile" class="mui-slider-item mui-control-content">
                 <div class="mui-scroll-wrapper">
                     <div class="mui-scroll">
                         <ul class="mui-table-view" id="ul_nopay" pageIndex='1' dataTotal='' data-type="3" template-id="template_nopay" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
@@ -111,7 +103,7 @@
                                 {{each data}}
 
                                 <li class="mui-table-view-cell">
-                                    <a class="mui-navigate-right li-a" href="/mp/pay/OrderAdvisory?o={{$value.order_num}}&back=/MP/Advisory/AdvisoryList">
+                                    <a class="mui-navigate-right li-a" href="javascript:void(0)" data-link="/mp/pay/OrderAdvisory?o={{$value.order_num}}&back=/MP/Advisory/AdvisoryList">
                                         <img class="mui-pull-left head-img" id="head-img" src="{{$value.avatar}}">
                                         <div class="user-info">
                                             <div class="user-nickname">
@@ -134,7 +126,8 @@
                     </div>
                 </div>
             </div>
-            <div id="item2mobile" class="mui-slider-item mui-control-content">
+           
+            <div id="item3mobile" class="mui-slider-item mui-control-content">
                 <div class="mui-scroll-wrapper">
                     <div class="mui-scroll">
                         <ul class="mui-table-view" id="ul_close" pageIndex='1' dataTotal='' data-type="2" template-id="template_close" ajaxUrl="/MP/Advisory/GetAdvisoryJsonList">
@@ -212,7 +205,6 @@
                     var d_type = ul.attr('data-type');
                     var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                     Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
-                    $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                 }
             });
             $$.ready(function () {
@@ -230,7 +222,6 @@
                             var d_type = ul.getAttribute('data-type');
                             var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                             Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
-                            $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                         }
                     }
 
@@ -250,7 +241,6 @@
                                 self.endPullDownToRefresh();
                                 //如果之前上拉没数据了，这里重新启用上拉刷新
                                 self.refresh(true);
-                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                             }
                         },
                         up: {
@@ -272,7 +262,6 @@
                                 var is_end = ++count > pullSize;
                                 self.endPullUpToRefresh(is_end);
                                 console.log("数据量：" + data_total + ",最大页：" + pullSize + ",是否最大：" + is_end);
-                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                             }
                         }
                     });
@@ -283,6 +272,7 @@
 
         function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id, pageIndex, pageSize) {
             mui.showLoading('数据加载中...', 'div');
+            unBindTap();
             mui.ajax({
                 url: url,
                 data: params_data,
@@ -313,6 +303,7 @@
                     if ($('#' + ul_id)) {
                         $('#' + ul_id).attr('dataTotal', res.total)
                     }
+                    bindTap();
                 },
                 error: function (xhr, type, errorThrown) {
                     mui.hideLoading();
@@ -321,6 +312,21 @@
                 }
             });
         };
+
+        //取消绑定点击事件
+        function unBindTap() {
+            mui('.mui-table-view-cell').off('tap', 'a');
+        }
+
+        //绑定点击事件
+        function bindTap() {
+            mui('.mui-table-view-cell').on('tap', 'a', function (e) {
+                var data_link = this.getAttribute("data-link");
+                if (data_link != null) {
+                    location.href = data_link;
+                }
+            });
+        }
 
     </script>
 

@@ -28,6 +28,7 @@
 
         .mui-table-view-cell.mui-active { background-color: #fff !important; }
         .voice-btn-group { display: inline-block; }
+
     </style>
 
 }
@@ -48,7 +49,7 @@
     <ul class="mui-table-view custom-input" style="margin-top: 10px;">
         <li class="mui-table-view-cell custom-li-br">
             <label>回复内容:</label>
-            <textarea id="txt_remark" data-maxNumber="100" cols="50" rows="6" style="margin-top: 10px;" placeholder="请详细描述您的患病时间、症状、先骨干医生的诊断，药物服用情况以及您当前需要医生为您解答的问题"></textarea>
+            <textarea id="txt_remark" data-maxNumber="100" cols="50" rows="6" style="margin-top: 10px;" placeholder="填写回复用户的内容"></textarea>
         </li>
     </ul>
     <ul class="mui-table-view" style="margin-top: 10px;">
@@ -89,11 +90,11 @@
 <!-- MUI 页面底部脚本 -->
 @section htmlfoot{
     <script src="~/Assets/mui/js/jquery.min.js"></script>
+    <script src="~/Assets/mui/js/jquery.limitTextarea.js"></script>
     <script src="~/Assets/mui/js/mui.min.js"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="~/Assets/mui/js/mui.picker.min.js"></script>
     <script src="~/Assets/mui/js/mui.ext.loading.js"></script>
-    <script src="~/Assets/mui/js/jquery.limitTextarea.js"></script>
     <script type="text/javascript">
         // 全局变量存储
         var images = {
@@ -129,7 +130,6 @@
             $$.init();
             $$("#btn_save")[0].addEventListener('tap', function () {
                 var btn = this;
-                
                 var server_id_arr = [];
                 $(".album-item").each(function () {
                     var server_id = $(this).find("img").attr("server-id");
@@ -149,6 +149,11 @@
 
                 var remark = $("#txt_remark").val();
 
+                if (remark.length == 0 && VoiceServerId.length == 0) {
+                    $$.toast("请填写回复内容或录音");
+                    return;
+                }
+
                 mui(btn).button('loading');
                 mui.showLoading("保存中");
 
@@ -167,7 +172,7 @@
                         mui.hideLoading();
                         mui(btn).button('reset');
                         if (data.msg == 1) {
-                            window.location.href = @ViewData["BackUrl"];
+                            window.location.href = "@ViewData["BackUrl"]";
                         } else {
                             mui.alert('错误消息', data.msgbox);
                         }
@@ -242,17 +247,7 @@
                     $("#btn_voice_play").addClass("mui-btn-success");
                 }
             })
-
-
-            $$("#text_ctype")[0].addEventListener('tap', function () {
-                var picker = new mui.PopPicker();
-                picker.setData(@Html.Raw(ViewData["DiseaseJson"]));
-                picker.pickers[0].setSelectedValue(document.getElementById("hid_ctype").value);
-                picker.show(function (selectItems) {
-                    $("#text_ctype").val(selectItems[0].text);
-                    $("#hid_ctype").val(selectItems[0].value);
-                })
-            });
+            
         })(mui);
 
 
@@ -310,13 +305,13 @@
         
         //1.拍照、本地选图
         function chooseImage() {
-            if (images.localIds.length == 9) {
-                alert('最多允许选中9张图片');
+            if (images.localIds.length == 3) {
+                alert('最多允许选中3张图片');
                 return;
             }
             else {
                 wx.chooseImage({
-                    count: 9 - images.localIds.length, // 默认9
+                    count: 3 - images.localIds.length, // 默认9
                     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                     sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                     success: function (res) {

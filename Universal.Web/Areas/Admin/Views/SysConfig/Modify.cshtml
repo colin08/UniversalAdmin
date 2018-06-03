@@ -6,7 +6,7 @@
 <!--头部脚本-->
 @section head
 {
-
+    @Styles.Render("~/Content/simditor")
 }
 
 <!--头部脚本 end-->
@@ -47,8 +47,9 @@
 <div class="clients-list">
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#tab-1">站点配置</a></li>
-        <li><a data-toggle="tab" href="#tab-2">邮件配置</a></li>
-        <li><a data-toggle="tab" href="#tab-3">微信配置</a></li>
+        <li><a data-toggle="tab" href="#tab-2">用户协议</a></li>
+        <li><a data-toggle="tab" href="#tab-3">邮件配置</a></li>
+        <li><a data-toggle="tab" href="#tab-4">微信配置</a></li>
     </ul>
     <form method="post" class="form-horizontal" onsubmit="configm_before()">
         @Html.AntiForgeryToken()
@@ -99,21 +100,21 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AdvisoryNoReplyTimeOut)</label>
-                    <div class="col-sm-1">
-                        @Html.TextBoxFor(p => p.AdvisoryNoReplyTimeOut, (object)new { @class = "form-control", placeholder = "小时" })
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(p => p.AdvisoryNoReplyTimeOut, (object)new { @class = "form-control",@style="width:100px", placeholder = "小时" })
                         <span class="help-block m-b-none">超过设置的小时即为用户退款</span>
                     </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.AdvisoryNoReplyTimeOut)</label>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.AdvisoryNoReplyTimeOut)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AdvisoryTimeOut)</label>
-                    <div class="col-sm-1">
-                        @Html.TextBoxFor(p => p.AdvisoryTimeOut, (object)new { @class = "form-control", placeholder = "小时" })
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(p => p.AdvisoryTimeOut, (object)new { @class = "form-control",@style="width:100px", placeholder = "小时" })
                         <span class="help-block m-b-none">超过设置的小时即咨询结束</span>
                     </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.AdvisoryTimeOut)</label>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.AdvisoryTimeOut)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -185,6 +186,28 @@
             <div id="tab-2" class="tab-pane">
                 <div style="margin-top:20px;"></div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AgreementVIP)</label>
+                    <div class="col-sm-6">
+                        @Html.TextAreaFor(p => p.AgreementVIP, (object)new { @class = "form-control",rows="10", placeholder = "不超过100个字符" })
+                    </div>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.AgreementVIP)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AgreementAdvisory)</label>
+                    <div class="col-sm-6">
+                        @Html.TextAreaFor(p => p.AgreementAdvisory, (object)new { @class = "form-control",rows="10", placeholder = "不超过100个字符" })
+                    </div>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.AgreementAdvisory)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-3" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailHost)</label>
                     <div class="col-sm-3">
                         @Html.TextBoxFor(p => p.EmailHost, (object)new { @class = "form-control", placeholder = "不超过100个字符" })
@@ -236,16 +259,27 @@
                 </div>
                 <div class="hr-line-dashed"></div>
 
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailNotifyOrderMedical)</label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(p => p.EmailNotifyOrderMedical, (object)new { @class = "form-control", placeholder = "不超过255个字符" })
+                        <span class="help-block m-b-none">当有新的体检订单，则通知到此邮箱，多个邮箱逗号分隔。为空则不发送通知</span>
+                    </div>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.EmailNotifyOrderMedical)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
 
             </div>
-
-
-            <div id="tab-3" class="tab-pane">
+            
+            <div id="tab-4" class="tab-pane">
                 <div style="margin-top:20px;"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WeChatAppID)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WeChatAppID, (object)new { @class = "form-control" })
+                        @Html.TextBoxFor(p => p.WeChatAppID, (object)new { @class = "form-control", disabled = "disabled" })
                     </div>
                     <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WeChatAppID)</label>
                 </div>
@@ -253,7 +287,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WeChatAppSecret)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WeChatAppSecret, (object)new { @class = "form-control" })
+                        @Html.TextBoxFor(p => p.WeChatAppSecret, (object)new { @class = "form-control", disabled = "disabled" })
                     </div>
                     <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WeChatAppSecret)</label>
                 </div>
@@ -261,7 +295,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WeChatPayMchid)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WeChatPayMchid, (object)new { @class = "form-control" })
+                        @Html.TextBoxFor(p => p.WeChatPayMchid, (object)new { @class = "form-control", disabled = "disabled" })
                     </div>
                     <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WeChatPayMchid)</label>
                 </div>
@@ -269,7 +303,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WeChatPayMchAppID)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WeChatPayMchAppID, (object)new { @class = "form-control" })
+                        @Html.TextBoxFor(p => p.WeChatPayMchAppID, (object)new { @class = "form-control", disabled = "disabled" })
                     </div>
                     <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WeChatPayMchAppID)</label>
                 </div>
@@ -277,7 +311,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WeChatPayPayKey)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WeChatPayPayKey, (object)new { @class = "form-control" })
+                        @Html.TextBoxFor(p => p.WeChatPayPayKey, (object)new { @class = "form-control", disabled = "disabled" })
                     </div>
                     <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WeChatPayPayKey)</label>
                 </div>
@@ -300,6 +334,7 @@
 @section foot
 {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/simditor");
 
     <script type="text/javascript">
 
@@ -332,10 +367,14 @@
                 $("#"+hid_id).val("true");
             else
                 $("#" + hid_id).val("false");
-
+            
         }
 
+
         $(function () {
+            InitTextArea("AgreementVIP");
+
+            InitTextArea("AgreementAdvisory");
 
         @if(!ViewData.ModelState.IsValid)
         {

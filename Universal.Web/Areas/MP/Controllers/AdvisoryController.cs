@@ -146,7 +146,6 @@ namespace Universal.Web.Areas.MP.Controllers
             ViewData["ID"] = id;
             ViewData["BackUrl"] = "/MP/Advisory/AdvisoryInfo?id=" + id.ToString();
             var jssdkUiPackage = Senparc.Weixin.MP.Helpers.JSSDKHelper.GetJsSdkUiPackage(WorkContext.WebSite.WeChatAppID, WorkContext.WebSite.WeChatAppSecret, Request.Url.AbsoluteUri);
-
             return View(jssdkUiPackage);
         }
 
@@ -178,7 +177,7 @@ namespace Universal.Web.Areas.MP.Controllers
             }
 
             string msg = "";
-            var status = BLL.BLLConsultation.AddReplay(id, remark, Entity.ReplayUserType.User, file_list, out msg);
+            var status = BLL.BLLConsultation.AddReplay(id, remark, Entity.ReplayUserType.User, file_list,WorkContext.WebSite.AdvisoryTimeOut, out msg);
             if (!status)
             {
                 WorkContext.AjaxStringEntity.msgbox = msg;
@@ -187,6 +186,8 @@ namespace Universal.Web.Areas.MP.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "OK";
             WorkContext.AjaxStringEntity.data = msg;
+            //给医生发送提醒
+            MPHelper.TemplateMessage.SendReplyNotify(Entity.ReplayUserType.User, id, remark);
             return Json(WorkContext.AjaxStringEntity);
         }
 
@@ -231,6 +232,10 @@ namespace Universal.Web.Areas.MP.Controllers
         public ActionResult AdvisoryInfo(int id)
         {
             Universal.Entity.ViewModel.ConsultationDetail entity = BLL.BLLConsultation.GetConsultationInfo(id);
+            string msg = "";
+            var can_reply = BLL.BLLConsultation.CheckConsultationCanReply(id, WorkContext.WebSite.AdvisoryTimeOut, out msg);
+            ViewData["CanReply"] = can_reply ? "1" : "0";
+            ViewData["ErrorMSG"] = msg;
             return View(entity);
         }
 

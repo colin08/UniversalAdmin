@@ -93,7 +93,7 @@ namespace Universal.Web.MPHelper
             string keyword3 = WebHelper.CutString(entity.Content, 10);
             string keyword4= TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
             string remark = "请您及时回复，点击查看咨询详情";
-            string link_url = WebSite + "/MP/Doctors/AdvisoryInfo?id=" + entity.ID;
+            string link_url = WebSite.SiteUrl + "/MP/Doctors/AdvisoryInfo?id=" + entity.ID;
             var templateId = "H8523M9weflJrcbuWKqKmxHjvZscYr7HRYi_MSjgUZw";
             var template_data = new
             {
@@ -115,13 +115,13 @@ namespace Universal.Web.MPHelper
             string keyword1_user = entity.MPDoctorInfo.RealName;
             string keyword2_user = entity.PayMoney.ToString("F2") +"元";
             string remark_user = "点击查看咨询详情";
-            string link_url_user = WebSite + "/MP/Advisory/AdvisoryInfo?id=" + entity.ID;
+            string link_url_user = WebSite.SiteUrl + "/MP/Advisory/AdvisoryInfo?id=" + entity.ID;
             var template_data_user = new
             {
-                first = new TemplateDataItem(first),
-                keyword1 = new TemplateDataItem(keyword1),
-                keyword2 = new TemplateDataItem(keyword2),
-                remark = new TemplateDataItem(remark)
+                first = new TemplateDataItem(first_user),
+                keyword1 = new TemplateDataItem(keyword1_user),
+                keyword2 = new TemplateDataItem(keyword2_user),
+                remark = new TemplateDataItem(remark_user)
             };
             var result_user = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId_user, link_url_user, template_data_user);
             if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
@@ -154,7 +154,7 @@ namespace Universal.Web.MPHelper
             string keyword3 = WebHelper.CutString(entity.Content, 10);
             string keyword4 = TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
             string remark = "该咨询已可以进行结算，点击前往结算";
-            string link_url = WebSite + "/MP/Doctors/AdvisoryClear";
+            string link_url = WebSite.SiteUrl + "/MP/Doctors/AdvisoryClear";
             var templateId = "UJYpt7rtGd6AodLWeZYQ4bwvBpXbSjTqWjc3xHgLOBo";
             var template_data = new
             {
@@ -176,7 +176,7 @@ namespace Universal.Web.MPHelper
             string keyword1_user = WebHelper.CutString(entity.Content, 10);
             string keyword2_user = string.Format("超过{0},自动结束", timeStr);
             string remark_user = "点击查看我的咨询";
-            string link_url_user = WebSite + "/MP/Advisory/AdvisoryList";
+            string link_url_user = WebSite.SiteUrl + "/MP/Advisory/AdvisoryList";
             var template_data_user = new
             {
                 first = new TemplateDataItem(first),
@@ -188,6 +188,64 @@ namespace Universal.Web.MPHelper
             if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
             {
                 System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时自动结束-给用户发消息出错：{0},订单号：{1}", result.errmsg, id.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// 在线咨询设置结束-给用户和医生发送消息--医生手动关闭咨询
+        /// </summary>
+        /// <param name="order_num"></param>
+        /// <returns></returns>
+        public static void SendDoctorsAndUserAdvisoryIsDone(int id)
+        {
+            var entity = BLL.BLLConsultation.GetModel(id);
+            if (entity == null) { System.Diagnostics.Trace.WriteLine("在线咨询-医生手动关闭咨询-给医生发消息出错：咨询不存在" + id.ToString()); return; }
+            if (entity.Status != Entity.ConsultationStatus.已完成) { System.Diagnostics.Trace.WriteLine("在线咨询-医生手动关闭咨询-给医生发消息出错：订单号不是已完成状态" + id.ToString()); return; }
+            if (entity.MPDoctorInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-医生手动关闭咨询-给医生发消息出错：医生不存在" + id.ToString()); return; }
+            if (entity.MPUserInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-医生手动关闭咨询-给医生发消息出错：用户不存在" + id.ToString()); return; }
+            if (entity.ConsultationDisease == null) { System.Diagnostics.Trace.WriteLine("在线咨询-医生手动关闭咨询-给医生发消息出错：咨询类型为空" + id.ToString()); return; }
+
+            //给医生发
+            string first = string.Format("{0},您好，患者咨询已结束。", entity.MPDoctorInfo.RealName);
+            string keyword1 = string.Format("您提前关闭了该咨询");
+            string keyword2 = entity.MPUserInfo.RealName;
+            string keyword3 = WebHelper.CutString(entity.Content, 10);
+            string keyword4 = TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
+            string remark = "该咨询已可以进行结算，点击前往结算";
+            string link_url = WebSite.SiteUrl + "/MP/Doctors/AdvisoryClear";
+            var templateId = "UJYpt7rtGd6AodLWeZYQ4bwvBpXbSjTqWjc3xHgLOBo";
+            var template_data = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                keyword3 = new TemplateDataItem(keyword3),
+                keyword4 = new TemplateDataItem(keyword4),
+                remark = new TemplateDataItem(remark)
+            };
+            var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPDoctorInfo.OpenID, templateId, link_url, template_data);
+            if (result.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-医生手动关闭咨询-给医生发消息出错：{0},咨询ID：{1}", result.errmsg, id.ToString()));
+            }
+            //给用户发消息
+            string templateId_user = "fmqOskT9csvy9ez1JmBC4NsrcTFUl3XUPMqgrnDBx94";
+            string first_user = string.Format("{0},您好，您的咨询已结束。", entity.MPUserInfo.RealName);
+            string keyword1_user = WebHelper.CutString(entity.Content, 10);
+            string keyword2_user = string.Format("{0}医生手动关闭了该咨询", entity.MPDoctorInfo.RealName);
+            string remark_user = "点击查看我的咨询";
+            string link_url_user = WebSite.SiteUrl + "/MP/Advisory/AdvisoryList";
+            var template_data_user = new
+            {
+                first = new TemplateDataItem(first),
+                keyword1 = new TemplateDataItem(keyword1),
+                keyword2 = new TemplateDataItem(keyword2),
+                remark = new TemplateDataItem(remark)
+            };
+            var result_user = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId_user, link_url_user, template_data_user);
+            if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
+            {
+                System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-医生手动关闭咨询-给用户发消息出错：{0},订单号：{1}", result.errmsg, id.ToString()));
             }
         }
 
@@ -213,7 +271,7 @@ namespace Universal.Web.MPHelper
             string keyword3 = WebHelper.CutString(entity.Content, 10);
             string keyword4 = TypeHelper.ObjectToDateTime(entity.PayTime, DateTime.Now).ToString("yyyy年MM月dd日 HH点mm分");
             string remark = "后期咨询请注意及时回复。";
-            string link_url = WebSite + "/MP/Doctors/Advisory";
+            string link_url = WebSite.SiteUrl + "/MP/Doctors/Advisory";
             var templateId = "UJYpt7rtGd6AodLWeZYQ4bwvBpXbSjTqWjc3xHgLOBo";
             var template_data = new
             {
@@ -235,7 +293,7 @@ namespace Universal.Web.MPHelper
             string keyword1_user = WebHelper.CutString(entity.Content, 10);
             string keyword2_user = string.Format("医生超过{0}未回复,自动结束", timeStr);
             string remark_user = "您的咨询费用已返回到您的支付账户，请及时查看。";
-            string link_url_user = WebSite + "/MP/Advisory/AdvisoryList";
+            string link_url_user = WebSite.SiteUrl + "/MP/Advisory/AdvisoryList";
             var template_data_user = new
             {
                 first = new TemplateDataItem(first),
@@ -247,6 +305,64 @@ namespace Universal.Web.MPHelper
             if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
             {
                 System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-设置超时未回复退款-给用户发消息出错：{0},订单号：{1}", result.errmsg, id.ToString()));
+            }
+        }
+
+
+        /// <summary>
+        /// 咨询回复提醒
+        /// </summary>
+        public static void SendReplyNotify(Entity.ReplayUserType type,int id,string content)
+        {
+            var entity = BLL.BLLConsultation.GetModel(id);
+            if (entity == null) { System.Diagnostics.Trace.WriteLine("在线咨询-咨询回复提醒：咨询不存在" + id.ToString()); return; }
+            if (entity.MPDoctorInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-咨询回复提醒：医生不存在" + id.ToString()); return; }
+            if (entity.MPUserInfo == null) { System.Diagnostics.Trace.WriteLine("在线咨询-咨询回复提醒：用户不存在" + id.ToString()); return; }
+            
+            if (type == Entity.ReplayUserType.User)
+            {
+                //如果是用户发的-则给医生发消息
+                string first = string.Format("{0},您好，患者回复了您。", entity.MPDoctorInfo.RealName);
+                string keyword1 = string.Format(""+ WebHelper.CutString(content, 10));
+                string keyword2 = DateTime.Now.ToString("yyyy年MM月dd日 HH点mm分");
+                string remark = "点击查看详情。";
+                string link_url = WebSite.SiteUrl + "/MP/Doctors/AdvisoryInfo?id=" + id;
+                var templateId = "_TfWjSUpBVZiLgxQOA3-dyniZ0w3xjROb2LPj-S1Oq4";
+                var template_data = new
+                {
+                    first = new TemplateDataItem(first),
+                    keyword1 = new TemplateDataItem(keyword1),
+                    keyword2 = new TemplateDataItem(keyword2),
+                    remark = new TemplateDataItem(remark)
+                };
+                var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPDoctorInfo.OpenID, templateId, link_url, template_data);
+                if (result.errcode != Senparc.Weixin.ReturnCode.请求成功)
+                {
+                    System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-咨询回复提醒-给医生发消息出错：{0},咨询ID：{1}", result.errmsg, id.ToString()));
+                }
+            }
+            else {
+                //如果是医生发的，则给用户发消息
+                string first = string.Format("{0}，您好，医生回复了您的咨询。", entity.MPUserInfo.RealName);
+                string keyword1 = WebHelper.CutString(entity.Content, 10);
+                string keyword2 = WebHelper.CutString(content, 10);//DateTime.Now.ToString("yyyy年MM月dd日 HH点mm分");
+                string keyword3 = entity.MPDoctorInfo.RealName;
+                string remark = "点击查看详情。";
+                string link_url = WebSite.SiteUrl + "/MP/Advisory/AdvisoryInfo?id=" + id;
+                var templateId = "ph3gsfikUr1HVn-bL_yHpmeZ5TOwjl85T_KlZX7WkYI";
+                var template_data = new
+                {
+                    first = new TemplateDataItem(first),
+                    keyword1 = new TemplateDataItem(keyword1),
+                    keyword2 = new TemplateDataItem(keyword2),
+                    keyword3 = new TemplateDataItem(keyword3),
+                    remark = new TemplateDataItem(remark)
+                };
+                var result = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId, link_url, template_data);
+                if (result.errcode != Senparc.Weixin.ReturnCode.请求成功)
+                {
+                    System.Diagnostics.Trace.WriteLine(string.Format("在线咨询-咨询回复提醒-给用户发消息出错：{0},咨询ID：{1}", result.errmsg, id.ToString()));
+                }
             }
         }
 

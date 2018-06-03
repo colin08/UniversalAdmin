@@ -153,7 +153,7 @@ namespace Universal.Web.Areas.MP.Controllers
             }
             //发送通知
             string link_url = WorkContext.WebSite.SiteUrl + "/MP/Medical/OrderInfo?o=" + o;
-            MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);
+            MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);            
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);
@@ -174,6 +174,8 @@ namespace Universal.Web.Areas.MP.Controllers
             if (entity_order.Status == Entity.OrderStatus.已支付)
             {
                 ViewData["Status"] = 1;
+                //给管理员发送邮件通知
+                BLL.BLLEmail.Send_Notify_OrderMedical(order_num);
             }
             else
                 ViewData["Status"] = 0;
@@ -263,8 +265,6 @@ namespace Universal.Web.Areas.MP.Controllers
             string link_url = WorkContext.WebSite.SiteUrl + "/MP/Advisory/Index";
             //用户余额变动提醒
             MPHelper.TemplateMessage.SendUserAmountMsg(mad_id, WorkContext.open_id, o, link_url);
-            //医生-用户，发送提醒
-            MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsPay(o);
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "ok";
             return Json(WorkContext.AjaxStringEntity);
@@ -285,6 +285,8 @@ namespace Universal.Web.Areas.MP.Controllers
             if (entity_order.Status ==  Entity.ConsultationStatus.已支付)
             {
                 ViewData["Status"] = 1;
+                //发送通知
+                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsPay(order_num);
             }
             else
                 ViewData["Status"] = 0;

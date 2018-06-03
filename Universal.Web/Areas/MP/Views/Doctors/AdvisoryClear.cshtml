@@ -242,7 +242,6 @@
                     var d_type = ul.attr('data-type');
                     var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                     Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
-                    $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                 }
                 if (ul.attr('id') == 'ul_kejiesuan') {
                     $(".fixed-group-buttom").show();
@@ -267,7 +266,6 @@
                             var d_type = ul.getAttribute('data-type');
                             var params_data = { "page_size": pageSize, "page_index": parseInt(pageIndex), "type": d_type };
                             Ajax_Load_Pullrefresh_Data(true, ajaxUrl, params_data, ul_id, template_id, pageIndex, pageSize);
-                            $$('body').on('tap', 'a', function () { document.location.href = this.href; });
                         }
                     }
 
@@ -286,7 +284,7 @@
                                 self.endPullDownToRefresh();
                                 //如果之前上拉没数据了，这里重新启用上拉刷新
                                 self.refresh(true);
-                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                                
 
                             }
                         },
@@ -307,8 +305,7 @@
                                 var pullSize = data_total / pageSize;
                                 var is_end = ++count > pullSize;
                                 self.endPullUpToRefresh(is_end);
-                                console.log("数据量：" + data_total + ",最大页：" + pullSize + ",是否最大：" + is_end);
-                                $$('body').on('tap', 'a', function () { document.location.href = this.href; });
+                                //console.log("数据量：" + data_total + ",最大页：" + pullSize + ",是否最大：" + is_end);
                             }
                         }
                     });
@@ -318,6 +315,7 @@
 
         function Ajax_Load_Pullrefresh_Data(reload, url, params_data, ul_id, template_id, pageIndex, pageSize) {
             mui.showLoading('数据加载中...', 'div');
+            unBindTap();
             mui.ajax({
                 url: url,
                 data: params_data,
@@ -348,6 +346,7 @@
                     if ($('#' + ul_id)) {
                         $('#' + ul_id).attr('dataTotal', res.total)
                     }
+                    bindTap();
                 },
                 error: function (xhr, type, errorThrown) {
                     mui.hideLoading();
@@ -387,7 +386,22 @@
                 }
             });
         };
-        
+
+        //取消绑定点击事件
+        function unBindTap() {
+            //mui('.mui-table-view-cell').off('tap', 'a');
+        }
+
+        //绑定点击事件
+        function bindTap() {
+            //mui('.mui-table-view-cell').on('tap', 'a', function (e) {
+            //    var data_link = this.getAttribute("data-link");
+            //    if (data_link != null) {
+            //        location.href = data_link;
+            //    }
+            //});
+        }
+
     </script>
 
 }

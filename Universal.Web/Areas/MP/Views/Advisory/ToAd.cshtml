@@ -5,7 +5,9 @@
 
 <!-- 头部Style等 -->
 @section htmlhead{
-
+    <style>
+        .custom-content p { font-size: inherit !important; color: rgba(0,0,0,0.8); }
+    </style>
 
 }
 <!-- 头部Style等 END -->
@@ -21,13 +23,14 @@
 }
 <!-- MUI 头部导航栏设置 END -->
 <!-- Body -->
-    <div class="mui-content-padded">
-        <p style="color: #000;">
-            咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知咨询须知
-        </p>
-
-        <button type="button" onclick="location.href='@ViewData["NextUrl"]'" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">同意并继续</button>
+<div class="mui-content-padded">
+    <p>请仔细阅读以下事项</p>
+    <div class="custom-content">
+        @Html.Raw(Universal.Tools.WebHelper.UrlDecode(WorkContext.WebSite.AgreementAdvisory))
     </div>
+
+    <button type="button" onclick="location.href='@ViewData["NextUrl"]'" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">同意并继续</button>
+</div>
 <!-- Body END -->
 <!-- MUI 底部导航栏设置 -->
 @section muifooter{

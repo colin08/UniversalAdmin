@@ -69,9 +69,7 @@ namespace Universal.Web
                       "~/Assets/js/plugins/simditor/uploader.min.js",
                       "~/Assets/js/plugins/simditor/simditor.min.js",
                       "~/Assets/js/plugins/simditor/simditor-autosave.js",
-                      "~/Assets/js/plugins/simditor/marked.js",
-                      "~/Assets/js/plugins/simditor/to-markdown.js",
-                      "~/Assets/js/plugins/simditor/simditor-markdown.js"));
+                      "~/Assets/js/plugins/simditor/marked.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/metisMenu").Include(
                       "~/Assets/js/plugins/metisMenu/jquery.metisMenu.js"));
@@ -107,8 +105,7 @@ namespace Universal.Web
                       "~/Assets/css/plugins/chosen/chosen.css"));
 
             bundles.Add(new StyleBundle("~/Content/simditor").Include(
-                       "~/Assets/css/plugins/simditor/simditor.css",
-                       "~/Assets/css/plugins/simditor/simditor-markdown.css"));
+                       "~/Assets/css/plugins/simditor/simditor.css"));
 
             bundles.Add(new StyleBundle("~/Content/ztree_metroStyle").Include(
                       "~/Assets/js/plugins/ztree/css/metroStyle/metroStyle.css"));

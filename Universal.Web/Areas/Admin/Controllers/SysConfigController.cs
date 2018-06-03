@@ -31,6 +31,8 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermission("站点配置文件", "编辑配置文件页面")]
         public ActionResult Modify()
         {
+            WebSite.AgreementVIP = WebHelper.UrlDecode(WebSite.AgreementVIP);
+            WebSite.AgreementAdvisory = WebHelper.UrlDecode(WebSite.AgreementAdvisory);
             return View(WebSite);
         }
 
@@ -41,9 +43,17 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [AdminPermission("站点配置文件", "保存修改的配置文件")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         public ActionResult Modify(WebSiteModel entity)
         {
+            if (!string.IsNullOrWhiteSpace(entity.EmailNotifyOrderMedical))
+            {
+                entity.EmailNotifyOrderMedical = entity.EmailNotifyOrderMedical.Replace("，", ",").Trim();
+            }
+
+            entity.AgreementVIP = WebHelper.UrlEncode(entity.AgreementVIP);
+            entity.AgreementAdvisory = WebHelper.UrlEncode(entity.AgreementAdvisory);
+
             if (ModelState.IsValid)
             {
                 if (ConfigHelper.SaveConfig(ConfigFileEnum.SiteConfig, entity))

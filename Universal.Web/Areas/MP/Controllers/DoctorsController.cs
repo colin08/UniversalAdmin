@@ -288,6 +288,10 @@ namespace Universal.Web.Areas.MP.Controllers
         public ActionResult AdvisoryInfo(int id)
         {
             Universal.Entity.ViewModel.ConsultationDetail entity = BLL.BLLConsultation.GetConsultationInfo(id);
+            string msg = "";
+            var can_reply = BLL.BLLConsultation.CheckConsultationCanReply(id, WorkContext.WebSite.AdvisoryTimeOut, out msg);
+            ViewData["CanReply"] = can_reply ? "1" : "0";
+            ViewData["ErrorMSG"] = msg;
             return View(entity);
         }
 
@@ -334,7 +338,7 @@ namespace Universal.Web.Areas.MP.Controllers
             }
 
             string msg = "";
-            var status = BLL.BLLConsultation.AddReplay(id, remark, Entity.ReplayUserType.Doctor, file_list, out msg);
+            var status = BLL.BLLConsultation.AddReplay(id, remark, Entity.ReplayUserType.Doctor, file_list,WorkContext.WebSite.AdvisoryTimeOut, out msg);
             if (!status)
             {
                 WorkContext.AjaxStringEntity.msgbox = msg;
@@ -348,9 +352,44 @@ namespace Universal.Web.Areas.MP.Controllers
             WorkContext.AjaxStringEntity.msg = 1;
             WorkContext.AjaxStringEntity.msgbox = "OK";
             WorkContext.AjaxStringEntity.data = "回复成功";
+            //给医生发送提醒
+            MPHelper.TemplateMessage.SendReplyNotify(Entity.ReplayUserType.Doctor, id, remark);
             return Json(WorkContext.AjaxStringEntity);
         }
 
+        /// <summary>
+        /// 手动关闭咨询
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SetAvdisoryDone(int id)
+        {
+            if (id <= 0)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "非法参数";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+            //System.Threading.Thread.Sleep(2000);
+            //WorkContext.AjaxStringEntity.msg = 1;
+            //WorkContext.AjaxStringEntity.msgbox = "操作成功";
+            //return Json(WorkContext.AjaxStringEntity);
+
+            var status = BLL.BLLConsultation.CloseOnDoc(id);
+            if (status)
+            {
+                MPHelper.TemplateMessage.SendDoctorsAndUserAdvisoryIsDone(id);
+                WorkContext.AjaxStringEntity.msg = 1;
+                WorkContext.AjaxStringEntity.msgbox = "操作成功";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+            else
+            {
+                WorkContext.AjaxStringEntity.msgbox = "操作失败";
+                return Json(WorkContext.AjaxStringEntity);
+            }
+
+        }
 
         /// <summary>
         /// 咨询结算

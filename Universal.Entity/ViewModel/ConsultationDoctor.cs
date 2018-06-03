@@ -24,6 +24,11 @@ namespace Universal.Entity.ViewModel
         public string user_name { get; set; }
 
         /// <summary>
+        /// 生日
+        /// </summary>
+        public DateTime? brithday { get; set; } 
+
+        /// <summary>
         /// 年龄
         /// </summary>
         public int age { get; set; }

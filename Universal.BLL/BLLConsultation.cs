@@ -125,6 +125,28 @@ namespace Universal.BLL
         }
 
         /// <summary>
+        /// 关闭咨询|完成咨询-医生手动关闭
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="timeStr">时间字符串，比如:3天、72小时</param>
+        /// <returns></returns>
+        public static bool CloseOnDoc(int id)
+        {
+            using (var db = new DataCore.EFDBContext())
+            {
+                var entity = db.Consultations.Find(id);
+                if (entity == null) return false;
+                if (entity.Status == Entity.ConsultationStatus.已完成) return true;
+                entity.Status = Entity.ConsultationStatus.已完成;
+                entity.CloseDesc = "医生提前关闭咨询";
+                entity.Settlement = Entity.ConsultaionSett.待结算;
+                entity.SettDesc = "咨询完成，可以结算";
+                db.SaveChanges();
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 关闭咨询-第一次医生长时间没有回复,调用后同时调用退款接口
         /// </summary>
         /// <param name="id"></param>
@@ -159,7 +181,7 @@ namespace Universal.BLL
         /// <param name="files">回复附件</param>
         /// <param name="msg">状态消息</param>
         /// <returns></returns>
-        public static bool AddReplay(int main_id, string content, Entity.ReplayUserType type, List<Entity.ConsultationListFile> files, out string msg)
+        public static bool AddReplay(int main_id, string content, Entity.ReplayUserType type, List<Entity.ConsultationListFile> files, int reply_time_out, out string msg)
         {
             msg = "ok";
             if (files == null) files = new List<Entity.ConsultationListFile>();
@@ -168,8 +190,11 @@ namespace Universal.BLL
                 var main_entity = db.Consultations.Where(p => p.ID == main_id).FirstOrDefault();
                 if (main_entity == null) { msg = "咨询不存在"; return false; }
                 if (main_entity.IsRefund) { msg = "该咨询已退款"; return false; }
-                if (Tools.WebHelper.DateTimeDiff(main_entity.AddTime, DateTime.Now, "ad") > 10) if (main_entity == null) { msg = "该咨询太久远了，已不能再回复"; return false; }
                 if (main_entity.Status == Entity.ConsultationStatus.待支付) { msg = "该咨询未支付"; return false; }
+                var pay_time = Tools.TypeHelper.ObjectToDateTime(main_entity.PayTime);
+                var hou_out = Tools.WebHelper.DateTimeDiff(pay_time, DateTime.Now, "ah");
+                if (hou_out > reply_time_out) { msg = "超过" + reply_time_out.ToString() + "小时,该咨询已不能再回复"; return false; }
+
                 main_entity.LastReplayType = type;
                 main_entity.LastReplyContent = content;
                 main_entity.LastReplyTime = DateTime.Now;
@@ -192,10 +217,12 @@ namespace Universal.BLL
                     db.ConsultationListFiles.Add(item);
                 }
                 db.SaveChanges();
+
             }
 
             return true;
         }
+
 
         /// <summary>
         /// 根据订单号获取咨询实体
@@ -205,9 +232,9 @@ namespace Universal.BLL
         public static Entity.Consultation GetModel(string order_num)
         {
             if (string.IsNullOrWhiteSpace(order_num)) return null;
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
-                return db.Consultations.Where(p => p.PayNumber == order_num).Include(p=>p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
+                return db.Consultations.Where(p => p.PayNumber == order_num).Include(p => p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
             }
         }
 
@@ -218,7 +245,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static Entity.Consultation GetModel(int id)
         {
-            if (id<=0) return null;
+            if (id <= 0) return null;
             using (var db = new DataCore.EFDBContext())
             {
                 return db.Consultations.Where(p => p.ID == id).Include(p => p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).AsNoTracking().FirstOrDefault();
@@ -235,7 +262,7 @@ namespace Universal.BLL
         /// <returns></returns>
         public static List<Entity.ViewModel.ConsultationDoctor> GetDoctorsMsgList(int page_size, int page_index, int doc_id, int type, out int total)
         {
-            List<Entity.ViewModel.ConsultationDoctor> result = new List<Entity.ViewModel.ConsultationDoctor>();
+            //List<Entity.ViewModel.ConsultationDoctor> result = new List<Entity.ViewModel.ConsultationDoctor>();
             total = 0;
             if (page_size <= 1) page_size = 8;
             if (page_index <= 0) page_index = 1;
@@ -256,31 +283,34 @@ namespace Universal.BLL
             using (var db = new DataCore.EFDBContext())
             {
                 string strSqlTotal = "select count(1) FROM [dbo].[Consultation]" + strWhere;
-                string strSql = "select * from (SELECT ROW_Number() OVER(ORDER BY LastReplyTime Desc) as row,* FROM [dbo].[Consultation] " + strWhere + ") as T where row BETWEEN " + begin_index.ToString() + " and " + end_index.ToString();
+                string strSql = "select * from (SELECT ROW_Number() OVER(ORDER BY last_reply_time Desc) as row,* from(select C.ID as id," + type.ToString() + " as type,U.RealName as user_name,10 as age,CAST(U.Gender as VARCHAR) as gender,D.Title as disease,U.Avatar as avatar,U.Brithday as brithday,C.LastReplyTime as last_reply_time,C.LastReplayType as last_replay_user,C.LastReplyContent as last_reply_content,C.CloseDesc as close_desc,C.PayMoney as price,C.SettDesc as sett_desc from(SELECT ID, PayMoney, CloseDesc, SettDesc, ConsultationDiseaseID, MPUserID, LastReplyTime, LastReplayType, LastReplyContent, PayTime FROM[dbo].[Consultation]  " + strWhere + ") as C LEFT JOIN MPUser as U on C.MPUserID = U.ID LEFT JOIN ConsultationDisease as D on C.ConsultationDiseaseID = D.ID) as S) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index.ToString();
                 total = db.Database.SqlQuery<int>(strSqlTotal).FirstOrDefault();
-                var db_list = db.Consultations.SqlQuery(strSql).ToList();
+                var db_list = db.Database.SqlQuery<Entity.ViewModel.ConsultationDoctor>(strSql).ToList();
                 foreach (var item in db_list)
                 {
-                    var entity_dis = db.ConsultationDiseases.Where(p => p.ID == item.ConsultationDiseaseID).AsNoTracking().FirstOrDefault();
-                    Entity.ViewModel.ConsultationDoctor model = new Entity.ViewModel.ConsultationDoctor();
-                    model.id = item.ID;
-                    model.last_replay_user = item.LastReplayType;
-                    model.close_desc = item.CloseDesc;
-                    model.age = item.GetUserAge;
-                    model.gender = item.GetUserGender;
-                    model.avatar = item.GetUserAvatar;
-                    model.last_reply_content = item.LastReplyContent;
-                    model.last_reply_time = item.LastReplyTime;
-                    model.type = type;
-                    if (entity_dis == null) model.disease = "未知";
-                    else model.disease = entity_dis.Title;
-                    model.user_name = item.GetUserName;
-                    model.last_reply_time_str = Tools.WebHelper.DateStringFromNow(item.LastReplyTime);
-                    result.Add(model);
+                    item.age = GetAge(item.brithday);
+                    int temp_gender = int.Parse(item.gender);
+                    item.gender = Tools.EnumHelper.GetDescription<Entity.MPUserGenderType>((Entity.MPUserGenderType)temp_gender);
+                    item.last_reply_time_str = Tools.WebHelper.DateStringFromNow(item.last_reply_time);
                 }
 
+                return db_list;
             }
-            return result;
+        }
+        /// <summary>
+        /// 根据生日获取年龄
+        /// </summary>
+        static int GetAge(DateTime? brithday)
+        {
+            if (brithday == null) return 0;
+            DateTime now = DateTime.Now;
+            var bri = Tools.TypeHelper.ObjectToDateTime(brithday);
+            int age = now.Year - bri.Year;
+            if (now.Month < bri.Month || (now.Month == bri.Month && now.Day < bri.Day))
+            {
+                age--;
+            }
+            return age < 0 ? 0 : age;
         }
 
         /// <summary>
@@ -305,10 +335,11 @@ namespace Universal.BLL
             {
                 strWhere += " and (Status=2 or Status=3)";
             }
-            else if(type == 2)
+            else if (type == 2)
             {
                 strWhere += " and (Status=4 or Status=5)";
-            }else if(type == 3)
+            }
+            else if (type == 3)
             {
                 strWhere += " and Status=1";
             }
@@ -401,14 +432,27 @@ namespace Universal.BLL
         public static Entity.ViewModel.ConsultationDetail GetConsultationInfo(int main_id)
         {
             Entity.ViewModel.ConsultationDetail result = new Entity.ViewModel.ConsultationDetail();
+            Entity.ViewModel.ConsultationInfo CInfo = new Entity.ViewModel.ConsultationInfo();
             using (var db = new DataCore.EFDBContext())
             {
-                var entity_main = db.Consultations.Where(p => p.ID == main_id).Include(p => p.ConsultationFiles).AsNoTracking().FirstOrDefault();
+                var entity_main = db.Consultations.Where(p => p.ID == main_id).Include(p=>p.ConsultationDisease).Include(p => p.MPDoctorInfo).Include(p => p.MPUserInfo).Include(p => p.ConsultationFiles).AsNoTracking().FirstOrDefault();
                 if (entity_main == null) return null;
                 result.main_id = main_id;
                 result.status = entity_main.Status;
                 result.user_avatar = entity_main.GetUserAvatar;
                 result.doctor_avatar = entity_main.GetDoctorAvatar;
+
+
+                CInfo.age = entity_main.MPUserInfo.GetAge.ToString()+"岁";
+                CInfo.dis_str = entity_main.ConsultationDisease.Title;
+                CInfo.area = entity_main.Area;
+                CInfo.create_time = entity_main.AddTime.ToString("yyyy-MM-dd HH:mm");
+                if (entity_main.PayTime == null) CInfo.pay_time = "未支付";
+                else
+                    CInfo.pay_time = Tools.TypeHelper.ObjectToDateTime(entity_main.PayTime).ToString("yyyy-MM-dd HH:mm");
+                CInfo.gender = entity_main.MPUserInfo.GetGenderStr;
+                CInfo.price = "￥" + entity_main.PayMoney.ToString("F2");
+                CInfo.user_name = entity_main.MPUserInfo.RealName;
 
                 List<Entity.ViewModel.ConsultationDetailMsg> msg_list = new List<Entity.ViewModel.ConsultationDetailMsg>();
 
@@ -463,11 +507,34 @@ namespace Universal.BLL
                 }
                 //回复信息添加完毕
                 result.msg_list = msg_list;
-
+                result.CInfo = CInfo;
                 return result;
             }
         }
 
+        /// <summary>
+        /// 判断帖子是否可以继续回复
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckConsultationCanReply(int id, int reply_time_out, out string msg)
+        {
+            msg = "ok";
+            if (id <= 0) return false;
+            using (var db = new DataCore.EFDBContext())
+            {
+                var main_entity = db.Consultations.Where(p => p.ID == id).FirstOrDefault();
+                if (main_entity == null) { msg = "咨询不存在"; return false; }
+                if (main_entity.IsRefund) { msg = "该咨询已退款"; return false; }
+                if (main_entity.Status == Entity.ConsultationStatus.待支付) { msg = "该咨询未支付"; return false; }
+                if(main_entity.Status == Entity.ConsultationStatus.已关闭) { msg = "该咨询已关闭"; return false; }
+                var pay_time = Tools.TypeHelper.ObjectToDateTime(main_entity.PayTime);
+                var hou_out = Tools.WebHelper.DateTimeDiff(pay_time, DateTime.Now, "ah");
+                if (hou_out > reply_time_out) { msg = "超过" + reply_time_out.ToString() + "小时,该咨询已自动完成咨询"; return false; }
+                if (main_entity.Status == Entity.ConsultationStatus.已完成) { msg = "该咨询已完成"; return false; }
+                if(main_entity.Status == Entity.ConsultationStatus.进行中) { msg = "可以咨询";return true; }
+                else { msg = "不可继续回复了"; return true; }
+            }
+        }
 
         #region 计划任务使用
 
@@ -478,7 +545,7 @@ namespace Universal.BLL
         public static List<Entity.TaskModel.AdvisoryTimeOut> TaskGetAdvisoryTimeOutIds()
         {
             string strSql = "SELECT ID as id,PayTime as pay_time FROM [dbo].[Consultation] where Status = 3";
-            using (var db= new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
                 return db.Database.SqlQuery<Entity.TaskModel.AdvisoryTimeOut>(strSql).ToList();
             }

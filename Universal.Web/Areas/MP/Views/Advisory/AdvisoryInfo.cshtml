@@ -7,11 +7,11 @@
 @section htmlhead{
     <link href="~/Assets/mui/css/swiper-4.2.0.min.css" rel="stylesheet" />
     <style>
-        .bbs-msg-left { display: flex; justify-content: center; flex-direction: row; }
+        .bbs-msg-left { display: flex; justify-content: space-between; flex-direction: row; }
 
         .bbs-msg-left-headimg { width: 80px; height: 80px; }
-
-        .bbs-msg-left-content { margin-left: 10px; }
+            .bbs-msg-left-headimg img { width: 80px; height: 80px; }
+            .bbs-msg-left-content { margin-left: 10px; width:100%;}
             .bbs-msg-left-content p { font-size: 16px !important; }
 
         .bbs-msg-left-album { margin: 1em 0; height: 50px; overflow: hidden; }
@@ -26,6 +26,8 @@
 
         .swiper-pagination { top: 6em; bottom: auto; color: #fff; }
         audio { width: 98%; }
+        .bbs-msg-left-text { min-height: 80px; }
+        .bbs-msg-time { text-align: center; margin-top: 10px; }
     </style>
 }
 <!-- 头部Style等 END -->
@@ -52,7 +54,9 @@
             {
                 <li class="mui-table-view-cell">
                     <div class="bbs-msg-left">
-                        <img class="bbs-msg-left-headimg" src="@Model.user_avatar" />
+                        <div class="bbs-msg-left-headimg">
+                            <img src="@Model.doctor_avatar" />
+                        </div>
                         <div class="bbs-msg-left-content">
                             @if (msg.total_voice > 0)
                             {
@@ -65,7 +69,7 @@
                                     </audio>
                                 </div>
                             }
-                            <div class="bbs-msg-left-text">
+                            <div class="bbs-msg-left-text" >
                                 <p>@msg.content</p>
                             </div>
                             @{
@@ -88,7 +92,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mui-text-center">
+                    <div class="bbs-msg-time">
                         <p class="msg-time">@msg.time_str <span>(@msg.time.ToString("MM-dd HH:mm"))</span></p>
                     </div>
                 </li>
@@ -97,7 +101,7 @@
             {
                 <li class="mui-table-view-cell">
                     <div class="bbs-msg-left">
-                        <div class="bbs-msg-left-content">
+                        <div class="bbs-msg-left-content"  style="margin-left:0;margin-right:10px;">
                             @if (msg.total_voice > 0)
                             {
                                 <div class="bbs-msg-left-message">
@@ -135,9 +139,11 @@
 
                             </div>
                         </div>
-                        <img class="bbs-msg-left-headimg" src="@Model.doctor_avatar" />
+                        <div class="bbs-msg-left-headimg">
+                            <img src="@Model.user_avatar" />
+                        </div>
                     </div>
-                    <div class="mui-text-center">
+                    <div class="bbs-msg-time">
                         <p class="msg-time">@msg.time_str <span>(@msg.time.ToString("MM-dd HH:mm"))</span></p>
                     </div>
                 </li>
@@ -146,8 +152,13 @@
         }
 
     </ul>
-
-    <button type="button" onclick="location.href='/MP/Add?id=@Model.main_id'" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">回复</button>
+    @if(ViewData["CanReply"].ToString() == "1")
+    {
+        <button type="button" onclick="location.href='/MP/Advisory/Add?id=@Model.main_id'" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 20px;">回复</button>
+    }
+    else {
+        <button type="button" disabled class="mui-btn mui-btn-primary mui-btn-block mui-disabled" style="margin-top: 20px;">@ViewData["ErrorMSG"]</button>
+    }
 
 </div>
 

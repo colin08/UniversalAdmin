@@ -31,7 +31,46 @@ namespace Universal.Entity.ViewModel
         /// </summary>
         public ConsultationStatus status { get; set; }
 
+        public ConsultationInfo CInfo { get; set; }
+
+
         public List<ConsultationDetailMsg> msg_list { get; set; }
+
+    }
+
+    
+    public class ConsultationInfo
+    {
+        public ConsultationInfo()
+        {
+            this.user_name = "未知";
+            this.gender = "未知";
+            this.age = "未知";
+            this.area = "未知";
+            this.dis_str = "未知";
+            this.price = "未知";
+            this.create_time = "未知";
+            this.pay_time = "未知";
+        }
+
+        public string user_name { get; set; }
+
+        public string gender { get; set;}
+        
+        public string age { get; set; }
+
+        public string area { get; set; }
+        
+        /// <summary>
+        /// 病症类型
+        /// </summary>
+        public string dis_str { get; set; }
+
+        public string price { get; set; }
+
+        public string create_time { get; set; }
+
+        public string pay_time { get; set; }
 
     }
 

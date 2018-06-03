@@ -129,7 +129,7 @@ namespace Universal.Tools
 
         [Display(Name = "异常日志是否入库")]
         public bool LogExceptionInDB { get; set; }
-
+        
         #endregion
         
         #region 邮件配置
@@ -149,6 +149,9 @@ namespace Universal.Tools
         [Display(Name = "账户密码"),Required(ErrorMessage ="不能为空"),MaxLength(255,ErrorMessage ="不能超过255个字符")]
         public string EmailPwd { get; set; }
 
+        [Display(Name = "体检套餐订单通知接收者"),MaxLength(255, ErrorMessage = "不能超过255个字符")]
+        public string EmailNotifyOrderMedical { get; set; }
+
         #endregion
 
         #region 微信参数
@@ -167,7 +170,18 @@ namespace Universal.Tools
         
         [Display(Name = "微信支付PayKey"), Required(ErrorMessage = "不能为空"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
         public string WeChatPayPayKey { get; set; }
-        
+
+        #endregion
+
+        #region
+
+        [Display(Name = "升级VIP说明"), MaxLength(2000, ErrorMessage = "不能超过2000个字符")]
+        public string AgreementVIP { get; set; }
+
+        [Display(Name = "在线咨询协议"), MaxLength(2000, ErrorMessage = "不能超过2000个字符")]
+        public string AgreementAdvisory { get; set; }
+
+
         #endregion
 
     }

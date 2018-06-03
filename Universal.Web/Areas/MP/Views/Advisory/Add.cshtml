@@ -148,6 +148,10 @@
                 }
 
                 var remark = $("#txt_remark").val();
+                if (remark.length == 0 && VoiceServerId.length == 0) {
+                    $$.toast("请填写回复内容或录音");
+                    return;
+                }
 
                 mui(btn).button('loading');
                 mui.showLoading("保存中");
@@ -167,7 +171,7 @@
                         mui.hideLoading();
                         mui(btn).button('reset');
                         if (data.msg == 1) {
-                            window.location.href = @ViewData["BackUrl"];
+                            window.location.href = "@ViewData["BackUrl"]";
                         } else {
                             mui.alert('错误消息', data.msgbox);
                         }
@@ -244,15 +248,6 @@
             })
 
 
-            $$("#text_ctype")[0].addEventListener('tap', function () {
-                var picker = new mui.PopPicker();
-                picker.setData(@Html.Raw(ViewData["DiseaseJson"]));
-                picker.pickers[0].setSelectedValue(document.getElementById("hid_ctype").value);
-                picker.show(function (selectItems) {
-                    $("#text_ctype").val(selectItems[0].text);
-                    $("#hid_ctype").val(selectItems[0].value);
-                })
-            });
         })(mui);
 
 
@@ -310,13 +305,13 @@
         
         //1.拍照、本地选图
         function chooseImage() {
-            if (images.localIds.length == 9) {
-                alert('最多允许选中9张图片');
+            if (images.localIds.length == 3) {
+                alert('最多允许选中3张图片');
                 return;
             }
             else {
                 wx.chooseImage({
-                    count: 9 - images.localIds.length, // 默认9
+                    count: 3 - images.localIds.length, // 默认3
                     sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                     sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                     success: function (res) {
