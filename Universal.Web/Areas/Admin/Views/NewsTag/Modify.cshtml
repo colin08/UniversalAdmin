@@ -22,7 +22,7 @@
         <input type="hidden" id="hid_category_ids" value="@ViewData["CategoryIDs"]" />
         <div class="form-group">
             <label class="col-sm-2 control-label">所属分类</label>
-            <div class="col-sm-2">
+            <div class="col-sm-2" style="padding-left: 100px;">
                 @Html.DropDownList("CategoryMultiple", ViewData["CategoryList"] as List<SelectListItem>, new { multiple = "multiple" })
             </div>
             <label class="col-sm-4 label_msg"></label>

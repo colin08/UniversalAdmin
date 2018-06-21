@@ -179,10 +179,10 @@ namespace Universal.Web.MPHelper
             string link_url_user = WebSite.SiteUrl + "/MP/Advisory/AdvisoryList";
             var template_data_user = new
             {
-                first = new TemplateDataItem(first),
-                keyword1 = new TemplateDataItem(keyword1),
-                keyword2 = new TemplateDataItem(keyword2),
-                remark = new TemplateDataItem(remark)
+                first = new TemplateDataItem(first_user),
+                keyword1 = new TemplateDataItem(keyword1_user),
+                keyword2 = new TemplateDataItem(keyword2_user),
+                remark = new TemplateDataItem(remark_user)
             };
             var result_user = TemplateApi.SendTemplateMessage(WebSite.WeChatAppID, entity.MPUserInfo.OpenID, templateId_user, link_url_user, template_data_user);
             if (result_user.errcode != Senparc.Weixin.ReturnCode.请求成功)
