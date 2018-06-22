@@ -109,10 +109,7 @@ namespace Universal.Tools
 
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
-
-        [Display(Name = "数据库备份目录"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^[C-Zc-z]:(\\\w+)*\\$", ErrorMessage = "目录格式有误，Ps:C:\\db\\"), MaxLength(100, ErrorMessage = "不能超过100个字符")]
-        public string DbBackPath { get; set; }
-
+        
         [Display(Name = "页面耗时统计")]
         public bool WebExecutionTime { get; set; }
 
@@ -124,24 +121,24 @@ namespace Universal.Tools
 
         #endregion
 
-        #region 接口配置
+        //#region 接口配置
 
-        [Display(Name = "接口验证是否开启")]
-        public bool WebAPIAuthentication { get; set; }
+        //[Display(Name = "接口验证是否开启")]
+        //public bool WebAPIAuthentication { get; set; }
 
-        [Display(Name = "是否启用请求信息记录")]
-        public bool WebAPITracker { get; set; }
+        //[Display(Name = "是否启用请求信息记录")]
+        //public bool WebAPITracker { get; set; }
         
-        [Display(Name = "Token的KEY名"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
-        public string WebAPITokenKey { get; set; }
+        //[Display(Name = "Token的KEY名"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
+        //public string WebAPITokenKey { get; set; }
         
-        [Display(Name = "Token混淆字符串"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
-        public string WebAPIMixer { get; set; }
+        //[Display(Name = "Token混淆字符串"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
+        //public string WebAPIMixer { get; set; }
 
-        [Display(Name = "接口超时时间(分钟)"), Required(ErrorMessage = "不能为空")]
-        public int WebAPITmeOut { get; set; }
+        //[Display(Name = "接口超时时间(分钟)"), Required(ErrorMessage = "不能为空")]
+        //public int WebAPITmeOut { get; set; }
 
-        #endregion
+        //#endregion
 
         #region 邮件配置
 

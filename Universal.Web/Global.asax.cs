@@ -30,7 +30,7 @@ namespace Universal.Web
             //添加自定义监听器
             System.Diagnostics.Trace.Listeners.Add(new Tools.CustomTraceListener());
 
-            GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
+            //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
 
 
             SqlDependency.Start(SqlConnection);

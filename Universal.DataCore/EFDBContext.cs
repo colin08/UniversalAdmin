@@ -37,27 +37,7 @@ namespace Universal.DataCore
         /// 系统异常日志
         /// </summary>
         public DbSet<Entity.SysLogException> SysLogExceptions { get; set; }
-
-        /// <summary>
-        /// 接口请求日志
-        /// </summary>
-        public DbSet<Entity.SysLogApiAction> SysLogApiActions { get; set; }
-
-        /// <summary>
-        /// 系统及时消息
-        /// </summary>
-        public DbSet<Entity.SysMessage> SysMessages { get; set; }
-
-        /// <summary>
-        /// 意见反馈
-        /// </summary>
-        public DbSet<Entity.Feedback> Feedbacks { get; set; }
-
-        /// <summary>
-        /// APP版本升级管理
-        /// </summary>
-        public DbSet<Entity.AppVersion> AppVersions { get; set; }
-
+        
         /// <summary>
         /// 系统需要权限控制的路由表
         /// </summary>
@@ -69,29 +49,9 @@ namespace Universal.DataCore
         public DbSet<Entity.SysRoleRoute> SysRoleRoutes { get; set; }
 
         /// <summary>
-        /// 测试
-        /// </summary>
-        public DbSet<Entity.Demo> Demo { get; set; }
-
-        /// <summary>
-        /// 测试相册
-        /// </summary>
-        public DbSet<Entity.DemoAlbum> DemoAlbums { get; set; }
-
-        /// <summary>
-        /// 测试成员
-        /// </summary>
-        public DbSet<Entity.DemoDept> DemoDepts { get; set; }
-
-        /// <summary>
         /// 无限级分类
         /// </summary>
         public DbSet<Entity.CusCategory> CusCategorys { get; set; }
-
-        /// <summary>
-        /// 数据库备份
-        /// </summary>
-        public  DbSet<Entity.SysDbBack> SysDbBacks { get; set; }
 
 
         /// <summary>

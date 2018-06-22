@@ -76,13 +76,6 @@
 							<a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>        
 						</li>                   	
 					}
-					<li class="line dk"></li>
-                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                        <span class="ng-scope">Demo</span>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-picture-o"></i> <span class="nav-label">测试相册</span></a>
-                    </li>
 
 					@if(CheckAdminPower("SysConfig/Sys", false))
 					{
@@ -103,27 +96,12 @@
 									{
 										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
 									}
-									@if (CheckAdminPower("SysLog/LogApiAction", false))
-									{
-									<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogApiAction">接口日志</a></li>
-									}
 								</ul>
 							</li>
                         }
-                        <li><a class="nav-link J_menuItem" href="/Admin/SysMessage/Index"><i class="fa fa-bell"></i> <span class="nav-label">系统消息管理</span></a></li>
-                        if (CheckAdminPower("SysDbBack/Index", false))
-                        {
-							<li><a class="nav-link J_menuItem" href="/Admin/SysDbBack/Index"><i class="fa fa-database"></i> <span class="nav-label">数据库备份管理</span></a></li>
-						}
 						if (CheckAdminPower("SysConfig/Modify", false))
 						{
 							<li><a class="nav-link J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
-						}
-						if (CheckAdminPower("AppVersion/Index", false))
-						{
-							<li>
-								<a class="nav-link J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
-							</li>
 						}
 					}
 					<li style="height: 100px;">
@@ -190,12 +168,12 @@
                         </li>
                         -->
 
-                        <li class="dropdown" style="margin-right:50px;">
+                        @*<li class="dropdown" style="margin-right:50px;">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                 <i class="fa fa-bell"></i> <span class="label label-primary" id="sys_msg_total"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-alerts" id="sys_msg_list">
-                                @*<li>
+                                <li>
                                     <a href="http://www.baidu.com" class="nav-link J_menuItem">
                                         <div>
                                             <i class="fa fa-times-circle" onclick="setMsgRead(2)"></i> &nbsp;&nbsp;
@@ -222,9 +200,9 @@
                                             <i class="fa fa-angle-right"></i>
                                         </a>
                                     </div>
-                                </li>*@
+                                </li>
                             </ul>
-                        </li>
+                        </li>*@
 
                         @*<li class="dropdown hidden-xs" style="display:none;" >
                             <a class="right-sidebar-toggle" aria-expanded="false">
@@ -248,55 +226,7 @@
 
     <!-- 自定义js -->
     <script src="/Assets/js/hAdmin.js?v=4.1.0"></script>
-
-    <script type="text/javascript" src="~/Assets/js/jquery.signalR-2.2.1.min.js"></script>
-    <script type="text/javascript" src="~/SignalR/hubs"></script>
-    <!-- SignalR -->
-    <script type="text/javascript">
-        $(function () {
-            var proxy = $.connection.sysMessageService;
-
-            proxy.client.displayDatas = function () {
-                getMsgData();
-            };
-            $.connection.hub.start();
-            getMsgData();
-
-            $.connection.hub.start().done(function () {
-                getMsgData();
-            });
-        });
-
-        function getMsgData() {
-            var $list = $('#sys_msg_list');
-            $.ajax({
-                url: '/Admin/Home/SysMessage',
-                type: 'POST',
-                datatype: 'json',
-                success: function (data) {
-                    $list.empty();                        
-                    var lis = [];
-                    if (data.length > 0) {
-                        $("#sys_msg_total").text(data.length);
-                        $.each(data, function (i,item) {
-                            var htmlT = '<li>';
-                            htmlT += '<a href="javascript:void(0);" link="' + item.LinkUrl + '" open-new-tab="' + item.OpenNewTab + '" onclick="setMsgRead(this)" d-id=' + item.ID + '>';
-                            htmlT += '<div>' + item.Content + '<span class="pull-right text-muted small">' + item.TimeBefore + '前</span></div>';
-                            htmlT += '</a></li><li class="divider"></li>';
-                            lis.push(htmlT);
-                        })
-                    }else
-                    {
-                        $("#sys_msg_total").text('');
-                        lis.push('<li style="text-align:center;">没有消息</li><li class="divider"></li>');
-                    }
-                    lis.push('<li><div class="text-center link-block"><a class="nav-link J_menuItem" href="javascript:(0);" onclick="to_msg_list()"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
-                    $list.append(lis.join(''));
-                }
-            });
-        }
-    </script>
-
+        
 	<script type="text/javascript">
 		$(function(){
 		    //菜单点击    
@@ -306,38 +236,7 @@
 		        return false;
 		    });
 		});
-
-		function to_msg_list()
-		{
-		    document.getElementById("J_iframe").src = "/Admin/SysMessage/Index";
-		}
-
-		function setMsgRead(obj)
-		{
-		    var link =$(obj).attr("link");
-		    var id =$(obj).attr("d-id");
-		    $.ajax({
-		        url: '/Admin/SysMessage/SetMsgRead',
-		        type: 'POST',
-		        data:{"id":id},
-		        datatype: 'json',
-		        success: function (data) {
-		            if(data.msg == 0)
-		            {
-		                layer.msg(data.msgbox);
-		            }
-		        }
-		    });
-
-		    if($(obj).attr("open-new-tab"))
-		    {
-		        window.open(link)
-		    }else
-		    {
-		        document.getElementById("J_iframe").src = link;
-		    }
-		}
-
+        
 	</script>
 </body>
 

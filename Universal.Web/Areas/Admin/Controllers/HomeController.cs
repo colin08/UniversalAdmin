@@ -126,18 +126,6 @@ namespace Universal.Web.Areas.Admin.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 获取系统消息
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult SysMessage()
-        {
-            SignalR.SysMessage sm = new SignalR.SysMessage();
-            var model = sm.GetData();
-            return Json(model);
-        }
-        
         public ActionResult Center()
         {
             return View();

@@ -115,7 +115,6 @@
     <Compile Include="UploadHelper.cs" />
     <Compile Include="ViewPages\AdminViewPage.cs" />
     <Compile Include="WebAjaxEntity.cs" />
-    <Compile Include="WebApiMonitorLog.cs" />
     <Compile Include="WorkContext\AdminWorkContext.cs" />
     <Compile Include="WorkContext\APIWorkContext.cs" />
     <Compile Include="WorkContext\BaseWorkContext.cs" />

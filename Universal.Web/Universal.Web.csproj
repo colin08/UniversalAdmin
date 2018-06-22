@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,14 +72,6 @@
     </Reference>
     <Reference Include="Glimpse.Mvc5, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -589,7 +582,6 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
     <Content Include="Global.asax" />
-    <Content Include="Assets\js\jquery.signalR-2.2.1.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -600,33 +592,22 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\AppVersionController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
-    <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
-    <Compile Include="Areas\Admin\Controllers\SysDbBackController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
-    <Compile Include="Areas\Admin\Controllers\SysMessageController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysRoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysUserController.cs" />
     <Compile Include="Areas\Admin\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Admin\Models\BasePageModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelRoute.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelAppVersion.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelSysDbBack.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelDemo.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogin.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelSysMessage.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysRoleList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysUserList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTree.cs" />
-    <Compile Include="Areas\Admin\SignalR\SysMessageHub.cs" />
-    <Compile Include="Areas\Admin\SignalR\DBData\SysMessage.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -682,8 +663,6 @@
     <Content Include="Areas\Admin\Views\SysRole\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SysRole\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Tools\UploadFile.cshtml" />
-    <Content Include="Areas\Admin\Views\Demo\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Demo\Edit.cshtml" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\awesome.less" />
     <Content Include="Assets\js\plugins\ztree\css\awesomeStyle\fa.less" />
     <Content Include="Areas\Admin\Views\Home\Center.cshtml" />
@@ -698,9 +677,6 @@
     <Content Include="Assets\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Areas\Admin\Views\SysLog\LogException.cshtml" />
     <Content Include="Areas\Admin\Views\SysLog\LogMethod.cshtml" />
-    <Content Include="Areas\Admin\Views\AppVersion\EditAndroid.cshtml" />
-    <Content Include="Areas\Admin\Views\AppVersion\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\AppVersion\EditIOS.cshtml" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
@@ -721,13 +697,9 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="Areas\Admin\Views\SysLog\LogApiAction.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SysInfo.cshtml" />
     <Content Include="Areas\Admin\Views\CusCategory\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CusCategory\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\SysDbBack\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\SysDbBack\Add.cshtml" />
-    <Content Include="Areas\Admin\Views\SysDbBack\Info.cshtml" />
     <Content Include="Areas\Admin\Views\SysConfig\Modify.cshtml" />
     <Content Include="Assets\js\jquery.min.map" />
     <Content Include="Assets\img\browser.psd" />
@@ -735,7 +707,6 @@
     <Content Include="Assets\css\plugins\simditor\editor.scss" />
     <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
     <Content Include="Assets\css\plugins\simditor\simditor.scss" />
-    <Content Include="Areas\Admin\Views\SysMessage\Index.cshtml" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.eot" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.ttf" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.woff" />

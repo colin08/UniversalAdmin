@@ -47,8 +47,7 @@
 <div class="clients-list">
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#tab-1">站点配置</a></li>
-        <li><a data-toggle="tab" href="#tab-2">接口配置</a></li>
-        <li><a data-toggle="tab" href="#tab-3">邮件配置</a></li>
+        <li><a data-toggle="tab" href="#tab-2">邮件配置</a></li>
     </ul>
     <form method="post" class="form-horizontal" onsubmit="configm_before()">
         @Html.AntiForgeryToken()
@@ -91,15 +90,6 @@
                 </div>
                 <div class="hr-line-dashed"></div>
 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.DbBackPath)</label>
-                    <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.DbBackPath, (object)new { @class = "form-control", placeholder = "不超过100个字符" })
-                    </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.DbBackPath)</label>
-                </div>
-
-                <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebExecutionTime)</label>
@@ -158,75 +148,6 @@
             </div>
 
             <div id="tab-2" class="tab-pane">
-                <div style="margin-top:20px;"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPIAuthentication)</label>
-                    <div class="col-sm-3">
-                        <div class="switch">
-                            <div class="onoffswitch">
-                                @Html.HiddenFor(p => p.WebAPIAuthentication)
-                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.WebAPIAuthentication ? "checked":"") id="ck_WebAPIAuthentication" onchange="CKTap(this, 'WebAPIAuthentication')" alt="安全验证是否开启">
-                                <label class="onoffswitch-label" for="ck_WebAPIAuthentication">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="col-sm-3 label_msg"></label>
-                </div>
-                <div class="hr-line-dashed"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITracker)</label>
-                    <div class="col-sm-3">
-                        <div class="switch">
-                            <div class="onoffswitch">
-                                @Html.HiddenFor(p => p.WebAPITracker)
-                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.WebAPITracker ? "checked":"") id="ck_WebAPITracker" onchange="CKTap(this, 'WebAPITracker')" alt="是否启用请求信息记录">
-                                <label class="onoffswitch-label" for="ck_WebAPITracker">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="col-sm-3 label_msg"></label>
-                </div>
-                <div class="hr-line-dashed"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITokenKey)</label>
-                    <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WebAPITokenKey, (object)new { @class = "form-control", placeholder = "不超过50个字符" })
-                    </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPITokenKey)</label>
-                </div>
-                <div class="hr-line-dashed"></div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPIMixer)</label>
-                    <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WebAPIMixer, (object)new { @class = "form-control", placeholder = "不超过50个字符" })
-                    </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPIMixer)</label>
-                </div>
-                <div class="hr-line-dashed"></div>
-                
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.WebAPITmeOut)</label>
-                    <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.WebAPITmeOut, (object)new { @class = "form-control", placeholder = "分钟" })
-                        <span class="help-block m-b-none">为0表示只校验格式，不校验时间差</span>
-                    </div>
-                    <label class="col-sm-3 label_msg">@Html.ValidationMessageFor(p => p.WebAPITmeOut)</label>
-                </div>
-                <div class="hr-line-dashed"></div>
-
-            </div>
-
-            <div id="tab-3" class="tab-pane">
                 <div style="margin-top:20px;"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.EmailHost)</label>
