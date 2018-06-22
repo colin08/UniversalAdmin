@@ -41,6 +41,17 @@ namespace Universal.Tools
         /// </summary>
         private static int[] constantInt = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
+        /// <summary>
+        /// 价格处理，如果小数点都是0，则返回整形，否则返回小数点后两位
+        /// </summary>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        public static string FormatDecimalMoney(decimal money)
+        {
+            if ((money - (int)money) == 0) return ((int)money).ToString();
+            else return money.ToString("F2");
+        }
+
         public static string ConvertMilliseconds(double milliseconds)
         {
             if (milliseconds <= 0)
