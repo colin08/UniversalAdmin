@@ -117,6 +117,9 @@ namespace Universal.Tools
         [Display(Name = "咨询医生未回复时间"), Required(ErrorMessage = "不能为空")]
         public int AdvisoryNoReplyTimeOut { get; set; }
 
+        [Display(Name = "咨询电话"), Required(ErrorMessage = "不能为空")]
+        public string AdvisoryTelphone { get; set; }
+
 
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
