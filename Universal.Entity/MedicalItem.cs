@@ -63,6 +63,18 @@ namespace Universal.Entity
         [MaxLength(500), DisplayFormat(ConvertEmptyStringToNull = true)]
         public string Desc { get; set; }
 
+        public string GetTipsDesc
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Desc)) return "无介绍";
+                else
+                {
+                    return Desc.Replace("\r\n", "");
+                }
+            }
+        }
+
         public DateTime AddTime { get; set; }
 
         /// <summary>
