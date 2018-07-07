@@ -1,6 +1,6 @@
-﻿@model Universal.Web.Areas.Admin.Models.ViewModelMedicalItemList
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelMedicalItemCategoryList
 @{
-    ViewBag.Title = "体检项列表";
+    ViewBag.Title = "体检项分类列表";
 }
 
 <!--头部脚本-->
@@ -13,7 +13,7 @@
 @section nav
 {
     <div class="ibox-title">
-        <h5>体检项列表</h5>
+        <h5>体检项分类列表</h5>
         <div class="ibox-tools">
             <a class="collapse-link">
                 <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
@@ -28,7 +28,7 @@
     <div class="col-sm-4">
         <ol class="breadcrumb">
             <li><a href="/Admin/Home/Center">主页</a></li>
-            <li><a href="/Admin/MedicalItem/Index">体检项管理</a></li>
+            <li><a href="/Admin/MedicalItemCategory/Index">体检项分类管理</a></li>
             <li><strong>数据列表</strong></li>
         </ol>
     </div>
@@ -40,20 +40,20 @@
 
 <div class="row">
     <div class="col-sm-2">
-        @if (CheckAdminPower("MedicalItem/edit", true))
+        @if (CheckAdminPower("MedicalItemCategory/edit", true))
         {
-            @:<a class="btn btn-white" href="@Url.Action("Edit", "MedicalItem", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+            @:<a class="btn btn-white" href="@Url.Action("Edit", "MedicalItemCategory", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
-        @if (CheckAdminPower("MedicalItem/del", true))
+        @if (CheckAdminPower("MedicalItemCategory/del", true))
         {
-            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/MedicalItem/Del',1)"><i class="glyphicon glyphicon-ban-circle"></i> 禁用</a>
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/MedicalItemCategory/Del',1)"><i class="glyphicon glyphicon-ban-circle"></i> 禁用</a>
         }
     </div>
     <div class="col-sm-4">
         <p></p>
     </div>
     <div class="col-sm-2">
-        @Html.DropDownListFor(p => p.cid, ViewData["CategoryList"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "Search()" })
+        
     </div>
     <div class="col-sm-4">
         <div class="input-group">
@@ -76,12 +76,10 @@
                     <th>
                         <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                     </th>
-                    <th>编号</th>
-                    <th>名称</th>
-                    <th>分类</th>
-                    <th>价格</th>
+                    <th>分类名称</th>
                     <th>状态</th>
                     <th>排序数字</th>
+                    <th>添加时间</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -92,14 +90,12 @@
                         <td>
                             <input type="checkbox" class="datacheck" hid="@item.ID">
                         </td>
-                        <td>@item.OnlyID</td>
-                        <td><a href="/Admin/MedicalItem/Edit?id=@item.ID">@item.Title</a></td>
-                        <td>@item.MedicalItemCategory.Title</td>
-                        <td>@item.Price.ToString("F2")</td>
+                        <td><a href="/Admin/MedicalItemCategory/Edit?id=@item.ID">@item.Title</a></td>
                         <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "ban-circle")"></i></td>
                         <td>@item.Weight</td>
+                        <td>@item.AddTime.ToShortDateString()</td>
                         <td>
-                            <a class="btn btn-sm btn-white" href="/Admin/MedicalItem/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                            <a class="btn btn-sm btn-white" href="/Admin/MedicalItemCategory/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                         </td>
                     </tr>
                 }
@@ -127,7 +123,7 @@ else
 
     function Search()
     {
-        location.href = "?page=1&cid="+$("#cid").val()+"&word=" + encodeURIComponent($("#txt_word").val());
+        location.href = "?page=1&word=" + encodeURIComponent($("#txt_word").val());
     }
 
     laypage({
@@ -140,7 +136,7 @@ else
         }(),
         jump: function (e, first) { //触发分页后的回调
             if (!first) { //一定要加此判断，否则初始时会无限刷新
-                location.href = '?page=' + e.curr+"&cid=@Model.cid&word=@Model.word";
+                location.href = '?page=' + e.curr;
             }
         }
     });

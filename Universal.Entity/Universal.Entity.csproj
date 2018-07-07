@@ -68,6 +68,7 @@
     <Compile Include="Medical.cs" />
     <Compile Include="MedicalBanner.cs" />
     <Compile Include="MedicalItem.cs" />
+    <Compile Include="MedicalItemCategory.cs" />
     <Compile Include="MPUser.cs" />
     <Compile Include="MPUserAmountDetails.cs" />
     <Compile Include="MPUserAmountOrder.cs" />

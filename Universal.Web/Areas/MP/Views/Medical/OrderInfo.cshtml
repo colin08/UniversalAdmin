@@ -122,7 +122,7 @@
                 <li class="mui-table-view-cell">
                     <div class="tt-item">
                         <span>@item.Title</span>
-                        <img src="~/Assets/mui/img/icon-info-gray.png" onclick="showTips('@item.Desc',this)" />
+                        <img src="~/Assets/mui/img/icon-info-gray.png" onclick="showTips('@item.GetTipsDesc',this)" />
                     </div>
                 </li>
             }
@@ -136,7 +136,7 @@
             <li class="mui-table-view-cell">
                 <div class="tt-item">
                     <span>@item.Title</span>
-                    <img src="~/Assets/mui/img/icon-info-gray.png" onclick="showTips('@item.Desc',this)" />
+                    <img src="~/Assets/mui/img/icon-info-gray.png" onclick="showTips('@item.GetTipsDesc',this)" />
                 </div>
             </li>
         }
@@ -169,7 +169,7 @@
 <script>
         function showTips(text,obj)
         {
-            layer.tips(text, obj, 5);
+            layer.tips("<lable style='color:#000;font-size:16px'>" + text + "</lable>", obj, { tips: [3, "#EFEFF4"] });
         }
 </script>
 

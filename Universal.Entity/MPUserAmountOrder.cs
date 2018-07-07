@@ -48,6 +48,14 @@ namespace Universal.Entity
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
 
+        public string GetAmount
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(Amount);
+            }
+        }
+
         /// <summary>
         /// 所属用户
         /// </summary>

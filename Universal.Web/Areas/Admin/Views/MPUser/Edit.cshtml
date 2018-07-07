@@ -52,6 +52,7 @@
                     <label class="col-sm-2 control-label">身份类别</label>
                     <div class="col-sm-2">
                         @Html.DropDownListFor(p => p.Identity, ViewData["IdentityList"] as List<SelectListItem>, new { @class = "form-control",@style="padding:0" })
+                        <span class="help-block m-b-none">修改后3个小时后生效</span>
                     </div>
                     <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.Identity)</label>
                 </div>

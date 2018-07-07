@@ -174,33 +174,62 @@ namespace Universal.Web.Areas.Admin.Controllers
         {
             BLL.BaseBLL<Entity.MedicalItem> bll_item = new BLL.BaseBLL<Entity.MedicalItem>();
             var db_item = bll_item.GetListBy(0, p => p.Status, "Weight DESC");
+            var db_data = BLL.BLLMedicalItemCategory.GetAllData();
             List<Entity.MedicalItem> check_list = new List<Entity.MedicalItem>();
             if(id != 0) check_list = BLL.BLLMedicalItem.GetItemByMedicalID(id);
             List<Models.ViewModelTree> list = new List<Models.ViewModelTree>();
             decimal total_amount = 0;
             System.Text.StringBuilder ids = new System.Text.StringBuilder();
-            foreach (var item in db_item)
+            foreach (var category in db_data)
             {
                 Models.ViewModelTree model = new Models.ViewModelTree();
-                model.id = item.ID;
-                model.price = item.Price;
-                model.name = item.Title + "  ￥：" + item.Price.ToString("F2");
-                model.open = false;
+                model.id = category.ID;
+                model.price = 0;
+                model.name = category.Title;
+                model.open = true;
                 model.pId = 0;
-                if (check_list.Any(p => p.ID == item.ID))
-                {
-                    ids.Append(item.ID.ToString() + ",");
-                    model.is_checked = true;
-                    total_amount += item.Price;
-                }
                 list.Add(model);
+
+                foreach (var item in category.MedicalItems.Where(p=>p.Status).OrderByDescending(p=>p.Weight))
+                {
+                    Models.ViewModelTree model_item = new Models.ViewModelTree();
+                    model_item.id = item.ID;
+                    model_item.price = item.Price;
+                    model_item.name = item.Title + "  ￥：" + Tools.WebHelper.FormatDecimalMoney(item.Price);
+                    model_item.open = false;
+                    model_item.pId = category.ID;
+                    if (check_list.Any(p => p.ID == item.ID))
+                    {
+                        ids.Append(item.ID.ToString() + ",");
+                        model_item.is_checked = true;
+                        total_amount += item.Price;
+                    }
+                    list.Add(model_item);
+                }
+
             }
+            //foreach (var item in db_item)
+            //{
+            //    Models.ViewModelTree model = new Models.ViewModelTree();
+            //    model.id = item.ID;
+            //    model.price = item.Price;
+            //    model.name = item.Title + "  ￥：" + item.Price.ToString("F2");
+            //    model.open = false;
+            //    model.pId = 0;
+            //    if (check_list.Any(p => p.ID == item.ID))
+            //    {
+            //        ids.Append(item.ID.ToString() + ",");
+            //        model.is_checked = true;
+            //        total_amount += item.Price;
+            //    }
+            //    list.Add(model);
+            //}
             if(ids.Length>0)
             {
                 ViewData["SelectIDS"] = ids.Remove(ids.Length - 1, 1).ToString();
             }
             
-            ViewData["TotalAmount"] = total_amount.ToString("F2");
+            ViewData["TotalAmount"] = WebHelper.FormatDecimalMoney(total_amount);
             ViewData["Tree"] = JsonHelper.ToJson(list).Replace("is_checked", "checked");
         }
 

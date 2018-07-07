@@ -87,7 +87,7 @@ namespace Universal.Web.Areas.MP.Controllers
 
             //检查账户余额
             var account_balance = BLL.BLLMPUser.GetAccountBalance(WorkContext.UserInfo.ID);
-            ViewData["AccountBalance"] = account_balance > 0 ? account_balance.ToString("F2") : "0";
+            ViewData["AccountBalance"] = Tools.WebHelper.FormatDecimalMoney(account_balance);
             ViewData["CanYue"] = account_balance >= entity_order.RelAmount ? 1 : 0;
 
             var timeStamp = TenPayV3Util.GetTimestamp();
@@ -120,7 +120,7 @@ namespace Universal.Web.Areas.MP.Controllers
             //System.Diagnostics.Trace.WriteLine(result.return_code + "--" + result.return_msg);
             var package = string.Format("prepay_id={0}", result.prepay_id);
             ViewData["product"] = entity_order.Title;
-            ViewData["price"] = entity_order.RelAmount.ToString("F2");
+            ViewData["price"] = entity_order.GetRelAmount;
             ViewData["appId"] = WorkContext.WebSite.WeChatAppID;
             ViewData["timeStamp"] = timeStamp;
             ViewData["nonceStr"] = nonceStr;
@@ -170,7 +170,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var entity_order = bll_order.GetModel(p => p.OrderNum == order_num, "ID DESC");
             if (entity_order == null) return PromptView("/MP/Medical/Index", "订单不存在");
             if (entity_order.MPUserID != WorkContext.UserInfo.ID) return PromptView("/MP/Medical/Index", "该订单不属于您");
-            ViewData["Price"] = entity_order.RelAmount.ToString("F2");
+            ViewData["Price"] = entity_order.GetRelAmount;
             if (entity_order.Status == Entity.OrderStatus.已支付)
             {
                 ViewData["Status"] = 1;
@@ -212,7 +212,7 @@ namespace Universal.Web.Areas.MP.Controllers
 
             //检查账户余额
             var account_balance = BLL.BLLMPUser.GetAccountBalance(WorkContext.UserInfo.ID);
-            ViewData["AccountBalance"] = account_balance > 0 ? account_balance.ToString("F2") : "0";
+            ViewData["AccountBalance"] = Tools.WebHelper.FormatDecimalMoney(account_balance);
             ViewData["CanYue"] = account_balance >= entity_order.PayMoney ? 1 : 0;
 
             var timeStamp = TenPayV3Util.GetTimestamp();
@@ -230,7 +230,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
             var package = string.Format("prepay_id={0}", result.prepay_id);
             ViewData["product"] = "在线咨询";
-            ViewData["price"] = entity_order.PayMoney.ToString("F2");
+            ViewData["price"] = entity_order.GetPayMoney;
             ViewData["appId"] = WorkContext.WebSite.WeChatAppID;
             ViewData["timeStamp"] = timeStamp;
             ViewData["nonceStr"] = nonceStr;
@@ -281,7 +281,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var entity_order = bll_order.GetModel(p => p.PayNumber == order_num, "ID DESC");
             if (entity_order == null) return PromptView("/MP/Advisory/Index", "咨询不存在");
             if (entity_order.MPUserID != WorkContext.UserInfo.ID) return PromptView("/MP/Advisory/Index", "该咨询不属于您");
-            ViewData["Price"] = entity_order.PayMoney.ToString("F2");
+            ViewData["Price"] = entity_order.GetPayMoney;
             if (entity_order.Status ==  Entity.ConsultationStatus.已支付)
             {
                 ViewData["Status"] = 1;
@@ -348,7 +348,7 @@ namespace Universal.Web.Areas.MP.Controllers
             var entity_order = bll_order.GetModel(p => p.OrderNum == order_num, "ID DESC");
             if (entity_order == null) return PromptView("/MP/BasicUser/Recharge", "订单不存在");
             if (entity_order.MPUserID != WorkContext.UserInfo.ID) return PromptView("/MP/BasicUser/Recharge", "该订单不属于您");
-            ViewData["Price"] = entity_order.Amount.ToString("F2");
+            ViewData["Price"] = entity_order.GetAmount;
             if (entity_order.Status)
             {
                 ViewData["Status"] = 1;

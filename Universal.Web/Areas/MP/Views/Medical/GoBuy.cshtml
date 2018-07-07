@@ -71,7 +71,7 @@
         <div class="mui-card-content">
         </div>
         <div class="mui-card-footer">
-            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_order.MPrice.ToString("F2")</span>&nbsp;<span class="price">￥@entity_order.MYPrice.ToString("F2")</span></a>
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_order.GetMPrice</span>&nbsp;<span class="price">￥@entity_order.GetMYPrice</span></a>
         </div>
     </div>
 }
@@ -83,7 +83,7 @@ else
         <div class="mui-card-content">
         </div>
         <div class="mui-card-footer">
-            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_medical.Price.ToString("F2")</span>&nbsp;<span class="price">￥@entity_medical.YPrice.ToString("F2")</span></a>
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@entity_medical.GetPrice</span>&nbsp;<span class="price">￥@entity_medical.GetYPrice</span></a>
         </div>
     </div>
 }
@@ -100,7 +100,7 @@ else
                 <li class="mui-table-view-cell">
                     <div class="tt-item">
                         <span>@item.Title</span>
-                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.Desc',this)" />
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.GetTipsDesc',this)" />
                     </div>
                 </li>
             }            
@@ -123,7 +123,7 @@ else
                 <li class="mui-table-view-cell">
                     <div class="tt-item">
                         <span>@item.Title</span>
-                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.Desc',this)" />
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Order" onclick="showTips('@item.GetTipsDesc',this)" />
                     </div>
                 </li>
             }
@@ -135,7 +135,7 @@ else
                 <li class="mui-table-view-cell">
                     <div class="tt-item">
                         <span>@item.Title</span>
-                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Medical" onclick="showTips('@item.Desc',this)" />
+                        <img src="~/Assets/mui/img/icon-info-gray.png" data-type="Medical" onclick="showTips('@item.GetTipsDesc',this)" />
                     </div>
                 </li>
             }
@@ -159,10 +159,10 @@ else
     <div class="bar-left">
         @if(have_order)
         {
-            <span>总金额:<label>￥@entity_order.RelAmount.ToString("F2")</label></span>
+            <span>总金额:<label>￥@entity_order.GetRelAmount</label></span>
         }else
         {
-            <span>总金额:<label>￥@entity_medical.Price.ToString("F2")</label></span>
+            <span>总金额:<label>￥@entity_medical.GetPrice</label></span>
         }
     </div>
     <div class="bar-right">
@@ -182,7 +182,7 @@ else
 <script>
         function showTips(text,obj)
         {
-            layer.tips(text, obj, 5);
+            layer.tips("<lable style='color:#000;font-size:16px'>" + text + "</lable>", obj, { tips: [3, "#EFEFF4"] });
         }
 </script>
 

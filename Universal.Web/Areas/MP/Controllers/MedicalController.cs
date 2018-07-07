@@ -51,7 +51,7 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <param name="mid">套餐ID</param>
         /// <param name="o">临时订单号</param>
         /// <returns></returns>
-        public ActionResult GoBuy(int mid, string o,string back)
+        public ActionResult GoBuy(int mid, string o, string back)
         {
             if (mid <= 0) return PromptView("/MP/Medical/Index", "非法参数");
             ViewData["MID"] = mid;
@@ -76,7 +76,7 @@ namespace Universal.Web.Areas.MP.Controllers
             ViewData["OrderNum"] = o;
             ViewData["GoSelectItem"] = "/MP/Medical/SelectItem?mid=" + mid + "&o=" + o;
             ViewData["NextUrl"] = "/MP/Medical/AddMInfo?mid=" + mid.ToString() + "&o=" + o;
-            if(!string.IsNullOrWhiteSpace(back))
+            if (!string.IsNullOrWhiteSpace(back))
             {
                 ViewData["BackUrl"] = back;
             }
@@ -102,7 +102,7 @@ namespace Universal.Web.Areas.MP.Controllers
             if (entity.Status == MedicalStatus.Down) return PromptView("/MP/Medical/Index", "该套餐已下架");
             ViewData["MID"] = mid;
             ViewData["Medical"] = entity;
-            ViewData["MPrice"] = entity.Price.ToString("F2");
+            ViewData["MPrice"] = WebHelper.FormatDecimalMoney(entity.Price);
             if (string.IsNullOrWhiteSpace(o))
             {
                 //添加订单
@@ -121,11 +121,11 @@ namespace Universal.Web.Areas.MP.Controllers
             if (model.Status != OrderStatus.临时订单) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该订单已不能再加项");
             ViewData["BackUrl"] = "/MP/Medical/GoBuy?mid=" + mid.ToString() + "&o=" + o;
 
+            //LoadAllSelectSZMItem(model);
             LoadAllSelectItem(model);
-
             decimal select_price = Tools.TypeHelper.ObjectToDecimal(ViewData["SelectPrice"], 0);
             var TotalPrice = select_price + entity.Price;
-            ViewData["TotalPrice"] = TotalPrice.ToString("F2");
+            ViewData["TotalPrice"] = WebHelper.FormatDecimalMoney(TotalPrice);
             return View(model);
         }
 
@@ -159,7 +159,7 @@ namespace Universal.Web.Areas.MP.Controllers
             BLL.BaseBLL<OrderMedical> bll_order = new BLL.BaseBLL<OrderMedical>();
             var model = bll_order.GetModel(p => p.OrderNum == o, "ID DESC");
             if (model == null) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "新增临时订单不存在");
-            if (model.MedicalID!= entity.ID) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该套餐不属于该订单");
+            if (model.MedicalID != entity.ID) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该套餐不属于该订单");
             if (model.Status != OrderStatus.临时订单) return PromptView("/MP/Medical/GoBuy?mid=" + mid.ToString(), "该订单已不能再加项");
             ViewData["BackUrl"] = "/MP/Medical/GoBuy?mid=" + mid.ToString() + "&o=" + o;
             ViewData["NextUrl"] = "/mp/pay/OrderMedical?o=" + o;
@@ -201,7 +201,7 @@ namespace Universal.Web.Areas.MP.Controllers
         {
             int u_id = WorkContext.UserInfo.ID;
             BLL.BaseBLL<Entity.OrderMedical> bll = new BLL.BaseBLL<OrderMedical>();
-            List<Universal.Entity.OrderMedical> db_list =  bll.GetListBy(0, p => p.MPUserID == u_id, "AddTime DESC");
+            List<Universal.Entity.OrderMedical> db_list = bll.GetListBy(0, p => p.MPUserID == u_id, "AddTime DESC");
             return View(db_list);
         }
 
@@ -214,7 +214,7 @@ namespace Universal.Web.Areas.MP.Controllers
         {
             BLL.BaseBLL<Entity.OrderMedical> bll = new BLL.BaseBLL<OrderMedical>();
             Universal.Entity.OrderMedical model = bll.GetModel(p => p.OrderNum == o, "ID ASC", "OrderMedicalItems");
-            if(model == null) return PromptView("/MP/Medical/OrderList", "订单不存在");
+            if (model == null) return PromptView("/MP/Medical/OrderList", "订单不存在");
             if (model.MPUserID != WorkContext.UserInfo.ID) return PromptView("/MP/Medical/OrderList", "该订单不属于您");
             var yuyue_str = model.YuYueDate.ToString("yyyy-MM-dd");
             if (model.YuYueDate.Hour < 13) yuyue_str += " 上午";
@@ -225,7 +225,7 @@ namespace Universal.Web.Areas.MP.Controllers
             else ViewData["Gender"] = "未知";
 
             var show_bri = "/";
-            if(model.Brithday != null) show_bri = TypeHelper.ObjectToDateTime(model.Brithday, DateTime.Now).ToShortDateString();
+            if (model.Brithday != null) show_bri = TypeHelper.ObjectToDateTime(model.Brithday, DateTime.Now).ToShortDateString();
             ViewData["ShowBrithDay"] = show_bri;
 
             return View(model);
@@ -244,7 +244,7 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <param name="yuyue"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult ModifyOrderUserInfo(string o,string realname, string idnumber,string telphone, int gender,string bri,string yuyue)
+        public JsonResult ModifyOrderUserInfo(string o, string realname, string idnumber, string telphone, int gender, string bri, string yuyue)
         {
             #region 数据验证
 
@@ -275,7 +275,7 @@ namespace Universal.Web.Areas.MP.Controllers
             #endregion
             BLL.BaseBLL<Entity.OrderMedical> bll = new BLL.BaseBLL<OrderMedical>();
             var model = bll.GetModel(p => p.OrderNum == o, "ID DESC");
-            if(model == null)
+            if (model == null)
             {
                 WorkContext.AjaxStringEntity.msgbox = "订单不存在";
                 return Json(WorkContext.AjaxStringEntity);
@@ -331,10 +331,10 @@ namespace Universal.Web.Areas.MP.Controllers
         /// <summary>
         /// 加载所有的选择项
         /// </summary>
-        private void LoadAllSelectItem(Entity.OrderMedical entity_order)
+        private void LoadAllSelectSZMItem(Entity.OrderMedical entity_order)
         {
             List<string> SZMList = new List<string>();
-            var db_list = BLL.BLLMedical.LoadAllSelectList(out SZMList);
+            var db_list = BLL.BLLMedical.LoadAllSelectSZMList(out SZMList);
             var order_medical_item = entity_order.OrderMedicalItems.ToList();
             var SelectItem = new List<Universal.Web.Areas.MP.Models.MedicalSelectItem>();
             int select_total = 0;
@@ -347,7 +347,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 var mach_entity = order_medical_item.Find(p => p.MedicalID == db_mecal_id);
                 if (mach_entity != null) model.type = (int)mach_entity.Type;
                 else model.type = 0;
-                if(model.type == 2)
+                if (model.type == 2)
                 {
                     select_total++;
                     select_price += item.Price;
@@ -357,7 +357,7 @@ namespace Universal.Web.Areas.MP.Controllers
                 model.SZM = item.SZM;
                 model.Title = item.Title;
                 model.Weight = item.Weight;
-                model.price = item.Price.ToString("F2");
+                model.price = WebHelper.FormatDecimalMoney(item.Price);
                 SelectItem.Add(model);
             }
             if (select_total == 0)
@@ -374,6 +374,60 @@ namespace Universal.Web.Areas.MP.Controllers
             ViewData["SZMList"] = SZMList;
         }
 
+        /// <summary>
+        /// 加载所有体检项,分类方式
+        /// </summary>
+        /// <param name="entity_order"></param>
+        private void LoadAllSelectItem(Entity.OrderMedical entity_order)
+        {
+            List<Models.SelectMedicalCategory> result_list = new List<Models.SelectMedicalCategory>();
+
+            var db_list = BLL.BLLMedicalItemCategory.GetAllData();
+            var order_medical_item = entity_order.OrderMedicalItems.ToList();
+            
+            int select_total = 0;
+            decimal select_price = 0;
+
+            foreach (var cate in db_list)
+            {
+                Models.SelectMedicalCategory cateogry = new Models.SelectMedicalCategory();
+                cateogry.id = cate.ID;
+                cateogry.title = cate.Title;
+                foreach (var item in cate.MedicalItems.Where(p => p.Status).OrderByDescending(p => p.Weight).ToList())
+                {
+                    Models.SelectMedicalCategoryItem ite = new Models.SelectMedicalCategoryItem();
+                    var db_mecal_id = item.ID;
+                    var mach_entity = order_medical_item.Find(p => p.MedicalID == db_mecal_id);
+
+                    if (mach_entity != null) ite.type = (int)mach_entity.Type;
+                    else ite.type = 0;
+                    if (ite.type == 2)
+                    {
+                        select_total++;
+                        select_price += item.Price;
+                    }
+                    ite.id = item.ID;
+                    ite.title = item.Title;
+                    ite.price = item.Price.ToString("F2");
+                    cateogry.items.Add(ite);
+                }
+                result_list.Add(cateogry);
+            }
+
+            if (select_total == 0)
+            {
+                ViewData["BtnText"] = "完成";
+            }
+            else
+            {
+                ViewData["BtnText"] = "完成(" + select_total.ToString() + ")";
+            }
+            ViewData["SelectTotal"] = select_total;
+            ViewData["SelectPrice"] = WebHelper.FormatDecimalMoney(select_price);
+
+            var result_json = Tools.JsonHelper.ToJson(result_list);
+            ViewData["ItemJsonData"] = result_json;
+        }
 
     }
 }

@@ -131,7 +131,7 @@
         <div class="mui-card-content">
         </div>
         <div class="mui-card-footer">
-            <a class="mui-card-link">优惠价：<span class="price-yh">￥@item.Price.ToString("F2")</span>&nbsp;<span class="price">￥@item.YPrice.ToString("F2")</span></a>
+            <a class="mui-card-link">优惠价：<span class="price-yh">￥@item.GetPrice</span>&nbsp;<span class="price">￥@item.GetYPrice</span></a>
             <button class="mui-btn-red" onclick="location.href='GoBuy?mid=@item.ID&back=Index'">立即购买</button>
         </div>
     </div>

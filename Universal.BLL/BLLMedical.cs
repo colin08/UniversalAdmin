@@ -102,7 +102,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="SZMList"></param>
         /// <returns></returns>
-        public static List<Entity.MedicalItem> LoadAllSelectList(out List<string> SZMList)
+        public static List<Entity.MedicalItem> LoadAllSelectSZMList(out List<string> SZMList)
         {
             SZMList = new List<string>();
             using (var db=new DataCore.EFDBContext())
@@ -112,5 +112,6 @@ namespace Universal.BLL
                 return db_list;
             }
         }
+
     }
 }

@@ -85,6 +85,13 @@
                             </li>
                         }
 
+                        if (CheckAdminPower("MedicalItemCategory/Index", false))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/MedicalItemCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">体检项分类管理</span></a>
+                            </li>
+                        }
+
                         if (CheckAdminPower("MedicalBanner/Index", false))
                         {
                             <li>

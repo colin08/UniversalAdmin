@@ -705,6 +705,8 @@
     <Content Include="Areas\MP\Views\Pay\StatusOrderAdvisory.cshtml" />
     <Content Include="Areas\MP\Views\Advisory\Add.cshtml" />
     <Content Include="Areas\MP\Views\Doctors\AdvisoryReply.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalItemCategory\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MedicalItemCategory\Edit.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -728,6 +730,7 @@
     <Compile Include="Areas\Admin\Controllers\ConsultationSettlementController.cs" />
     <Compile Include="Areas\Admin\Controllers\CusCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MedicalItemCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsTagController.cs" />
     <Compile Include="Areas\Admin\Controllers\DoctorsSpecialtyController.cs" />
@@ -755,6 +758,7 @@
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelConsultationDiseaseList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelMedicalItemCategoryList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsCategoryList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsBannerList.cs" />

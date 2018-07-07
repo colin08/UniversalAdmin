@@ -15,6 +15,7 @@ namespace Universal.Entity
         {
             this.Status = true;
             this.Weight = 99;
+            this.Desc = "";
             this.AddTime = DateTime.Now;
             this.Medicals = new List<Medical>();
         }
@@ -38,6 +39,16 @@ namespace Universal.Entity
         /// </summary>
         [Required(ErrorMessage ="项目名称必填"),MaxLength(100,ErrorMessage ="不超过100个字符")]
         public string Title { get; set; }
+
+        /// <summary>
+        /// 所属分类ID
+        /// </summary>
+        public int MedicalItemCategoryID { get; set; }
+
+        /// <summary>
+        /// 所属分类
+        /// </summary>
+        public virtual MedicalItemCategory MedicalItemCategory { get; set; }
 
         /// <summary>
         /// 首字母

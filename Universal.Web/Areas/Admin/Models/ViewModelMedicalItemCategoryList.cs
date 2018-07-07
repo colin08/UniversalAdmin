@@ -8,22 +8,17 @@ namespace Universal.Web.Areas.Admin.Models
     /// <summary>
     /// 
     /// </summary>
-    public class ViewModelMedicalItemList : BasePageModel
+    public class ViewModelMedicalItemCategoryList : BasePageModel
     {
-        /// <summary>
-        /// 分类ID
-        /// </summary>
-        public int cid { get; set; }
-
         /// <summary>
         /// 当前筛选的关键字
         /// </summary>
         public string word { get; set; }
 
         /// <summary>
-        /// 用户列表
+        /// 列表
         /// </summary>
-        public List<Entity.MedicalItem> DataList { get; set; }
+        public List<Entity.MedicalItemCategory> DataList { get; set; }
         
     }
 }

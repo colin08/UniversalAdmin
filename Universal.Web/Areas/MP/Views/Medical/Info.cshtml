@@ -91,7 +91,7 @@
 @section muifooter{
 <div class="mui-bar-footer fixed-group-buttom">
     <div class="bar-left">
-        优惠价:<span class="price-yh">￥@Model.Price.ToString("F2")</span>&nbsp;<span class="price">￥@Model.YPrice.ToString("F2")</span>
+        优惠价:<span class="price-yh">￥@Model.GetPrice</span>&nbsp;<span class="price">￥@Model.GetYPrice</span>
     </div>
     <div class="bar-right">
         <button class="mui-btn-red" onclick="javascript:location.href='GoBuy?mid=@Model.ID'">立即购买</button>

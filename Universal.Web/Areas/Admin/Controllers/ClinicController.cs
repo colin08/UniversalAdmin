@@ -140,7 +140,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// 禁用
         /// </summary>
         [HttpPost]
-        [AdminPermissionAttribute("诊所管理", "禁用地区")]
+        [AdminPermissionAttribute("诊所管理", "禁用诊所")]
         public JsonResult Del(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

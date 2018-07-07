@@ -64,7 +64,7 @@
             </div>
             <div class="mui-card-footer">
                 <a>订单号:@item.OrderNum <span style="font-size: 12px; color:rgba(0,0,0,0.5)">(@item.AddTime.ToString("yyyy/MM/dd HH:mm"))</span></a>
-                <a class="money">￥@item.RelAmount.ToString("F2")</a>
+                <a class="money">￥@item.GetRelAmount</a>
             </div>
         </div>
     }

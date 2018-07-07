@@ -139,6 +139,11 @@ namespace Universal.DataCore
         public DbSet<Entity.MedicalItem> MedicalItems { get; set; }
 
         /// <summary>
+        /// 体检套餐项分类
+        /// </summary>
+        public DbSet<Entity.MedicalItemCategory> MedicatlItemCategorys { get; set; }
+
+        /// <summary>
         /// 账户支出明细
         /// </summary>
         public DbSet<Entity.MPUserAmountDetails> MPUserAmountDetails { get; set; }

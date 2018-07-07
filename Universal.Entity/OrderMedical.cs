@@ -126,6 +126,15 @@ namespace Universal.Entity
         [Column(TypeName = "money")]
         public decimal RelAmount { get; set; }
 
+        public string GetRelAmount
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(RelAmount);
+            }
+        }
+
+
         /// <summary>
         /// 所属用户
         /// </summary>
@@ -153,11 +162,28 @@ namespace Universal.Entity
         [Column(TypeName ="money")]
         public decimal MYPrice { get; set; }
 
+        public string GetMYPrice
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(MYPrice);
+            }
+        }
+
         /// <summary>
         /// 套餐实际价格
         /// </summary>
         [Column(TypeName = "money")]
         public decimal MPrice { get; set; }
+
+        public string GetMPrice
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(MPrice);
+            }
+        }
+
 
         /// <summary>
         /// 体检套餐封面图

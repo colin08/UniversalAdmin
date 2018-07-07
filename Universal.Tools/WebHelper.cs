@@ -48,6 +48,7 @@ namespace Universal.Tools
         /// <returns></returns>
         public static string FormatDecimalMoney(decimal money)
         {
+            if (money == 0) return "0";
             if ((money - (int)money) == 0) return ((int)money).ToString();
             else return money.ToString("F2");
         }

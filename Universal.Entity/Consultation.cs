@@ -257,6 +257,15 @@ namespace Universal.Entity
         [Column(TypeName = "money")]
         public decimal PayMoney { get; set; }
 
+        public string GetPayMoney
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(PayMoney);
+            }
+        }
+
+
         /// <summary>
         /// 提问内容
         /// </summary>

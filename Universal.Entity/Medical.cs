@@ -70,12 +70,29 @@ namespace Universal.Entity
         /// </summary>
         [Column(TypeName = "money")]
         public decimal YPrice { get; set; }
-        
+
+        public string GetYPrice
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(YPrice);
+            }
+        }
+
         /// <summary>
         /// 实际价格
         /// </summary>
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
+
+        public string GetPrice
+        {
+            get
+            {
+                return Tools.WebHelper.FormatDecimalMoney(Price);
+            }
+        }
+
         
         /// <summary>
         /// VIP价格（预留）

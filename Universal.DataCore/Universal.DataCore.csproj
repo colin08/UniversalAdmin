@@ -62,6 +62,14 @@
     <Compile Include="Migrations\201805261049255_add_con_pay_time.Designer.cs">
       <DependentUpon>201805261049255_add_con_pay_time.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807060856353_add_medicalitemcategory.cs" />
+    <Compile Include="Migrations\201807060856353_add_medicalitemcategory.Designer.cs">
+      <DependentUpon>201807060856353_add_medicalitemcategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807060912134_modify_medical_item.cs" />
+    <Compile Include="Migrations\201807060912134_modify_medical_item.Designer.cs">
+      <DependentUpon>201807060912134_modify_medical_item.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Mapping\MPUserDoctorsMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +97,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805261049255_add_con_pay_time.resx">
       <DependentUpon>201805261049255_add_con_pay_time.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807060856353_add_medicalitemcategory.resx">
+      <DependentUpon>201807060856353_add_medicalitemcategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807060912134_modify_medical_item.resx">
+      <DependentUpon>201807060912134_modify_medical_item.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
