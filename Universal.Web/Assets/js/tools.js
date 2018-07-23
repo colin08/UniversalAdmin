@@ -81,9 +81,9 @@ function SetPageSize(obj) {
     if (num != "") {
         $.post("/admin/tools/SetPageCookie", { "cname": cname, "num": num }, function (result) {
             //
+            location.reload();
         });
-        //页面刷新
-        location.href = '?page=1';
+        //location.href = '?page=1';
     }
 }
 
@@ -205,30 +205,36 @@ function configm_before() {
     }
 }
 
-function InitTextArea(TextAreaID)
-{
-    /** 富文本编辑器 begin  **/
-    var toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale', 'color', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', 'hr', '|', 'indent', 'outdent', 'alignment', 'markdown'];
-    var editor = new Simditor({
-        textarea: $('#' + TextAreaID + ''),
-        autosave: 'editor-'+TextAreaID,
-        toolbar: toolbar,
-        defaultImage: '/Assets/img/default_avatar.jpg', //编辑器插入图片时使用的默认图片  
-        upload: {
-            url: '/Admin/Tools/UploadAction',
-            params: { operation: "area", upload_type: "TxtArea" },
-            fileKey: 'imgFile', //服务器端获取文件数据的参数名  
-            connectionCount: 3,
-            leaveConfirm: '正在上传文件',
-        },
-        success: function (data) {
-            console.log(data);
-            //alert(data);
-        }
+/** 富文本编辑器 begin  **/
+function InitFroalaTextArea(TextAreaID) {
+    $('#' + TextAreaID + '').froalaEditor({
+        toolbarInline: false,
+        language: 'zh_cn',
+        toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'quote', 'insertHR', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+        heightMin: 200,
+        heightMax: 300,
+        placeholderText: '请输入内容',
+        //上传图片配置
+        imageUploadURL: '/Admin/Tools/UploadAction',
+        imageUploadParams: { operation: 'area', upload_type: 'FroalaEditor' },
+        imageUploadMethod: 'POST',
+        imageMaxSize: 5 * 1024 * 1024,//5MB
+        imageAllowedTypes: ['jpeg', 'jpg', 'png', 'bmp', 'gif'],
+        //上传视频配置
+        videoUploadURL: '/Admin/Tools/UploadAction',
+        videoUploadParams: { operation: 'area', upload_type: 'FroalaEditor' },
+        videoUploadMethod: 'POST',
+        videoMaxSize: 500 * 1024 * 1024, //500MB
+        videoAllowedTypes: ['mp4', 'ogg'],
+        //上传文件配置
+        fileUploadURL: '/Admin/Tools/UploadAction',
+        fileUploadParams: { operation: 'area', upload_type: 'FroalaEditor' },
+        fileUploadMethod: 'POST',
+        fileMaxSize: 20 * 1024 * 1024,//20MB
+        fileAllowedTypes: ['*']
     });
-
-    /** 富文本编辑器 end  **/
 }
+/** 富文本编辑器 end  **/
 
 //文件下载
 function FileDown(uri,name)

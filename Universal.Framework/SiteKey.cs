@@ -66,7 +66,7 @@ namespace Universal.Web.Framework
         /// <summary>
         /// 富文本编辑器
         /// </summary>
-        TxtArea
+        FroalaEditor
     }
 
 

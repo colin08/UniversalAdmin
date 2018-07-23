@@ -58,15 +58,43 @@ namespace Universal.Web
             bundles.Add(new ScriptBundle("~/bundles/webuploader").Include(
                       "~/Assets/js/plugins/webuploader/webuploader.min.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/simditor").Include(
-                      "~/Assets/js/plugins/simditor/module.min.js",
-                      "~/Assets/js/plugins/simditor/hotkeys.min.js",
-                      "~/Assets/js/plugins/simditor/uploader.min.js",
-                      "~/Assets/js/plugins/simditor/simditor.min.js",
-                      "~/Assets/js/plugins/simditor/simditor-autosave.js",
-                      "~/Assets/js/plugins/simditor/marked.js",
-                      "~/Assets/js/plugins/simditor/to-markdown.js",
-                      "~/Assets/js/plugins/simditor/simditor-markdown.js"));
+            bundles.Add(new ScriptBundle("~/bundles/froala_editor").Include(
+                       "~/Assets/js/plugins/froala_editor/codemirror.min.js",
+                       "~/Assets/js/plugins/froala_editor/xml.min.js",
+                       "~/Assets/js/plugins/froala_editor/froala_editor.min.js",
+                       "~/Assets/js/plugins/froala_editor/froala_editor.pkgd.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/align.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/char_counter.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/code_beautifier.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/code_view.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/colors.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/draggable.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/emoticons.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/entities.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/file.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/font_size.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/font_family.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/fullscreen.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/image.min.js",
+                       //"~/Assets/js/plugins/froala_editor/plugins/image_manager.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/line_breaker.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/inline_style.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/link.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/lists.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/paragraph_format.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/paragraph_style.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/quick_insert.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/quote.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/table.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/save.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/url.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/video.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/help.min.js",
+                       "~/Assets/js/plugins/froala_editor/third_party/spell_checker.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/special_characters.min.js",
+                       "~/Assets/js/plugins/froala_editor/plugins/word_paste.min.js",
+                       "~/Assets/js/plugins/froala_editor/languages/zh_cn.js"
+                       ));
 
             bundles.Add(new ScriptBundle("~/bundles/metisMenu").Include(
                       "~/Assets/js/plugins/metisMenu/jquery.metisMenu.js"));
@@ -98,9 +126,27 @@ namespace Universal.Web
             bundles.Add(new StyleBundle("~/Content/chosen").Include(
                       "~/Assets/css/plugins/chosen/chosen.css"));
 
-            bundles.Add(new StyleBundle("~/Content/simditor").Include(
-                       "~/Assets/css/plugins/simditor/simditor.css",
-                       "~/Assets/css/plugins/simditor/simditor-markdown.css"));
+            bundles.Add(new StyleBundle("~/Content/froala_editor").Include(
+                      "~/Assets/css/plugins/froala_editor/froala_editor.css",
+                      "~/Assets/css/plugins/froala_editor/froala_style.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/code_view.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/draggable.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/colors.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/emoticons.css",
+                      //"~/Assets/css/plugins/froala_editor/plugins/image_manager.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/image.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/line_breaker.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/table.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/char_counter.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/video.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/fullscreen.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/file.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/quick_insert.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/help.css",
+                      "~/Assets/css/plugins/froala_editor/third_party/spell_checker.css",
+                      "~/Assets/css/plugins/froala_editor/plugins/special_characters.css",
+                      "~/Assets/css/plugins/froala_editor/codemirror.min.css"
+                      ));
 
             bundles.Add(new StyleBundle("~/Content/ztree_metroStyle").Include(
                       "~/Assets/js/plugins/ztree/css/metroStyle/metroStyle.css"));
