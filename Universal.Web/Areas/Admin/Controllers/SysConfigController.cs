@@ -49,10 +49,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                 if (ConfigHelper.SaveConfig(ConfigFileEnum.SiteConfig, entity))
                 {
                     AddAdminLogs(Entity.SysLogMethodType.Update, "修改配置文件");
-                    return PromptView("/admin/SysConfig/Modify", "OK", "Success", "修改成功", 5);
+                    return PromptView("/admin/SysConfig/Modify", "OK", "Success", "修改成功", 3);
                 }else
                 {
-                    return PromptView("/admin/SysConfig/Modify", "500", "Error", "保存失败，可能是没有权限操作数据库", 5);
+                    return PromptView("/admin/SysConfig/Modify", "500", "Error", "保存失败，可能是没有权限操作数据库", 3);
                 }
             }
             else

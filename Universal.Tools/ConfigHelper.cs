@@ -101,11 +101,23 @@ namespace Universal.Tools
         [Display(Name = "站点URL"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^(http|https)\://.+$", ErrorMessage = "URL格式错误")]
         public string SiteUrl { get; set; }
 
+        [Display(Name = "备案信息"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过200个字符")]
+        public string Copyright { get; set; }
+
         [Display(Name ="附件地址")]
         public string FileUrl { get; set; }
 
         [Display(Name ="公司名称"),Required(ErrorMessage ="不能为空"),MaxLength(30,ErrorMessage = "不能超过30个字符")]
         public string CompanyName { get; set; }
+
+        [Display(Name = "公司电话"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
+        public string CompanyTel { get; set; }
+
+        [Display(Name = "公司邮箱"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
+        public string CompanyEmail { get; set; }
+
+        [Display(Name = "公司地址"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过100个字符")]
+        public string CompanyAddress { get; set; }
 
         [Display(Name = "站点应用程序池名称"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string AppPoolName { get; set; }
@@ -128,10 +140,10 @@ namespace Universal.Tools
 
         //[Display(Name = "是否启用请求信息记录")]
         //public bool WebAPITracker { get; set; }
-        
+
         //[Display(Name = "Token的KEY名"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
         //public string WebAPITokenKey { get; set; }
-        
+
         //[Display(Name = "Token混淆字符串"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
         //public string WebAPIMixer { get; set; }
 
@@ -139,6 +151,12 @@ namespace Universal.Tools
         //public int WebAPITmeOut { get; set; }
 
         //#endregion
+
+        [Display(Name = "职位咨询电话"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
+        public string JobTel { get; set; }
+
+        [Display(Name = "职位投递邮箱"), Required(ErrorMessage = "不能为空"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
+        public string JobEmail { get; set; }
 
         #region 邮件配置
 

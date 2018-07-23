@@ -44,67 +44,119 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                        	<span><img alt="image" class="img-circle" width="64" height="64" src="@WorkContext.UserInfo.AvatarOrDefault" /></span>
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="@WorkContext.UserInfo.AvatarOrDefault" /></span>
                         </div>
                     </li>
                     <li>
                         <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
-					@if (CheckAdminPower("Sysuser/Index", false))
+                    @if (CheckAdminPower("HomeBanner/Index", false))
                     {
-						<li class="line dk"></li>
-						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-							<span class="ng-scope">User</span>
-						</li>
-						<li>
-							<a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
-						</li>
-						if (CheckAdminPower("SysRole/Index", false))
-						{
-							<li>
-								<a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
-							</li>
-						}
-					}
-					@if (CheckAdminPower("CusCategory/Index", false))
-					{
-						<li class="line dk"></li>
-						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-							<span class="ng-scope">Category</span>
-						</li>
-						<li>
-							<a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>        
-						</li>                   	
-					}
-
-					@if(CheckAdminPower("SysConfig/Sys", false))
-					{
-						<li class="line dk"></li>
-						<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-							<span class="ng-scope">System</span>
-						</li>
-						if (CheckAdminPower("SysLog/Log", false))
-						{
-							<li>
-								<a href="#"><i class="fa fa-bars"></i> <span class="nav-label">系统日志</span><span class="fa arrow"></span></a>
-								<ul class="nav nav-second-level">
-									@if (CheckAdminPower("SysLog/LogMethod", false))
-									{
-										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
-									}
-									@if (CheckAdminPower("SysLog/LogException", false))
-									{
-										<li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
-									}
-								</ul>
-							</li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/HomeBanner/Index"><i class="fa fa-bars"></i><span class="nav-label">首页轮播图</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("FutureVision/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/FutureVision/Index"><i class="fa fa-bars"></i><span class="nav-label">未来愿景</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("TimeLine/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/TimeLine/Index"><i class="fa fa-bars"></i><span class="nav-label">大事记</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("TeamWork/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/TeamWork/Index"><i class="fa fa-bars"></i><span class="nav-label">合作企业</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("News/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/News/Index"><i class="fa fa-bars"></i><span class="nav-label">新闻资讯</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("CaseShow/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/CaseShow/Index"><i class="fa fa-bars"></i><span class="nav-label">案例展示</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("JoinUS/Index", false))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">Join US</span>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/JoinUS/Index"><i class="fa fa-bars"></i> <span class="nav-label">职位管理</span></a>
+                        </li>
+                        if (CheckAdminPower("JoinUSCategory/Index", false))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/JoinUSCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">职位分类</span></a>
+                            </li>
                         }
-						if (CheckAdminPower("SysConfig/Modify", false))
-						{
-							<li><a class="nav-link J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
-						}
-					}
-					<li style="height: 100px;">
+                    }
+                    @if (CheckAdminPower("Sysuser/Index", false))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">User</span>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
+                        </li>
+                        if (CheckAdminPower("SysRole/Index", false))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户管理</span></a>
+                            </li>
+                        }
+                    }
+                    @if (CheckAdminPower("Category/Index", false))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">Category</span>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/Category/Index"><i class="fa fa-bars"></i> <span class="nav-label">栏目分类</span></a>
+                        </li>
+                    }
+
+                    @if (CheckAdminPower("SysConfig/Sys", false))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">System</span>
+                        </li>
+                        if (CheckAdminPower("SysLog/Log", false))
+                        {
+                            <li>
+                                <a href="#"><i class="fa fa-bars"></i> <span class="nav-label">系统日志</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    @if (CheckAdminPower("SysLog/LogMethod", false))
+                                    {
+                                        <li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod">操作日志</a></li>
+                                    }
+                                    @if (CheckAdminPower("SysLog/LogException", false))
+                                    {
+                                        <li><a class="nav-link J_menuItem" href="/Admin/SysLog/LogException">异常日志</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        if (CheckAdminPower("SysConfig/Modify", false))
+                        {
+                            <li><a class="nav-link J_menuItem" href="/Admin/SysConfig/Modify"><i class="fa fa-gear"></i> <span class="nav-label">站点配置文件</span></a></li>
+                        }
+                    }
+                    <li style="height: 100px;">
                     </li>
                 </ul>
             </div>

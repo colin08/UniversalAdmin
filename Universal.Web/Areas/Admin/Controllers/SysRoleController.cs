@@ -136,7 +136,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                 {
-                    return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 5);
+                    return PromptView("/admin/SysRole", "404", "Not Found", "信息不存在或已被删除", 3);
                 }
             }
             return View(entity);
@@ -161,7 +161,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             else
             {
                 if (!bll.Exists(p => p.ID == entity.ID))
-                    return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 5);
+                    return PromptView("/admin/SysRole", "404", "Not Found", "该组不存在或已被删除", 3);
 
                 var old_entity = bll.GetModel(p => p.ID == entity.ID, null);
                 //验证组名是否存在
@@ -180,7 +180,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 else //修改
                     bll_role.Modify(entity, qx);
 
-                return PromptView("/admin/SysRole", "OK", "Success", "操作成功", 5);
+                return PromptView("/admin/SysRole", "OK", "Success", "操作成功", 3);
             }
             else
                 return View(entity);

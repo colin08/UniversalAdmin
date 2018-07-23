@@ -18,6 +18,7 @@ namespace Universal.DataCore
             this.Configuration.LazyLoadingEnabled = false;
         }
 
+        #region 系统核心
         /// <summary>
         /// 用户信息
         /// </summary>
@@ -37,7 +38,7 @@ namespace Universal.DataCore
         /// 系统异常日志
         /// </summary>
         public DbSet<Entity.SysLogException> SysLogExceptions { get; set; }
-        
+
         /// <summary>
         /// 系统需要权限控制的路由表
         /// </summary>
@@ -53,6 +54,58 @@ namespace Universal.DataCore
         /// </summary>
         public DbSet<Entity.CusCategory> CusCategorys { get; set; }
 
+
+        #endregion
+
+
+        #region 朗形
+
+        /// <summary>
+        /// 案例展示-创意视觉
+        /// </summary>
+        public DbSet<Entity.CaseShow> CaseShows { get; set; }
+
+        /// <summary>
+        /// 系统栏目
+        /// </summary>
+        public DbSet<Entity.Category> Categorys { get; set; }
+
+        /// <summary>
+        /// 未来愿景
+        /// </summary>
+        public DbSet<Entity.FutureVision> FutureVisions { get; set; }
+
+        /// <summary>
+        /// 首页Banner
+        /// </summary>
+        public DbSet<Entity.HomeBanner> HomeBanners { get; set; }
+
+        /// <summary>
+        /// 加入我们
+        /// </summary>
+        public DbSet<Entity.JoinUS> JoinUSs { get; set; }
+
+        /// <summary>
+        /// 加入我们-职位分类
+        /// </summary>
+        public DbSet<Entity.JoinUSCategory> JoinUSCategorys { get; set; }
+
+        /// <summary>
+        /// 新闻咨询
+        /// </summary>
+        public DbSet<Entity.News> News { get; set; }
+        
+        /// <summary>
+        /// 合作企业
+        /// </summary>
+        public DbSet<Entity.TeamWork> TeamWorks { get; set; }
+
+        /// <summary>
+        /// 大事件
+        /// </summary>
+        public DbSet<Entity.TimeLine> TimeLines { get; set; }
+        
+        #endregion
 
         /// <summary>
         /// 

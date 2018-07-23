@@ -67,7 +67,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 entity = bll.GetModel(p => p.ID == num, null);
                 if (entity == null)
                 {
-                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
+                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 3);
                 }
             }
             return View(entity);
@@ -108,7 +108,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 //如果要编辑的用户不存在
                 if (!bll.Exists(p => p.ID == entity.ID))
                 {
-                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 5);
+                    return PromptView("/admin/SysUser", "404", "Not Found", "信息不存在或已被删除", 3);
                 }
                 ModelState.Remove("UserName");
             }
@@ -121,6 +121,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     entity.RegTime = DateTime.Now;
                     entity.Password = SecureHelper.MD5(entity.Password);
                     entity.LastLoginTime = DateTime.Now;
+                    AddAdminLogs(Entity.SysLogMethodType.Add, "添加后台用户：" + entity.UserName + "");
                     bll.Add(entity);
 
                 }
@@ -135,9 +136,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                     user.Avatar = entity.Avatar;
                     user.SysRoleID = entity.SysRoleID;
                     bll.Modify(user);
+                    AddAdminLogs(Entity.SysLogMethodType.Update, "修改后台用户：" + user.UserName + "");
                 }
 
-                return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 5);
+                return PromptView("/admin/SysUser", "OK", "Success", "操作成功", 3);
             }
             else
                 return View(entity);

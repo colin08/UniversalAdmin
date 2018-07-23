@@ -62,11 +62,10 @@ namespace Universal.Web.Framework
         /// 附件压缩包
         /// </summary>
         ZIP,
-
         /// <summary>
-        /// 富文本编辑器
+        /// FroalaEditor 文本编辑器
         /// </summary>
-        TxtArea
+        FroalaEditor
     }
 
 

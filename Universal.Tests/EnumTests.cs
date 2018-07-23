@@ -15,9 +15,12 @@ namespace Universal.Tests
         [TestMethod]
         public void Testxzz()
         {
-            string s = EnumHelper.GetEnumShowName(typeof(Tools.ConfigFileEnum), 1);
-            string s2=  Enum.GetName(typeof(ConfigFileEnum), 1);
-            Trace.WriteLine(s);
+            //string s = EnumHelper.GetEnumShowName(typeof(Tools.ConfigFileEnum), 1);
+            //string s2=  Enum.GetName(typeof(ConfigFileEnum), 1);
+            //Trace.WriteLine(s);
+
+            var ss = BLL.BLLCategory.GetCaseShowCategory();
+
             Assert.AreEqual(1, 1);
         }
     }

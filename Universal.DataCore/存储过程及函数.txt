@@ -1,0 +1,186 @@
+﻿--查找指定分类下的所有子类
+CREATE PROCEDURE [dbo].[sp_GetChildCategory] (@Id int)
+AS
+BEGIN
+WITH Record AS(
+    SELECT
+    Id,
+    Title,
+    CallName,
+    PID,
+    Depth,
+    Status,
+    Weight,
+    ImgUrl,
+    Summary,
+    Remark,
+    AddTime,
+    AddUserID,
+    LastUpdateUserID
+FROM
+    Category(NOLOCK)
+    WHERE Id=@Id
+    UNION ALL
+        SELECT
+    a.Id Id,
+    a.Title Title,
+    a.CallName CallName,
+    a.PID PID,
+    a.Depth Depth,
+    a.Status Status,
+    a.Weight [Weight],
+    a.ImgUrl ImgUrl,
+    a.Summary Summary,
+    a.Remark Remark,
+    a.AddTime AddTime,
+    a.AddUserID AddUserID,
+    a.LastUpdateUserID LastUpdateUserID
+FROM
+    Category(NOLOCK) a JOIN Record b
+    ON a.PID=b.Id
+)
+
+SELECT
+    Id,
+    Title,
+    CallName,
+    PID,
+    Depth,
+    Status,
+    Weight,
+    ImgUrl,
+    Summary,
+    Remark,
+    AddTime,
+    AddUserID,
+    LastUpdateUserID
+FROM
+    Record
+    WHERE Status=1
+    ORDER BY Weight DESC     
+END
+
+
+ --查找指定分类的所有父类
+ CREATE PROCEDURE [dbo].[sp_GetParentCategory] (@Id int)
+AS
+BEGIN
+WITH Record AS(
+    SELECT
+    Id,
+    Title,
+    CallName,
+    PID,
+    Depth,
+    Status,
+    Weight,
+    ImgUrl,
+    Summary,
+    Remark,
+    AddTime,
+    AddUserID,
+    LastUpdateUserID    
+FROM
+    Category(NOLOCK)
+    WHERE Id=@Id
+    UNION ALL
+    SELECT
+    a.Id Id,
+    a.Title Title,
+    a.CallName CallName,
+    a.PID PID,
+    a.Depth Depth,
+    a.Status Status,
+    a.Weight [Weight],
+    a.ImgUrl ImgUrl,
+    a.Summary Summary,
+    a.Remark Remark,
+    a.AddTime AddTime,
+    a.AddUserID AddUserID,
+    a.LastUpdateUserID LastUpdateUserID
+FROM
+    Category(NOLOCK) a JOIN Record b
+    ON a.Id=b.PId
+)
+
+SELECT
+    Id,
+    Title,
+    CallName,
+    PID,
+    Depth,
+    Status,
+    Weight,
+    ImgUrl,
+    Summary,
+    Remark,
+    AddTime,
+    AddUserID,
+    LastUpdateUserID    
+FROM
+    Record
+    WHERE Status=1
+    ORDER BY Weight DESC
+
+END
+
+
+--拆分指定分隔符的字符串
+CREATE function [dbo].[func_splitstring]
+(@str nvarchar(max),@split varchar(10))
+returns @t Table (c1 varchar(100))
+as
+begin
+    if charindex(@split,@str) = 0
+    begin
+        insert @t(c1) values(@str)
+        return
+    end
+
+    declare @i int
+    declare @s int
+    set @i=1
+    set @s=1
+    while(@i>0)
+    begin    
+        set @i=charindex(@split,@str,@s)
+        if(@i>0)
+        begin
+            insert @t(c1) values(substring(@str,@s,@i-@s))
+        end   
+        else begin
+            insert @t(c1) values(substring(@str,@s,len(@str)-@s+1))
+        end
+        set @s = @i + 1   
+    end
+    return
+end
+
+
+--获取指定分类的子分类ID合集，逗号分隔
+CREATE FUNCTION [dbo].[fn_GetChildCategoryStr] (@Id int) RETURNS varchar(1000) 
+AS
+BEGIN
+declare @a VARCHAR(1000);
+set @a='';
+    WITH Record AS(
+        SELECT
+        Id,
+        PID,
+        Status
+    FROM
+        Category(NOLOCK)
+        WHERE Id=@Id
+        UNION ALL
+            SELECT
+                a.Id Id,
+                a.PID PID,
+                a.Status Status
+            FROM
+                Category(NOLOCK) a JOIN Record b
+                ON a.PID=b.Id
+            )
+SELECT @a=isnull(@a+',','')+ltrim(Id) FROM Record  WHERE Status=1  
+return SUBSTRING(@a, 2, len(@a))
+END
+                        

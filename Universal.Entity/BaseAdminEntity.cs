@@ -18,7 +18,7 @@ namespace Universal.Entity
         /// <summary>
         /// 添加者ID
         /// </summary>
-        public int AddUserID { get; set; }
+        public int? AddUserID { get; set; }
 
         /// <summary>
         /// 添加信息的用户信息
@@ -36,7 +36,7 @@ namespace Universal.Entity
         /// <summary>
         /// 最后修改者ID
         /// </summary>
-        public int LastUpdateUserID { get; set; }
+        public int? LastUpdateUserID { get; set; }
 
         /// <summary>
         /// 最后修改的用户的信息

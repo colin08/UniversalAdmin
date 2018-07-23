@@ -89,7 +89,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         public JsonResult UploadAction(HttpPostedFileBase fileData)
         {
             fileData = fileData ?? HttpContext.Request.Files["imgFile"];
-
+            fileData = fileData ?? HttpContext.Request.Files["file"];
             string file_name = fileData.FileName;
             string file_ext = "";
             if (!string.IsNullOrWhiteSpace(file_name))
@@ -154,22 +154,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                         }
                     }
                     WorkContext.AjaxStringEntity = up_helper.Upload_Zip(fileData, filePath);
-                    return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
-                case Admin_Upload_Type.TxtArea: //富文本编辑器中的上传
-                    WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
-                    SimditorResult result = new SimditorResult();
-                    if (WorkContext.AjaxStringEntity.msg == 1)
-                    {
-                        result.success = true;
-                        result.msg = "上传成功";
-                        result.file_path = WorkContext.AjaxStringEntity.data;
-                    }
-                    else
-                    {
-                        result.success = false;
-                        result.msg = WorkContext.AjaxStringEntity.msgbox;
-                    }
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);                
                 case Admin_Upload_Type.OnePicture:
                 case Admin_Upload_Type.MorePicture:
                     if (!string.IsNullOrWhiteSpace(file_ext))
@@ -182,6 +167,10 @@ namespace Universal.Web.Areas.Admin.Controllers
                     }
                     WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
                     return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+                case Admin_Upload_Type.FroalaEditor:
+                    WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
+                    FroalaEditorResult result2 = new FroalaEditorResult(WorkContext.AjaxStringEntity.msg == 1 ? WorkContext.AjaxStringEntity.data : "");
+                    return Json(result2, JsonRequestBehavior.AllowGet);
                 default:
                     WorkContext.AjaxStringEntity = up_helper.Upload(fileData, filePath);
                     return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
@@ -193,14 +182,29 @@ namespace Universal.Web.Areas.Admin.Controllers
     }
 
     /// <summary>
-    /// 富文本编辑器上传需要返回的格式
+    /// 富文本编辑器上传文件返回值
     /// </summary>
-    public class SimditorResult
+    public class FroalaEditorResult
     {
-        public bool success { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public FroalaEditorResult()
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="link"></param>
+        public FroalaEditorResult(string link)
+        {
+            this.link = link;
+        }
 
-        public string msg { get; set; }
-
-        public string file_path { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string link { get; set; }
     }
 }

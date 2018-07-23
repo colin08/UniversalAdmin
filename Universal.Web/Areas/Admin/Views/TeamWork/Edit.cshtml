@@ -1,0 +1,259 @@
+﻿@model Universal.Entity.TeamWork
+@{
+    ViewBag.Title = "编辑合作企业";
+}
+
+<!--头部脚本-->
+@section head
+{
+@Styles.Render("~/Content/icheck")
+}
+
+<!--头部脚本 end-->
+
+<!--Panel-->
+@section nav
+{
+<div class="ibox-title">
+    <h5>@ViewBag.Title</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+        </a>
+    </div>
+</div>
+}
+<!--Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/TeamWork/Index">合作企业管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+
+<!--Main Body-->
+    <div class="clients-list">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+            <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+        </ul>
+        <form method="post" class="form-horizontal" onsubmit="configm_before()">
+            @Html.AntiForgeryToken()
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div style="margin-top:20px;"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Title)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(p => p.Title, (object)new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Title)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">灰色LOGO</label>
+
+                        <div class="col-sm-6">
+                            @Html.HiddenFor(p => p.ImgUrl)
+
+                            <button type="button" class="btn btn-info " onclick="upload()">
+                                <i class="fa fa-upload"></i> 上传灰色LOGO
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">灰色LOGO预览</label>
+
+                        <div class="col-sm-10">
+                            <div class="img_list">
+                                <ul id="@Html.NameFor(p => p.ImgUrl)ListData">
+                                    @if (!string.IsNullOrWhiteSpace(Model.ImgUrl))
+                                    {
+                                        @:
+                                        <li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">彩色LOGO</label>
+
+                        <div class="col-sm-6">
+                            @Html.HiddenFor(p => p.ImgUrl2)
+
+                            <button type="button" class="btn btn-info " onclick="upload2()">
+                                <i class="fa fa-upload"></i> 上传彩色LOGO
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">彩色LOGO预览</label>
+
+                        <div class="col-sm-10">
+                            <div class="img_list">
+                                <ul id="@Html.NameFor(p => p.ImgUrl2)ListData">
+                                    @if (!string.IsNullOrWhiteSpace(Model.ImgUrl2))
+                                    {
+                                        @:
+                                        <li><img src="@Model.ImgUrl2" ids="0" class="@Html.NameFor(p => p.ImgUrl2)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl2)')">删除</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Weight)</label>
+
+                        <div class="col-sm-1">
+                            @Html.TextBoxFor(p => p.Weight, new { @class = "form-control", placeholder = "排序数字" })
+                            <span class="help-block m-b-none">越大越靠前</span>
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Weight)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Status) </label>
+                        <div class="col-sm-10">
+                            <div class="radio-inline i-checks">
+                                <label>@Html.RadioButtonFor(x => x.Status, true, new { @id = "rb_status_1" }) <i></i> 正常</label>
+                            </div>
+                            <div class="radio-inline i-checks">
+                                <label>@Html.RadioButtonFor(x => x.Status, false, new { @id = "rb_status_2" }) <i></i> 禁用</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Remark)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextAreaFor(p => p.Remark, new { @class = "form-control", placeholder = "", style = "height:100px" })
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Remark)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    
+                </div>
+
+                <div id="tab-2" class="tab-pane" style="display:none;">
+                    <div style="margin-top:20px;"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">普通</label>
+
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control">
+                        </div>
+                        <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                        <button class="btn btn-white" type="reset">取消</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/icheck")
+
+<script>
+    function upload() {
+        var total = $(".@Html.NameFor(p=>p.ImgUrl)List").size();
+        if (total >= 1) {
+            layer.msg("已有灰色LOGO，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "hm", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.ImgUrl), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.ImgUrl)ListData").append(img_te);
+        }
+    }
+
+    function upload2() {
+        var total = $(".@Html.NameFor(p=>p.ImgUrl2)List").size();
+        if (total >= 1) {
+            layer.msg("已有彩色LOGO，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "hm", num = 1,call_func= "set_upload_file2", call_back_ele = Html.NameFor(p=>p.ImgUrl2), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file2(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.ImgUrl2)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl2)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl2)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.ImgUrl2)ListData").append(img_te);
+        }
+    }
+
+
+    $(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+</script>
+}
+<!--底部脚本 end-->

@@ -1,0 +1,98 @@
+﻿@model List<Universal.Entity.Category>
+@{
+    ViewBag.Title = "栏目分类";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+<!-- Panel -->
+@section nav
+{
+<div class="ibox-title">
+    <h5>@ViewBag.Title</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+        </a>
+    </div>
+</div>
+}
+<!-- Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/Category/Index">栏目分类管理</a></li>
+            <li><strong>栏目分类列表</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+
+<div class="row">
+    <div class="col-sm-2">
+        @*@if (CheckAdminPower("Category/edit", true))
+        {
+            @:<a class="btn btn-white" href="@Url.Action("Edit", "Category", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+        }*@
+
+    </div>
+    <div class="col-sm-4">
+        <p></p>
+    </div>
+    <div class="col-sm-2">
+        <p></p>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+</div>
+<br>
+
+<!--Main Body-->
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>栏目名称</th>
+                <th>排序数字</th>
+                <th>启用状态</th>
+                <th>CallName</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.PID == null ? "success":"")">
+                    <td>@item.ID</td>
+                    <td style="text-align: left;">@Html.Raw(item.Title)</td>
+                    <td>@item.Weight</td>
+                    <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
+                    <td>@item.CallName</td>
+                    <td>
+                        @*<a class="btn btn-sm btn-warning" href="javascript:;" onclick="del_item('/Admin/Category/Del',@item.ID, 1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>*@
+                        <a class="btn btn-sm btn-white" href="/Admin/Category/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                    </td>
+                </tr>
+            }
+            @if(Model.Count ==0)
+            {
+                <tr><td colspan="5"><p><h2>没有相关数据</h2></p></td></tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Main Body end -->
+
