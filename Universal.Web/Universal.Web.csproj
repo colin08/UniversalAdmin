@@ -268,8 +268,6 @@
     <Content Include="Assets\css\plugins\perfect-scrollbar\perfect-scrollbar.min.css" />
     <Content Include="Assets\css\plugins\plyr\plyr.css" />
     <Content Include="Assets\css\plugins\plyr\sprite.svg" />
-    <Content Include="Assets\css\plugins\simditor\simditor-markdown.css" />
-    <Content Include="Assets\css\plugins\simditor\simditor.css" />
     <Content Include="Assets\css\plugins\switchery\switchery.css" />
     <Content Include="Assets\css\plugins\treeview\bootstrap-treeview.css" />
     <Content Include="Assets\css\style.css" />
@@ -650,18 +648,6 @@
     <Content Include="Assets\js\plugins\pace\pace.min.js" />
     <Content Include="Assets\js\plugins\perfect-scrollbar\perfect-scrollbar.min.js" />
     <Content Include="Assets\js\plugins\plyr\plyr.js" />
-    <Content Include="Assets\js\plugins\simditor\hotkeys.js" />
-    <Content Include="Assets\js\plugins\simditor\hotkeys.min.js" />
-    <Content Include="Assets\js\plugins\simditor\marked.js" />
-    <Content Include="Assets\js\plugins\simditor\module.js" />
-    <Content Include="Assets\js\plugins\simditor\module.min.js" />
-    <Content Include="Assets\js\plugins\simditor\simditor-autosave.js" />
-    <Content Include="Assets\js\plugins\simditor\simditor-markdown.js" />
-    <Content Include="Assets\js\plugins\simditor\simditor.js" />
-    <Content Include="Assets\js\plugins\simditor\simditor.min.js" />
-    <Content Include="Assets\js\plugins\simditor\to-markdown.js" />
-    <Content Include="Assets\js\plugins\simditor\uploader.js" />
-    <Content Include="Assets\js\plugins\simditor\uploader.min.js" />
     <Content Include="Assets\js\plugins\slimscroll\jquery.slimscroll.min.js" />
     <Content Include="Assets\js\plugins\switchery\switchery.js" />
     <Content Include="Assets\js\plugins\treeview\bootstrap-treeview.js" />
@@ -845,9 +831,6 @@
     <Content Include="Assets\js\jquery.min.map" />
     <Content Include="Assets\img\browser.psd" />
     <Content Include="Assets\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Assets\css\plugins\simditor\editor.scss" />
-    <Content Include="Assets\css\plugins\simditor\fonticon.scss" />
-    <Content Include="Assets\css\plugins\simditor\simditor.scss" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.eot" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.ttf" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.woff" />
