@@ -7,7 +7,7 @@
 @section head
 {
 @Styles.Render("~/Content/uploadifive")
-@Styles.Render("~/Content/simditor")
+@Styles.Render("~/Content/froala_editor")
 }
 
 <!--头部脚本 end-->
@@ -103,7 +103,7 @@
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p=>p.Content)</label>
 
                     <div class="col-sm-8">
-                        @Html.TextAreaFor(p => p.Content, new { @class = "form-control", placeholder = "版本更新内容"})
+                        @Html.TextAreaFor(p => p.Content)
                     </div>
                     <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p=>p.Content)</label>
                 </div>
@@ -143,7 +143,7 @@
 @section foot
 {
 @Scripts.Render("~/bundles/uploadifive")
-@Scripts.Render("~/bundles/simditor")
+@Scripts.Render("~/bundles/froala_editor")
 <script>
 
     $(function () {
@@ -194,7 +194,7 @@
 
 
         /** 富文本编辑器 begin  **/
-        InitTextArea("Content");
+        InitFroalaTextArea("Content");
 
         /** 富文本编辑器 end  **/
 

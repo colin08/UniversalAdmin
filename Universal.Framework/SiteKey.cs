@@ -64,9 +64,9 @@ namespace Universal.Web.Framework
         ZIP,
 
         /// <summary>
-        /// 富文本编辑器
+        /// FroalaEditor 富文本编辑器
         /// </summary>
-        TxtArea
+        FroalaEditor
     }
 
 
