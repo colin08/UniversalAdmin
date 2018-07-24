@@ -56,6 +56,7 @@
     <Compile Include="Category\CusCategory.cs" />
     <Compile Include="FutureVision.cs" />
     <Compile Include="HomeBanner.cs" />
+    <Compile Include="Honour.cs" />
     <Compile Include="JoinUS.cs" />
     <Compile Include="JoinUSCategory.cs" />
     <Compile Include="News.cs" />

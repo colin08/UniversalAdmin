@@ -7,19 +7,21 @@ using Universal.Web.Framework;
 
 namespace Universal.Web.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class HomeController : Controller
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
+
             return View();
         }
         
-        [BasicAuth]
-        public ContentResult test()
-        { 
-            return Content("哈哈哈");
-        }
-
     }
 
 }

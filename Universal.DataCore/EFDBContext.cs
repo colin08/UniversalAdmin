@@ -104,7 +104,12 @@ namespace Universal.DataCore
         /// 大事件
         /// </summary>
         public DbSet<Entity.TimeLine> TimeLines { get; set; }
-        
+
+        /// <summary>
+        /// 荣誉证书
+        /// </summary>
+        public DbSet<Entity.Honour> Honours { get; set; }
+
         #endregion
 
         /// <summary>

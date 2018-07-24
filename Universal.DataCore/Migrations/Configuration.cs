@@ -17,7 +17,6 @@ namespace Universal.DataCore.Migrations
 
         protected override void Seed(Universal.DataCore.EFDBContext context)
         {
-            return;
             #region ÏµÍ³ºËÐÄ
             var role_list = new List<Entity.SysRole>() {
                 new Entity.SysRole() {

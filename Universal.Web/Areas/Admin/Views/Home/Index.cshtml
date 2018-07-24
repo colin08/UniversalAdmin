@@ -86,6 +86,12 @@
                             <a class="nav-link J_menuItem" href="/Admin/CaseShow/Index"><i class="fa fa-bars"></i><span class="nav-label">案例展示</span></a>
                         </li>
                     }
+                    @if (CheckAdminPower("Honour/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/Honour/Index"><i class="fa fa-bars"></i><span class="nav-label">朗形荣誉</span></a>
+                        </li>
+                    }
                     @if (CheckAdminPower("JoinUS/Index", false))
                     {
                         <li class="line dk"></li>

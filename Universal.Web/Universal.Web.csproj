@@ -707,6 +707,7 @@
     <Compile Include="Areas\Admin\Controllers\CaseShowController.cs" />
     <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TeamWorkController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HonourController.cs" />
     <Compile Include="Areas\Admin\Controllers\TimeLineController.cs" />
     <Compile Include="Areas\Admin\Controllers\FutureVisionController.cs" />
     <Compile Include="Areas\Admin\Controllers\JoinUSCategoryController.cs" />
@@ -723,6 +724,7 @@
     <Compile Include="Areas\Admin\Models\ViewModelCaseShowList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelNewsList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTeamWorkList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelHonourList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelTimeLineList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelFutureVisionList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelJoinUSList.cs" />
@@ -770,7 +772,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ModelAllHouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -850,8 +851,13 @@
     <Content Include="Areas\Admin\Views\News\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CaseShow\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\CaseShow\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Honour\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Honour\Index.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\Home\SignalDemo.cshtml" />
+    <Content Include="Views\Shared\TopNavigation.cshtml" />
+    <Content Include="Views\Shared\Buttom.cshtml" />
+    <Content Include="Views\Shared\404.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -860,6 +866,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>

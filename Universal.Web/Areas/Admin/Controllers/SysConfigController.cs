@@ -62,7 +62,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
 
-        [AdminPermission("站点配置文件","回收应用程序池")]
+        //[AdminPermission("站点配置文件","回收应用程序池")]
         [HttpPost]
         public JsonResult AppPoolRecycle()
         {

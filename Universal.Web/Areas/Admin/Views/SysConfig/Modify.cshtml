@@ -34,10 +34,10 @@
             <li><strong>编辑</strong></li>
         </ol>
     </div>
-    @if (CheckAdminPower("sysconfig/apppoolrecycle", true))
+    @*@if (CheckAdminPower("sysconfig/apppoolrecycle", true))
     {
         <a class="btn btn-info pull-right" style="margin-right:50px;" onclick="AppPoolRecycle()" id="a_recycle_pool">回收应用程序池</a>
-    }
+    }*@
     <div style="height: 40px;"></div>
 </div>
 <!-- 路径导航 end -->
@@ -55,22 +55,22 @@
             <div id="tab-1" class="tab-pane active">
                 <div style="margin-top:20px;"></div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p=>p.SiteUrl)</label>
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.SiteUrl)</label>
                     <div class="col-sm-3">
-                        @Html.TextBoxFor(p => p.SiteUrl, (object)new { @class = "form-control",placeholder = "不超过30个字符" })
+                        @Html.TextBoxFor(p => p.SiteUrl, (object)new { @class = "form-control", placeholder = "不超过30个字符" })
                     </div>
                     <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.SiteUrl)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
-                <div class="form-group">
+                <div class="form-group" style="display:none;">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.FileUrl)</label>
                     <div class="col-sm-3">
                         @Html.TextBoxFor(p => p.FileUrl, (object)new { @class = "form-control", placeholder = "留空为本站" })
                     </div>
                     <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.FileUrl)</label>
                 </div>
-                <div class="hr-line-dashed"></div>
+                <div class="hr-line-dashed" style="display:none;"></div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.CompanyName)</label>
@@ -82,13 +82,67 @@
                 <div class="hr-line-dashed"></div>
 
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Copyright)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Copyright, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Copyright)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.CompanyTel)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.CompanyTel, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.CompanyTel)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.CompanyEmail)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.CompanyEmail, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.CompanyEmail)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.CompanyAddress)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.CompanyAddress, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.CompanyAddress)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JobTel)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JobTel, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JobTel)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JobEmail)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JobEmail, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JobEmail)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group" style="display:none;">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AppPoolName)</label>
                     <div class="col-sm-3">
                         @Html.TextBoxFor(p => p.AppPoolName, (object)new { @class = "form-control", placeholder = "不超过15个字符" })
                     </div>
                     <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.AppPoolName)</label>
                 </div>
-                <div class="hr-line-dashed"></div>
+                <div class="hr-line-dashed" style="display:none;"></div>
 
 
                 <div class="form-group">
@@ -96,8 +150,8 @@
                     <div class="col-sm-3">
                         <div class="switch">
                             <div class="onoffswitch">
-                                @Html.HiddenFor(p=>p.WebExecutionTime)
-                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.WebExecutionTime?"checked":"")  id="ck_WebExecutionTime" onchange="CKTap(this, 'WebExecutionTime')" alt="页面请求耗时统计">
+                                @Html.HiddenFor(p => p.WebExecutionTime)
+                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.WebExecutionTime ? "checked" : "") id="ck_WebExecutionTime" onchange="CKTap(this, 'WebExecutionTime')" alt="页面请求耗时统计">
                                 <label class="onoffswitch-label" for="ck_WebExecutionTime">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
@@ -108,14 +162,14 @@
                     <label class="col-sm-3 label_msg"></label>
                 </div>
                 <div class="hr-line-dashed"></div>
-                
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.LogMethodInDB)</label>
                     <div class="col-sm-3">
                         <div class="switch">
                             <div class="onoffswitch">
                                 @Html.HiddenFor(p => p.LogMethodInDB)
-                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.LogMethodInDB ? "checked":"") id="ck_LogMethodInDB" onchange="CKTap(this, 'LogMethodInDB')" alt="操作日志是否入库">
+                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.LogMethodInDB ? "checked" : "") id="ck_LogMethodInDB" onchange="CKTap(this, 'LogMethodInDB')" alt="操作日志是否入库">
                                 <label class="onoffswitch-label" for="ck_LogMethodInDB">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
@@ -133,7 +187,7 @@
                         <div class="switch">
                             <div class="onoffswitch">
                                 @Html.HiddenFor(p => p.LogExceptionInDB)
-                                <input type="checkbox" class="onoffswitch-checkbox"  @(Model.LogExceptionInDB ? "checked":"") id="ck_LogExceptionInDB" onchange="CKTap(this, 'LogExceptionInDB')" alt="异常日志是否入库">
+                                <input type="checkbox" class="onoffswitch-checkbox" @(Model.LogExceptionInDB ? "checked" : "") id="ck_LogExceptionInDB" onchange="CKTap(this, 'LogExceptionInDB')" alt="异常日志是否入库">
                                 <label class="onoffswitch-label" for="ck_LogExceptionInDB">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
