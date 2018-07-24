@@ -91,6 +91,7 @@ namespace Universal.Web.Controllers
             }
             result.msg = 1;
             result.msgbox = "ok";
+            result.data = server_path;
             return Json(result);
         }
 
