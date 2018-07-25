@@ -16,7 +16,7 @@ namespace Universal.Tools
         /// <returns></returns>
         public static bool SendVer(string phopneNo, string text)
         {
-            string requestUrl = string.Format("http://211.147.239.62:9050/cgi-bin/sendsms?username=hdyl@hdyl&password=uY5vv1w9&to={0}&text={1}&subid=&msgtype=4", phopneNo, WebHelper.UrlEncode(text, "GB2312"));
+            string requestUrl = string.Format("http://211.147.239.62:9050/cgi-bin/sendsms?username=hdyl@hdyl&password=IPE2ROnh&to={0}&text={1}&subid=&msgtype=4", phopneNo, WebHelper.UrlEncode(text, "GB2312"));
             try
             {
                 string html = WebHelper.GetRequestData(requestUrl, "GET", "");
