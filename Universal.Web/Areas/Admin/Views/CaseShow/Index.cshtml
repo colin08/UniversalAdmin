@@ -82,9 +82,12 @@
                 <th>
                     <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                 </th>
+                <th>编号</th>
                 <th>案例名称</th>
                 <th>类别</th>
+                <th>内容类别</th>
                 <th>所属分类</th>
+                <th>首页显示</th>
                 <th>状态</th>
                 <th>排序数字</th>
                 <th>最后修改时间</th>
@@ -94,20 +97,23 @@
         <tbody>
             @foreach (var item in Model.DataList)
             {
-                <tr>
-                    <td>
-                        <input type="checkbox" class="datacheck" hid="@item.ID">
-                    </td>
-                    <td><a href="/Admin/CaseShow/Edit?id=@item.ID">@item.Title</a></td>
-                    <td>@item.GetTypeStr</td>
-                    <td>@item.Category.Title</td>
-                    <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
-                    <td>@item.Weight</td>
-                    <td>@item.LastUpdateTime.ToLongDateString()</td>
-                    <td>
-                        <a class="btn btn-sm btn-white" href="/Admin/CaseShow/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" class="datacheck" hid="@item.ID">
+                </td>
+                <td>@item.ID</td>
+                <td><a href="/Admin/CaseShow/Edit?id=@item.ID">@item.Title</a></td>
+                <td>@item.GetImgTypeStr</td>
+                <td>@item.GetTypeStr</td>
+                <td>@item.Category.Title</td>
+                <td><i class="glyphicon glyphicon-@(item.IsHome ? "ok": "ban-circle")"></i></td>
+                <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
+                <td>@item.Weight</td>
+                <td>@item.LastUpdateTime.ToLongDateString()</td>
+                <td>
+                    <a class="btn btn-sm btn-white" href="/Admin/CaseShow/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

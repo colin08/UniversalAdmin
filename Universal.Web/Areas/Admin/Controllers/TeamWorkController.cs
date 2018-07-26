@@ -88,16 +88,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("Title", "标题必填");
             }
-
-            if(string.IsNullOrWhiteSpace(entity.ImgUrl))
-            {
-                ModelState.AddModelError("ImgUrl", "灰色LOGO必须上传");
-            }
-            if (string.IsNullOrWhiteSpace(entity.ImgUrl2))
-            {
-                ModelState.AddModelError("ImgUrl2", "彩色LOGO必须上传");
-            }
-
+            
             //数据验证
             if (isAdd)
             {

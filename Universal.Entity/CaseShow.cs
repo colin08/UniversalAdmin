@@ -20,6 +20,19 @@ namespace Universal.Entity
     }
 
     /// <summary>
+    /// 案例内容类别
+    /// </summary>
+    public enum CaseShotImgType:byte
+    {
+        [Description("普通")]
+        basic=1,
+        [Description("图片")]
+        album,
+        [Description("视频")]
+        video,
+    }
+
+    /// <summary>
     /// 案例展示-创意视觉
     /// </summary>
     public class CaseShow : BaseAdminEntity
@@ -40,6 +53,9 @@ namespace Universal.Entity
         [Display(Name = "案例类别")]
         public CaseShowType Type { get; set; }
 
+        [Display(Name ="内容类别")]
+        public CaseShotImgType ImgType { get; set; }
+
         [Display(Name = "所属栏目")]
         public int CategoryID { get; set; }
 
@@ -59,6 +75,17 @@ namespace Universal.Entity
             }
         }
 
+        /// <summary>
+        /// 获取内容类别文本
+        /// </summary>
+        public string GetImgTypeStr
+        {
+            get
+            {
+                return Tools.EnumHelper.GetDescription(ImgType);
+            }
+        }
+
         [Display(Name = "图片"), MaxLength(300)]
         public string ImgUrl { get; set; }
 
@@ -73,6 +100,9 @@ namespace Universal.Entity
         
         [Display(Name = "状态")]
         public bool Status { get; set; }
+
+        [Display(Name ="首页显示")]
+        public bool IsHome { get; set; }
 
         /// <summary>
         /// 优先级，越大，同级显示的时候越靠前

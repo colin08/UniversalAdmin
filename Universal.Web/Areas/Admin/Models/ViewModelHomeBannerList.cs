@@ -8,7 +8,7 @@ namespace Universal.Web.Areas.Admin.Models
     /// <summary>
     /// 
     /// </summary>
-    public class ViewModelHomeBannerList : BasePageModel
+    public class ViewModelBannerList : BasePageModel
     {
         
         /// <summary>
@@ -19,7 +19,7 @@ namespace Universal.Web.Areas.Admin.Models
         /// <summary>
         /// 数据列表
         /// </summary>
-        public List<Entity.HomeBanner> DataList { get; set; }
+        public List<Entity.Banner> DataList { get; set; }
         
     }
 }

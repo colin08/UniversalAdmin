@@ -78,7 +78,7 @@ namespace Universal.DataCore
         /// <summary>
         /// 首页Banner
         /// </summary>
-        public DbSet<Entity.HomeBanner> HomeBanners { get; set; }
+        public DbSet<Entity.Banner> HomeBanners { get; set; }
 
         /// <summary>
         /// 加入我们

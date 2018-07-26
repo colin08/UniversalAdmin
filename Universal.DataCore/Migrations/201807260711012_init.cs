@@ -14,12 +14,14 @@ namespace Universal.DataCore.Migrations
                         ID = c.Int(nullable: false, identity: true),
                         Title = c.String(nullable: false, maxLength: 50),
                         Type = c.Byte(nullable: false),
+                        ImgType = c.Byte(nullable: false),
                         CategoryID = c.Int(nullable: false),
                         ImgUrl = c.String(maxLength: 300),
                         Time = c.String(nullable: false, maxLength: 20),
                         Address = c.String(nullable: false, maxLength: 20),
                         Summary = c.String(maxLength: 500),
                         Status = c.Boolean(nullable: false),
+                        IsHome = c.Boolean(nullable: false),
                         Weight = c.Int(nullable: false),
                         Content = c.String(),
                         AddTime = c.DateTime(nullable: false),
@@ -128,8 +130,8 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Title = c.String(nullable: false, maxLength: 30),
-                        ImgUrl = c.String(nullable: false, maxLength: 300),
-                        ImgUrl2 = c.String(nullable: false, maxLength: 300),
+                        ImgUrl = c.String(),
+                        ImgUrl2 = c.String(),
                         Status = c.Boolean(nullable: false),
                         Weight = c.Int(nullable: false),
                         Remark = c.String(maxLength: 500),
@@ -184,10 +186,11 @@ namespace Universal.DataCore.Migrations
                 .Index(t => t.LastUpdateUserID);
             
             CreateTable(
-                "dbo.HomeBanner",
+                "dbo.Banner",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
+                        CategoryID = c.Int(nullable: false),
                         Title = c.String(maxLength: 255),
                         LinkType = c.Int(nullable: false),
                         LinkVal = c.String(nullable: false, maxLength: 500),
@@ -202,7 +205,9 @@ namespace Universal.DataCore.Migrations
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysUser", t => t.AddUserID)
+                .ForeignKey("dbo.Category", t => t.CategoryID, cascadeDelete: true)
                 .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
+                .Index(t => t.CategoryID)
                 .Index(t => t.AddUserID)
                 .Index(t => t.LastUpdateUserID);
             
@@ -373,8 +378,9 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.JoinUSCategory", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "AddUserID", "dbo.SysUser");
-            DropForeignKey("dbo.HomeBanner", "LastUpdateUserID", "dbo.SysUser");
-            DropForeignKey("dbo.HomeBanner", "AddUserID", "dbo.SysUser");
+            DropForeignKey("dbo.Banner", "LastUpdateUserID", "dbo.SysUser");
+            DropForeignKey("dbo.Banner", "CategoryID", "dbo.Category");
+            DropForeignKey("dbo.Banner", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.FutureVision", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.FutureVision", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.CusCategory", "PID", "dbo.CusCategory");
@@ -405,8 +411,9 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.JoinUSCategory", new[] { "AddUserID" });
             DropIndex("dbo.Honour", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Honour", new[] { "AddUserID" });
-            DropIndex("dbo.HomeBanner", new[] { "LastUpdateUserID" });
-            DropIndex("dbo.HomeBanner", new[] { "AddUserID" });
+            DropIndex("dbo.Banner", new[] { "LastUpdateUserID" });
+            DropIndex("dbo.Banner", new[] { "AddUserID" });
+            DropIndex("dbo.Banner", new[] { "CategoryID" });
             DropIndex("dbo.FutureVision", new[] { "LastUpdateUserID" });
             DropIndex("dbo.FutureVision", new[] { "AddUserID" });
             DropIndex("dbo.CusCategory", new[] { "PID" });
@@ -431,7 +438,7 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.JoinUS");
             DropTable("dbo.JoinUSCategory");
             DropTable("dbo.Honour");
-            DropTable("dbo.HomeBanner");
+            DropTable("dbo.Banner");
             DropTable("dbo.FutureVision");
             DropTable("dbo.CusCategory");
             DropTable("dbo.TeamWork");

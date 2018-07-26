@@ -103,7 +103,11 @@ namespace Universal.Web.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("Title", "标题必填");
             }
-            if(entity.Type == 0)
+            if (entity.ImgType == 0)
+            {
+                ModelState.AddModelError("ImgType", "内容类别必选");
+            }
+            if (entity.Type == 0)
             {
                 ModelState.AddModelError("Type", "类别必选");
             }
@@ -193,6 +197,15 @@ namespace Universal.Web.Areas.Admin.Controllers
                 data2List.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
             }
             ViewData["Category_type"] = data2List;
+
+            List<SelectListItem> data3List = new List<SelectListItem>();
+            data3List.Add(new SelectListItem() { Text = "全部内容类别", Value = "0" });
+            foreach (var item in EnumHelper.BEnumToDictionary(typeof(Entity.CaseShotImgType)))
+            {
+                string text = EnumHelper.GetDescription<Entity.CaseShotImgType>((Entity.CaseShotImgType)item.Key);
+                data3List.Add(new SelectListItem() { Text = text, Value = item.Key.ToString() });
+            }
+            ViewData["Category_img_type"] = data3List;
 
         }
 

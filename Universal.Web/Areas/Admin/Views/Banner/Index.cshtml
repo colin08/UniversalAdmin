@@ -1,6 +1,6 @@
-﻿@model Universal.Web.Areas.Admin.Models.ViewModelHomeBannerList
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelBannerList
 @{
-    ViewBag.Title = "首页轮播图列表";
+    ViewBag.Title = "轮播图列表";
 }
 
 <!--头部脚本-->
@@ -30,7 +30,7 @@
     <div class="col-sm-4">
         <ol class="breadcrumb">
             <li><a href="/Admin/Home/Center">主页</a></li>
-            <li><a href="/Admin/HomeBanner/Index">轮播图管理</a></li>
+            <li><a href="/Admin/Banner/Index?page=1&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]">轮播图管理 - @ViewData["CTitle"]</a></li>
             <li><strong>@ViewBag.Title</strong></li>
         </ol>
     </div>
@@ -43,13 +43,13 @@
 
 <div class="row">
     <div class="col-sm-2">
-        @if (CheckAdminPower("HomeBanner/edit", true))
+        @if (CheckAdminPower("Banner/edit", true))
         {
-            @:<a class="btn btn-white" href="@Url.Action("Edit", "HomeBanner", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
+            @:<a class="btn btn-white" href="/admin/Banner/Edit?id=0&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
-        @if (CheckAdminPower("HomeBanner/del", true))
+        @if (CheckAdminPower("Banner/del", true))
         {
-            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/HomeBanner/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
+            @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/Banner/Del',1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
     </div>
     <div class="col-sm-4">
@@ -94,14 +94,14 @@
                     <td>
                         <input type="checkbox" class="datacheck" hid="@item.ID">
                     </td>
-                    <td><a href="/Admin/HomeBanner/Edit?id=@item.ID"><img src="@item.ImgUrl" width="250" height="150" /></a></td>
-                    <td><a href="/Admin/HomeBanner/Edit?id=@item.ID">@item.Title</a></td>
+                    <td><a href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]"><img src="@item.ImgUrl" width="250" height="150" /></a></td>
+                    <td><a href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]">@item.Title</a></td>
                     <td>@item.GetLinkType</td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
                     <td>@item.Weight</td>
                     <td>@item.LastUpdateTime.ToLongDateString()</td>
                     <td>
-                        <a class="btn btn-sm btn-white" href="/Admin/HomeBanner/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                        <a class="btn btn-sm btn-white" href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                     </td>
                 </tr>
             }
@@ -130,7 +130,7 @@ else
     
     function WordSearch()
     {
-        location.href = "?page=1&word="+encodeURIComponent($("#txt_word").val());
+        location.href = "?page=1&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]&word="+encodeURIComponent($("#txt_word").val());
     }
 
     laypage({

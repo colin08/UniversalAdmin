@@ -1,6 +1,6 @@
-﻿@model Universal.Entity.HomeBanner
+﻿@model Universal.Entity.Banner
 @{
-    ViewBag.Title = "编辑首页轮播图";
+    ViewBag.Title = "编辑轮播图";
 }
 
 <!--头部脚本-->
@@ -30,7 +30,7 @@
     <div class="col-sm-4">
         <ol class="breadcrumb">
             <li><a href="/Admin/Home/Center">主页</a></li>
-            <li><a href="/Admin/HomeBanner/Index">轮播图管理</a></li>
+            <li><a href="/Admin/Banner/Index?cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]">轮播图管理 - @ViewData["CTitle"]</a></li>
             <li><strong>编辑</strong></li>
         </ol>
     </div>
@@ -47,6 +47,8 @@
         </ul>
         <form method="post" class="form-horizontal" onsubmit="configm_before()">
             @Html.AntiForgeryToken()
+            @Html.Hidden("cid",ViewData["CID"])
+            @Html.Hidden("ctitle",ViewData["CTitle"])
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
                     <div style="margin-top:20px;"></div>

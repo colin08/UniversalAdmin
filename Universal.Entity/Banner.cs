@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Universal.Entity
 {
-    public enum HomeBannerLinkType
+    public enum BannerLinkType
     {
         [Description("外部网页")]
         web_url = 1,
@@ -15,9 +15,9 @@ namespace Universal.Entity
     /// <summary>
     /// 首页Banner图
     /// </summary>
-    public class HomeBanner : BaseAdminEntity
+    public class Banner : BaseAdminEntity
     {
-        public HomeBanner()
+        public Banner()
         {
             this.Status = true;
             this.Weight = 99;
@@ -28,11 +28,22 @@ namespace Universal.Entity
 
         public int ID { get; set; }
 
+        /// <summary>
+        /// 所属分类
+        /// </summary>
+        [Display(Name = "所属分类")]
+        public int CategoryID { get; set; }
+
+        /// <summary>
+        /// 分类信息
+        /// </summary>
+        public virtual Category Category { get; set; }
+
         [Display(Name = "标题"), MaxLength(255, ErrorMessage = "不能超过255个字符")]
         public string Title { get; set; }
 
         [Display(Name = "事件目标"), Required(ErrorMessage = "不能为空")]
-        public HomeBannerLinkType LinkType { get; set; }
+        public BannerLinkType LinkType { get; set; }
 
         /// <summary>
         /// 获取事件类别

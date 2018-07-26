@@ -83,6 +83,7 @@
                     <td>
                         @*<a class="btn btn-sm btn-warning" href="javascript:;" onclick="del_item('/Admin/Category/Del',@item.ID, 1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>*@
                         <a class="btn btn-sm btn-white" href="/Admin/Category/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                        <a class="btn btn-sm btn-white" href="/Admin/Banner/Index?&page=1&cid=@item.ID&ctitle=@item.Title.Replace("&nbsp;","").Replace("├","").Replace(" ","")"><i class="glyphicon glyphicon-align-right"></i> 轮播图管理</a>
                     </td>
                 </tr>
             }

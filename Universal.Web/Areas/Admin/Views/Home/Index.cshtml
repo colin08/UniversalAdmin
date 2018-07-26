@@ -50,12 +50,18 @@
                     <li>
                         <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
-                    @if (CheckAdminPower("HomeBanner/Index", false))
+
+                    @if (CheckAdminPower("Category/Index", false))
                     {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">Category</span>
+                        </li>
                         <li>
-                            <a class="nav-link J_menuItem" href="/Admin/HomeBanner/Index"><i class="fa fa-bars"></i><span class="nav-label">首页轮播图</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/Category/Index"><i class="fa fa-bars"></i> <span class="nav-label">栏目分类</span></a>
                         </li>
                     }
+
                     @if (CheckAdminPower("FutureVision/Index", false))
                     {
                         <li>
@@ -124,17 +130,7 @@
                             </li>
                         }
                     }
-                    @if (CheckAdminPower("Category/Index", false))
-                    {
-                        <li class="line dk"></li>
-                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                            <span class="ng-scope">Category</span>
-                        </li>
-                        <li>
-                            <a class="nav-link J_menuItem" href="/Admin/Category/Index"><i class="fa fa-bars"></i> <span class="nav-label">栏目分类</span></a>
-                        </li>
-                    }
-
+                    
                     @if (CheckAdminPower("SysConfig/Sys", false))
                     {
                         <li class="line dk"></li>

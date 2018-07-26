@@ -692,6 +692,13 @@
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.js" />
     <Content Include="Assets\js\plugins\ztree\js\jquery.ztree.exhide.min.js" />
     <Content Include="Assets\js\tools.js" />
+    <Content Include="bin\Universal.BLL.dll" />
+    <Content Include="bin\Universal.DataCore.dll" />
+    <Content Include="bin\Universal.Entity.dll" />
+    <Content Include="bin\Universal.Tools.dll" />
+    <Content Include="bin\Universal.Web.dll" />
+    <Content Include="bin\Universal.Web.Framework.dll" />
+    <Content Include="bin\Universal.Web.XML" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -711,7 +718,7 @@
     <Compile Include="Areas\Admin\Controllers\TimeLineController.cs" />
     <Compile Include="Areas\Admin\Controllers\FutureVisionController.cs" />
     <Compile Include="Areas\Admin\Controllers\JoinUSCategoryController.cs" />
-    <Compile Include="Areas\Admin\Controllers\HomeBannerController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysLogController.cs" />
@@ -835,8 +842,8 @@
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.eot" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.ttf" />
     <Content Include="Assets\js\plugins\layer\laydate\theme\default\font\iconfont.woff" />
-    <Content Include="Areas\Admin\Views\HomeBanner\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\HomeBanner\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Banner\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Banner\Index.cshtml" />
     <Content Include="Areas\Admin\Views\FutureVision\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\FutureVision\Index.cshtml" />
     <Content Include="Areas\Admin\Views\JoinUSCategory\Edit.cshtml" />

@@ -59,7 +59,7 @@ FROM
     WHERE Status=1
     ORDER BY Weight DESC     
 END
-
+go
 
  --查找指定分类的所有父类
  CREATE PROCEDURE [dbo].[sp_GetParentCategory] (@Id int)
@@ -123,7 +123,7 @@ FROM
     ORDER BY Weight DESC
 
 END
-
+go
 
 --拆分指定分隔符的字符串
 CREATE function [dbo].[func_splitstring]
@@ -155,7 +155,7 @@ begin
     end
     return
 end
-
+go
 
 --获取指定分类的子分类ID合集，逗号分隔
 CREATE FUNCTION [dbo].[fn_GetChildCategoryStr] (@Id int) RETURNS varchar(1000) 

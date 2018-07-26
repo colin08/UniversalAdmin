@@ -52,6 +52,7 @@ namespace Universal.BLL
                 entity.Time = model.Time;
                 entity.Title = model.Title;
                 entity.Type = model.Type;
+                entity.ImgType = model.ImgType;
                 entity.Weight = model.Weight;
                 db.CaseShows.Add(entity);
                 db.SaveChanges();
@@ -95,6 +96,7 @@ namespace Universal.BLL
                 entity.Time = model.Time;
                 entity.Title = model.Title;
                 entity.Type = model.Type;
+                entity.ImgType = model.ImgType;
                 entity.Weight = model.Weight;
                 db.SaveChanges();
                 StringBuilder sb_sql = new StringBuilder();
