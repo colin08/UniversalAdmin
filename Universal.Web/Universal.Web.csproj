@@ -861,10 +861,8 @@
     <Content Include="Areas\Admin\Views\Honour\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Honour\Index.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
-    <Content Include="Views\Home\SignalDemo.cshtml" />
     <Content Include="Views\Shared\TopNavigation.cshtml" />
     <Content Include="Views\Shared\Buttom.cshtml" />
-    <Content Include="Views\Shared\404.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

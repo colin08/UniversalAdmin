@@ -107,17 +107,21 @@
     <Compile Include="Attribute\CustomAPIExceptionAttribute.cs" />
     <Compile Include="Attribute\AdminPermissionAttribute.cs" />
     <Compile Include="Attribute\CustomWebExceptionAttribute.cs" />
+    <Compile Include="Controllers\BaseWebController.cs" />
     <Compile Include="ExceptionInDB.cs" />
     <Compile Include="PromptModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadApkPackInfo.cs" />
     <Compile Include="SiteKey.cs" />
     <Compile Include="UploadHelper.cs" />
+    <Compile Include="ViewPages\WebViewPage.cs" />
     <Compile Include="ViewPages\AdminViewPage.cs" />
     <Compile Include="WebAjaxEntity.cs" />
+    <Compile Include="WebErrorModel.cs" />
     <Compile Include="WorkContext\AdminWorkContext.cs" />
     <Compile Include="WorkContext\APIWorkContext.cs" />
     <Compile Include="WorkContext\BaseWorkContext.cs" />
+    <Compile Include="WorkContext\WebWorkContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

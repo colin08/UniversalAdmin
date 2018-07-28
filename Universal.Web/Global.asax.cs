@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
 using System.Web.Http;
+using System.Web.Mvc;
 using System.Web.Optimization;
-using System.Data.SqlClient;
+using System.Web.Routing;
 
 namespace Universal.Web
 {
     public class Global : HttpApplication
     {
-        string SqlConnection = System.Configuration.ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
 
         void Application_Start(object sender, EventArgs e)
         {
@@ -33,13 +27,11 @@ namespace Universal.Web
             //GlobalConfiguration.Configuration.MessageHandlers.Add(new Framework.ApplicationAuthenticationHandler());
 
 
-            SqlDependency.Start(SqlConnection);
         }
 
 
         void Application_End()
         {
-            SqlDependency.Stop(SqlConnection);
         }
 
 

@@ -30,6 +30,7 @@ namespace Universal.Web.Framework
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+            //System.Diagnostics.Trace.WriteLine(filterContext.HttpContext.Request.Url.AbsoluteUri);
             //filterContext.HttpContext.Response.Write("1. OnActionExecuting  \r\n");
             if(SiteConfig.WebExecutionTime)
             {

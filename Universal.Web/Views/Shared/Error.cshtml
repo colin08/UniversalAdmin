@@ -1,4 +1,4 @@
-﻿
+﻿@model Universal.Web.Framework.WebErrorModel
 @{
     Layout = null;
 }
@@ -11,8 +11,8 @@
     <title>Error</title>
 </head>
 <body>
-    <div> 
-        <h2>系统出现错误</h2>
+    <div>
+        <h2>@Model.message</h2>
     </div>
 </body>
 </html>

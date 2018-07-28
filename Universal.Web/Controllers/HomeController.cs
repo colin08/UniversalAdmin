@@ -10,7 +10,7 @@ namespace Universal.Web.Controllers
     /// <summary>
     /// 
     /// </summary>
-    public class HomeController : Controller
+    public class HomeController : BaseWebController
     {
         /// <summary>
         /// 
@@ -18,7 +18,6 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-
             return View();
         }
         

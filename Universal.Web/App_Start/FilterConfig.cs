@@ -14,9 +14,9 @@ namespace Universal.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute(),1);
-            filters.Add(new Framework.CustomWebExceptionAttribute(),2);
+            //filters.Add(new Framework.CustomWebExceptionAttribute(),2);
+            //filters.Add(new Framework.CustomActionAttribute());
 
-            filters.Add(new Framework.CustomActionAttribute());
         }
     }
 }
