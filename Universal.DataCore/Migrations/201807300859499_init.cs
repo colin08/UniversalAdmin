@@ -8,22 +8,18 @@ namespace Universal.DataCore.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.CaseShow",
+                "dbo.Banner",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 50),
-                        Type = c.Byte(nullable: false),
-                        ImgType = c.Byte(nullable: false),
                         CategoryID = c.Int(nullable: false),
-                        ImgUrl = c.String(maxLength: 300),
-                        Time = c.String(nullable: false, maxLength: 20),
-                        Address = c.String(nullable: false, maxLength: 20),
-                        Summary = c.String(maxLength: 500),
+                        Title = c.String(maxLength: 255),
+                        LinkType = c.Int(nullable: false),
+                        LinkVal = c.String(nullable: false, maxLength: 500),
                         Status = c.Boolean(nullable: false),
-                        IsHome = c.Boolean(nullable: false),
                         Weight = c.Int(nullable: false),
-                        Content = c.String(),
+                        ImgUrl = c.String(maxLength: 300),
+                        Remark = c.String(maxLength: 500),
                         AddTime = c.DateTime(nullable: false),
                         AddUserID = c.Int(),
                         LastUpdateTime = c.DateTime(nullable: false),
@@ -103,6 +99,7 @@ namespace Universal.DataCore.Migrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Title = c.String(nullable: false, maxLength: 30),
+                        TitleEr = c.String(maxLength: 50),
                         CallName = c.String(nullable: false, maxLength: 100),
                         PID = c.Int(),
                         Depth = c.Int(nullable: false),
@@ -121,6 +118,36 @@ namespace Universal.DataCore.Migrations
                 .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
                 .ForeignKey("dbo.Category", t => t.PID)
                 .Index(t => t.PID)
+                .Index(t => t.AddUserID)
+                .Index(t => t.LastUpdateUserID);
+            
+            CreateTable(
+                "dbo.CaseShow",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Title = c.String(nullable: false, maxLength: 50),
+                        Type = c.Byte(nullable: false),
+                        ImgType = c.Byte(nullable: false),
+                        CategoryID = c.Int(nullable: false),
+                        ImgUrl = c.String(maxLength: 300),
+                        Time = c.String(nullable: false, maxLength: 20),
+                        Address = c.String(nullable: false, maxLength: 20),
+                        Summary = c.String(maxLength: 500),
+                        Status = c.Boolean(nullable: false),
+                        IsHome = c.Boolean(nullable: false),
+                        Weight = c.Int(nullable: false),
+                        Content = c.String(),
+                        AddTime = c.DateTime(nullable: false),
+                        AddUserID = c.Int(),
+                        LastUpdateTime = c.DateTime(nullable: false),
+                        LastUpdateUserID = c.Int(),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.SysUser", t => t.AddUserID)
+                .ForeignKey("dbo.Category", t => t.CategoryID, cascadeDelete: true)
+                .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
+                .Index(t => t.CategoryID)
                 .Index(t => t.AddUserID)
                 .Index(t => t.LastUpdateUserID);
             
@@ -182,32 +209,6 @@ namespace Universal.DataCore.Migrations
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysUser", t => t.AddUserID)
                 .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
-                .Index(t => t.AddUserID)
-                .Index(t => t.LastUpdateUserID);
-            
-            CreateTable(
-                "dbo.Banner",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        CategoryID = c.Int(nullable: false),
-                        Title = c.String(maxLength: 255),
-                        LinkType = c.Int(nullable: false),
-                        LinkVal = c.String(nullable: false, maxLength: 500),
-                        Status = c.Boolean(nullable: false),
-                        Weight = c.Int(nullable: false),
-                        ImgUrl = c.String(maxLength: 300),
-                        Remark = c.String(maxLength: 500),
-                        AddTime = c.DateTime(nullable: false),
-                        AddUserID = c.Int(),
-                        LastUpdateTime = c.DateTime(nullable: false),
-                        LastUpdateUserID = c.Int(),
-                    })
-                .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.SysUser", t => t.AddUserID)
-                .ForeignKey("dbo.Category", t => t.CategoryID, cascadeDelete: true)
-                .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
-                .Index(t => t.CategoryID)
                 .Index(t => t.AddUserID)
                 .Index(t => t.LastUpdateUserID);
             
@@ -378,9 +379,6 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.JoinUSCategory", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "AddUserID", "dbo.SysUser");
-            DropForeignKey("dbo.Banner", "LastUpdateUserID", "dbo.SysUser");
-            DropForeignKey("dbo.Banner", "CategoryID", "dbo.Category");
-            DropForeignKey("dbo.Banner", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.FutureVision", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.FutureVision", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.CusCategory", "PID", "dbo.CusCategory");
@@ -390,10 +388,13 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.TeamWork", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.CaseShow", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.CaseShow", "CategoryID", "dbo.Category");
+            DropForeignKey("dbo.CaseShow", "AddUserID", "dbo.SysUser");
+            DropForeignKey("dbo.Banner", "LastUpdateUserID", "dbo.SysUser");
+            DropForeignKey("dbo.Banner", "CategoryID", "dbo.Category");
             DropForeignKey("dbo.Category", "PID", "dbo.Category");
             DropForeignKey("dbo.Category", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.Category", "AddUserID", "dbo.SysUser");
-            DropForeignKey("dbo.CaseShow", "AddUserID", "dbo.SysUser");
+            DropForeignKey("dbo.Banner", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.SysUser", "SysRoleID", "dbo.SysRole");
             DropForeignKey("dbo.SysRoleRoute", "SysRouteID", "dbo.SysRoute");
             DropForeignKey("dbo.SysRoleRoute", "SysRoleID", "dbo.SysRole");
@@ -411,14 +412,14 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.JoinUSCategory", new[] { "AddUserID" });
             DropIndex("dbo.Honour", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Honour", new[] { "AddUserID" });
-            DropIndex("dbo.Banner", new[] { "LastUpdateUserID" });
-            DropIndex("dbo.Banner", new[] { "AddUserID" });
-            DropIndex("dbo.Banner", new[] { "CategoryID" });
             DropIndex("dbo.FutureVision", new[] { "LastUpdateUserID" });
             DropIndex("dbo.FutureVision", new[] { "AddUserID" });
             DropIndex("dbo.CusCategory", new[] { "PID" });
             DropIndex("dbo.TeamWork", new[] { "LastUpdateUserID" });
             DropIndex("dbo.TeamWork", new[] { "AddUserID" });
+            DropIndex("dbo.CaseShow", new[] { "LastUpdateUserID" });
+            DropIndex("dbo.CaseShow", new[] { "AddUserID" });
+            DropIndex("dbo.CaseShow", new[] { "CategoryID" });
             DropIndex("dbo.Category", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Category", new[] { "AddUserID" });
             DropIndex("dbo.Category", new[] { "PID" });
@@ -427,9 +428,9 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.SysRole", new[] { "RoleName" });
             DropIndex("dbo.SysUser", new[] { "SysRoleID" });
             DropIndex("dbo.SysUser", new[] { "UserName" });
-            DropIndex("dbo.CaseShow", new[] { "LastUpdateUserID" });
-            DropIndex("dbo.CaseShow", new[] { "AddUserID" });
-            DropIndex("dbo.CaseShow", new[] { "CategoryID" });
+            DropIndex("dbo.Banner", new[] { "LastUpdateUserID" });
+            DropIndex("dbo.Banner", new[] { "AddUserID" });
+            DropIndex("dbo.Banner", new[] { "CategoryID" });
             DropTable("dbo.TeamWorkCaseShow");
             DropTable("dbo.TimeLine");
             DropTable("dbo.SysLogMethod");
@@ -438,16 +439,16 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.JoinUS");
             DropTable("dbo.JoinUSCategory");
             DropTable("dbo.Honour");
-            DropTable("dbo.Banner");
             DropTable("dbo.FutureVision");
             DropTable("dbo.CusCategory");
             DropTable("dbo.TeamWork");
+            DropTable("dbo.CaseShow");
             DropTable("dbo.Category");
             DropTable("dbo.SysRoute");
             DropTable("dbo.SysRoleRoute");
             DropTable("dbo.SysRole");
             DropTable("dbo.SysUser");
-            DropTable("dbo.CaseShow");
+            DropTable("dbo.Banner");
         }
     }
 }

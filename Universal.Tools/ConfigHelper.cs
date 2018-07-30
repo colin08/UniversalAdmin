@@ -161,6 +161,9 @@ namespace Universal.Tools
         [Display(Name ="轮播图间隔时间"),Required(ErrorMessage ="必填")]
         public int BannerTime { get; set; }
 
+        [Display(Name ="首页经典案例描述"),Required(ErrorMessage ="必填")]
+        public string HomeCaseDesc { get; set; }
+
         #region 邮件配置
 
         [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]

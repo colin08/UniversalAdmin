@@ -69,6 +69,7 @@
     <Compile Include="SysUser.cs" />
     <Compile Include="TeamWork.cs" />
     <Compile Include="TimeLine.cs" />
+    <Compile Include="ViewModel\HomeData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

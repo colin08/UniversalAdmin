@@ -13,8 +13,14 @@ namespace Universal.Entity
     /// </summary>
     public enum CaseShowType : byte
     {
+        /// <summary>
+        /// 最新案例
+        /// </summary>
         [Description("最新案例")]
         New = 1,
+        /// <summary>
+        /// 经典案例
+        /// </summary>
         [Description("经典案例")]
         Classic
     }

@@ -105,6 +105,7 @@ namespace Universal.DataCore.Migrations
             //数字展示
             var entity_shuzi = new Entity.Category();
             entity_shuzi.Title = "数字展示";
+            entity_shuzi.TitleEr = "中国创意视觉与数字展示领航者";
             entity_shuzi.Summary = "";
             entity_shuzi.CallName = "Digital-Display";
             entity_shuzi.Remark = "";
@@ -185,6 +186,7 @@ namespace Universal.DataCore.Migrations
             //创意视觉
             var entity_chuangyishujue = new Entity.Category();
             entity_chuangyishujue.Title = "创意视觉";
+            entity_chuangyishujue.TitleEr = "中国创意视觉与数字展示领航者";
             entity_chuangyishujue.Summary = "";
             entity_chuangyishujue.CallName = "Creative-Vision";
             entity_chuangyishujue.Remark = "";

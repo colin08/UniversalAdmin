@@ -18,6 +18,8 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            WorkContext.CategoryMark = "HOME";
+            WorkContext.CategoryErMark = "SSSS";
             return View();
         }
         

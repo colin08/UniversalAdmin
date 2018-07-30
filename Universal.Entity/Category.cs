@@ -16,6 +16,8 @@ namespace Universal.Entity
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
             this.Remark = "";
+            this.Summary = "";
+            this.TitleEr = "";
             //this.AddUserID = 1;
             //this.LastUpdateUserID = 1;
         }
@@ -25,6 +27,9 @@ namespace Universal.Entity
 
         [Display(Name = "栏目名称"), MaxLength(30,ErrorMessage ="不能超过30个字符"), Required(ErrorMessage = "分类名称不能为空")]
         public string Title { get; set; }
+
+        [Display(Name = "栏目二级名称"), MaxLength(50, ErrorMessage = "不能超过50个字符")]
+        public string TitleEr { get; set; }
 
         [Display(Name ="栏目标识"),MaxLength(100,ErrorMessage ="不能超过100个字符"),Required(ErrorMessage ="标识不能为空")]
         public string CallName { get; set; }

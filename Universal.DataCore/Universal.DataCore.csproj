@@ -50,9 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFDBContext.cs" />
-    <Compile Include="Migrations\201807260711012_init.cs" />
-    <Compile Include="Migrations\201807260711012_init.Designer.cs">
-      <DependentUpon>201807260711012_init.cs</DependentUpon>
+    <Compile Include="Migrations\201807300859499_init.cs" />
+    <Compile Include="Migrations\201807300859499_init.Designer.cs">
+      <DependentUpon>201807300859499_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +75,8 @@
     <Content Include="存储过程及函数.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807260711012_init.resx">
-      <DependentUpon>201807260711012_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807300859499_init.resx">
+      <DependentUpon>201807300859499_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
