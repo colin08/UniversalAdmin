@@ -11,7 +11,7 @@ namespace Universal.Web.Controllers
     {
         public ActionResult Index()
         {
-            //BLL.BLLMPUserState.SetOpenID("oHP6jw7Uc0EYIqFQBmFbXL3lcasI");
+            //BLL.BLLMPUserState.SetOpenID("oHP6jw6WoaY5MyVOBUfuRxSnWHlg");
             //return Redirect("/Admin/Home/");
             
             return Content("");

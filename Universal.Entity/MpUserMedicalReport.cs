@@ -28,6 +28,16 @@ namespace Universal.Entity
         [MaxLength(255)]
         public string Title { get; set; }
 
+        [NotMapped]
+        public string GetTitle
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Title)) return "";
+                return Tools.StringHelper.SubString(Title, 10);
+            }
+        }
+
         /// <summary>
         /// 报告pdf附件地址
         /// </summary>
@@ -35,5 +45,15 @@ namespace Universal.Entity
 
 
         public DateTime AddTime { get; set; }
+
+        [NotMapped]
+        public string GetTime
+        {
+            get
+            {
+                return AddTime.ToString("yyyy-MM-dd HH:mm");
+            }
+        }
+
     }
 }
