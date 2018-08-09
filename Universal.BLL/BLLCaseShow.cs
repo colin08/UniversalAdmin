@@ -15,6 +15,43 @@ namespace Universal.BLL
     {
 
         /// <summary>
+        /// 获取前端页面展示的数据
+        /// </summary>
+        /// <param name="category_er_call_name">二级导航的标识</param>
+        /// <returns></returns>
+        public static Entity.ViewModel.CaseShow GetWebData(string category_er_call_name,int case_new_top = 3,int case_classic_top = 6)
+        {
+            //string cache_key = "CACHE_CASE_SHOW_WEB";
+            //var cache_model = CacheHelper.Get<Entity.ViewModel.CaseShow>(cache_key);
+            //if (cache_model != null) return cache_model;
+
+            var result_model = new Entity.ViewModel.CaseShow();
+            using (var db = new DataCore.EFDBContext())
+            {
+                //查找分类是否存在
+                var entity_category = db.Categorys.Where(p => p.CallName == category_er_call_name).AsNoTracking().FirstOrDefault();
+                if(entity_category == null) return null;
+
+                result_model.category_id = entity_category.ID;
+                result_model.category_title = entity_category.Title;
+                result_model.category_call_name = category_er_call_name;
+
+                //轮播图
+                result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =" + entity_category.ID.ToString() + "  ORDER BY Weight DESC").ToList();
+                //最新案例
+                result_model.case_list_new = db.CaseShows.Where(p =>p.Status && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                //经典案例
+                result_model.case_list_classic = db.CaseShows.Where(p => p.Status && p.Type == Entity.CaseShowType.Classic).Take(case_classic_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                
+                //CacheHelper.Insert(cache_key, result_model, 1200);
+            }
+
+            return result_model;
+
+        }
+
+
+        /// <summary>
         /// 获取一个实体，返回所拥有的企业合作，id逗号分隔
         /// </summary>
         /// <param name="id"></param>
@@ -46,6 +83,7 @@ namespace Universal.BLL
                 entity.CategoryID = model.CategoryID;
                 entity.Content = model.Content;
                 entity.ImgUrl = model.ImgUrl;
+                entity.ImgUrlBig = model.ImgUrlBig;
                 entity.LastUpdateUserID = model.LastUpdateUserID;
                 entity.Status = model.Status;
                 entity.Summary = model.Summary;
@@ -90,6 +128,7 @@ namespace Universal.BLL
                 entity.CategoryID = model.CategoryID;
                 entity.Content = model.Content;
                 entity.ImgUrl = model.ImgUrl;
+                entity.ImgUrlBig = model.ImgUrlBig;
                 entity.LastUpdateUserID = model.LastUpdateUserID;
                 entity.Status = model.Status;
                 entity.Summary = model.Summary;

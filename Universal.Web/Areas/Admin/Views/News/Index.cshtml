@@ -79,6 +79,7 @@
                 <th>
                     <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                 </th>
+                <th>引用标识</th>
                 <th>图片</th>
                 <th>标题</th>
                 <th>类别</th>
@@ -97,6 +98,7 @@
                     <td>
                         <input type="checkbox" class="datacheck" hid="@item.ID">
                     </td>
+                    <td>@item.GetBase64ID</td>
                     <td><a href="/Admin/News/Edit?id=@item.ID"><img src="@item.ImgUrl" width="150" height="150" /></a></td>
                     <td><a href="/Admin/News/Edit?id=@item.ID">@item.Title</a></td>
                     <td>@item.GetTypeStr</td>

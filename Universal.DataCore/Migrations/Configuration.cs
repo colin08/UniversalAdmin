@@ -101,7 +101,20 @@ namespace Universal.DataCore.Migrations
             #endregion
 
             #region 栏目分类
-            
+
+            //首页
+            var entity_home = new Entity.Category();
+            entity_home.Title = "首页";
+            entity_home.TitleEr = "";
+            entity_home.Summary = "";
+            entity_home.CallName = "Home";
+            entity_home.Remark = "";
+            entity_home.Weight = 199;
+            entity_home.Depth = 1;
+            entity_home.ImgUrl = "";
+            entity_home.PID = null;
+            context.Categorys.Add(entity_home);
+
             //数字展示
             var entity_shuzi = new Entity.Category();
             entity_shuzi.Title = "数字展示";

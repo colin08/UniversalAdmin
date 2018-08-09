@@ -63,7 +63,6 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>栏目名称</th>
                 <th>排序数字</th>
                 <th>启用状态</th>
@@ -75,7 +74,6 @@
             @foreach (var item in Model)
             {
                 <tr class="@(item.PID == null ? "success":"")">
-                    <td>@item.ID</td>
                     <td style="text-align: left;">@Html.Raw(item.Title)</td>
                     <td>@item.Weight</td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>

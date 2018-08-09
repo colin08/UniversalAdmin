@@ -52,7 +52,16 @@ namespace Universal.Entity
         }
 
         public int ID { get; set; }
-
+        /// <summary>
+        /// 获取Base64位编码ID
+        /// </summary>
+        public string GetBase64ID
+        {
+            get
+            {
+                return Tools.Base64.EncodeBase64(ID.ToString());
+            }
+        }
         [Display(Name = "案例名称"), MaxLength(50, ErrorMessage = "不能超过50个字符"), Required(ErrorMessage = "项目名称不能为空")]
         public string Title { get; set; }
 
@@ -92,8 +101,11 @@ namespace Universal.Entity
             }
         }
 
-        [Display(Name = "图片"), MaxLength(300)]
+        [Display(Name = "封面小图片"), MaxLength(300)]
         public string ImgUrl { get; set; }
+
+        [Display(Name = "详情顶部大图"), MaxLength(300)]
+        public string ImgUrlBig { get; set; }
 
         [Display(Name = "时间"), MaxLength(20, ErrorMessage = "不能超过20个字符"), Required(ErrorMessage = "时间不能为空")]
         public string Time { get; set; }

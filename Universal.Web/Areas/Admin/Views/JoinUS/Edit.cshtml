@@ -51,14 +51,6 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
                     <div style="margin-top:20px;"></div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JoinUSCategoryID)</label>
-                        <div class="col-sm-2">
-                            @Html.DropDownListFor(p => p.JoinUSCategoryID, ViewData["JoinUS_role"] as List<SelectListItem>, new { @class = "form-control" })
-                        </div>
-                        <label class="col-sm-4 label_msg"> @Html.ValidationMessageFor(p => p.JoinUSCategoryID)</label>
-                    </div>
-                    <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Title)</label>
@@ -80,6 +72,16 @@
                     </div>
                     <div class="hr-line-dashed"></div>
 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Department)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(p => p.Department, (object)new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Department)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
                     <div class="form-group" style="display:none;">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.TimeOut)</label>
 
@@ -88,7 +90,67 @@
                         </div>
                         <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.TimeOut)</label>
                     </div>
-                    <div class="hr-line-dashed"  style="display:none;"></div>
+                    <div class="hr-line-dashed" style="display:none;"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图片</label>
+
+                        <div class="col-sm-6">
+                            @Html.HiddenFor(p => p.ImgUrl)
+
+                            <button type="button" class="btn btn-info " onclick="upload()">
+                                <i class="fa fa-upload"></i> 上传图片
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图片预览</label>
+
+                        <div class="col-sm-10">
+                            <div class="img_list">
+                                <ul id="@Html.NameFor(p => p.ImgUrl)ListData">
+                                    @if (!string.IsNullOrWhiteSpace(Model.ImgUrl))
+                                    {
+                                        @:
+                                        <li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详情顶部大图</label>
+
+                        <div class="col-sm-6">
+                            @Html.HiddenFor(p => p.ImgUrlBig)
+
+                            <button type="button" class="btn btn-info " onclick="upload2()">
+                                <i class="fa fa-upload"></i> 上传文件
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详情大图预览</label>
+
+                        <div class="col-sm-10">
+                            <div class="img_list">
+                                <ul id="@Html.NameFor(p => p.ImgUrlBig)ListData">
+                                    @if (!string.IsNullOrWhiteSpace(Model.ImgUrlBig))
+                                    {
+                                        @:
+                                        <li><img src="@Model.ImgUrlBig" ids="0" class="@Html.NameFor(p => p.ImgUrlBig)List" width="500" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrlBig)')">删除</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Weight)</label>
@@ -162,7 +224,57 @@
 @Scripts.Render("~/bundles/froala_editor")
 
 <script>
-    
+
+    function upload() {
+            var total = $(".@Html.NameFor(p=>p.ImgUrl)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "category", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.ImgUrl), Area = "Admin" })', 'no']
+            });
+            }
+
+        //回掉方法，参数固定
+        function set_upload_file(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.ImgUrl)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.ImgUrl)ListData").append(img_te);
+            }
+        }
+
+    function upload2() {
+        var total = $(".@Html.NameFor(p=>p.ImgUrlBig)List").size();
+        if (total >= 1) {
+            layer.msg("已有大图片，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "hm", num = 1,call_func= "set_upload_file2", call_back_ele = Html.NameFor(p=>p.ImgUrlBig), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file2(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.ImgUrlBig)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrlBig)List' width='500px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrlBig)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.ImgUrlBig)ListData").append(img_te);
+        }
+    }
+
     $(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',

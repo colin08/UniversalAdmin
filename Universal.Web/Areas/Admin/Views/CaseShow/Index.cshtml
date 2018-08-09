@@ -82,7 +82,7 @@
                 <th>
                     <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                 </th>
-                <th>编号</th>
+                <th>引用编号</th>
                 <th>案例名称</th>
                 <th>类别</th>
                 <th>内容类别</th>
@@ -101,7 +101,7 @@
                 <td>
                     <input type="checkbox" class="datacheck" hid="@item.ID">
                 </td>
-                <td>@item.ID</td>
+                <td>@item.GetBase64ID</td>
                 <td><a href="/Admin/CaseShow/Edit?id=@item.ID">@item.Title</a></td>
                 <td>@item.GetImgTypeStr</td>
                 <td>@item.GetTypeStr</td>

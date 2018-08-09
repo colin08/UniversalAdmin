@@ -84,12 +84,7 @@ namespace Universal.DataCore
         /// 加入我们
         /// </summary>
         public DbSet<Entity.JoinUS> JoinUSs { get; set; }
-
-        /// <summary>
-        /// 加入我们-职位分类
-        /// </summary>
-        public DbSet<Entity.JoinUSCategory> JoinUSCategorys { get; set; }
-
+                
         /// <summary>
         /// 新闻咨询
         /// </summary>

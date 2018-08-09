@@ -15,6 +15,26 @@ namespace Universal.BLL
     {
 
         /// <summary>
+        /// 获取某个分类的轮播图-缓存
+        /// </summary>
+        /// <returns></returns>
+        public List<Entity.Banner> GetCategoryBannerByCallName(string call_name)
+        {
+            //string cache_key = "CACHE_Category_BANNER";
+            //var cache_model = CacheHelper.Get<List<Entity.Banner>>(cache_key);
+            //if (cache_model != null) return cache_model;
+
+            var result_model = new List<Entity.Banner>();
+            using (var db = new DataCore.EFDBContext())
+            {
+                result_model = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =(select ID from Category where CallName = '" + call_name + "')  ORDER BY Weight DESC").ToList();
+                //if(result_model != null) CacheHelper.Insert(cache_key, result_model, 1200);
+            }
+            return result_model;
+        }
+
+
+        /// <summary>
         /// 获取案例展示的分类
         /// </summary>
         /// <returns></returns>

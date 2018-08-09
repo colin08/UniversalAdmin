@@ -17,21 +17,32 @@ namespace Universal.Entity
         }
 
         public int ID { get; set; }
-
         /// <summary>
-        /// 所属职位分类
+        /// 获取Base64位编码ID
         /// </summary>
-        [Display(Name ="所属分类")]
-        public int JoinUSCategoryID { get; set; }
-
-        public virtual JoinUSCategory Category { get; set; }
-
+        public string GetBase64ID
+        {
+            get
+            {
+                return Tools.Base64.EncodeBase64(ID.ToString());
+            }
+        }
+       
         [Display(Name = "职位名称"), MaxLength(30, ErrorMessage = "不能超过30个字符"), Required(ErrorMessage = "职位名称不能为空")]
         public string Title { get; set; }
-
+        
         [Display(Name = "工作地点"), MaxLength(30, ErrorMessage = "不能超过30个字符"), Required(ErrorMessage = "工作地点不能为空")]
         public string Address { get; set; }
-        
+
+        [Display(Name = "部门"), MaxLength(30, ErrorMessage = "不能超过30个字符"), Required(ErrorMessage = "部门不能为空")]
+        public string Department { get; set; }
+
+        [Display(Name = "封面小图片"), MaxLength(300)]
+        public string ImgUrl { get; set; }
+
+        [Display(Name = "详情顶部大图"), MaxLength(300)]
+        public string ImgUrlBig { get; set; }
+
         [Display(Name = "状态")]
         public bool Status { get; set; }
         

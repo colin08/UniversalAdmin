@@ -19,22 +19,17 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <param name="word">筛选：关键字</param>
         /// <returns></returns>
         [AdminPermissionAttribute("职位管理", "职位管理首页")]
-        public ActionResult Index(int page = 1, int role = 0, string word = "")
+        public ActionResult Index(int page = 1,string word = "")
         {
             word = WebHelper.UrlDecode(word);
             Models.ViewModelJoinUSList response_model = new Models.ViewModelJoinUSList();
             response_model.page = page;
-            response_model.role = role;
             response_model.word = word;
             //获取每页大小的Cookie
             response_model.page_size = TypeHelper.ObjectToInt(WebHelper.GetCookie(WorkContext.PageKeyCookie), SiteKey.AdminDefaultPageSize);
-
-            Load();
-
+            
             int total = 0;
             List<BLL.FilterSearch> filter = new List<BLL.FilterSearch>();
-            if (role != 0)
-                filter.Add(new BLL.FilterSearch("JoinUSCategoryID", role.ToString(), BLL.FilterSearchContract.等于));
             if (!string.IsNullOrWhiteSpace(word))
             {
                 filter.Add(new BLL.FilterSearch("Title", word, BLL.FilterSearchContract.like));
@@ -42,7 +37,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
 
             BLL.BaseBLL<Entity.JoinUS> bll = new BLL.BaseBLL<Entity.JoinUS>();
-            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "Weight desc", "Category");
+            var list = bll.GetPagedList(page, response_model.page_size, ref total, filter, "Weight desc");
             response_model.DataList = list;
             response_model.total = total;
             response_model.total_page = CalculatePage(total, response_model.page_size);
@@ -58,7 +53,6 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult Edit(int? id)
         {
             BLL.BaseBLL<Entity.JoinUS> bll = new BLL.BaseBLL<Entity.JoinUS>();
-            Load();
             Entity.JoinUS entity = new Entity.JoinUS();
             int num = TypeHelper.ObjectToInt(id, 0);
             if (num != 0)
@@ -85,12 +79,7 @@ namespace Universal.Web.Areas.Admin.Controllers
             var isAdd = entity.ID == 0 ? true : false;
 
             BLL.BaseBLL<Entity.JoinUS> bll = new BLL.BaseBLL<Entity.JoinUS>();
-            Load();
-
-            if (entity.JoinUSCategoryID == 0)
-            {
-                ModelState.AddModelError("JoinUSCategoryID", "请选择所属分类");
-            }
+            
 
             //数据验证
             if (isAdd)
@@ -127,8 +116,12 @@ namespace Universal.Web.Areas.Admin.Controllers
                     ddd.TimeOut = entity.TimeOut;
                     ddd.Weight = entity.Weight;
                     ddd.Content = entity.Content;
-                    entity.AddUserID = WorkContext.UserInfo.ID;
-                    entity.LastUpdateUserID = WorkContext.UserInfo.ID;
+                    ddd.AddUserID = WorkContext.UserInfo.ID;
+                    ddd.LastUpdateUserID = WorkContext.UserInfo.ID;
+                    ddd.ImgUrl = entity.ImgUrl;
+                    ddd.ImgUrlBig = entity.ImgUrlBig;
+                    ddd.Department = entity.Department;
+
                     bll.Modify(ddd);
                     AddAdminLogs(Entity.SysLogMethodType.Update, "修改职位管理：" + ddd.Title + "");
                 }
@@ -159,22 +152,5 @@ namespace Universal.Web.Areas.Admin.Controllers
             WorkContext.AjaxStringEntity.msgbox = "success";
             return Json(WorkContext.AjaxStringEntity);
         }
-
-
-        /// <summary>
-        /// 加载用户组
-        /// </summary>
-        private void Load()
-        {
-            List<SelectListItem> dataList = new List<SelectListItem>();
-            dataList.Add(new SelectListItem() { Text = "全部分类", Value = "0" });
-            BLL.BaseBLL<Entity.JoinUSCategory> bll = new BLL.BaseBLL<Entity.JoinUSCategory>();
-            foreach (var item in bll.GetListBy(0,p=>p.Status,null))
-            {
-                dataList.Add(new SelectListItem() { Text = item.Title, Value = item.ID.ToString() });
-            }
-            ViewData["JoinUS_role"] = dataList;
-        }
-
     }
 }

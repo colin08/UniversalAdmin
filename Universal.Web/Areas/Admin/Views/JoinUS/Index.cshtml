@@ -56,7 +56,6 @@
         <p></p>
     </div>
     <div class="col-sm-2">
-        @Html.DropDownListFor(p => p.role, ViewData["JoinUS_role"] as List<SelectListItem>, new { @class = "input-sm form-control", onchange = "WordSearch()" })
     </div>
     <div class="col-sm-4">
         <div class="input-group">
@@ -79,9 +78,10 @@
                 <th>
                     <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                 </th>
+                <th>引用标识</th>
                 <th>职位名称</th>
-                <th>所属类别</th>
                 <th>工作地点</th>
+                <th>部门</th>
                 <th style="display:none;">过期时间</th>
                 <th>状态</th>
                 <th>排序数字</th>
@@ -96,9 +96,10 @@
                     <td>
                         <input type="checkbox" class="datacheck" hid="@item.ID">
                     </td>
+                    <td>@item.GetBase64ID</td>
                     <td><a href="/Admin/JoinUS/Edit?id=@item.ID">@item.Title</a></td>
-                    <td>@item.Category.Title</td>
                     <td>@item.Address</td>
+                    <td>@item.Department</td>
                     <td style="display:none;">@item.GetTimeOut</td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
                     <td>@item.Weight</td>
@@ -133,7 +134,7 @@ else
 
     function WordSearch()
     {
-        location.href = "?page=1&role=" + $("#role").val()+"&word=" + encodeURIComponent($("#txt_word").val());
+        location.href = "?page=1&word=" + encodeURIComponent($("#txt_word").val());
 
     }
 
@@ -147,7 +148,7 @@ else
         }(),
         jump: function (e, first) { //触发分页后的回调
             if (!first) { //一定要加此判断，否则初始时会无限刷新
-                location.href = '?page=' + e.curr + "&role=" + $("#role").val() + "&word=" + encodeURIComponent($("#txt_word").val())
+                location.href = '?page=' + e.curr + "&word=" + encodeURIComponent($("#txt_word").val())
             }
         }
     });

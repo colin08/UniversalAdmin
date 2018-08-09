@@ -717,7 +717,6 @@
     <Compile Include="Areas\Admin\Controllers\HonourController.cs" />
     <Compile Include="Areas\Admin\Controllers\TimeLineController.cs" />
     <Compile Include="Areas\Admin\Controllers\FutureVisionController.cs" />
-    <Compile Include="Areas\Admin\Controllers\JoinUSCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\BannerController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SysConfigController.cs" />
@@ -735,7 +734,6 @@
     <Compile Include="Areas\Admin\Models\ViewModelTimeLineList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelFutureVisionList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelJoinUSList.cs" />
-    <Compile Include="Areas\Admin\Models\ViewModelJoinUSCategoryList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelSysInfo.cs" />
@@ -772,7 +770,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\APIController.cs" />
+    <Compile Include="Controllers\CaseShowController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -846,8 +847,6 @@
     <Content Include="Areas\Admin\Views\Banner\Index.cshtml" />
     <Content Include="Areas\Admin\Views\FutureVision\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\FutureVision\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\JoinUSCategory\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\JoinUSCategory\Index.cshtml" />
     <Content Include="Areas\Admin\Views\JoinUS\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\JoinUS\Index.cshtml" />
     <Content Include="Areas\Admin\Views\TimeLine\Edit.cshtml" />
@@ -863,6 +862,18 @@
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\Shared\TopNavigation.cshtml" />
     <Content Include="Views\Shared\Buttom.cshtml" />
+    <Content Include="Views\CaseShow\Index.cshtml" />
+    <Content Include="Views\About\Summary.cshtml" />
+    <Content Include="Views\About\Culture.cshtml" />
+    <Content Include="Views\About\Memorabilia.cshtml" />
+    <Content Include="Views\About\TeamIntroduction.cshtml" />
+    <Content Include="Views\About\Honor.cshtml" />
+    <Content Include="Views\About\FutureVision.cshtml" />
+    <Content Include="Views\Contact\Join.cshtml" />
+    <Content Include="Views\Contact\News.cshtml" />
+    <Content Include="Views\CaseShow\Detail.cshtml" />
+    <Content Include="Views\Contact\Job.cshtml" />
+    <Content Include="Views\Contact\NewsDetail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

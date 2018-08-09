@@ -18,9 +18,12 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            //设置导航标识
             WorkContext.CategoryMark = "HOME";
-            WorkContext.CategoryErMark = "SSSS";
-            return View();
+            WorkContext.CategoryErMark = "";
+
+            var result_model = BLL.BLLHome.GetData();
+            return View(result_model);
         }
         
     }

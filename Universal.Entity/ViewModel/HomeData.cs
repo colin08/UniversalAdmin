@@ -11,6 +11,17 @@ namespace Universal.Entity.ViewModel
     /// </summary>
     public class HomeData
     {
+        public HomeData()
+        {
+            this.banner_list = new List<Banner>();
+            this.time_line_list = new List<Entity.TimeLine>();
+            this.case_show_list = new List<Entity.CaseShow>();
+            this.team_work_list = new List<TeamWork>();
+            this.shuzi = new HomeShuZiChuangYiData();
+            this.chuangyi = new HomeShuZiChuangYiData();
+            this.news_list = new List<Entity.News>();
+        }
+
         /// <summary>
         /// 轮播图列表
         /// </summary>
@@ -24,7 +35,7 @@ namespace Universal.Entity.ViewModel
         /// <summary>
         /// 经典案例列表
         /// </summary>
-        public List<CaseShow> case_show_list { get; set; }
+        public List<Entity.CaseShow> case_show_list { get; set; }
 
         /// <summary>
         /// 合作企业列表
@@ -44,7 +55,7 @@ namespace Universal.Entity.ViewModel
         /// <summary>
         /// 最新资讯
         /// </summary>
-        public List<News> news_list { get; set; }
+        public List<Entity.News> news_list { get; set; }
 
     }
 
@@ -53,6 +64,11 @@ namespace Universal.Entity.ViewModel
     /// </summary>
     public class HomeShuZiChuangYiData
     {
+        public HomeShuZiChuangYiData()
+        {
+            this.category_list = new List<HomeShuZiChuangYiCategoryData>();
+        }
+
         public string title { get; set; }
 
         public string title_er { get; set; }

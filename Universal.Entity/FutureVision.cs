@@ -17,6 +17,16 @@ namespace Universal.Entity
         }
 
         public int ID { get; set; }
+        /// <summary>
+        /// 获取Base64位编码ID
+        /// </summary>
+        public string GetBase64ID
+        {
+            get
+            {
+                return Tools.Base64.EncodeBase64(ID.ToString());
+            }
+        }
 
         [Display(Name = "标题"), MaxLength(30, ErrorMessage = "不能超过30个字符"), Required(ErrorMessage = "标题不能为空")]
         public string Title { get; set; }

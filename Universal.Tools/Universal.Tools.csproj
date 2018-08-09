@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base64.cs" />
     <Compile Include="CacheHelper.cs" />
     <Compile Include="Crypto3DES.cs" />
     <Compile Include="CustomTraceListener.cs" />

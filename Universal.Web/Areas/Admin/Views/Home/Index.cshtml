@@ -100,19 +100,9 @@
                     }
                     @if (CheckAdminPower("JoinUS/Index", false))
                     {
-                        <li class="line dk"></li>
-                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                            <span class="ng-scope">Join US</span>
-                        </li>
                         <li>
                             <a class="nav-link J_menuItem" href="/Admin/JoinUS/Index"><i class="fa fa-bars"></i> <span class="nav-label">职位管理</span></a>
                         </li>
-                        if (CheckAdminPower("JoinUSCategory/Index", false))
-                        {
-                            <li>
-                                <a class="nav-link J_menuItem" href="/Admin/JoinUSCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">职位分类</span></a>
-                            </li>
-                        }
                     }
                     @if (CheckAdminPower("Sysuser/Index", false))
                     {
@@ -130,7 +120,7 @@
                             </li>
                         }
                     }
-                    
+
                     @if (CheckAdminPower("SysConfig/Sys", false))
                     {
                         <li class="line dk"></li>

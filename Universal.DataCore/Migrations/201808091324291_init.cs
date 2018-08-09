@@ -131,6 +131,7 @@ namespace Universal.DataCore.Migrations
                         ImgType = c.Byte(nullable: false),
                         CategoryID = c.Int(nullable: false),
                         ImgUrl = c.String(maxLength: 300),
+                        ImgUrlBig = c.String(maxLength: 300),
                         Time = c.String(nullable: false, maxLength: 20),
                         Address = c.String(nullable: false, maxLength: 20),
                         Summary = c.String(maxLength: 500),
@@ -233,34 +234,15 @@ namespace Universal.DataCore.Migrations
                 .Index(t => t.LastUpdateUserID);
             
             CreateTable(
-                "dbo.JoinUSCategory",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Title = c.String(nullable: false, maxLength: 30),
-                        ImgUrl = c.String(nullable: false, maxLength: 300),
-                        Status = c.Boolean(nullable: false),
-                        Weight = c.Int(nullable: false),
-                        Remark = c.String(maxLength: 500),
-                        AddTime = c.DateTime(nullable: false),
-                        AddUserID = c.Int(),
-                        LastUpdateTime = c.DateTime(nullable: false),
-                        LastUpdateUserID = c.Int(),
-                    })
-                .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.SysUser", t => t.AddUserID)
-                .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
-                .Index(t => t.AddUserID)
-                .Index(t => t.LastUpdateUserID);
-            
-            CreateTable(
                 "dbo.JoinUS",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        JoinUSCategoryID = c.Int(nullable: false),
                         Title = c.String(nullable: false, maxLength: 30),
                         Address = c.String(nullable: false, maxLength: 30),
+                        Department = c.String(nullable: false, maxLength: 30),
+                        ImgUrl = c.String(maxLength: 300),
+                        ImgUrlBig = c.String(maxLength: 300),
                         Status = c.Boolean(nullable: false),
                         Weight = c.Int(nullable: false),
                         Content = c.String(),
@@ -272,9 +254,7 @@ namespace Universal.DataCore.Migrations
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.SysUser", t => t.AddUserID)
-                .ForeignKey("dbo.JoinUSCategory", t => t.JoinUSCategoryID, cascadeDelete: true)
                 .ForeignKey("dbo.SysUser", t => t.LastUpdateUserID)
-                .Index(t => t.JoinUSCategoryID)
                 .Index(t => t.AddUserID)
                 .Index(t => t.LastUpdateUserID);
             
@@ -287,6 +267,7 @@ namespace Universal.DataCore.Migrations
                         Type = c.Byte(nullable: false),
                         Status = c.Boolean(nullable: false),
                         ImgUrl = c.String(maxLength: 300),
+                        ImgUrlBig = c.String(maxLength: 300),
                         Weight = c.Int(nullable: false),
                         Source = c.String(maxLength: 30),
                         Author = c.String(maxLength: 30),
@@ -373,10 +354,7 @@ namespace Universal.DataCore.Migrations
             DropForeignKey("dbo.News", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.News", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.JoinUS", "LastUpdateUserID", "dbo.SysUser");
-            DropForeignKey("dbo.JoinUS", "JoinUSCategoryID", "dbo.JoinUSCategory");
             DropForeignKey("dbo.JoinUS", "AddUserID", "dbo.SysUser");
-            DropForeignKey("dbo.JoinUSCategory", "LastUpdateUserID", "dbo.SysUser");
-            DropForeignKey("dbo.JoinUSCategory", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "LastUpdateUserID", "dbo.SysUser");
             DropForeignKey("dbo.Honour", "AddUserID", "dbo.SysUser");
             DropForeignKey("dbo.FutureVision", "LastUpdateUserID", "dbo.SysUser");
@@ -407,9 +385,6 @@ namespace Universal.DataCore.Migrations
             DropIndex("dbo.News", new[] { "AddUserID" });
             DropIndex("dbo.JoinUS", new[] { "LastUpdateUserID" });
             DropIndex("dbo.JoinUS", new[] { "AddUserID" });
-            DropIndex("dbo.JoinUS", new[] { "JoinUSCategoryID" });
-            DropIndex("dbo.JoinUSCategory", new[] { "LastUpdateUserID" });
-            DropIndex("dbo.JoinUSCategory", new[] { "AddUserID" });
             DropIndex("dbo.Honour", new[] { "LastUpdateUserID" });
             DropIndex("dbo.Honour", new[] { "AddUserID" });
             DropIndex("dbo.FutureVision", new[] { "LastUpdateUserID" });
@@ -437,7 +412,6 @@ namespace Universal.DataCore.Migrations
             DropTable("dbo.SysLogException");
             DropTable("dbo.News");
             DropTable("dbo.JoinUS");
-            DropTable("dbo.JoinUSCategory");
             DropTable("dbo.Honour");
             DropTable("dbo.FutureVision");
             DropTable("dbo.CusCategory");

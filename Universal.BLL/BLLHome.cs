@@ -19,25 +19,25 @@ namespace Universal.BLL
         /// <returns></returns>
         public static Entity.ViewModel.HomeData GetData()
         {
-            string cache_key = "CACHE_HOME_DATA";
-            var cache_model = CacheHelper.Get<Entity.ViewModel.HomeData>(cache_key);
-            if (cache_model != null) return cache_model;
+            //string cache_key = "CACHE_HOME_DATA";
+            //var cache_model = CacheHelper.Get<Entity.ViewModel.HomeData>(cache_key);
+            //if (cache_model != null) return cache_model;
 
             var result_model = new Entity.ViewModel.HomeData();
-            using (var db=new DataCore.EFDBContext())
+            using (var db = new DataCore.EFDBContext())
             {
-                //轮播图
-                result_model.banner_list = db.Banners.Where(p => p.Status).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                //首页轮播图
+                result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =(select ID from Category where CallName = 'Home')  ORDER BY Weight DESC").ToList();
                 //大事记
                 result_model.time_line_list = db.TimeLines.Where(p => p.Status).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //合作企业
                 result_model.team_work_list = db.TeamWorks.Where(p => p.Status).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //经典案例
-                result_model.case_show_list = db.CaseShows.Where(p => p.Type == Entity.CaseShowType.Classic && p.IsHome).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_show_list = db.CaseShows.Where(p => p.Status && p.Type == Entity.CaseShowType.Classic && p.IsHome).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //数字展示
                 var temp_shuzi = new Entity.ViewModel.HomeShuZiChuangYiData();
                 var entity_category_shuzi = db.Categorys.Where(p => p.Status && p.CallName == "Digital-Display").AsNoTracking().FirstOrDefault();
-                if(entity_category_shuzi!= null)
+                if (entity_category_shuzi != null)
                 {
                     temp_shuzi.title = entity_category_shuzi.Title;
                     temp_shuzi.title_er = entity_category_shuzi.TitleEr;
@@ -73,7 +73,7 @@ namespace Universal.BLL
                 //最新资讯
                 result_model.news_list = db.News.Where(p => p.Status).OrderByDescending(p => p.Weight).Take(3).AsNoTracking().ToList();
 
-                CacheHelper.Insert(cache_key, result_model, 1200);
+                //CacheHelper.Insert(cache_key, result_model, 1200);
             }
 
             return result_model;

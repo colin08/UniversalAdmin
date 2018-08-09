@@ -10,9 +10,6 @@ namespace Universal.Web.Areas.Admin.Models
     /// </summary>
     public class ViewModelJoinUSList : BasePageModel
     {
-
-        public int role { get; set; }
-
         /// <summary>
         /// 当前筛选的关键字
         /// </summary>

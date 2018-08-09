@@ -58,8 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseBLL.cs" />
+    <Compile Include="BLLAbout.cs" />
     <Compile Include="BLLCaseShow.cs" />
     <Compile Include="BLLCategory.cs" />
+    <Compile Include="BLLContact.cs" />
     <Compile Include="BLLEmail.cs" />
     <Compile Include="BLLHome.cs" />
     <Compile Include="BLLSysRole.cs" />

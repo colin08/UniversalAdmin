@@ -32,6 +32,17 @@ namespace Universal.Entity
 
         public int ID { get; set; }
 
+        /// <summary>
+        /// 获取Base64位编码ID
+        /// </summary>
+        public string GetBase64ID
+        {
+            get
+            {
+                return Tools.Base64.EncodeBase64(ID.ToString());
+            }
+        }
+
         [Display(Name = "新闻标题"), MaxLength(30, ErrorMessage = "不能超过100个字符"), Required(ErrorMessage = "新闻标题不能为空")]
         public string Title { get; set; }
 
@@ -58,6 +69,9 @@ namespace Universal.Entity
         /// </summary>
         [Display(Name = "封面图"), MaxLength(300)]
         public string ImgUrl { get; set; }
+
+        [Display(Name = "详情顶部大图"), MaxLength(300)]
+        public string ImgUrlBig { get; set; }
 
         /// <summary>
         /// 优先级，越大，同级显示的时候越靠前
