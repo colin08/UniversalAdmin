@@ -20,7 +20,6 @@ namespace Universal.Web.Controllers
         {
             WorkContext.CategoryMark = "About";
             WorkContext.CategoryErMark = "Company-Profile";
-
             return View();
         }
 

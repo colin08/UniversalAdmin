@@ -59,6 +59,23 @@ namespace Universal.Entity
         [Display(Name = "目标参数"), MaxLength(500, ErrorMessage = "不能超过500个字符"), Required(ErrorMessage = "不能为空")]
         public string LinkVal { get; set; }
 
+        /// <summary>
+        /// 获取前端点击跳转的页面地址
+        /// </summary>
+        public string GetClickUrl
+        {
+            get
+            {
+                switch (LinkType)
+                {
+                    case BannerLinkType.web_url:
+                        return " href='" + LinkVal + "' target='_blank'";
+                    default:
+                        return "";
+                }
+            }
+        }
+
         [Display(Name = "状态")]
         public bool Status { get; set; }
 

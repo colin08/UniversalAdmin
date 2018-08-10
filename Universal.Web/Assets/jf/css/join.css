@@ -1,0 +1,84 @@
+.page_join .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 948px;
+}
+.page_join .bgcolor{
+    background: #f0f0f0;
+    padding: 58px 0;
+}
+.page_join .page-mid{
+    width: 1200px;
+    margin: 0 auto;
+}
+.page_join .list{
+    width: 1212px;
+}
+.page_join .list li{
+    float: left;
+    width:594px;
+    height: 256px;
+    margin: 0 12px 12px 0;
+    position: relative;
+    cursor: pointer;
+    background: #000;
+    overflow: hidden;
+}
+.page_join .list img{
+    width: 594px;
+    height: 256px;
+    position: absolute;
+    transition: all 0.5s;
+    z-index: 1;
+}
+.page_join .list .box{
+    position: absolute;
+    left: 0;
+    top: 108px;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    z-index: 2;
+    color: #fff;
+    font-size: 16px;
+    line-height: 16px;
+}
+.page_join .list .out-mid{
+    display: inline-block;
+}
+.page_join .list .box-line{
+    width: 100%;
+    height: 12px;
+    border-top: 2px solid #ff0000;
+    display: inline-block;
+}
+.page_join .list .box-line-u{
+    border-top: none;
+    border-bottom: 2px solid #ff0000;
+}
+.page_join .list li:hover .box-line{
+    animation-name: lineAni;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:initial;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+.page_join .list li:hover img{
+    transform: scale(1.05);
+    opacity: 0.6;
+}
+.page_join .bnt-box{
+    text-align: center;
+    margin-top: 46px;
+}
+.page_join .bnt-box .ivu-btn{
+    border-radius: 0;
+    border: 2px solid #c0c0c0;
+    color: #c0c0c0;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.page_join .bnt-box .ivu-btn:hover{
+    border-color: #333;
+    background-color:#333;
+    color:#fff;
+}

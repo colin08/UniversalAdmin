@@ -39,9 +39,9 @@ namespace Universal.BLL
                 //轮播图
                 result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =" + entity_category.ID.ToString() + "  ORDER BY Weight DESC").ToList();
                 //最新案例
-                result_model.case_list_new = db.CaseShows.Where(p =>p.Status && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_list_new = db.CaseShows.Where(p =>p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //经典案例
-                result_model.case_list_classic = db.CaseShows.Where(p => p.Status && p.Type == Entity.CaseShowType.Classic).Take(case_classic_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_list_classic = db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.Classic).Take(case_classic_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 
                 //CacheHelper.Insert(cache_key, result_model, 1200);
             }
@@ -92,6 +92,7 @@ namespace Universal.BLL
                 entity.Type = model.Type;
                 entity.ImgType = model.ImgType;
                 entity.Weight = model.Weight;
+                entity.IsHome = model.IsHome;
                 db.CaseShows.Add(entity);
                 db.SaveChanges();
                 StringBuilder sb_sql = new StringBuilder();
@@ -137,6 +138,7 @@ namespace Universal.BLL
                 entity.Type = model.Type;
                 entity.ImgType = model.ImgType;
                 entity.Weight = model.Weight;
+                entity.IsHome = model.IsHome;
                 db.SaveChanges();
                 StringBuilder sb_sql = new StringBuilder();
                 //先清空

@@ -1,18 +1,125 @@
 ﻿@model Universal.Entity.ViewModel.News
+
 @{
-    Layout = null;
+    ViewBag.Title = "最新资讯";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/news.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Join</title>
-</head>
-<body>
-    <div> 
-        最新资讯
-    </div>
-</body>
-</html>
+<!-- Body Begin -->
+
+    <div class="main page_news">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width">
+                <div class="page-container-width">
+                    <p class="bpt">VR交互体验</p>
+                    <div class="page-pub-line"></div>
+                    <p class="bpl">沉浸式进入虚拟世界消费内容，给用户身临其境的感觉<br />电影、比赛、风景、新闻、旅游互动中的物理动态式体验</p>
+                </div>
+            </div>
+            <div class="lv1 page-container-min-width">
+                <div class="page-container-width">
+                    <p class="list-tt">朗形动态</p>
+                    <div class="page-pub-line"></div>
+                    <p class="list-und">传递最新咨询，记录行业成长......</p>
+                    <ul class="product-list clearfix">
+                        @foreach (var item in Model.new_list_lx)
+                        {
+                            <li>
+                                <div class="product-style">
+                                    <div class="pic-box">
+                                        <img src="@(WorkContext.WebSiteConfig.SiteUrl +item.ImgUrl)">
+                                        <div class="pic-link">
+                                            <span class="out-mid" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
+                                                <i class="box-line"></i><br>
+                                                查看详情
+                                                <i class="box-line box-line-u"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="txt-box">
+                                        <p class="pro-pdt">@item.Title</p>
+                                        <p class="pro-pdl">
+                                            @item.Summary
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+            <div class="lv2 page-container-min-width">
+                <div class="page-container-width">
+                    <p class="list-tt">行业资讯</p>
+                    <div class="page-pub-line"></div>
+                    <p class="list-und">传递最新资讯，记录行业成长......</p>
+                    <ul class="product-list clearfix">
+                        @foreach (var item in Model.new_list_hy)
+                        {
+                            <li>
+                                <div class="product-style">
+                                    <div class="pic-box">
+                                        <img src="@(WorkContext.WebSiteConfig.SiteUrl +item.ImgUrl)">
+                                        <div class="pic-link">
+                                            <span class="out-mid" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
+                                                <i class="box-line"></i><br>
+                                                查看详情
+                                                <i class="box-line box-line-u"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="txt-box">
+                                        <p class="pro-pdt">@item.Title</p>
+                                        <p class="pro-pdl">
+                                            @item.Summary
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <div class="more-bnt">
+                        <i-button>查看更多</i-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

@@ -43,13 +43,13 @@ namespace Universal.BLL
                     temp_shuzi.title_er = entity_category_shuzi.TitleEr;
                     temp_shuzi.summary = entity_category_shuzi.Summary;
                     temp_shuzi.image_url = entity_category_shuzi.ImgUrl;
-                    var temp_category_list = new List<Entity.ViewModel.HomeShuZiChuangYiCategoryData>();
-                    var category_shuzi = db.Categorys.Where(p => p.Status && p.PID == entity_category_shuzi.ID).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
-                    foreach (var item in category_shuzi)
-                    {
-                        temp_category_list.Add(new Entity.ViewModel.HomeShuZiChuangYiCategoryData(item.ID, item.Title, item.CallName));
-                    }
-                    temp_shuzi.category_list = temp_category_list;
+                    //var temp_category_list = new List<Entity.ViewModel.HomeShuZiChuangYiCategoryData>();
+                    //var category_shuzi = db.Categorys.Where(p => p.Status && p.PID == entity_category_shuzi.ID).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                    //foreach (var item in category_shuzi)
+                    //{
+                    //    temp_category_list.Add(new Entity.ViewModel.HomeShuZiChuangYiCategoryData(item.ID, item.Title, item.CallName));
+                    //}
+                    //temp_shuzi.category_list = temp_category_list;
                 }
                 result_model.shuzi = temp_shuzi;
                 //创意视觉
@@ -61,13 +61,13 @@ namespace Universal.BLL
                     temp_chuangyi.title_er = entity_category_chuangyi.TitleEr;
                     temp_chuangyi.summary = entity_category_chuangyi.Summary;
                     temp_chuangyi.image_url = entity_category_chuangyi.ImgUrl;
-                    var temp_category_chuangyi_list = new List<Entity.ViewModel.HomeShuZiChuangYiCategoryData>();
-                    var category_chuangyi = db.Categorys.Where(p => p.Status && p.PID == entity_category_chuangyi.ID).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
-                    foreach (var item in category_chuangyi)
-                    {
-                        temp_category_chuangyi_list.Add(new Entity.ViewModel.HomeShuZiChuangYiCategoryData(item.ID, item.Title, item.CallName));
-                    }
-                    temp_chuangyi.category_list = temp_category_chuangyi_list;
+                    //var temp_category_chuangyi_list = new List<Entity.ViewModel.HomeShuZiChuangYiCategoryData>();
+                    //var category_chuangyi = db.Categorys.Where(p => p.Status && p.PID == entity_category_chuangyi.ID).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                    //foreach (var item in category_chuangyi)
+                    //{
+                    //    temp_category_chuangyi_list.Add(new Entity.ViewModel.HomeShuZiChuangYiCategoryData(item.ID, item.Title, item.CallName));
+                    //}
+                    //temp_chuangyi.category_list = temp_category_chuangyi_list;
                 }
                 result_model.chuangyi = temp_chuangyi;
                 //最新资讯
@@ -78,6 +78,20 @@ namespace Universal.BLL
 
             return result_model;
 
+        }
+
+        /// <summary>
+        /// 根据顶级分类获取子分类
+        /// </summary>
+        /// <param name="call_name"></param>
+        /// <returns></returns>
+        public static List<Entity.Category> GetChildeCategory(string call_name)
+        {
+            using (var db=new DataCore.EFDBContext())
+            {
+                string strSql = "select * from Category where Status =1  AND PID =(select ID from Category where CallName = '" + call_name + "') ORDER BY Weight DESC";
+                return db.Categorys.SqlQuery(strSql).AsNoTracking().ToList();
+            }
         }
 
     }

@@ -1,0 +1,60 @@
+.page_future .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 948px;
+    color:#fff;
+    letter-spacing: 2px;
+}
+.page_future .sz-banner .page-container-width{
+    padding: 554px 0 0 362px;
+}
+.page_future .sz-banner .bpt{
+    font-size: 50px;
+    line-height: 60px;
+    margin-bottom:28px;
+}
+.page_future .sz-banner .bpl{
+    font-size: 18px;
+    margin-top: 44px;
+}
+.page_future .bgcolor{
+    background: #f0f0f0;
+    padding: 58px 0;
+}
+
+.page_future .mid{
+    width: 1200px;
+    height: 600px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.page_future .mid-box{
+    float: left;
+    width: 600px;
+    height: 600px;
+    overflow: hidden;
+}
+.page_future .mid-box img{
+    width: 600px;
+    height: 600px;
+}
+.page_future .mid-txt{
+    padding: 174px 30px 0 58px;
+}
+.page_future .mid-txt .t-p-dt{
+    font-size: 28px;
+    color: #323232;
+    line-height: 28px;
+    margin-bottom: 20px;
+}
+.page_future .mid-txt .t-p-dl{
+    font-size: 18px;
+    line-height: 18px;
+    color: #333;
+    margin: 20px 0 56px 0;
+}
+.page_future .mid-txt .t-p-dd{
+    font-size: 14px;
+    line-height: 24px;
+    color: #666;
+    margin-bottom: 10px;
+}

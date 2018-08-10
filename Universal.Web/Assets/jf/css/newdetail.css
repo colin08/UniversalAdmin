@@ -1,0 +1,44 @@
+.page_newdetail .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 650px;
+}
+.page_newdetail .bgcolor{
+    background: #fff;
+    padding: 58px 0;
+}
+.page_newdetail .page-mid{
+    width: 1200px;
+    margin: 0 auto;
+}
+.page_newdetail .d-p-dt{
+    font-size: 28px;
+    line-height: 28px;
+    color: #323232;
+    margin-bottom: 30px;
+}
+.page_newdetail .d-p-dl{
+    font-size: 16px;
+    line-height: 16px;
+    color: #333;
+    margin-bottom: 30px;
+}
+.page_newdetail .d-p-dl span{
+    padding-right: 40px;
+}
+.page_newdetail .d-line{
+    height: 0px;
+    border-top: 1px solid #333;
+}
+.page_newdetail .d-p-dd{
+    padding-top: 32px;
+    line-height: 24px;
+    font-size: 14px;
+    color: #666;
+}
+.page_newdetail .d-p-dd p{
+    margin-bottom: 30px;
+}
+.page_newdetail .d-p-dd img{
+    max-width: 100%;
+    height: auto;
+}

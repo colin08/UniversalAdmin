@@ -1,0 +1,220 @@
+.page_about .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 948px;
+    color:#fff;
+    letter-spacing: 2px;
+}
+.page_about .sz-banner .page-container-width{
+    padding: 554px 0 0 362px;
+}
+.page_about .sz-banner .bpt{
+    font-size: 50px;
+    line-height: 60px;
+    margin-bottom:28px;
+}
+.page_about .sz-banner .bpl{
+    font-size: 18px;
+    margin-top: 44px;
+}
+.page_about .bgcolor{
+    background: #f0f0f0;
+    padding-bottom: 58px;
+}
+.page_about .lv1{
+    background: #323232;
+    width: 100%;
+}
+.page_about .lv1 .ls{
+    float: left;
+    width: 1000px;
+    height: 100%;
+    padding: 116px 60px 222px 360px;
+    background: #fff;
+}
+.page_about .lv1 .l-dt{
+    font-size: 48px;
+    color: #323232;
+    line-height: 48px;
+    padding-bottom: 18px;
+}
+.page_about .lv1 .l-dl{
+    font-size: 16px;
+    color:#333;
+    line-height: 16px;
+    padding-bottom: 28px;
+}
+.page_about .lv1 .l-dd{
+    font-size: 14px;
+    line-height: 24px;
+    padding-top: 24px;
+    color: #666;
+}
+.page_about .lv1 .rs{
+    float: left;
+    padding: 180px 0 180px 56px;
+    color:#fff;
+}
+.page_about .lv1 .r-dt{
+    font-size: 28px;
+    line-height: 28px;
+    padding-bottom:28px;
+}
+.page_about .lv1 .r-dl{
+    font-size: 16px;
+    line-height: 16px;
+    padding: 34px 0 80px 0;
+}
+.page_about .lv1 .r-dd{
+    text-align: center;
+    white-space:nowrap;
+    font-size: 14px;
+    margin-bottom: 108px;
+}
+.page_about .lv1 .r-sp-tt{
+    font-size: 16px;
+}
+.page_about .lv1 .r-sp-tx{
+    font-size: 46px;
+}
+.page_about .lv1 .icon-zengjia{
+    color: #ff0000;
+    font-size: 24px;
+}
+.page_about .lv1 .icon-jiantou1-copy{
+    font-size: 50px;
+    cursor: pointer;
+}
+.page_about .lv1 .icon-jiantou1-copy:hover{
+    color: #ff0000;
+}
+
+.page_about .lv2{
+    background:#fff;
+    margin-top: 12px;
+}
+.page_about .lv2 .ls{
+    float: left;
+    width: 800px;
+    height: 550px;
+    background:#fff;
+    padding: 118px 104px 0 360px;
+}
+.page_about .lv2 .l-p-dt{
+    color: #333;
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 28px;
+}
+.page_about .lv2 .l-p-dl{
+    color:#666;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 30px;
+}
+.page_about .lv2 .l-p-dd{
+    padding-top: 84px;
+}
+.page_about .lv2 .l-sp1{
+    color:#666;
+    font-size: 14px;
+}
+.page_about .lv2 .l-sp2{
+    font-size: 28px;
+    color: #333;
+    line-height: 30px;
+}
+.page_about .lv2 .r-pic{
+    float:right;
+    width: 1120px;
+    height: 550px;
+}
+.page_about .lv3{
+    margin-top: 12px;
+}
+.page_about .lv3 .ls{
+    float:left;
+    width: 720px;
+    height: 550px;
+    padding: 250px 0 0 452px;
+    font-size: 28px;
+    line-height: 28px;
+    color: #fff;
+    background: url(./../images/index1.jpg) center no-repeat;
+}
+.page_about .lv3 .rs{
+    float: left;
+    width: 1200px;
+    height: 550px;
+    padding: 218px 530px 0 178px;
+    color: #fff;
+    text-align: center;
+    background: url(./../images/index1.jpg) center no-repeat;
+}
+.page_about .lv3 .r-p-tt{
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 24px;
+}
+.page_about .lv3 .r-p-txt{
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.page_about .lv4{
+    background: #323232;
+    height: 550px;
+    margin-top: 24px;
+}
+.page_about .lv4 .ls{
+    float: left;
+    width: 1120px;
+    height: 550px;
+}
+.page_about .lv4 .rs{
+    float: left;
+    width: 800px;
+    height: 550px;
+    padding: 116px 364px 0 58px;
+    color: #fff;
+}
+.page_about .lv4 .r-p-dt{
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 28px;
+}
+.page_about .lv4 .r-p-dl{
+    font-size: 14px;
+    line-height: 24px;
+    margin-top: 30px;
+}
+
+.page_about .lv5{
+    margin-top: 12px;
+    color: #fff;
+}
+.page_about .lv5 .ls{
+    float: left;
+    width: 1200px;
+    height: 550px;
+    padding: 216px 180px 0 542px;
+    text-align: center;
+    background: url(./../images/index1.jpg) center no-repeat;
+}
+.page_about .lv5 .l-p-dt{
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 24px;
+}
+.page_about .lv5 .l-p-dl{
+    font-size: 14px;
+    line-height: 24px;
+}
+.page_about .lv5 .rs{
+    float: left;
+    width: 720px;
+    height: 550px;
+    font-size:28px;
+    line-height: 28px;
+    background: url(./../images/index1.jpg) center no-repeat;
+    padding: 250px 0 0 92px;
+}

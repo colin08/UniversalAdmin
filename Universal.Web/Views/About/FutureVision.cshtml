@@ -1,18 +1,103 @@
 ﻿@model Universal.Entity.ViewModel.FutureVision
+
 @{
-    Layout = null;
+    ViewBag.Title = "未来&愿景";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/future.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Summary</title>
-</head>
-<body>
-    <div>
-        未来&愿景
-    </div>
-</body>
-</html>
+<!-- Body Begin -->
+
+    <div class="main page_future">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width">
+                <div class="page-container-width">
+                    <p class="bpt">未来&愿景</p>
+                    <div class="page-pub-line"></div>
+                    <p class="bpl">为企业提供最具创意的高质量<br />数字科技展示服务</p>
+                </div>
+            </div>
+            <div class="page-container-width bgcolor">
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in Model.future_vision_list)
+                {
+
+                    if (i % 2 == 0)
+                    {
+                        <div class="mid clearfix">
+                            <div class="mid-box">
+                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                            </div>
+                            <div class="mid-box">
+                                <div class="mid-txt">
+                                    <p class="t-p-dt">@item.Title</p>
+                                    <div class="page-pub-line">让世界因创意更生动</div>
+                                    <p class="t-p-dl"></p>
+                                    <p class="t-p-dd">@item.Content</p>
+                                    <p class="t-p-dd">@item.Content2</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mid clearfix">
+                            <div class="mid-box">
+                                <div class="mid-txt">
+                                    <p class="t-p-dt">@item.Title</p>
+                                    <div class="page-pub-line">让世界因创意更生动</div>
+                                    <p class="t-p-dl"></p>
+                                    <p class="t-p-dd">@item.Content</p>
+                                    <p class="t-p-dd">@item.Content2</p>
+                                </div>
+                            </div>
+                            <div class="mid-box">
+                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                            </div>
+                        </div>
+                    }
+
+                    i++;
+                }
+                
+            </div>
+        </div>
+    </div>    
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

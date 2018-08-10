@@ -1,18 +1,138 @@
 ﻿
+
 @{
-    Layout = null;
+    ViewBag.Title = "团队介绍";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/about.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Summary</title>
-</head>
-<body>
-    <div>
-        团队介绍
+<!-- Body Begin -->
+
+    <div class="main page_about">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width">
+                <div class="page-container-width">
+                    <p class="bpt">公司简介</p>
+                    <div class="page-pub-line"></div>
+                    <p class="bpl">为企业提供最具创意的高质量<br />数字科技展示服务</p>
+                </div>
+            </div>
+            <div class="page-container-width bgcolor">
+                <div class="lv1 clearfix">
+                    <div class="ls">
+                        <p class="l-dt">LANDSKY</p>
+                        <p class="l-dl">中国创意视觉与数字展示领跑者</p>
+                        <div class="page-pub-line"></div>
+                        <p class="l-dd">
+                            朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构<br><br>
+                            朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构<br><br>
+                            朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构朗形公司是一家集设计组合和动画制作于一身的创意公司，从2000年以来，一直致力于为国际建筑设计机构
+                        </p>
+                    </div>
+                    <div class="rs">
+                        <p class="r-dt">我们的客户</p>
+                        <div class="page-pub-line"></div>
+                        <p class="r-dl">我们为中国最知名的客户服务！</p>
+                        <div class="r-dd">
+                            <row :gutter="76">
+                                <i-col span="8">
+                                    <span class="r-sp-tt">服务客户</span><br>
+                                    <span class="r-sp-tx">666<sup><i class="iconfont icon-zengjia"></i></sup></span>
+                                </i-col>
+                                <i-col span="8">
+                                    <span class="r-sp-tt">500强企业</span><br>
+                                    <span class="r-sp-tx">666<sup><i class="iconfont icon-zengjia"></i></sup></span>
+                                </i-col>
+                                <i-col span="8">
+                                    <span class="r-sp-tt">上市企业</span><br>
+                                    <span class="r-sp-tx">666<sup><i class="iconfont icon-zengjia"></i></sup></span>
+                                </i-col>
+                            </row>
+                        </div>
+                        <div>
+                            <i class="iconfont icon-jiantou1-copy"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lv2 clearfix">
+                    <div class="ls">
+                        <p class="l-p-dt">办公环境</p>
+                        <div class="page-pub-line"></div>
+                        <p class="l-p-dl">朗形机构深圳总部位于深圳市中国新媒体广告园13F<br>2012年初搬入至今</p>
+                        <p class="l-p-dd">
+                            <span class="l-sp1">总办公面积</span><br>
+                            <span class="l-sp2">3800m<sup>2</sup></span>
+                        </p>
+                    </div>
+                    <img src="/Assets/jf/images/index1.jpg" class="r-pic">
+                </div>
+
+                <div class="lv3 clearfix">
+                    <div class="ls">
+                        <p>开放式休息区</p>
+                    </div>
+                    <div class="rs">
+                        <p class="r-p-tt">开放式办公区</p>
+                        <p class="r-p-txt">是非成败转头空，青山依旧在，观看秋月春风。一壶浊酒喜相逢，古今多少事，滚滚长江东逝水，浪花淘尽英雄。几度夕阳红。白发渔樵江堵上，都付笑谈中。滚滚长江东逝水，浪淘尽滚滚长江东逝水，浪淘尽</p>
+                    </div>
+                </div>
+
+                <div class="lv4 clearfix">
+                    <img src="/Assets/jf/images/index1.jpg" class="ls">
+                    <div class="rs">
+                        <p class="r-p-dt">商业洽谈会议室</p>
+                        <div class="page-pub-line"></div>
+                        <p class="r-p-dl">专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及专属于攻势上午接待及</p>
+                    </div>
+                </div>
+
+                <div class="lv5 clearfix">
+                    <div class="ls">
+                        <p class="l-p-dt">创意空间</p>
+                        <p class="l-p-dl">结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及结合朗形专业服务客户及</p>
+                    </div>
+
+                    <div class="rs">
+                        <p>开放式办公区</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

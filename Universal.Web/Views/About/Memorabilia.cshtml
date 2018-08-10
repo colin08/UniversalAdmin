@@ -1,18 +1,113 @@
 ﻿@model Universal.Entity.ViewModel.TimeLine
+
 @{
-    Layout = null;
+    ViewBag.Title = "大事记";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/timeline.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Summary</title>
-</head>
-<body>
-    <div>
-        大事记
+<!-- Body Begin -->
+    <div class="main page_timeline">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width">
+                <div class="page-container-width">
+                    <p class="bpt">大事记</p>
+                    <div class="page-pub-line"></div>
+                    <p class="bpl">为企业提供最具创意的高质量<br />数字科技展示服务</p>
+                </div>
+            </div>
+            <div class="page-container-width bgcolor">
+                <p class="page-tt">Development path</p>
+                <div class="sp-line"><span></span></div>
+                <p class="page-dl">2000年成立至今</p>
+                <div class="time-line">
+                    @*@foreach (var item in Model.time_line_list)
+                    {
+                        <span attr="标题">@item.Title</span>
+                        <span attr="内容">@item.Content</span>
+                        <span attr="图片">@item.ImgUrl</span>
+                    }*@
+
+                    <div class="time-line-lv">
+                        <i class="iconfont icon-circle2yuanquan"></i>
+                        <div class="l-h"></div>
+                    </div>
+
+                    <div class="time-line-lv active">
+                        <i class="iconfont icon-circle2yuanquan"></i>
+                        <i class="iconfont icon-circleyuanquan"></i>
+                        <div class="l-h l-lh"></div>
+                        <div class="time-date-box">
+                            <p class="t-p-dt">2000</p>
+                            <p class="t-p-dl">深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立</p>
+                            <div class="data-line"><span></span></div>
+                            <img class="t-p-dd" src="/Assets/jf/images/index1.jpg">
+                        </div>
+                    </div>
+
+                    <div class="time-line-lv">
+                        <i class="iconfont icon-circle2yuanquan"></i>
+                        <i class="iconfont icon-circleyuanquan"></i>
+                        <div class="l-h l-lh"></div>
+                        <div class="time-date-box">
+                            <p class="t-p-dt">2000</p>
+                            <p class="t-p-dl">深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立</p>
+                            <div class="data-line"><span></span></div>
+                            <img class="t-p-dd" src="/Assets/jf/images/index1.jpg">
+                        </div>
+                    </div>
+
+                    <div class="time-line-lv">
+                        <i class="iconfont icon-circle2yuanquan"></i>
+                        <i class="iconfont icon-circleyuanquan"></i>
+                        <div class="l-h l-lh"></div>
+                        <div class="time-date-box">
+                            <p class="t-p-dt">2000</p>
+                            <p class="t-p-dl">深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立深圳市朗形公司成立</p>
+                            <div class="data-line"><span></span></div>
+                            <img class="t-p-dd" src="/Assets/jf/images/index1.jpg">
+                        </div>
+                    </div>
+                    <div class="time-line-lv">
+                        <div class="l-h"></div>
+                    </div>
+                </div>
+                <p class="page-dd">Future</p>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

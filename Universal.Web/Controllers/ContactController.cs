@@ -18,7 +18,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Join()
         {
-            WorkContext.CategoryMark = "Contact-US";
+            WorkContext.CategoryMark = "ContactUS";
             WorkContext.CategoryErMark = "Join-US";
 
             var result_model = BLL.BLLContact.GetJobList();
@@ -70,7 +70,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult News()
         {
-            WorkContext.CategoryMark = "Contact-US";
+            WorkContext.CategoryMark = "ContactUS";
             WorkContext.CategoryErMark = "News";
 
             var result_model = BLL.BLLContact.GetNewsListData();
@@ -111,7 +111,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult NewsDetail(string id)
         {
-            WorkContext.CategoryMark = "Contact-US";
+            WorkContext.CategoryMark = "ContactUS";
             WorkContext.CategoryErMark = "News";
 
             if (string.IsNullOrWhiteSpace(id)) return ErrorView("找不到相关新闻");

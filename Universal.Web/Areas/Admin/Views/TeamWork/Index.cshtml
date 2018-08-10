@@ -78,8 +78,7 @@
                 <th>
                     <input type="checkbox" onclick="CheckAll(this)" txt="全选">
                 </th>
-                <th>灰色LOGO</th>
-                <th>彩色LOGO</th>
+                <th>LOGO</th>
                 <th>标题</th>
                 <th>状态</th>
                 <th>排序数字</th>
@@ -94,8 +93,7 @@
                     <td>
                         <input type="checkbox" class="datacheck" hid="@item.ID">
                     </td>
-                    <td><a href="/Admin/TeamWork/Edit?id=@item.ID"><img src="@item.ImgUrl" width="150" height="150" /></a></td>
-                    <td><a href="/Admin/TeamWork/Edit?id=@item.ID"><img src="@item.ImgUrl2" width="150" height="150" /></a></td>
+                    <td><a href="/Admin/TeamWork/Edit?id=@item.ID"><img src="@item.ImgUrl" width="150" /></a></td>
                     <td><a href="/Admin/TeamWork/Edit?id=@item.ID">@item.Title</a></td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
                     <td>@item.Weight</td>

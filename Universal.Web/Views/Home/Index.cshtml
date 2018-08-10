@@ -1,23 +1,413 @@
 ﻿@model  Universal.Entity.ViewModel.HomeData
 @{
-    Layout = null;
+    ViewBag.Title = "朗形机构";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/index.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+<!-- Body Begin -->
+<div class="main page_index">
+    <div class="main-content">
+        <div class="lv1">
+            <div class="banner-lv1-index">
+                <carousel v-model="value3"
+                          height="948"
+                          :autoplay-speed="setting.autoplaySpeed"
+                          :dots="setting.dots"
+                          :radius-dot="setting.radiusDot"
+                          :trigger="setting.trigger"
+                          :arrow="setting.arrow"
+                          loop
+                          autoplay>
+                    @foreach (var item in Model.banner_list)
+                    {
+                        <carousel-item>
+                            <div class="demo-carousel">
+                                <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                            </div>
+                        </carousel-item>
+                    }                    
+                </carousel>
+            </div>
+        </div>
+        <div class="lv2">
+            <div class="main-container-width clearfix color-bg">
+                @{
+                    int i_time_line = 0;
+                }
+                @foreach (var item in Model.time_line_list)
+                {
+                    i_time_line++;
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <h4>Index</h4>
-    @{ 
-        if(ViewData.ContainsKey("ExecutionTime"))
-        {
-            @:执行时间：@ViewData["ExecutionTime"] ms
-        }
+                    if (i_time_line == 9)
+                    {
+                        <div class="sun_li red-bg" onclick="location.href='/About/Memorabilia'">
+                            <span class="sp-tt">@WorkContext.WebSiteConfig.TimeLineRedCenterTop</span>
+                            <span>@WorkContext.WebSiteConfig.TimeLineRedCenterDesc</span>
+                        </div>
+                    }
+
+                    <div class="sun_li">
+                        @if (i_time_line == 1)
+                        {
+                            @:<span class="sp-year">FOUNDED IN</span>
+                        }
+                        <span class="sp-year">@item.Title</span>
+                        <div class="hover-div1">
+                            <span class="h-tt">@item.Title</span>
+                            <span class="h-txt">@item.Content</span>
+                        </div>
+                    </div>
+                }
+                <div class="sun_li">
+                    <span>FUTURE</span>
+                </div>
+            </div>
+        </div>
+        <div class="lv4">
+            <div class="main-container-width pd">
+                <p class="ppt">合作企业</p>
+                <p class="upt">朗形机构致力于数字科技展示，以创意为导向，为客户提供一站式解决方案<br>······</p>
+                <ul class="list clearfix">
+                    @foreach (var item in Model.team_work_list)
+                    {
+                        <li>
+                            <div class="logo-li">
+                                <img class="l2" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="lv3">
+            <div class="main-container-width clearfix">
+                <div class="ls">
+                    <div class="txt1 clearfix">
+                        <span class="fl t1">A</span>
+                        <p class="p1">CLASSIC</p>
+                        <p>CASE</p>
+                    </div>
+                    <div class="line"></div>
+                    <div class="txt2">
+                        <p class="p1">经典案例</p>
+                        <p class="p2">@WorkContext.WebSiteConfig.HomeCaseDesc</p>
+                    </div>
+                </div>
+                <div class="rs">
+
+                    @foreach (var item in Model.case_show_list)
+                    {
+                        <span atr="案例封面图">@item.ImgUrl</span>
+                        <span attr="案例名称">@item.Title</span>
+                        <span attr="时间">@item.Time</span>
+                        <span attr="案例类别,普通、相册、视频">@item.ImgType</span>
+                        <span attr="预留跳转地址"></span>
+                        <br />
+                    }
+
+                    <div class="outbox" id="allheight">
+                        <div v-if="imgLoading" class="anli-list" id="allgh">
+                            <ul class="clearfix" id="allul">
+                                <li id="gh1">
+                                </li>
+                                <li id="gh2">
+                                </li>
+                                <li id="gh3">
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else class="loadingImage">
+                            <i class="iconfont icon-loading2 ivu-icon demo-spin-icon-load"></i>
+                            <p>Loading</p>
+                        </div>
+                        <div id="loadall" style="display: none;">
+                            <img v-for="item in jdList" :src="item.pic" :key="item.pid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lv5">
+            <div class="main-container-width clearfix">
+                <div class="ct-w fl">
+                    <p class="l-dt">@Model.shuzi.title</p>
+                    <div class="l-line"></div>
+                    <p class="l-dl">@Model.shuzi.title_er</p>
+                    <p class="l-dd">@Model.shuzi.summary</p>
+                    <div class="bnt-list">
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=Digital-Brand-Pavilion'">数字品牌馆</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=Digital-Experience-Hall'">数字体验馆</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=City-Planning-Hall'">城市规划馆</i-button>
+                        <br />
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=Digital-Engineering-Simulation'">数字工程仿真</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=VR-Interactive-Experience'">VR交互体验</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=AR-Interactive-Entertainment'">AR互动娱乐</i-button>
+                    </div>
+
+                    <p><i class="iconfont icon-jiantou1-copy bounce" onclick="location.href='/Home/Category?t=Digital-Display'"></i></p>
+                </div>
+                <div class="ct-w fr">
+                    <div class="r-pic">
+                        <img src="@(WorkContext.WebSiteConfig.SiteUrl+Model.shuzi.image_url)" class="bg-img">
+                        <div class="r-link" onclick="location.href='/Home/Category?t=Digital-Display'">
+                            <span class="line-span"></span>
+                            <span class="txt-span">查看详情</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lv5 lv6">
+            <div class="main-container-width clearfix">
+                <div class="ct-w1 fl">
+                    <div class="l6-pic">
+                        <img src="@(WorkContext.WebSiteConfig.SiteUrl + Model.chuangyi.image_url)" class="bg-img">
+                        <div class="l6-link" onclick="location.href='/Home/Category?t=Creative-Vision'">
+                            <span class="line-span"></span>
+                            <span class="txt-span">查看详情</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ct-w2 fr">
+                    <p class="l-dt">@Model.chuangyi.title</p>
+                    <div class="l-line"></div>
+                    <p class="l-dl">@Model.chuangyi.title_er</p>
+                    <p class="l-dd">@Model.chuangyi.summary</p>
+                    <div class="bnt-list">
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Creative-Vision&e=Visual-Animation'">视频动画</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Creative-Vision&e=Creative-Advertising'">创意广告</i-button>
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Creative-Vision&e=New-Media-Interaction'">新媒体互动</i-button>
+                        <br />
+                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Creative-Vision&e=Architectural-Visualization'">建筑可视化</i-button>
+                    </div>
+
+                    <p><i class="iconfont icon-jiantou1-copy bounce" onclick="location.href='/Home/Category?t=Creative-Vision'"></i></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="lv7">
+            <div class="l7-center">
+                <div class="l7-tt clearfix">
+                    <i class="iconfont icon-jiantou1-copy bounce fr" onclick="location.href='/Contact/News'"></i>
+                    <span>最新资讯</span>
+                </div>
+                <div class="und-line"></div>
+                <p class="und-txt">传递最新资讯，记录行业成长......</p>
+                <row>
+                    @foreach (var item in Model.news_list)
+                    {
+                        <i-col span="8">
+                            <div class="pic-box">
+                                <div class="pub-pic-trans">
+                                    <img class="trans-img" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                    <div class="trans-link">
+                                        <p class="trans-link-txt">查看详情</p>
+                                        <span class="trans-link-line"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </i-col>
+                    }
+                </row>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Body End -->
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+    value3: 0,
+    setting: {
+    autoplay: true,
+    autoplaySpeed: 6000,
+    dots: 'inside',
+    radiusDot: false,
+    trigger: 'click',
+    arrow: 'never'
+    },
+    jdList:[
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (1).b002698.jpg',
+    pid:'1',
+    title:'鑫帝地产·新干线',
+    type:1
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (3).dec1666.jpg',
+    pid:'2',
+    title:'鑫帝地产·新干线',
+    type:2
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (4).014f860.jpg',
+    pid:'3',
+    title:'鑫帝地产·新干线',
+    type:3
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg.90d8b2f.jpg',
+    pid:'4',
+    title:'鑫帝地产·新干线',
+    type:2
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (2).2b13225.jpg',
+    pid:'5',
+    title:'鑫帝地产·新干线',
+    type:1
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (3).dec1666.jpg',
+    pid:'6',
+    title:'鑫帝地产·新干线',
+    type:2
+    },
+    {
+    pic:'http://www.langxing.com.cn:82/static/img/timg (4).014f860.jpg',
+    pid:'7',
+    title:'鑫帝地产·新干线',
+    type:3
     }
+    ],
+    imgLoading:false,
+}
+<!-- Json中的Data数据 End -->
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    this.checkLoadImage();
+    this.pushBntNum();
+}
+<!-- Json中的mounted数据 End -->
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+	makePBHtml(obj){
+          var xhtml='<div class="index-lv3-pic-li">';
+              xhtml+='<img src="'+obj.pic+'">';
+              if(obj.type==1){
+                  xhtml+='<p class="bg-bl">'+obj.title+'</p>';
+                  xhtml+='<i class="iconfont bofang-icon picture-icon icon-tupian2"></i>';
+              }
+              else if(obj.type==2){
+                  xhtml+='<i class="iconfont bofang-icon icon-iconset0481"></i>';
+              }
+              else{
+                  xhtml+='<div class="pic-txt">';
+                  xhtml+='<p class="pt1">'+obj.title+'</p>';
+                  xhtml+='<p>2017.12.12</p>';
+                  xhtml+='<p class="pt2"><i class="iconfont icon icon-zengjia"></i><span>VIEW</span></p>';
+                  xhtml+='</div>';
+              }
+              xhtml+='</div>';
+          return xhtml;
+      },
+      waterFall(){
+          for(var i=0; i<this.jdList.length; i++){
+              var _html=this.makePBHtml(this.jdList[i]);
+              // var ghv1=document.getElementById("gh1").clientHeight;
+              // var ghv2=document.getElementById("gh2").clientHeight;
+              // var ghv3=document.getElementById("gh3").clientHeight;
+              var ghv1=$("#gh1").height();
+              var ghv2=$("#gh2").height();
+              var ghv3=$("#gh3").height();
+              // if(ghv1==0||ghv2==0||ghv3==0){
+              //     if(i==0&&ghv1==0){
+              //         $("#gh1").html(_html);
+              //     }
+              //     if(i==1&&ghv2==0){
+              //         $("#gh2").html(_html);
+              //     }
+              //     if(i==2&&ghv3==0){
+              //         $("#gh3").html(_html);
+              //     }
+              // }
+              // else{
+                  if(ghv1<=ghv2&&ghv1<=ghv3){
+                      $("#gh1").append(_html);
+                  }
+                  else if(ghv2<ghv1&&ghv2<=ghv3){
+                      $("#gh2").append(_html);
+                  }
+                  else{
+                      $("#gh3").append(_html);
+                  }
+              // }
+          @Html.Raw("}")
+      @Html.Raw("}"),
+      checkLoadImage(){
+          // var _img=$("#loadall img");
+          // var _num=_img.length;
+          // _img.each(function(){
+          //     console.log($(this));
+          //     // $(this).load(function(){
+          //     //     _num--;
+          //     //     if(num>0){
+          //     //         return false;
+          //     //     }
+          //     //     console.log('loading already');
+          //     // });
+          // });
+          var imgdefereds=[];
+          var _this=this;
+          $('img').each(function(){
+              var dfd=$.Deferred();
+              $(this).bind('load',function(){
+                  dfd.resolve();
+              }).bind('error',function(){
+              //图片加载错误，加入错误处理
+              // dfd.resolve();
+              })
+              if(this.complete) setTimeout(function(){
+                  dfd.resolve();
+              },1000);
+              imgdefereds.push(dfd);
+          })
+          $.when.apply(null,imgdefereds).done(function(){
+              _this.imgLoading=true;
+              setTimeout(() => {
+                  _this.waterFall();
+                  _this.waterFallScroll();
+              }, 500);
+          });
+      },
+      waterFallScroll(){
+          var _this=this;
+          var scrollSelf=setInterval(function(){
+              $("#allgh").scrollTop($("#allgh").scrollTop()*1+1);
+          },30)
+          $("#allgh").scroll(function(){
+              if($("#allgh").scrollTop()>=$("#allul").height()-$("#allgh").height()-200){
+                  _this.waterFall();
+              }
+          });
+          $("#allgh").hover(function(){
+              clearInterval(scrollSelf);
+          },function(){
+              scrollSelf=setInterval(function(){
+                  $("#allgh").scrollTop($("#allgh").scrollTop()*1+1);
+              },30)
+          })
+      },
+      pushBntNum(){
+          $(function(){
+              $(".ivu-carousel-dots-inside li").each(function(index){
+                  $(this).children().first().before('<span>0'+(index*1+1)+'</span>');
+              });
+          })
+      },
+}
+<!-- Json中的methods数据 End -->
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
 
-</body>
-</html>
+}
+<!-- 底部中的JS脚本 End -->

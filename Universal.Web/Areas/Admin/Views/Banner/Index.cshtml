@@ -94,7 +94,7 @@
                     <td>
                         <input type="checkbox" class="datacheck" hid="@item.ID">
                     </td>
-                    <td><a href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]"><img src="@item.ImgUrl" width="250" height="150" /></a></td>
+                    <td><a href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]"><img src="@item.ImgUrl" width="200" /></a></td>
                     <td><a href="/Admin/Banner/Edit?id=@item.ID&cid=@ViewData["CID"]&ctitle=@ViewData["CTitle"]">@item.Title</a></td>
                     <td>@item.GetLinkType</td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>

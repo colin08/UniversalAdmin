@@ -24,13 +24,14 @@ namespace Universal.Web.Controllers
             //大分类必须是数字展示或创意视觉
             if (t.ToLower() != "digital-display" && t.ToLower() != "creative-vision") return ErrorView("找不到相关页面");
             //设置导航标识
-            WorkContext.CategoryMark = t;
+            WorkContext.CategoryMark = t.Replace("-","");
             WorkContext.CategoryErMark = e;
 
             var result_model = BLL.BLLCaseShow.GetWebData(e);
             return View(result_model);
         }
 
+        
         /// <summary>
         /// 分页加载更多案例
         /// </summary>

@@ -164,6 +164,12 @@ namespace Universal.Tools
         [Display(Name ="首页经典案例描述"),Required(ErrorMessage ="必填")]
         public string HomeCaseDesc { get; set; }
 
+        [Display(Name ="首页大事记时间范围"),Required(ErrorMessage ="必填")]
+        public string TimeLineRedCenterTop { get; set; }
+
+        [Display(Name = "首页大事记内容"), Required(ErrorMessage = "必填")]
+        public string TimeLineRedCenterDesc { get; set; }
+
         #region 邮件配置
 
         [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]

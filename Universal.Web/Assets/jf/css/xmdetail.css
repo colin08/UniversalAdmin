@@ -1,0 +1,92 @@
+.page_xmdetail .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 650px;
+    color:#fff;
+    letter-spacing: 2px;
+}
+.page_xmdetail .sz-banner .page-container-width{
+    padding: 554px 0 0 362px;
+}
+.page_xmdetail .sz-banner .bpt{
+    font-size: 50px;
+    line-height: 60px;
+    margin-bottom:28px;
+}
+.page_xmdetail .sz-banner .bpl{
+    font-size: 18px;
+    margin-top: 44px;
+}
+.page_xmdetail .bgcolor{
+    background: #f0f0f0;
+    padding-bottom: 58px;
+}
+
+.page_xmdetail .lv1{
+    height: 688px;
+    background: #fff;
+}
+.page_xmdetail .lv1 .ls{
+    float: left;
+    width: 1000px;
+    height: 688px;
+    padding: 100px 65px 0 360px;
+}
+.page_xmdetail .lv1 .l-p-dt{
+    font-size: 36px;
+    color: #323232;
+    line-height: 36px;
+    margin-bottom: 20px;
+}
+.page_xmdetail .lv1 .l-p-dl{
+    font-size: 16px;
+    color: #333;
+    line-height: 16px;
+    margin-bottom: 28px;
+}
+.page_xmdetail .lv1 .l-p-dd{
+    font-size: 14px;
+    color: #666;
+    line-height: 24px;
+    margin-top: 28px;
+}
+.page_xmdetail .lv1 .rs{
+    float: left;
+    width: 920px;
+    height: 480px;
+    padding: 24px 0;
+    color: #fff;
+}
+.page_xmdetail .lv1 .rs .bg{
+    width: 100%;
+    height: 640px;
+    background: #323232;
+    padding: 116px 0 0 58px;
+}
+.page_xmdetail .lv1 .r-p-dt{
+    font-size: 36px;
+    line-height: 36px;
+    margin-bottom: 26px;
+    letter-spacing: 2px;
+}
+.page_xmdetail .lv1 .r-p-dl{
+    font-size: 16px;
+    line-height: 16px;
+    margin-top: 28px
+}
+.page_xmdetail .lv1 .r-p-dd{
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.page_xmdetail .lv2{
+    height: 760px;
+    padding: 24px 0;
+    background: #c0c0c0;
+}
+
+.page_xmdetail .lv3{
+    height: 760px;
+    background: #c0c0c0;
+    margin-top: 24px;
+    padding: 24px 0;
+}

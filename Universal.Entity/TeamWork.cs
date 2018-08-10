@@ -24,10 +24,10 @@ namespace Universal.Entity
         [Display(Name = "企业名称"), MaxLength(30, ErrorMessage = "不能超过30个字符"), Required(ErrorMessage = "企业名称不能为空")]
         public string Title { get; set; }
 
-        [Display(Name = "灰色LOGO")]
+        [Display(Name = "LOGO")]
         public string ImgUrl { get; set; }
 
-        [Display(Name = "彩色LOGO")]
+        [Display(Name = "案例顶部大图")]
         public string ImgUrl2 { get; set; }
 
         [Display(Name = "状态")]

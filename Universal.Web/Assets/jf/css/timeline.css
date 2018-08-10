@@ -1,0 +1,121 @@
+.page_timeline .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 948px;
+    color:#fff;
+    letter-spacing: 2px;
+}
+.page_timeline .sz-banner .page-container-width{
+    padding: 554px 0 0 362px;
+}
+.page_timeline .sz-banner .bpt{
+    font-size: 50px;
+    line-height: 60px;
+    margin-bottom:28px;
+}
+.page_timeline .sz-banner .bpl{
+    font-size: 18px;
+    margin-top: 44px;
+}
+.page_timeline .bgcolor{
+    background: #f0f0f0;
+    padding: 58px 0;
+}
+
+.page_timeline .page-tt{
+    text-align: center;
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 20px;
+    color:#323232;
+}
+.page_timeline .sp-line{
+    text-align: center;
+    height: 22px;
+}
+.page_timeline .sp-line span{
+    display: inline-block;
+    border-top: 2px solid #ff0000;
+    width: 30px;
+    vertical-align: top;
+}
+.page_timeline .page-dl{
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+    margin-bottom: 48px;
+}
+.page_timeline .page-dd{
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+    margin-top: 48px;
+}
+.page_timeline .time-line{
+    width:18px;
+    margin: 0 auto;
+}
+.page_timeline .time-line-lv{
+    position: relative;
+    z-index: 2;
+}
+.page_timeline .time-line-lv i{
+    display: block;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+}
+.page_timeline .time-line-lv .icon-circleyuanquan{
+    display: none;
+    color: #ff0000;
+}
+.page_timeline .time-line-lv.active .icon-circleyuanquan{
+    display: block;
+}
+.page_timeline .time-line-lv.active .icon-circle2yuanquan{
+    display: none;
+}
+.page_timeline .time-line-lv .l-h{
+    width: 9px;
+    height: 98px;
+    border-right: 1px solid #c0c0c0;
+}
+.page_timeline .time-line-lv .l-lh{
+    height: 160px;
+}
+.page_timeline .time-date-box{
+    position: absolute;
+    top: -3px;
+    left: 86px;
+}
+.page_timeline .time-date-box .t-p-dt{
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 20px;
+    color: #323232;
+}
+.page_timeline .time-date-box .t-p-dl{
+    height: 60px;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 20px;
+    color: #666;
+    width: 410px;
+}
+.page_timeline .time-date-box .data-line span{
+    width: 30px;
+    height: 20px;
+    border-top: 2px solid #ff0000;
+    margin-top: 18px;
+    display: inline-block;
+}
+.page_timeline .time-date-box .t-p-dd{
+    width: 264px;
+    height: 120px;
+}
+
+.page_timeline .time-line-lv:nth-child(2n) .time-date-box{
+    left: auto;
+    right: 86px;
+    text-align: right;
+}

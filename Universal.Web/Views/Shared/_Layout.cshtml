@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="http://at.alicdn.com/t/font_750964_1drzr9nemmo.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <link href="https://cdn.bootcss.com/iview/2.14.0/styles/iview.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/iview/2.14.0/iview.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link href="~/Assets/jf/css/public.css" rel="stylesheet" />
+
+    @RenderSection("head", required: false)
+
+</head>
+<body>
+    <div id="app">
+        <header class="pubheader">
+            <div class="header-div" id="pubheader">
+                <div class="content clearfix">
+                    <div class="logo">
+                        <a href="/"><img src="~/Assets/jf/images/logo.png"></a>
+                    </div>
+                    <div v-if="!searchShow" class="search" @@click="searchInput()">
+                        <i class="iconfont icon-search"></i>
+                    </div>
+                    <div v-if="searchShow" :class="closeSearchVal?'header-search-box':'header-search-box header-search-box-close'">
+                        <i-button icon="ios-search"></i-button>
+                        <i-input id="search-inp" placeholder="SEARCH"></i-input>
+                        <i-button @@click="closeSearch"><i class="iconfont icon-close"></i></i-button>
+                    </div>
+                    <div v-else class="header-nav" @@mouseleave="sunList=false;activeName=''">
+                        <ul class="header-nav-ul clearfix">
+                            <li v-for="item in navList" :key="item.url" :class="item.active==activeName?'hover':''">
+                                <a v-if="item.sun.length>0" href="javascript:;" @@mouseenter="activeNavShow(item.active)">{{item.name}}</a>
+                                <a v-else :href="item.url" @@mouseenter="sunList=false;activeName=''">{{item.name}}</a>
+                            </li>
+                        </ul>
+                        <div v-if="sunList" class="header-und">
+                            <div class="content clearfix">
+                                <ul class="sun-list clearfix" id="nav-sun">
+                                    <li v-for="item in activeSun" :key="item.name" :class="item.active==oldModel.menu?'link active':'link'">
+                                        <a :href="item.url">{{item.name}}</a>
+                                    </li>
+                                    <!-- <li class="line-hover" id="moveline"></li> -->
+                                    <li class="sp"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="sunList" class="header-bg"></div>
+            </div>
+        </header>
+        <div class="page-right-bnts">
+            <div class="bnt-right-bnt">
+                <i class="iconfont icon-qq" onclick="window.open('http://shang.qq.com/email/stop/email_stop.html?qq=576741099&sig=c8c71581986141991aec6b5eb9f567e0a28b1db4dd73ad1b&tttt=1')"></i>
+            </div>
+            <div class="bnt-right-bnt">
+                <i class="iconfont icon-phone"></i>
+                <div class="right-shower-a"><span>@WorkContext.WebSiteConfig.CompanyTel</span></div>
+            </div>
+            <div class="bnt-right-bnt">
+                <i class="iconfont icon-erweima"></i>
+                <div class="right-shower-b">
+                    <img src="~/Assets/jf/images/ewcode.jpg" />
+                </div>
+            </div>
+            <back-top></back-top>
+        </div>
+
+        @RenderBody()
+
+        <footer>
+            <div class="txt-cen">
+                <a href="/About/Summary">关于朗形</a>
+                <a href="/CaseShow/Index?t=Digital-Display&e=Digital-Brand-Pavilion">数字展示</a>
+                <a href="/CaseShow/Index?t=Creative-Vision&e=Visual-Animation">创意视觉</a>
+                <a href="/Contact/Join">联系我们</a>
+                <a href="/Contact/Join">加入我们</a>
+            </div>
+            <div class="txt-cont">
+                <span>TEL:@WorkContext.WebSiteConfig.CompanyTel</span>
+                <span>E-mail:@WorkContext.WebSiteConfig.CompanyEmail</span>
+                <span>ADD:@WorkContext.WebSiteConfig.CompanyAddress</span>
+            </div>
+            <div class="bor"></div>
+            <div class="copy">
+                <p>@WorkContext.WebSiteConfig.Copyright</p>
+            </div>
+        </footer>
+    </div>
+    <!-- built files will be auto injected -->
+    <script type="text/javascript">
+        var app = new Vue({
+            el: "#app",
+            data: {
+                oldModel: {
+                    nav: '@WorkContext.CategoryMark',
+                    menu: '@WorkContext.CategoryErMark'
+                },
+                sunList: false,
+                searchShow: false,
+                searchVal: '',
+                activeSun: [],
+                activeName: '',
+                navList: {
+                    Home: {
+                        name: '首页',
+                        url: '/',
+                        active: 'Home',
+                        sun: []
+                    },
+                    DigitalDisplay: {
+                        name: '数字展示',
+                        url: '/CaseShow/Index?t=Digital-Display&e=Digital-Brand-Pavilion',
+                        active: 'DigitalDisplay',
+                        sun: [
+                            {
+                                name: "数字品牌馆",
+                                url: "/CaseShow/Index?t=Digital-Display&e=Digital-Brand-Pavilion",
+                                active: 'Digital-Brand-Pavilion'
+                            },
+                            {
+                                name: "数字体验馆",
+                                url: "/CaseShow/Index?t=Digital-Display&e=Digital-Experience-Hall",
+                                active: 'Digital-Experience-Hall'
+                            },
+                            {
+                                name: "城市规划馆",
+                                url: "/CaseShow/Index?t=Digital-Display&e=City-Planning-Hall",
+                                active: 'City-Planning-Hall'
+                            },
+                            {
+                                name: "数字工程仿真",
+                                url: "/CaseShow/Index?t=Digital-Display&e=Digital-Engineering-Simulation",
+                                active: 'Digital-Engineering-Simulation'
+                            },
+                            {
+                                name: "VR交互体验",
+                                url: "/CaseShow/Index?t=Digital-Display&e=VR-Interactive-Experience",
+                                active: 'VR-Interactive-Experience'
+                            },
+                            {
+                                name: "AR互动娱乐",
+                                url: "/CaseShow/Index?t=Digital-Display&e=AR-Interactive-Entertainment",
+                                active: 'AR-Interactive-Entertainment'
+                            },
+                        ]
+                    },
+                    CreativeVision: {
+                        name: '创意视觉',
+                        url: '/CaseShow/Index?t=Creative-Vision&e=Visual-Animation',
+                        active: 'CreativeVision',
+                        sun: [
+                            {
+                                name: "视频动画",
+                                url: "/CaseShow/Index?t=Creative-Vision&e=Visual-Animation",
+                                active: 'Visual-Animation'
+                            },
+                            {
+                                name: "创意广告",
+                                url: "/CaseShow/Index?t=Creative-Vision&e=Creative-Advertising",
+                                active: 'Creative-Advertising'
+                            },
+                            {
+                                name: "新媒体互动",
+                                url: "/CaseShow/Index?t=Creative-Vision&e=New-Media-Interaction",
+                                active: 'New-Media-Interaction'
+                            },
+                            {
+                                name: "建筑可视化",
+                                url: "/CaseShow/Index?t=Creative-Vision&e=Architectural-Visualization",
+                                active: 'Architectural-Visualization'
+                            }
+                        ]
+                    },
+                    About: {
+                        name: '关于朗形',
+                        url: '/About/Summary',
+                        active: 'About',
+                        sun: [
+                            {
+                                name: "公司简介",
+                                url: "/About/Summary",
+                                active: 'Company-Profile'
+                            },
+                            {
+                                name: "企业文化",
+                                url: "/About/Culture",
+                                active: 'Company-Culture'
+                            },
+                            {
+                                name: "团队介绍",
+                                url: "/About/TeamIntroduction",
+                                active: 'Team-Introduction'
+                            },
+                            {
+                                name: "公司荣誉",
+                                url: "/About/Honor",
+                                active: 'Company-Honor'
+                            },
+                            {
+                                name: "大事记",
+                                url: "/About/Memorabilia",
+                                active: 'Company-Memorabilia'
+                            },
+                            {
+                                name: "未来&愿景",
+                                url: "/About/FutureVision",
+                                active: 'Future-Vision'
+                            }
+                        ]
+                    },
+                    ContactUS: {
+                        name: '联系我们',
+                        url: '/Contact/Join',
+                        active: 'ContactUS',
+                        sun: [
+                            {
+                                name: "加入我们",
+                                url: "/Contact/Join",
+                                active: 'Join-US'
+                            },
+                            {
+                                name: "最新资讯",
+                                url: "/Contact/News",
+                                active: 'News'
+                            }
+                        ]
+                    },
+                },
+                activeNav: '@WorkContext.CategoryMark',
+                @RenderSection("json_data", required: false)
+                closeSearchVal: false                
+            },
+            mounted() {
+                this.navSunHover();
+                this.navScroll();
+                @RenderSection("json_mounted", required: false)
+            },
+            created() {
+                this.getNavList();
+            },
+            methods: {
+                activeNavShow(name) {
+                    this.activeSun = Object.assign({}, this.navList[name]['sun']);
+                    if (name == this.activeName) {
+                        this.activeName = '';
+                        this.sunList = !this.sunList;
+                    }
+                    else {
+                        this.activeName = name;
+                        this.sunList = true;
+                    }
+                    this.navSunHover();
+                },
+                closeSearch() {
+                    this.closeSearchVal = !this.closeSearchVal;
+                    var _this = this;
+                    setTimeout(function () {
+                        _this.searchShow = !_this.searchShow;
+                    }, 400);
+                },
+                getNavList() {
+                    var ct = Object.assign({}, this.oldModel);
+                    this.activeName = ct.nav;
+                    if (ct.menu && ct.menu != '') {
+                        this.sunList = true;
+                        this.activeSun = Object.assign({}, this.navList[ct.nav]['sun']);
+                    }
+                },
+                searchInput() {
+                    this.searchShow = !this.searchShow;
+                    this.closeSearchVal = !this.closeSearchVal;
+                    var _this = this;
+                    setTimeout(function () {
+                        $("#search-inp .ivu-input").focus();
+                        $("#search-inp .ivu-input").focusout(function () {
+                            _this.closeSearch();
+                        });
+                    }, 200);
+                },
+                navSunHover() {
+                    $(function () {
+                        $("#nav-sun").hover(function () {
+                            $("#nav-sun .sp").stop(true, true).fadeIn(400);
+                        }, function () {
+                            $("#nav-sun .sp").stop(true, true).fadeOut(400);
+                        });
+                        $("#nav-sun .link").mouseover(function () {
+                            $("#nav-sun .sp").stop(true, true).animate({
+                                'left': $(this).position().left + 'px',
+                                'width': $(this).width() + 'px'
+                            }, 200, 'swing');
+                        });
+                    })
+                },
+                @RenderSection("json_methods", required: false)
+                navScroll() {
+                    //导航滚动
+                    var agent = navigator.userAgent;
+                    if (/.*Firefox.*/.test(agent)) {
+                        document.addEventListener("DOMMouseScroll", function (e) {
+                            e = e || window.event;
+                            var detail = e.detail;
+                            if (detail > 0) {
+                                $("#pubheader").removeClass('nav-hidden-st');
+                            } else {
+                                $("#pubheader").addClass('nav-hidden-st');
+                            }
+                        });
+                    } else {
+                        document.onmousewheel = function (e) {
+                            e = e || window.event;
+                            var wheelDelta = e.wheelDelta;
+                            if (wheelDelta > 0) {
+                                $("#pubheader").removeClass('nav-hidden-st');
+                            } else {
+                                $("#pubheader").addClass('nav-hidden-st');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        @RenderSection("foot_js", required: false)
+
+    </script>
+</body>
+</html>

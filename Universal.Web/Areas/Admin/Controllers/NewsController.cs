@@ -81,7 +81,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         [AdminPermissionAttribute("新闻资讯", "保存新闻资讯编辑信息")]
         public ActionResult Edit(Entity.News entity)
         {

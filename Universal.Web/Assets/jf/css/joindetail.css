@@ -1,0 +1,89 @@
+.page_joindetail .sz-banner{
+    background: url(./../images/index1.jpg) center no-repeat;
+    height: 650px;
+}
+.page_joindetail .bgcolor{
+    background: #f0f0f0;
+    padding: 58px 0;
+}
+.page_joindetail .page-mid{
+    width: 1200px;
+    margin: 0 auto;
+}
+.page_joindetail .ivu-btn-self{
+    border-radius: 0;
+    border: 2px solid #c0c0c0;
+    color: #c0c0c0;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.page_joindetail .ivu-btn-self:hover{
+    border-color: #333;
+    background-color:#333;
+    color:#fff;
+}
+
+.page_joindetail .d-p-dt{
+    font-size: 28px;
+    line-height: 28px;
+    color: #323232;
+    margin-bottom: 22px;
+}
+.page_joindetail .d-p-dl{
+    font-size: 18px;
+    line-height: 18px;
+    color: #333;
+    margin-top: 26px;
+    margin-bottom: 32px;
+}
+.page_joindetail .d-p-dl span{
+    padding-right: 40px;
+}
+.page_joindetail .d-line{
+    height: 0px;
+    border-top: 1px solid #333;
+}
+.page_joindetail .d-p-dd{
+    padding-top: 32px;
+    margin-bottom: 24px;
+}
+.page_joindetail .d-p-dd .de-p-tt{
+    font-size: 16px;
+    line-height: 16px;
+    color: #323232;
+    margin-bottom: 30px;
+}
+.page_joindetail .d-p-dd .de-p-txt{
+    line-height: 20px;
+    color: #666;
+    font-size: 14px;
+}
+.page_joindetail .de-p-last{
+    margin-bottom: 58px;
+}
+
+.page_joindetail .page-und{
+    width: 100%;
+    height: 194px;
+    background: #ddd;
+    text-align: center;
+}
+.page_joindetail .pu-p-tt{
+    font-size: 18px;
+    color: #323232;
+    margin: 58px 0 16px 0;
+    line-height: 18px;
+}
+.page_joindetail .pu-line{
+    width: 30px;
+    height: 0px;
+    margin: 0 auto;
+    border-top: 2px solid #ff0000;
+}
+.page_joindetail .pu-p-txt{
+    font-size: 18px;
+    line-height: 18px;
+    color: #323232;
+    margin-top: 32px;
+    margin-bottom: 58px;
+}

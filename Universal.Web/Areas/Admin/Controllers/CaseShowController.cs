@@ -227,7 +227,7 @@ namespace Universal.Web.Areas.Admin.Controllers
 
             BLL.BaseBLL<Entity.TeamWork> bll_team_work = new BLL.BaseBLL<Entity.TeamWork>();
             System.Text.StringBuilder sb_ids = new System.Text.StringBuilder();
-            foreach (var item in bll_team_work.GetListBy(0, p => p.Status, "Weight"))
+            foreach (var item in bll_team_work.GetListBy(0, p => p.Status, "Weight DESC"))
             {
                 bool is_select = ids.IndexOf("," + item.ID.ToString() + ",") != -1;
                 if (is_select) sb_ids.Append(item.ID.ToString() + ",");

@@ -1,18 +1,77 @@
-﻿@model Universal.Entity.ViewModel.JobCategory
+﻿@model Universal.Entity.ViewModel.Job
+
 @{
-    Layout = null;
+    ViewBag.Title = "加入我们";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/join.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Join</title>
-</head>
-<body>
-    <div> 
-        加入我们
-    </div>
-</body>
-</html>
+<!-- Body Begin -->
+
+    <div class="main page_join">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width">
+            </div>
+            <div class="page-container-width bgcolor">
+                <div class="page-mid">
+                    <ul class="list clearfix">
+
+                        @foreach (var item in Model.job_list)
+                        {
+                            <li>
+                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                <div class="box">
+                                    <span class="out-mid" onclick="location.href='/Contact/Job?id=@item.GetBase64ID'">
+                                        <i class="box-line"></i><br>
+                                        @item.Title
+                                        <i class="box-line box-line-u"></i>
+                                    </span>
+                                </div>
+                            </li>
+                        }
+
+                        
+                    </ul>
+                    <div class="bnt-box">
+                        <i-button>查看更多</i-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

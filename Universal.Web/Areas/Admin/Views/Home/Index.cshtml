@@ -61,17 +61,10 @@
                             <a class="nav-link J_menuItem" href="/Admin/Category/Index"><i class="fa fa-bars"></i> <span class="nav-label">栏目分类</span></a>
                         </li>
                     }
-
-                    @if (CheckAdminPower("FutureVision/Index", false))
+                    @if (CheckAdminPower("CaseShow/Index", false))
                     {
                         <li>
-                            <a class="nav-link J_menuItem" href="/Admin/FutureVision/Index"><i class="fa fa-bars"></i><span class="nav-label">未来愿景</span></a>
-                        </li>
-                    }
-                    @if (CheckAdminPower("TimeLine/Index", false))
-                    {
-                        <li>
-                            <a class="nav-link J_menuItem" href="/Admin/TimeLine/Index"><i class="fa fa-bars"></i><span class="nav-label">大事记</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/CaseShow/Index"><i class="fa fa-bars"></i><span class="nav-label">案例展示</span></a>
                         </li>
                     }
                     @if (CheckAdminPower("TeamWork/Index", false))
@@ -86,10 +79,17 @@
                             <a class="nav-link J_menuItem" href="/Admin/News/Index"><i class="fa fa-bars"></i><span class="nav-label">新闻资讯</span></a>
                         </li>
                     }
-                    @if (CheckAdminPower("CaseShow/Index", false))
+
+                    @if (CheckAdminPower("JoinUS/Index", false))
                     {
                         <li>
-                            <a class="nav-link J_menuItem" href="/Admin/CaseShow/Index"><i class="fa fa-bars"></i><span class="nav-label">案例展示</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/JoinUS/Index"><i class="fa fa-bars"></i> <span class="nav-label">招聘管理</span></a>
+                        </li>
+                    }
+                    @if (CheckAdminPower("TimeLine/Index", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/TimeLine/Index"><i class="fa fa-bars"></i><span class="nav-label">大事记</span></a>
                         </li>
                     }
                     @if (CheckAdminPower("Honour/Index", false))
@@ -98,12 +98,14 @@
                             <a class="nav-link J_menuItem" href="/Admin/Honour/Index"><i class="fa fa-bars"></i><span class="nav-label">朗形荣誉</span></a>
                         </li>
                     }
-                    @if (CheckAdminPower("JoinUS/Index", false))
+                    @if (CheckAdminPower("FutureVision/Index", false))
                     {
                         <li>
-                            <a class="nav-link J_menuItem" href="/Admin/JoinUS/Index"><i class="fa fa-bars"></i> <span class="nav-label">职位管理</span></a>
+                            <a class="nav-link J_menuItem" href="/Admin/FutureVision/Index"><i class="fa fa-bars"></i><span class="nav-label">未来愿景</span></a>
                         </li>
                     }
+
+
                     @if (CheckAdminPower("Sysuser/Index", false))
                     {
                         <li class="line dk"></li>

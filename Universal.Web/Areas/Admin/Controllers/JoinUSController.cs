@@ -73,7 +73,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AdminPermissionAttribute("职位管理", "保存职位编辑信息")]
+        [AdminPermissionAttribute("职位管理", "保存职位编辑信息"),ValidateInput(false)]
         public ActionResult Edit(Entity.JoinUS entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
