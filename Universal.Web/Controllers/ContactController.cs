@@ -31,7 +31,7 @@ namespace Universal.Web.Controllers
         /// <returns></returns>
         public ActionResult Job(string id)
         {
-            WorkContext.CategoryMark = "Contact-US";
+            WorkContext.CategoryMark = "ContactUS";
             WorkContext.CategoryErMark = "Join-US";
 
             if (string.IsNullOrWhiteSpace(id)) return ErrorView("找不到相关职位");

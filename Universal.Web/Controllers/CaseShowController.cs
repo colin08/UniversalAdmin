@@ -86,5 +86,23 @@ namespace Universal.Web.Controllers
             return View(result_model);
         }
 
+        /// <summary>
+        /// 合作企业的案例列表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TeamWork(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return ErrorView("找不到相关合作企业");
+            int iid = Tools.Base64.DecodeBase64IntID(id);
+            if (iid == 0) return ErrorView("找不到相关合作企业0");
+
+            WorkContext.CategoryMark = "";
+            WorkContext.CategoryErMark = "";
+
+            var result_model = BLL.BLLCaseShow.GetTeamWorkCaseList(iid);
+            if (result_model == null) return ErrorView("找不到相关合作企业NULL");
+            return View(result_model);
+        }
+
     }
 }

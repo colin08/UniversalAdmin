@@ -10,87 +10,110 @@
     <link href="/Assets/jf/css/honor.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
-
 <!-- Body Begin -->
-    <div class="main page_honor">
-        <div class="main-content">
-            <div class="sz-banner page-container-min-width">
+<div class="main page_honor">
+    <div class="main-content">
+
+        @if (Model.banner_list.Count > 1)
+        {
+
+            <div class="banner-lv1-index">
+                <carousel v-model="value3"
+                          height="760"
+                          autoplay-speed="6000"
+                          arrow="never"
+                          loop
+                          autoplay>
+                    @foreach (var item in Model.banner_list)
+                    {
+                        <carousel-item>
+                            <div class="demo-carousel">
+                                <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                            </div>
+                        </carousel-item>
+                    }
+                </carousel>
+            </div>
+        }
+        else
+        {
+            <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@(WorkContext.WebSiteConfig.SiteUrl+Model.banner_list.First().ImgUrl))">
                 <div class="page-container-width">
-                    <p class="bpt">朗形荣誉</p>
-                    <div class="page-pub-line"></div>
-                    <p class="bpl">为企业提供最具创意的高质量<br />数字科技展示服务</p>
                 </div>
             </div>
-            <div class="page-container-width bgcolor">
-                <div class="lv1 clearfix">
-                    <div class="ls">
-                        <p class="l-p-dt">朗形荣誉</p>
-                        <p class="l-p-dl">中国创意视觉与数字展示领航者</p>
-                        <div class="page-pub-line"></div>
-                        <p class="l-p-dd">琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书</p>
-                    </div>
-                    <div class="rs">
-                        <div class="bg">
-                            <p class="r-p-dt">HONOR</p>
-                            <p class="r-p-dl">2000-2017</p>
-                            <div class="liner"></div>
-                            <div class="r-p-dd">
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>朗形公司国家高新科技企业</p>
-                                <p>......</p>
-                            </div>
+        }
+
+        <div class="page-container-width bgcolor">
+            <div class="lv1 clearfix">
+                <div class="ls">
+                    <p class="l-p-dt">朗形荣誉</p>
+                    <p class="l-p-dl">中国创意视觉与数字展示领航者</p>
+                    <div class="page-pub-line"></div>
+                    <p class="l-p-dd">琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书</p>
+                </div>
+                <div class="rs">
+                    <div class="bg">
+                        <p class="r-p-dt">HONOR</p>
+                        <p class="r-p-dl">2000-2017</p>
+                        <div class="liner"></div>
+                        <div class="r-p-dd">
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>朗形公司国家高新科技企业</p>
+                            <p>......</p>
                         </div>
                     </div>
                 </div>
-                <div class="lv2">
-                    <div class="list">
-                        <ul class="clearfix">
-                            @foreach (var item in Model.honor_list)
-                            {
-                                <li><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)"></li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-                <div class="lv3"></div>
             </div>
+            <div class="lv2">
+                <div class="list">
+                    <ul class="clearfix">
+                        @foreach (var item in Model.honor_list)
+                        {
+                            <li><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)"></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="lv3"></div>
         </div>
     </div>
+</div>
 <!-- Body End -->
-
 <!-- Json中的Data数据 Begin -->
 @section json_data
 {
-
+    value3:0,
 }
 <!-- Json中的Data数据 End -->
-
 <!-- Json中的mounted数据 Begin -->
 @section json_mounted
 {
-    
+    this.pushBntNum();
 }
 <!-- Json中的mounted数据 End -->
-
 <!-- Json中的methods数据 Begin -->
 @section json_methods
 {
-    
+    pushBntNum(){
+        $(function(){
+            $(".ivu-carousel-dots-inside li").each(function(index){
+                $(this).children().first().before('<span>0'+(index*1+1)+'</span>');
+            });
+        })
+    },
 }
 <!-- Json中的methods数据 End -->
-
-
 <!-- 底部中的JS脚本 Begin -->
 @section foot_js
 {
-    
+
 }
 <!-- 底部中的JS脚本 End -->

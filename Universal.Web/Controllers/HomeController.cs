@@ -23,6 +23,9 @@ namespace Universal.Web.Controllers
             WorkContext.CategoryErMark = "";
 
             var result_model = BLL.BLLHome.GetData();
+
+            ViewData["waterFallData"] = Tools.JsonHelper.ToJson(result_model.case_show_list).Replace("/uploads",WorkContext.WebSiteConfig.SiteUrl+ "/uploads");
+
             return View(result_model);
         }
 

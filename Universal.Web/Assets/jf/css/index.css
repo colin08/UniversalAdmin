@@ -28,6 +28,7 @@
 .page_index .lv2{
     height: 760px;
     background: url(./../images/index/dsj-bg.jpg) center no-repeat;
+    overflow: hidden;
 }
 .page_index .lv2 .color-bg{
     background: rgba(0, 0, 0, 0.4)
@@ -137,6 +138,7 @@
     height: 760px;
     margin: 0 auto;
     background: #333;
+    overflow: hidden;
 }
 .page_index .lv3 .ls{
     float: left;

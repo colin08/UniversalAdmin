@@ -1,18 +1,63 @@
 ﻿@model Universal.Entity.CaseShow
 @{
-    Layout = null;
+    ViewBag.Title = Model.Title;
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Detail</title>
-</head>
-<body>
-    <div> 
-        案例详情
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/newdetail.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<!-- Body Begin -->
+
+    <div class="main page_newdetail">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width" style="background: url(@(WorkContext.WebSiteConfig.SiteUrl+Model.ImgUrlBig)) center no-repeat;">
+            </div>
+            <div class="page-container-width bgcolor">
+                <div class="page-mid">
+                    <div class="default-li">
+                        <p class="d-p-dt">@Model.Title</p>
+                        <div class="d-line"></div>
+                        <div class="d-p-dd">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->

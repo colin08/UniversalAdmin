@@ -19,7 +19,7 @@ namespace Universal.BLL
         /// </summary>
         /// <param name="category_er_call_name">二级导航的标识</param>
         /// <returns></returns>
-        public static Entity.ViewModel.CaseShow GetWebData(string category_er_call_name,int case_new_top = 3,int case_classic_top = 6)
+        public static Entity.ViewModel.CaseShow GetWebData(string category_er_call_name, int case_new_top = 3, int case_classic_top = 6)
         {
             //string cache_key = "CACHE_CASE_SHOW_WEB";
             //var cache_model = CacheHelper.Get<Entity.ViewModel.CaseShow>(cache_key);
@@ -30,7 +30,7 @@ namespace Universal.BLL
             {
                 //查找分类是否存在
                 var entity_category = db.Categorys.Where(p => p.CallName == category_er_call_name).AsNoTracking().FirstOrDefault();
-                if(entity_category == null) return null;
+                if (entity_category == null) return null;
 
                 result_model.category_id = entity_category.ID;
                 result_model.category_title = entity_category.Title;
@@ -39,10 +39,10 @@ namespace Universal.BLL
                 //轮播图
                 result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =" + entity_category.ID.ToString() + "  ORDER BY Weight DESC").ToList();
                 //最新案例
-                result_model.case_list_new = db.CaseShows.Where(p =>p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_list_new = db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //经典案例
                 result_model.case_list_classic = db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.Classic).Take(case_classic_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
-                
+
                 //CacheHelper.Insert(cache_key, result_model, 1200);
             }
 
@@ -50,6 +50,30 @@ namespace Universal.BLL
 
         }
 
+        /// <summary>
+        /// 获取合作企业的案例列表
+        /// </summary>
+        /// <param name="id">企业ID</param>
+        /// <returns></returns>
+        public static Entity.ViewModel.CaseShowTeamWork GetTeamWorkCaseList(int id)
+        {
+            //string cache_key = "CACHE_CASE_SHOW_TEAM_WORK";
+            //var cache_model = CacheHelper.Get<Entity.ViewModel.CaseShowTeamWork>(cache_key);
+            //if (cache_model != null) return cache_model;
+
+            var result_model = new Entity.ViewModel.CaseShowTeamWork();
+            using (var db = new DataCore.EFDBContext())
+            {
+                var team_work_entity = db.TeamWorks.Where(p => p.Status && p.ID == id).AsNoTracking().FirstOrDefault();
+                if (team_work_entity == null) return null;
+                result_model.team_work_info = team_work_entity;
+                string strSql = "select * from CaseShow where Status =1 AND ID in(select CaseShow_ID FROM TeamWorkCaseShow where TeamWork_ID = 1) ORDER BY Weight DESC";
+                result_model.case_show_list = db.CaseShows.SqlQuery(strSql).ToList();
+
+                //CacheHelper.Insert(cache_key, result_model, 1200);
+            }
+            return result_model;
+        }
 
         /// <summary>
         /// 获取一个实体，返回所拥有的企业合作，id逗号分隔
@@ -109,7 +133,7 @@ namespace Universal.BLL
             return true;
 
         }
-        
+
         /// <summary>
         /// 修改案例
         /// </summary>

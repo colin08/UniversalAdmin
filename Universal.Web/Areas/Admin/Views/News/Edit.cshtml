@@ -98,8 +98,9 @@
                             @Html.HiddenFor(p => p.ImgUrl)
 
                             <button type="button" class="btn btn-info " onclick="upload()">
-                                <i class="fa fa-upload"></i> 上传文件
+                                <i class="fa fa-upload"></i> 上传封面图
                             </button>
+                            <span class="help-block m-b-none">建议尺寸:1024*987</span>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -113,7 +114,7 @@
                                     @if (!string.IsNullOrWhiteSpace(Model.ImgUrl))
                                     {
                                         @:
-                                        <li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
+                                        <li><img src="@Model.ImgUrl" ids="0" class="@Html.NameFor(p => p.ImgUrl)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrl)')">删除</a></li>
                                     }
                                 </ul>
                             </div>
@@ -128,8 +129,9 @@
                             @Html.HiddenFor(p => p.ImgUrlBig)
 
                             <button type="button" class="btn btn-info " onclick="upload2()">
-                                <i class="fa fa-upload"></i> 上传文件
+                                <i class="fa fa-upload"></i> 上传大图
                             </button>
+                            <span class="help-block m-b-none">建议尺寸:1920*948</span>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -143,7 +145,7 @@
                                     @if (!string.IsNullOrWhiteSpace(Model.ImgUrlBig))
                                     {
                                         @:
-                                        <li><img src="@Model.ImgUrlBig" ids="0" class="@Html.NameFor(p => p.ImgUrlBig)List" width="500" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrlBig)')">删除</a></li>
+                                        <li><img src="@Model.ImgUrlBig" ids="0" class="@Html.NameFor(p => p.ImgUrlBig)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.ImgUrlBig)')">删除</a></li>
                                     }
                                 </ul>
                             </div>
@@ -252,7 +254,7 @@
     function set_upload_file(path) {
         if (path.length != 0) {
             $("#@Html.NameFor(p=>p.ImgUrl)ListData").html("");
-            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrl)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrl)')\">删除</a></li>";
             $("#@Html.NameFor(p=>p.ImgUrl)ListData").append(img_te);
         }
     }
@@ -277,7 +279,7 @@
     function set_upload_file2(path) {
         if (path.length != 0) {
             $("#@Html.NameFor(p=>p.ImgUrlBig)ListData").html("");
-            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrlBig)List' width='500px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrlBig)')\">删除</a></li>";
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.ImgUrlBig)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.ImgUrlBig)')\">删除</a></li>";
             $("#@Html.NameFor(p=>p.ImgUrlBig)ListData").append(img_te);
         }
     }

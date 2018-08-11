@@ -10,6 +10,24 @@ namespace Universal.Entity
     {
         [Description("外部网页")]
         web_url = 1,
+        [Description("案例展示")]
+        case_show,
+        [Description("公司简介")]
+        CompanyProfile,
+        [Description("企业文化")]
+        CompanyCulture,
+        [Description("团队介绍")]
+        TeamIntroduction,
+        [Description("公司荣誉")]
+        CompanyHonor,
+        [Description("大事记")]
+        Memorabilia,
+        [Description("未来愿景")]
+        FutureVision,
+        [Description("职位招聘")]
+        JoinUS,
+        [Description("新闻资讯")]
+        News
     }
 
     /// <summary>
@@ -70,6 +88,24 @@ namespace Universal.Entity
                 {
                     case BannerLinkType.web_url:
                         return " href='" + LinkVal + "' target='_blank'";
+                    case BannerLinkType.case_show:
+                        return " href='/CaseShow/Detail?id="+LinkVal+"'";
+                    case BannerLinkType.CompanyProfile:
+                        return " href='/About/Summary'";
+                    case BannerLinkType.CompanyCulture:
+                        return " href='/About/Culture'";
+                    case BannerLinkType.TeamIntroduction:
+                        return " href='/About/TeamIntroduction'";
+                    case BannerLinkType.CompanyHonor:
+                        return " href='/About/Honor'";
+                    case BannerLinkType.Memorabilia:
+                        return " href='/About/Memorabilia'";
+                    case BannerLinkType.FutureVision:
+                        return " href='/About/FutureVision'";
+                    case BannerLinkType.JoinUS:
+                        return " href='/Contact/Job?id="+LinkVal+"'";
+                    case BannerLinkType.News:
+                        return " href='/Contact/NewsDetail?id=" + LinkVal + "'";
                     default:
                         return "";
                 }

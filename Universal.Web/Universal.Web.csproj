@@ -972,6 +972,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Template.cshtml" />
     <Content Include="Views\Home\Category.cshtml" />
+    <Content Include="Views\CaseShow\TeamWork.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

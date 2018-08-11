@@ -68,6 +68,7 @@
     <Compile Include="SysUser.cs" />
     <Compile Include="TeamWork.cs" />
     <Compile Include="TimeLine.cs" />
+    <Compile Include="ViewModel\CaseShowTeamWork.cs" />
     <Compile Include="ViewModel\News.cs" />
     <Compile Include="ViewModel\CaseShow.cs" />
     <Compile Include="ViewModel\Job.cs" />

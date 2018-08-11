@@ -16,11 +16,8 @@
             <div class="banner-lv1-index">
                 <carousel v-model="value3"
                           height="948"
-                          :autoplay-speed="setting.autoplaySpeed"
-                          :dots="setting.dots"
-                          :radius-dot="setting.radiusDot"
-                          :trigger="setting.trigger"
-                          :arrow="setting.arrow"
+                          autoplay-speed="6000"
+                          arrow="never"
                           loop
                           autoplay>
                     @foreach (var item in Model.banner_list)
@@ -77,7 +74,7 @@
                     {
                         <li>
                             <div class="logo-li">
-                                <img class="l2" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                <img class="l2" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" onclick="location.href='/CaseShow/TeamWork?id=@item.GetBase64ID'">
                             </div>
                         </li>
                     }
@@ -99,7 +96,7 @@
                     </div>
                 </div>
                 <div class="rs">
-
+@*
                     @foreach (var item in Model.case_show_list)
                     {
                         <span atr="案例封面图">@item.ImgUrl</span>
@@ -109,7 +106,7 @@
                         <span attr="预留跳转地址"></span>
                         <br />
                     }
-
+*@
                     <div class="outbox" id="allheight">
                         <div v-if="imgLoading" class="anli-list" id="allgh">
                             <ul class="clearfix" id="allul">
@@ -126,7 +123,7 @@
                             <p>Loading</p>
                         </div>
                         <div id="loadall" style="display: none;">
-                            <img v-for="item in jdList" :src="item.pic" :key="item.pid">
+                            <img v-for="(item,index) in jdList" :src="item.ImgUrl" :key="index">
                         </div>
                     </div>
                 </div>
@@ -199,14 +196,14 @@
                 </div>
                 <div class="und-line"></div>
                 <p class="und-txt">传递最新资讯，记录行业成长......</p>
-                <row>
+                <row :gutter="9">
                     @foreach (var item in Model.news_list)
                     {
                         <i-col span="8">
                             <div class="pic-box">
                                 <div class="pub-pic-trans">
                                     <img class="trans-img" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
-                                    <div class="trans-link">
+                                    <div class="trans-link" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
                                         <p class="trans-link-txt">查看详情</p>
                                         <span class="trans-link-line"></span>
                                     </div>
@@ -232,50 +229,7 @@
     trigger: 'click',
     arrow: 'never'
     },
-    jdList:[
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (1).b002698.jpg',
-    pid:'1',
-    title:'鑫帝地产·新干线',
-    type:1
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (3).dec1666.jpg',
-    pid:'2',
-    title:'鑫帝地产·新干线',
-    type:2
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (4).014f860.jpg',
-    pid:'3',
-    title:'鑫帝地产·新干线',
-    type:3
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg.90d8b2f.jpg',
-    pid:'4',
-    title:'鑫帝地产·新干线',
-    type:2
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (2).2b13225.jpg',
-    pid:'5',
-    title:'鑫帝地产·新干线',
-    type:1
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (3).dec1666.jpg',
-    pid:'6',
-    title:'鑫帝地产·新干线',
-    type:2
-    },
-    {
-    pic:'http://www.langxing.com.cn:82/static/img/timg (4).014f860.jpg',
-    pid:'7',
-    title:'鑫帝地产·新干线',
-    type:3
-    }
-    ],
+    jdList:@Html.Raw(ViewData["waterFallData"]),
     imgLoading:false,
 }
 <!-- Json中的Data数据 End -->
@@ -291,25 +245,26 @@
 {
 	makePBHtml(obj){
           var xhtml='<div class="index-lv3-pic-li">';
-              xhtml+='<img src="'+obj.pic+'">';
-              if(obj.type==1){
-                  xhtml+='<p class="bg-bl">'+obj.title+'</p>';
-                  xhtml+='<i class="iconfont bofang-icon picture-icon icon-tupian2"></i>';
+              xhtml+='<img src="'+obj.ImgUrl+'">';
+              if(obj.ImgType==1){
+                  xhtml+='<p class="bg-bl">'+obj.Title+'</p>';
+                  xhtml+='<a href="/CaseShow/Detail?id='+obj.GetBase64ID+'" class="iconfont bofang-icon picture-icon icon-tupian2"></a>';
               }
-              else if(obj.type==2){
-                  xhtml+='<i class="iconfont bofang-icon icon-iconset0481"></i>';
+              else if(obj.ImgType==2){
+                  xhtml+='<a href="/CaseShow/Detail?id='+obj.GetBase64ID+'" class="iconfont bofang-icon icon-iconset0481"></a>';
               }
               else{
                   xhtml+='<div class="pic-txt">';
-                  xhtml+='<p class="pt1">'+obj.title+'</p>';
-                  xhtml+='<p>2017.12.12</p>';
-                  xhtml+='<p class="pt2"><i class="iconfont icon icon-zengjia"></i><span>VIEW</span></p>';
+                  xhtml+='<p class="pt1">'+obj.Title+'</p>';
+                  xhtml+='<p>'+obj.Time+'</p>';
+                  xhtml+='<p class="pt2"><a href="/CaseShow/Detail?id='+obj.GetBase64ID+'" class="iconfont icon icon-zengjia"></a><span>VIEW</span></p>';
                   xhtml+='</div>';
               }
               xhtml+='</div>';
           return xhtml;
       },
       waterFall(){
+
           for(var i=0; i<this.jdList.length; i++){
               var _html=this.makePBHtml(this.jdList[i]);
               // var ghv1=document.getElementById("gh1").clientHeight;

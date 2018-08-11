@@ -15,13 +15,34 @@
 
     <div class="main page_future">
         <div class="main-content">
-            <div class="sz-banner page-container-min-width">
-                <div class="page-container-width">
-                    <p class="bpt">未来&愿景</p>
-                    <div class="page-pub-line"></div>
-                    <p class="bpl">为企业提供最具创意的高质量<br />数字科技展示服务</p>
+            @if (Model.banner_list.Count > 1)
+            {
+
+                <div class="banner-lv1-index">
+                    <carousel v-model="value3"
+                              height="760"
+                              autoplay-speed="6000"
+                              arrow="never"
+                              loop
+                              autoplay>
+                        @foreach (var item in Model.banner_list)
+                        {
+                            <carousel-item>
+                                <div class="demo-carousel">
+                                    <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                                </div>
+                            </carousel-item>
+                        }
+                    </carousel>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@(WorkContext.WebSiteConfig.SiteUrl+Model.banner_list.First().ImgUrl))">
+                    <div class="page-container-width">
+                    </div>
+                </div>
+            }
             <div class="page-container-width bgcolor">
                 @{
                     int i = 0;
@@ -66,7 +87,7 @@
 
                     i++;
                 }
-                
+
             </div>
         </div>
     </div>    
@@ -76,28 +97,31 @@
 <!-- Json中的Data数据 Begin -->
 @section json_data
 {
-
+    value3:0,
 }
 <!-- Json中的Data数据 End -->
-
 <!-- Json中的mounted数据 Begin -->
 @section json_mounted
 {
-    
+    this.pushBntNum();
 }
 <!-- Json中的mounted数据 End -->
-
 <!-- Json中的methods数据 Begin -->
 @section json_methods
 {
-    
+    pushBntNum(){
+        $(function(){
+            $(".ivu-carousel-dots-inside li").each(function(index){
+                $(this).children().first().before('<span>0'+(index*1+1)+'</span>');
+            });
+        })
+    },
 }
 <!-- Json中的methods数据 End -->
-
-
 <!-- 底部中的JS脚本 Begin -->
 @section foot_js
 {
-    
+
 }
 <!-- 底部中的JS脚本 End -->
+

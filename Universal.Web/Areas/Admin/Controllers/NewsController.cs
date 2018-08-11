@@ -133,6 +133,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     ddd.Author = entity.Author;
                     ddd.Weight = entity.Weight;
                     ddd.ImgUrl = entity.ImgUrl;
+                    ddd.ImgUrlBig = entity.ImgUrlBig;
                     ddd.Content = entity.Content;
                     entity.AddUserID = WorkContext.UserInfo.ID;
                     entity.LastUpdateUserID = WorkContext.UserInfo.ID;
