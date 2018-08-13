@@ -64,9 +64,9 @@
         <thead>
             <tr>
                 <th>栏目名称</th>
-                <th>排序数字</th>
+                @*<th>排序数字</th>
                 <th>启用状态</th>
-                <th>CallName</th>
+                <th>CallName</th>*@
                 <th>操作</th>
             </tr>
         </thead>
@@ -75,9 +75,9 @@
             {
                 <tr class="@(item.PID == null ? "success":"")">
                     <td style="text-align: left;">@Html.Raw(item.Title)</td>
-                    <td>@item.Weight</td>
+                    @*<td>@item.Weight</td>
                     <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
-                    <td>@item.CallName</td>
+                    <td>@item.CallName</td>*@
                     <td>
                         @*<a class="btn btn-sm btn-warning" href="javascript:;" onclick="del_item('/Admin/Category/Del',@item.ID, 1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>*@
                         <a class="btn btn-sm btn-white" href="/Admin/Category/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>

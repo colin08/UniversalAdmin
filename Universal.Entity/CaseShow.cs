@@ -119,7 +119,7 @@ namespace Universal.Entity
         [Display(Name = "状态")]
         public bool Status { get; set; }
 
-        [Display(Name ="首页显示")]
+        [Display(Name ="首页经典案例显示")]
         public bool IsHome { get; set; }
 
         /// <summary>

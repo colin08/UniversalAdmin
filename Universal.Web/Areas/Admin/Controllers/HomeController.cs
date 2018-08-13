@@ -21,6 +21,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            ViewData["Inc"] = WebSite.Copyright;
             var viewModelLogin = new Models.ViewModelLogin();
             if (WorkContext.UserInfo != null)
                 return RedirectToAction("Index");

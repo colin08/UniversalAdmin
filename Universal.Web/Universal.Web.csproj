@@ -892,7 +892,6 @@
     <Content Include="Areas\Admin\Views\Home\Login.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_FootInc.cshtml" />
     <Content Include="Areas\Admin\Views\SysUser\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SysUser\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\SysRole\Index.cshtml" />
