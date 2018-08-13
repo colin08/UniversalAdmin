@@ -1,18 +1,60 @@
 ﻿@model Universal.Web.Framework.WebErrorModel
+
 @{
-    Layout = null;
+    ViewBag.Title = "朗形机构";
+    WorkContext.CategoryMark = "";
+    WorkContext.CategoryErMark = "";
 }
 
-<!DOCTYPE html>
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/page404.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <div>
-        <h2>@Model.message</h2>
+<!-- Body Begin -->
+
+    <div class="main page404">
+        <div class="main-content">
+            <div class="page-main">
+                <p class="txt">@Model.message</p>
+                <div class="bnt-div">
+                    <i-button icon="ios-undo" onclick="location.href='@Model.back_url'">返回上一页</i-button>
+                    <i-button onclick="location.href='/'">返回首页</i-button>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->
+

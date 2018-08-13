@@ -316,9 +316,11 @@
     <Content Include="Assets\jf\css\listsa.css" />
     <Content Include="Assets\jf\css\newdetail.css" />
     <Content Include="Assets\jf\css\news.css" />
+    <Content Include="Assets\jf\css\page404.css" />
     <Content Include="Assets\jf\css\public.css" />
     <Content Include="Assets\jf\css\timeline.css" />
     <Content Include="Assets\jf\css\xmdetail.css" />
+    <Content Include="Assets\jf\images\404.jpg" />
     <Content Include="Assets\jf\images\ewcode.jpg" />
     <Content Include="Assets\jf\images\index1.jpg" />
     <Content Include="Assets\jf\images\index\2.jpg" />
@@ -401,6 +403,7 @@
     <Content Include="Assets\jf\images\lista\2-6.jpg" />
     <Content Include="Assets\jf\images\lista\index1.jpg" />
     <Content Include="Assets\jf\images\logo.png" />
+    <Content Include="Assets\jf\images\search-bg.png" />
     <Content Include="Assets\jf\js\axios.pop.js" />
     <Content Include="Assets\js\bootstrap.min.js" />
     <Content Include="Assets\js\content.js" />
@@ -955,7 +958,6 @@
     <Content Include="Areas\Admin\Views\Honour\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Honour\Index.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
-    <Content Include="Views\Shared\Buttom.cshtml" />
     <Content Include="Views\CaseShow\Index.cshtml" />
     <Content Include="Views\About\Summary.cshtml" />
     <Content Include="Views\About\Culture.cshtml" />

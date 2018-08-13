@@ -1,0 +1,33 @@
+.page404{
+    background: #fff;
+    padding: 80px 0;
+}
+.page404 .main-content{
+    background: url(./../images/404.jpg) top center no-repeat;
+}
+.page404 .page-main{
+    padding-top:650px;
+    text-align: center;    
+}
+.page404 .txt{
+    font-size:36px;
+    color: #323232;
+    padding-bottom: 64px;
+}
+.page404 .bnt-div{
+    padding-bottom: 100px;
+}
+.page404 .bnt-div .ivu-btn{
+    border-radius: 0;
+    border: 2px solid #c0c0c0;
+    color: #c0c0c0;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin: 0 30px;
+    font-size:18px;
+}
+.page404 .bnt-div .ivu-btn:hover{
+    border-color: #333;
+    background-color:#333;
+    color:#fff;
+}
