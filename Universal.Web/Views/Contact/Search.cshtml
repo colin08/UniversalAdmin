@@ -1,0 +1,126 @@
+﻿@model Universal.Web.Framework.WebErrorModel
+
+@{
+    ViewBag.Title = "搜索:"+ViewData["SearchKeyWord"];
+    WorkContext.CategoryMark = "";
+    WorkContext.CategoryErMark = "";
+}
+
+<!--头部脚本 Begin-->
+@section head
+{
+    <link href="/Assets/jf/css/search.css" rel="stylesheet" />
+}
+<!--头部脚本 end-->
+
+<!-- Body Begin -->
+
+    <div class="main page_search">
+        <div class="main-content">
+            <div class="sz-banner page-container-min-width"></div>
+            <div class="page-container-min-width bg-color">
+                <div class="page-container-width">
+                    <tabs value="name1">
+                        <tab-pane label="案例" name="name1">
+                            <p class="search-txt">找到32条结果</p>
+                            <ul class="product-list clearfix"></ul>
+                            <ul class="product-list xm-product-list clearfix">
+                                <li v-for="item in 6">
+                                    <div class="product-style">
+                                        <div class="pic-box">
+                                            <img src="/Assets/jf/images/index1.jpg">
+                                            <div class="pic-link">
+                                                <span class="out-mid">
+                                                    <i class="box-line"></i><br>
+                                                    查看详情
+                                                    <i class="box-line box-line-u"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="txt-box">
+                                            <p class="pro-pdt">恒大项目</p>
+                                            <p class="pro-pdl">
+                                                <span>时间：2017.11.26</span>
+                                                <span>地点：深圳-福田</span>
+                                            </p>
+                                            <div class="pro-line"></div>
+                                            <p class="pro-pdd clearfix"><i class="iconfont icon-jiantou1-copy bounce"></i>Details</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <Page :total="100" />
+                        </tab-pane>
+                        <tab-pane label="新闻资讯" name="name2">
+                            <p class="search-txt">找到32条结果</p>
+                            <ul class="product-list news-product-list clearfix">
+                                <li v-for="item in 6">
+                                    <div class="product-style">
+                                        <div class="pic-box">
+                                            <img src="/Assets/jf/images/index1.jpg">
+                                            <div class="pic-link">
+                                                <span class="out-mid">
+                                                    <i class="box-line"></i><br>
+                                                    查看详情
+                                                    <i class="box-line box-line-u"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="txt-box">
+                                            <p class="pro-pdt">恒大项目</p>
+                                            <p class="pro-pdl">
+                                                新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <Page :total="100" />
+                        </tab-pane>
+                    </tabs>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Body End -->
+
+<!-- Json中的Data数据 Begin -->
+@section json_data
+{
+
+}
+<!-- Json中的Data数据 End -->
+
+<!-- Json中的mounted数据 Begin -->
+@section json_mounted
+{
+    
+}
+<!-- Json中的mounted数据 End -->
+
+<!-- Json中的methods数据 Begin -->
+@section json_methods
+{
+    searchInput(){
+          this.searchShow=!this.searchShow;
+          this.closeSearchVal=!this.closeSearchVal;
+          var _this=this;
+          setTimeout(function(){
+              $("#search-inp .ivu-input").focus();
+              $("#search-inp .ivu-input").focusout(function(){
+                  _this.closeSearch();
+              });
+          },200);
+      },
+}
+<!-- Json中的methods数据 End -->
+
+
+<!-- 底部中的JS脚本 Begin -->
+@section foot_js
+{
+    
+}
+<!-- 底部中的JS脚本 End -->
+

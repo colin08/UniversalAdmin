@@ -101,7 +101,7 @@ namespace Universal.Tools
         [Display(Name = "站点URL"), Required(ErrorMessage = "不能为空"), RegularExpression(@"^(http|https)\://.+$", ErrorMessage = "URL格式错误")]
         public string SiteUrl { get; set; }
 
-        [Display(Name = "备案信息"), Required(ErrorMessage = "不能为空"), MaxLength(30, ErrorMessage = "不能超过200个字符")]
+        [Display(Name = "备案信息"), Required(ErrorMessage = "不能为空"), MaxLength(300, ErrorMessage = "不能超过300个字符")]
         public string Copyright { get; set; }
 
         [Display(Name ="附件地址")]
@@ -163,7 +163,7 @@ namespace Universal.Tools
 
         [Display(Name ="首页经典案例描述"),Required(ErrorMessage ="必填")]
         public string HomeCaseDesc { get; set; }
-
+        
         [Display(Name ="首页大事记时间范围"),Required(ErrorMessage ="必填")]
         public string TimeLineRedCenterTop { get; set; }
 

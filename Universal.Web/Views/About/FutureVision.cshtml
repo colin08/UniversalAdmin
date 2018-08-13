@@ -21,7 +21,7 @@
                 <div class="banner-lv1-index">
                     <carousel v-model="value3"
                               height="760"
-                              autoplay-speed="6000"
+                              autoplay-speed="@(WorkContext.WebSiteConfig.BannerTime * 1000)"
                               arrow="never"
                               loop
                               autoplay>

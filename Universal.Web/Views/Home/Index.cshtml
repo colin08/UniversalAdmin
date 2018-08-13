@@ -1,6 +1,6 @@
 ﻿@model  Universal.Entity.ViewModel.HomeData
 @{
-    ViewBag.Title = "朗形机构";
+    ViewBag.Title = WorkContext.WebSiteConfig.CompanyName;
 }
 
 <!--头部脚本 Begin-->
@@ -16,7 +16,7 @@
             <div class="banner-lv1-index">
                 <carousel v-model="value3"
                           height="948"
-                          autoplay-speed="6000"
+                          autoplay-speed="@(WorkContext.WebSiteConfig.BannerTime * 1000)"
                           arrow="never"
                           loop
                           autoplay>
@@ -96,17 +96,6 @@
                     </div>
                 </div>
                 <div class="rs">
-@*
-                    @foreach (var item in Model.case_show_list)
-                    {
-                        <span atr="案例封面图">@item.ImgUrl</span>
-                        <span attr="案例名称">@item.Title</span>
-                        <span attr="时间">@item.Time</span>
-                        <span attr="案例类别,普通、相册、视频">@item.ImgType</span>
-                        <span attr="预留跳转地址"></span>
-                        <br />
-                    }
-*@
                     <div class="outbox" id="allheight">
                         <div v-if="imgLoading" class="anli-list" id="allgh">
                             <ul class="clearfix" id="allul">

@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>@ViewData["Title"]</title>
     <link href="http://at.alicdn.com/t/font_750964_1drzr9nemmo.css" rel="stylesheet">
@@ -29,7 +30,7 @@
                     </div>
                     <div v-if="searchShow" :class="closeSearchVal?'header-search-box':'header-search-box header-search-box-close'">
                         <i-button icon="ios-search"></i-button>
-                        <i-input id="search-inp" placeholder="SEARCH"></i-input>
+                        <i-input id="search-inp" value="@ViewData["SearchKeyWord"]" placeholder="SEARCH"></i-input>
                         <i-button @@click="closeSearch"><i class="iconfont icon-close"></i></i-button>
                     </div>
                     <div v-else class="header-nav" @@mouseleave="sunList=false;activeName=''">
@@ -187,17 +188,7 @@
                                 name: "公司简介",
                                 url: "/About/Summary",
                                 active: 'Company-Profile'
-                            },
-                            {
-                                name: "企业文化",
-                                url: "/About/Culture",
-                                active: 'Company-Culture'
-                            },
-                            {
-                                name: "团队介绍",
-                                url: "/About/TeamIntroduction",
-                                active: 'Team-Introduction'
-                            },
+                            },                                                       
                             {
                                 name: "公司荣誉",
                                 url: "/About/Honor",

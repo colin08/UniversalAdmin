@@ -125,5 +125,16 @@ namespace Universal.Web.Controllers
             return View(result_model);
         }
 
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Search(string word,int page=1)
+        {
+            ViewData["SearchKeyWord"] = word;
+
+            return View();
+        }
+
     }
 }

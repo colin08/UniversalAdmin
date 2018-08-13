@@ -318,6 +318,7 @@
     <Content Include="Assets\jf\css\news.css" />
     <Content Include="Assets\jf\css\page404.css" />
     <Content Include="Assets\jf\css\public.css" />
+    <Content Include="Assets\jf\css\search.css" />
     <Content Include="Assets\jf\css\timeline.css" />
     <Content Include="Assets\jf\css\xmdetail.css" />
     <Content Include="Assets\jf\images\404.jpg" />
@@ -975,6 +976,7 @@
     <Content Include="Views\Shared\Template.cshtml" />
     <Content Include="Views\Home\Category.cshtml" />
     <Content Include="Views\CaseShow\TeamWork.cshtml" />
+    <Content Include="Views\Contact\Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
