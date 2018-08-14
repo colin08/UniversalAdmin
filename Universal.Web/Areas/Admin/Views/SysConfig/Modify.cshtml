@@ -172,6 +172,15 @@
                 </div>
                 <div class="hr-line-dashed"></div>
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.TeamWorkDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.TeamWorkDesc, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.TeamWorkDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
                 <div class="form-group" style="display:none;">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.AppPoolName)</label>
                     <div class="col-sm-3">

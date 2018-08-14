@@ -134,9 +134,11 @@ namespace Universal.Web.Areas.Admin.Controllers
                     ddd.Weight = entity.Weight;
                     ddd.ImgUrl = entity.ImgUrl;
                     ddd.ImgUrlBig = entity.ImgUrlBig;
+                    ddd.Summary = entity.Summary;
                     ddd.Content = entity.Content;
-                    entity.AddUserID = WorkContext.UserInfo.ID;
-                    entity.LastUpdateUserID = WorkContext.UserInfo.ID;
+                    ddd.AddUserID = WorkContext.UserInfo.ID;
+                    ddd.LastUpdateUserID = WorkContext.UserInfo.ID;
+                    ddd.LastUpdateTime = DateTime.Now;
                     bll.Modify(ddd);
                     AddAdminLogs(Entity.SysLogMethodType.Update, "修改新闻资讯：" + entity.ID.ToString() + "");
                 }

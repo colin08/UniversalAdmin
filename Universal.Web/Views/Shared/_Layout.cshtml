@@ -308,7 +308,9 @@
                 }
             }
         });
-
+        document.oncontextmenu = function () {
+            event.returnValue = false;
+        };
         @RenderSection("foot_js", required: false)
 
     </script>

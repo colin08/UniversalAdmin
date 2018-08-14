@@ -170,6 +170,9 @@ namespace Universal.Tools
         [Display(Name = "首页大事记内容"), Required(ErrorMessage = "必填")]
         public string TimeLineRedCenterDesc { get; set; }
 
+        [Display(Name = "首页合作企业介绍"), Required(ErrorMessage = "必填")]
+        public string TeamWorkDesc { get; set; }
+
         #region 邮件配置
 
         [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]

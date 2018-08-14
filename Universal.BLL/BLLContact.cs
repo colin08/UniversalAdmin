@@ -26,7 +26,7 @@ namespace Universal.BLL
             var result_model = new Entity.ViewModel.Job();
             using (var db = new DataCore.EFDBContext())
             {
-                result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =(select ID from Category where CallName = 'Company-Honor')  ORDER BY Weight DESC").ToList();
+                result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =(select ID from Category where CallName = 'Join-US')  ORDER BY Weight DESC").ToList();
                 result_model.job_list = db.JoinUSs.Where(p => p.Status).OrderByDescending(p => p.Weight).Take(top).AsNoTracking().ToList();
                 //if(result_model != null) CacheHelper.Insert(cache_key, result_model, 1200);
             }

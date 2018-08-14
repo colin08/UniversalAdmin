@@ -48,7 +48,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                 case Admin_Upload_Type.MorePicture:
                     file_ext = "image/*";
                     file_txt = "图片";
-                    file_size = "5MB";
+                    file_size = "50MB";
                     break;
                 case Admin_Upload_Type.APK:
                     file_ext = "*.apk;*.APK";
