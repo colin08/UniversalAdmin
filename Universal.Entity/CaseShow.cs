@@ -113,6 +113,12 @@ namespace Universal.Entity
         [Display(Name = "地点"), MaxLength(20, ErrorMessage = "不能超过20个字符"), Required(ErrorMessage = "地点不能为空")]
         public string Address { get; set; }
 
+        [Display(Name = "二级标题"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
+        public string ErTitle { get; set; }
+
+        [Display(Name = "服务项目"), MaxLength(200, ErrorMessage = "不能超过200个字符")]
+        public string FuWu { get; set; }
+
         [Display(Name = "简单描述"), MaxLength(500, ErrorMessage = "不能超过500个字符")]
         public string Summary { get; set; }
         

@@ -23,15 +23,15 @@
             <div class="page-container-width bgcolor">
                 <div class="page-mid">
                     <div class="default-li">
-                        <p class="d-p-dt">@Model.Title</p>
+                        <p class="d-p-dt" style="font-weight:bold;">@Model.Title</p>
                         <div class="page-pub-line"></div>
-                        <p class="d-p-dl"><span>@Model.Address</span>@Model.Department</p>
+                        <p class="d-p-dl" style="font-weight:800;"><span>@Model.Address</span>@Model.Department</p>
                         <div class="d-line"></div>
                         <div class="d-p-dd">
                             @Html.Raw(Model.Content)
                         </div>
                         
-                        <div class="bnt-box" onclick="window.open('http://shang.qq.com/email/stop/email_stop.html?qq=576741099&sig=c8c71581986141991aec6b5eb9f567e0a28b1db4dd73ad1b&tttt=1')">
+                        <div class="bnt-box" onclick="window.open('http://shang.qq.com/email/stop/email_stop.html?qq=2272601580&sig=c8c71581986141991aec6b5eb9f567e0a28b1db4dd73ad1b&tttt=1')">
                             <i-button class="ivu-btn-self">申请职位</i-button>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <p class="pu-p-txt">@WorkContext.WebSiteConfig.JobEmail</p>
                         </i-col>
                         <i-col span="8">
-                            <i-button class="ivu-btn-self">查看更多</i-button>
+                            <i-button class="ivu-btn-self" onclick="location.href='/Contact/Join'">查看更多</i-button>
                         </i-col>
                     </row>
                 </div>

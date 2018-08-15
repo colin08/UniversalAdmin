@@ -39,15 +39,59 @@ namespace Universal.BLL
                 //轮播图
                 result_model.banner_list = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =" + entity_category.ID.ToString() + "  ORDER BY Weight DESC").ToList();
                 //最新案例
-                result_model.case_list_new = db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.New).Take(case_new_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_list_new = LoadPageList(db, 3, 1, entity_category.ID, Entity.CaseShowType.New);//db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.New).OrderByDescending(p => p.Weight).Skip(0).Take(case_new_top).AsNoTracking().ToList();
                 //经典案例
-                result_model.case_list_classic = db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.Classic).Take(case_classic_top).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_list_classic = LoadPageList(db, 6, 1, entity_category.ID, Entity.CaseShowType.Classic); //db.CaseShows.Where(p => p.Status && p.CategoryID == entity_category.ID && p.Type == Entity.CaseShowType.Classic).OrderByDescending(p => p.Weight).Skip(0).Take(case_classic_top).AsNoTracking().ToList();
 
                 //CacheHelper.Insert(cache_key, result_model, 1200);
             }
 
             return result_model;
 
+        }
+        
+        /// <summary>
+        /// 分页加载案例
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="category_id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static List<Entity.CaseShow> LoadPageList(DataCore.EFDBContext db,int page_size,int page_index,int category_id,Entity.CaseShowType type)
+        {
+            if (page_size <= 0) page_size = 6;
+            if (page_index <= 0) page_index = 1;
+            int begin_index = (page_index - 1) * page_size + 1;
+            int end_index = page_size * page_index;
+
+            bool clear = false;
+            if (db == null)
+            {
+                db = new DataCore.EFDBContext();
+                clear = true;
+            }
+
+            var result_list = new List<Entity.CaseShow>();
+
+            string strSql = "select * from (select ROW_NUMBER() OVER(ORDER BY Weight Desc) as row, * from (SELECT* FROM[dbo].[CaseShow] WHERE Status = 1 AND CategoryID = " + category_id + " and Type = " + (int)type + ") as Y) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index.ToString() + "";
+            result_list = db.CaseShows.SqlQuery(strSql).ToList();
+            if (clear) db.Dispose();
+            return result_list;
+        }
+
+        /// <summary>
+        /// 提供给前端的分页方法
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="category_id"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<Entity.CaseShow> GetWebPageList(int page_size, int page_index, int category_id, Entity.CaseShowType type)
+        {
+            return LoadPageList(null, page_size, page_index, category_id, type);
         }
 
         /// <summary>
@@ -112,6 +156,8 @@ namespace Universal.BLL
                 entity.Status = model.Status;
                 entity.Summary = model.Summary;
                 entity.Time = model.Time;
+                entity.ErTitle = model.ErTitle;
+                entity.FuWu = model.FuWu;
                 entity.Title = model.Title;
                 entity.Type = model.Type;
                 entity.ImgType = model.ImgType;
@@ -159,6 +205,8 @@ namespace Universal.BLL
                 entity.Summary = model.Summary;
                 entity.Time = model.Time;
                 entity.Title = model.Title;
+                entity.ErTitle = model.ErTitle;
+                entity.FuWu = model.FuWu;
                 entity.Type = model.Type;
                 entity.ImgType = model.ImgType;
                 entity.Weight = model.Weight;

@@ -1,6 +1,6 @@
 .page_xmdetail .sz-banner{
     background: url(./../images/index1.jpg) center no-repeat;
-    height: 650px;
+    height: 760px;
     color:#fff;
     letter-spacing: 2px;
 }
@@ -22,13 +22,13 @@
 }
 
 .page_xmdetail .lv1{
-    height: 688px;
+    height: 520px;
     background: #fff;
 }
 .page_xmdetail .lv1 .ls{
     float: left;
     width: 1000px;
-    height: 688px;
+    height: 500px;
     padding: 100px 65px 0 360px;
 }
 .page_xmdetail .lv1 .l-p-dt{
@@ -58,7 +58,7 @@
 }
 .page_xmdetail .lv1 .rs .bg{
     width: 100%;
-    height: 640px;
+    height: 480px;
     background: #323232;
     padding: 116px 0 0 58px;
 }
@@ -89,4 +89,9 @@
     background: #c0c0c0;
     margin-top: 24px;
     padding: 24px 0;
+}
+
+.page_xmdetail .fr-draggable{
+    margin: 0 auto;
+    display: block;
 }

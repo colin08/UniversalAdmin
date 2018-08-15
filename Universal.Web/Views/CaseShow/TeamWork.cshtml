@@ -14,44 +14,44 @@
 <!-- Body Begin -->
     <div class="main page_listsa">
         <div class="main-content">
-            <div class="sz-banner page-container-min-width" style="background: url(@(WorkContext.WebSiteConfig.SiteUrl+Model.team_work_info.ImgUrl2)) center no-repeat;">
-                <div class="lv1 page-container-min-width">
-                    <div class="page-container-width">
-                        <p class="list-tt">@Model.team_work_info.Title</p>
-                        <div class="page-pub-line"></div>
-                        <p class="list-und">合作案例展示</p>
-                        <div class="shuzi-line"></div>
-                        <row :gutter="12">
-                            @foreach (var item in Model.case_show_list)
-                            {
-                                <i-col span="8">
-                                    <div class="product-style">
-                                        <div class="pic-box">
-                                            <img src="@(WorkContext.WebSiteConfig.SiteUrl+ item.ImgUrl)">
-                                            <div class="pic-link">
-                                                <span class="out-mid" onclick="location.href='/CaseShow/Detail?id=@item.GetBase64ID'">
-                                                    <i class="box-line"></i><br>
-                                                    查看详情
-                                                    <i class="box-line box-line-u"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="txt-box">
-                                            <p class="pro-pdt">@item.Title</p>
-                                            <p class="pro-pdl">
-                                                <span>时间：@item.Time</span>
-                                                <span>地点：@item.Address</span>
-                                            </p>
-                                            <div class="pro-line"></div>
-                                            <p class="pro-pdd clearfix" onclick="location.href='/CaseShow/Detail?id=@item.GetBase64ID'"><i class="iconfont icon-jiantou1-copy bounce"></i>Details</p>
+            <div class="sz-banner page-container-min-width" style="background: url(@(WorkContext.WebSiteConfig.SiteUrl+Model.team_work_info.ImgUrl2)) center no-repeat;"></div>
+            <div class="lv1 page-container-min-width">
+                <div class="page-container-width">
+                    <p class="list-tt">@Model.team_work_info.Title</p>
+                    <div class="page-pub-line"></div>
+                    <p class="list-und">合作案例展示</p>
+                    <div class="shuzi-line"></div>
+                    <row :gutter="12">
+                        @foreach (var item in Model.case_show_list)
+                        {
+                            <i-col span="8">
+                                <div class="product-style">
+                                    <div class="pic-box">
+                                        <img src="@(WorkContext.WebSiteConfig.SiteUrl+ item.ImgUrl)">
+                                        <div class="pic-link">
+                                            <span class="out-mid" onclick="location.href='/CaseShow/Detail?id=@item.GetBase64ID'">
+                                                <i class="box-line"></i><br>
+                                                查看详情
+                                                <i class="box-line box-line-u"></i>
+                                            </span>
                                         </div>
                                     </div>
-                                </i-col>
-                            }
-                        </row>
-                    </div>
+                                    <div class="txt-box">
+                                        <p class="pro-pdt">@item.Title</p>
+                                        <p class="pro-pdl">
+                                            <span>时间：@item.Time</span>
+                                            <span>地点：@item.Address</span>
+                                        </p>
+                                        <div class="pro-line"></div>
+                                        <p class="pro-pdd clearfix" onclick="location.href='/CaseShow/Detail?id=@item.GetBase64ID'"><i class="iconfont icon-jiantou1-copy bounce"></i>Details</p>
+                                    </div>
+                                </div>
+                            </i-col>
+                        }
+                    </row>
                 </div>
             </div>
+        </div>
     </div>
 <!-- Body End -->
 

@@ -92,6 +92,26 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.ErTitle)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(p => p.ErTitle, (object)new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.ErTitle)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.FuWu)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(p => p.FuWu, (object)new { @class = "form-control", placeholder = "" })
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.FuWu)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Time)</label>
 
                         <div class="col-sm-3">

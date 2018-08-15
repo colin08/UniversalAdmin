@@ -53,14 +53,12 @@ namespace Universal.Web.Controllers
         public JsonResult LoadJob(int page_index)
         {
             UnifiedResultEntity<List<Entity.JoinUS>> result_model = new UnifiedResultEntity<List<Entity.JoinUS>>();
-            BLL.BaseBLL<Entity.JoinUS> bll = new BLL.BaseBLL<Entity.JoinUS>();
-            int total = 0;
-            var db_data = bll.GetPagedList(page_index, 6, ref total, p => p.Status, "Weight DESC");
+            int page_size = 6;
+            var db_data = BLL.BLLContact.GetWebJobPageList(page_size, page_index);
             result_model.msg = 1;
             result_model.msgbox = "ok";
             result_model.data = db_data;
-            result_model.total = total;
-            return Json(result_model);
+            return Json(result_model,JsonRequestBehavior.AllowGet);
         }
 
 
@@ -82,10 +80,9 @@ namespace Universal.Web.Controllers
         /// 分页加载更多资讯
         /// </summary>
         /// <param name="page_index"></param>
-        /// <param name="page_size"></param>
         /// <param name="type">类别</param>
         /// <returns></returns>
-        public JsonResult LoadNews(int page_index,int page_size,int type)
+        public JsonResult LoadNews(int page_index,int type)
         {
             UnifiedResultEntity<List<Entity.News>> result_model = new UnifiedResultEntity<List<Entity.News>>();
             if(type != 1&& type != 2)
@@ -93,15 +90,16 @@ namespace Universal.Web.Controllers
                 result_model.msgbox = "非法类别";
                 return Json(result_model);
             }
+            int page_size = 6;
             Entity.NewsType ttt = (Entity.NewsType)type;
-            BLL.BaseBLL<Entity.News> bll = new BLL.BaseBLL<Entity.News>();
-            int total = 0;
-            var db_data = bll.GetPagedList(page_index, page_size, ref total, p => p.Status && p.Type == ttt, "Weight DESC");
+            //BLL.BaseBLL<Entity.News> bll = new BLL.BaseBLL<Entity.News>();
+            //int total = 0;
+            var db_data = BLL.BLLContact.GetWebNewsPageList(page_size, page_index, ttt);// bll.GetPagedList(page_index, page_size, ref total, p => p.Status && p.Type == ttt, "Weight DESC");
             result_model.msg = 1;
             result_model.msgbox = "ok";
             result_model.data = db_data;
-            result_model.total = total;
-            return Json(result_model);
+            result_model.total = 0;
+            return Json(result_model,JsonRequestBehavior.AllowGet);
         }
 
 
@@ -129,11 +127,70 @@ namespace Universal.Web.Controllers
         /// 搜索
         /// </summary>
         /// <returns></returns>
-        public ActionResult Search(string word,int page=1)
+        public ActionResult Search(string word)
         {
             ViewData["SearchKeyWord"] = word;
-
+            
             return View();
+        }
+
+        /// <summary>
+        /// Ajax加载搜索数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="type"></param>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public JsonResult LoadSearch(int page, int type, string word)
+        {
+            int page_size = 6;
+            if (type != 1 && type != 2)
+            {
+                WorkContext.AjaxStringEntity.msgbox = "不明确的分类";
+                return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+            }
+            if (string.IsNullOrWhiteSpace(word))
+            {
+                WorkContext.AjaxStringEntity.msgbox = "请输入关键字";
+                return Json(WorkContext.AjaxStringEntity, JsonRequestBehavior.AllowGet);
+            }
+            int total = 0;
+            if (type == 1)
+            {
+                //案例
+                UnifiedResultEntity<List<Models.SearchCase>> result = new UnifiedResultEntity<List<Models.SearchCase>>();
+                BLL.BaseBLL<Entity.CaseShow> bll = new BLL.BaseBLL<Entity.CaseShow>();
+                var db_data = bll.GetPagedList(page, page_size, ref total, p => p.Status && p.Title.Contains(word), "Weight DESC").ToList();
+                List<Models.SearchCase> result_list = new List<Models.SearchCase>();
+                foreach (var item in db_data)
+                {
+                    string open_url = "/CaseShow/Detail?id=" + item.GetBase64ID;
+                    result_list.Add(new Models.SearchCase(item.ImgUrl, open_url, item.Title, item.Time, item.Address));
+                }
+                result.msg = 1;
+                result.msgbox = "ok";
+                result.data = result_list;
+                result.total = total;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                //新闻
+                UnifiedResultEntity<List<Models.SearchNews>> result = new UnifiedResultEntity<List<Models.SearchNews>>();
+                BLL.BaseBLL<Entity.News> bll = new BLL.BaseBLL<Entity.News>();
+                var db_data = bll.GetPagedList(page, page_size, ref total, p => p.Status && p.Title.Contains(word), "Weight DESC").ToList();
+                List<Models.SearchNews> result_list = new List<Models.SearchNews>();
+                foreach (var item in db_data)
+                {
+                    string open_url = "/Contact/NewsDetail?id=" + item.GetBase64ID;
+                    result_list.Add(new Models.SearchNews(item.ImgUrl, open_url, item.Title, item.Summary));
+                }
+                result.msg = 1;
+                result.msgbox = "ok";
+                result.data = result_list;
+                result.total = total;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
         }
 
     }

@@ -33,7 +33,7 @@ namespace Universal.BLL
                 //合作企业
                 result_model.team_work_list = db.TeamWorks.Where(p => p.Status).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //经典案例
-                result_model.case_show_list = db.CaseShows.Where(p => p.Status && p.Type == Entity.CaseShowType.Classic && p.IsHome).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
+                result_model.case_show_list = db.CaseShows.Where(p => p.Status && p.IsHome).OrderByDescending(p => p.Weight).AsNoTracking().ToList();
                 //数字展示
                 var temp_shuzi = new Entity.ViewModel.HomeShuZiChuangYiData();
                 var entity_category_shuzi = db.Categorys.Where(p => p.Status && p.CallName == "Digital-Display").AsNoTracking().FirstOrDefault();

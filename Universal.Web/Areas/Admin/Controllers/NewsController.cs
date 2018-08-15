@@ -139,6 +139,7 @@ namespace Universal.Web.Areas.Admin.Controllers
                     ddd.AddUserID = WorkContext.UserInfo.ID;
                     ddd.LastUpdateUserID = WorkContext.UserInfo.ID;
                     ddd.LastUpdateTime = DateTime.Now;
+                    ddd.SourceLinkUrl = entity.SourceLinkUrl;
                     bll.Modify(ddd);
                     AddAdminLogs(Entity.SysLogMethodType.Update, "修改新闻资讯：" + entity.ID.ToString() + "");
                 }

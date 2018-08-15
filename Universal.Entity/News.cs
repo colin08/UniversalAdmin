@@ -28,6 +28,7 @@ namespace Universal.Entity
             this.LastUpdateTime = DateTime.Now;
             this.Source = "朗形";
             this.Author = "朗形";
+            this.SourceLinkUrl = "";
         }
 
         public int ID { get; set; }
@@ -81,6 +82,10 @@ namespace Universal.Entity
 
         [Display(Name = "新闻来源"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string Source { get; set; }
+
+        [Display(Name = "新闻来源网址"), MaxLength(500, ErrorMessage = "不能超过500个字符")]
+        public string SourceLinkUrl { get; set; }
+
 
         [Display(Name = "作者"), MaxLength(30, ErrorMessage = "不能超过30个字符")]
         public string Author { get; set; }

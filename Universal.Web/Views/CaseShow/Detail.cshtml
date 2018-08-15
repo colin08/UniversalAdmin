@@ -7,21 +7,34 @@
 <!--头部脚本 Begin-->
 @section head
 {
-    <link href="/Assets/jf/css/newdetail.css" rel="stylesheet" />
+    <link href="/Assets/jf/css/xmdetail.css" rel="stylesheet" />
 }
 <!--头部脚本 end-->
 
 <!-- Body Begin -->
 
-    <div class="main page_newdetail">
+    <div class="main page_xmdetail">
         <div class="main-content">
             <div class="sz-banner page-container-min-width" style="background: url(@(WorkContext.WebSiteConfig.SiteUrl+Model.ImgUrlBig)) center no-repeat;">
             </div>
             <div class="page-container-width bgcolor">
+                <div class="lv1 clearfix">
+                    <div class="ls">
+                        <p class="l-p-dt" style="font-weight:bold;">@Model.Title</p>
+                        <p class="l-p-dl" style="font-weight:800">@Model.ErTitle</p>
+                        <div class="page-pub-line"></div>
+                        <p class="l-p-dd">@Model.Summary</p>
+                    </div>
+                    <div class="rs">
+                        <div class="bg">
+                            <p class="r-p-dt">服务项目</p>
+                            <div class="page-pub-line"></div>
+                            <p class="r-p-dl">@Model.FuWu</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="page-mid">
                     <div class="default-li">
-                        <p class="d-p-dt">@Model.Title</p>
-                        <div class="d-line"></div>
                         <div class="d-p-dd">
                             @Html.Raw(Model.Content)
                         </div>

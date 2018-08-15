@@ -13,6 +13,13 @@
     <script src="https://cdn.bootcss.com/iview/2.14.0/iview.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <link href="~/Assets/jf/css/public.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://cdn.webfont.youziku.com/wwwroot/js/wf/youziku.api.min.js"></script>
+    <script type="text/javascript">
+    $youziku.load("body", "4314435caa8f498fa664aeb4a0a45abf", "SiYuan-ExtraLight");
+    /*$youziku.load("#id1,.class1,h1", "4314435caa8f498fa664aeb4a0a45abf", "SiYuan-ExtraLight");*/
+    /*．．．*/
+    $youziku.draw();
+    </script>
 
     @RenderSection("head", required: false)
 
@@ -58,7 +65,7 @@
         </header>
         <div class="page-right-bnts">
             <div class="bnt-right-bnt">
-                <i class="iconfont icon-qq" onclick="window.open('http://shang.qq.com/email/stop/email_stop.html?qq=576741099&sig=c8c71581986141991aec6b5eb9f567e0a28b1db4dd73ad1b&tttt=1')"></i>
+                <i class="iconfont icon-qq" onclick="window.open('http://shang.qq.com/email/stop/email_stop.html?qq=2272601580&sig=c8c71581986141991aec6b5eb9f567e0a28b1db4dd73ad1b&tttt=1')"></i>
             </div>
             <div class="bnt-right-bnt">
                 <i class="iconfont icon-phone"></i>
@@ -254,7 +261,7 @@
                         this.activeSun = Object.assign({}, this.navList[ct.nav]['sun']);
                     }
                 },
-                searchInput() {
+                searchInput() {                    
                     this.searchShow = !this.searchShow;
                     this.closeSearchVal = !this.closeSearchVal;
                     var _this = this;

@@ -74,7 +74,7 @@
             </div>
             <div class="lv2">
                 <div class="list">
-                    <ul class="clearfix">
+                    <ul id="movice" class="clearfix">
                         @foreach (var item in Model.honor_list)
                         {
                             <li><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)"></li>
@@ -97,11 +97,36 @@
 @section json_mounted
 {
     this.pushBntNum();
+    this.moviceModel();
 }
 <!-- Json中的mounted数据 End -->
 <!-- Json中的methods数据 Begin -->
 @section json_methods
 {
+    moviceModel(){
+        var _this=$("#movice");
+        var _that=this;
+        _this.width(_this.children().length*332);
+        if(_this.children().length<7){
+            return false;
+        }
+        var firstC=$("#movice li:first");
+        var lastC=firstC.clone();
+        _this.append(lastC);
+        firstC.animate({
+            marginLeft:'-332px'
+        },500);
+        var setModel=setTimeout(() => {
+            firstC.remove();
+            _that.moviceModel();
+        }, 3000);
+    //   _this.hover(function(){
+    //     clearTimeout(setModel);
+    //   },function(){
+    //     firstC.remove();
+    //     _that.moviceModel();
+    //   })
+    },
     pushBntNum(){
         $(function(){
             $(".ivu-carousel-dots-inside li").each(function(index){

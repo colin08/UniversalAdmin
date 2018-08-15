@@ -33,6 +33,10 @@
         </div>
         <div class="lv2">
             <div class="main-container-width clearfix color-bg">
+                <div class="sun_li">
+                    <span>FOUNDED IN</span>
+                    <span>2000</span>
+                </div>
                 @{
                     int i_time_line = 0;
                 }
@@ -47,18 +51,15 @@
                             <span>@WorkContext.WebSiteConfig.TimeLineRedCenterDesc</span>
                         </div>
                     }
-
-                    <div class="sun_li">
-                        @if (i_time_line == 1)
-                        {
-                            @:<span class="sp-year">FOUNDED IN</span>
-                        }
-                        <span class="sp-year">@item.Title</span>
-                        <div class="hover-div1">
-                            <span class="h-tt">@item.Title</span>
-                            <span class="h-txt">@item.Content</span>
+                    if(i_time_line!=1){
+                        <div class="sun_li">
+                            <span class="sp-year">@item.Title</span>
+                            <div class="hover-div1">
+                                <span class="h-tt">@item.Title</span>
+                                <span class="h-txt">@item.Content</span>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
                 <div class="sun_li">
                     <span>FUTURE</span>
@@ -235,11 +236,11 @@
 	makePBHtml(obj){
           var xhtml='<div class="index-lv3-pic-li">';
               xhtml+='<img src="'+obj.ImgUrl+'">';
-              if(obj.ImgType==1){
+              if(obj.ImgType==2){
                   xhtml+='<p class="bg-bl">'+obj.Title+'</p>';
                   xhtml+='<a href="/CaseShow/Detail?id='+obj.GetBase64ID+'" class="iconfont bofang-icon picture-icon icon-tupian2"></a>';
               }
-              else if(obj.ImgType==2){
+              else if(obj.ImgType==3){
                   xhtml+='<a href="/CaseShow/Detail?id='+obj.GetBase64ID+'" class="iconfont bofang-icon icon-iconset0481"></a>';
               }
               else{

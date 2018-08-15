@@ -4,7 +4,7 @@ html,body,#app{
   background:#000;
   min-width: 1920px;
   /* overflow-x: hidden; */
-  font-family: Microsoft YaHei,"微软雅黑",Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+  /* font-family: SiYuan-ExtraLight,Microsoft YaHei,"微软雅黑",Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,\5FAE\8F6F\96C5\9ED1,Arial,sans-serif; */
 }
 html>/**/body .clearfix{}
 .clearfix{zoom:1;}

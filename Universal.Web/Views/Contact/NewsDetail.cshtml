@@ -8,6 +8,12 @@
 @section head
 {
     <link href="/Assets/jf/css/newdetail.css" rel="stylesheet" />
+    <script type="text/javascript">
+    $youziku.load("#youzi-font", "78dfc60499134b15858e66a83f361ad9", "SourceHanSerif-EL");
+    /*$youziku.load("#id1,.class1,h1", "78dfc60499134b15858e66a83f361ad9", "SourceHanSerif-EL");*/
+    /*．．．*/
+    $youziku.draw();
+    </script>
 }
 <!--头部脚本 end-->
 
@@ -20,10 +26,10 @@
             <div class="page-container-width bgcolor">
                 <div class="page-mid">
                     <div class="default-li">
-                        <p class="d-p-dt">@Model.Title</p>
-                        <p class="d-p-dl" style="font-size:12px;">@Model.LastUpdateTime.ToShortDateString()  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;信息来源: @Model.Source</p>
+                        <p class="d-p-dt" style="font-weight:bold;">@Model.Title</p>
+                        <p class="d-p-dl" style="font-size:12px; font-weight:800;">@Model.LastUpdateTime.ToShortDateString()  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;信息来源: @Model.Source</p>
                         <div class="d-line"></div>
-                        <div class="d-p-dd">
+                        <div class="d-p-dd" id="youzi-font">
                             @Html.Raw(Model.Content)
                         </div>
                     </div>

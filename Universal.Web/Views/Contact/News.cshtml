@@ -48,7 +48,7 @@
                     <p class="list-tt">朗形动态</p>
                     <div class="page-pub-line"></div>
                     <p class="list-und">传递最新咨询，记录行业成长......</p>
-                    <ul class="product-list clearfix">
+                    <ul class="product-list clearfix" id="ul_news_lx">
                         @foreach (var item in Model.new_list_lx)
                         {
                             <li>
@@ -56,7 +56,7 @@
                                     <div class="pic-box">
                                         <img src="@(WorkContext.WebSiteConfig.SiteUrl +item.ImgUrl)">
                                         <div class="pic-link">
-                                            <span class="out-mid" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
+                                            <span class="out-mid" onclick="window.open('/Contact/NewsDetail?id=@item.GetBase64ID')">
                                                 <i class="box-line"></i><br>
                                                 查看详情
                                                 <i class="box-line box-line-u"></i>
@@ -64,8 +64,8 @@
                                         </div>
                                     </div>
                                     <div class="txt-box">
-                                        <p class="pro-pdt">@item.Title</p>
-                                        <p class="pro-pdl">
+                                        <p class="pro-pdt" style="font-weight:bold;">@item.Title</p>
+                                        <p class="pro-pdl" style="font-weight:600;">
                                             @item.Summary
                                         </p>
                                     </div>
@@ -74,6 +74,13 @@
                         }
 
                     </ul>
+
+                    @if (Model.new_list_lx.Count == 6)
+                    {
+                        <div class="more-bnt" onclick="LoadMore(this)" data-pindex="2" data-type="1" data-divid="ul_news_lx">
+                            <i-button>查看更多</i-button>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="lv2 page-container-min-width">
@@ -81,7 +88,7 @@
                     <p class="list-tt">行业资讯</p>
                     <div class="page-pub-line"></div>
                     <p class="list-und">传递最新资讯，记录行业成长......</p>
-                    <ul class="product-list clearfix">
+                    <ul class="product-list clearfix" id="ul_news_hy">
                         @foreach (var item in Model.new_list_hy)
                         {
                             <li>
@@ -89,7 +96,7 @@
                                     <div class="pic-box">
                                         <img src="@(WorkContext.WebSiteConfig.SiteUrl +item.ImgUrl)">
                                         <div class="pic-link">
-                                            <span class="out-mid" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
+                                            <span class="out-mid" onclick="window.open('/Contact/NewsDetail?id=@item.GetBase64ID')">
                                                 <i class="box-line"></i><br>
                                                 查看详情
                                                 <i class="box-line box-line-u"></i>
@@ -97,8 +104,8 @@
                                         </div>
                                     </div>
                                     <div class="txt-box">
-                                        <p class="pro-pdt">@item.Title</p>
-                                        <p class="pro-pdl">
+                                        <p class="pro-pdt" style="font-weight:bold;">@item.Title</p>
+                                        <p class="pro-pdl" style="font-weight:600;">
                                             @item.Summary
                                         </p>
                                     </div>
@@ -106,15 +113,77 @@
                             </li>
                         }
                     </ul>
-                    <div class="more-bnt">
-                        <i-button>查看更多</i-button>
-                    </div>
+                    @if (Model.new_list_hy.Count == 6)
+                    {
+                        <div class="more-bnt" onclick="LoadMore(this)" data-pindex="2" data-type="2" data-divid="ul_news_hy">
+                            <i-button>查看更多</i-button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>    
 
 <!-- Body End -->
+
+    <script>
+        function LoadMore(obj) {
+            var pindex = parseInt($(obj).attr("data-pindex"));
+            var dtype = $(obj).attr("data-type");
+            var datadivid = $(obj).attr("data-divid");
+            $.ajax({
+                url: "/Contact/LoadNews",
+                datatype: "json",
+                type: 'post',
+                data: { "page_index": pindex, "type": dtype },
+                beforeSend: function () {
+                    $(obj).find('span').text("加载中...");
+                    $(obj).removeAttr("onclick");
+                },
+                success: function (result) {
+                    //函数体，数据发送成功回调
+                    console.log(result.data.length);
+
+                    if (result.data.length == 0) {
+                        $(obj).find('span').text("没有更多数据了");
+                    } else {
+                        //还有数据，继续加载
+                        $(obj).attr("onclick", "LoadMore(this)");
+                        $(obj).find('span').text("查看更多");
+                        var datahtml = "";
+
+                        $.each(result.data, function (i, item) {
+                            datahtml += "<li>";
+                            if (dtype == 1) {
+                            }
+                            else if (dtype == 2) {
+                            }
+                            datahtml += "	<div class=\"product-style\">";
+                            datahtml += "		<div class=\"pic-box\">";
+                            datahtml += "			<img src=\"" + item.ImgUrl+"\">";
+                            datahtml += "			<div class=\"pic-link\">";
+                            datahtml += "				<span onclick=\"window.open('/Contact/NewsDetail?id=" + item.GetBase64ID+"')\" class=\"out-mid\"><i class=\"box-line\"></i><br>查看详情<i class=\"box-line box-line-u\"></i></span>";
+                            datahtml += "			</div>";
+                            datahtml += "		</div> ";
+                            datahtml += "	<div class=\"txt-box\">";
+                            datahtml += "		<p class=\"pro-pdt\" style=\"font-weight: bold;\">"+item.Title+"</p>";
+                            datahtml += "		<p class=\"pro-pdl\" style=\"font-weight: 600;\">" + item.Summary+"</p>";
+                            datahtml += "	</div>";
+                            datahtml += "</li>";
+
+                        });
+
+                        $("#" + datadivid).append(datahtml);
+
+                    }
+                    $(obj).attr("data-pindex", pindex + 1);
+                },
+                error: function () {
+                    $(obj).find('span').text("加载失败");
+                }
+            });
+        }
+    </script>
 
 <!-- Json中的Data数据 Begin -->
 @section json_data

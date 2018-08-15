@@ -502,3 +502,8 @@
     height: 260px;
     background: #333;
 }
+.page_index .pic-category{
+    height: 948px;
+    overflow: hidden;
+    text-align: center;
+}

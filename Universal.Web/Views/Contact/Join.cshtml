@@ -45,14 +45,13 @@
             }
             <div class="page-container-width bgcolor">
                 <div class="page-mid">
-                    <ul class="list clearfix">
-
+                    <ul class="list clearfix" id="ul_join">
                         @foreach (var item in Model.job_list)
                         {
                             <li>
                                 <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
                                 <div class="box">
-                                    <span class="out-mid" onclick="location.href='/Contact/Job?id=@item.GetBase64ID'">
+                                    <span class="out-mid" onclick="window.open('/Contact/Job?id=@item.GetBase64ID')">
                                         <i class="box-line"></i><br>
                                         @item.Title
                                         <i class="box-line box-line-u"></i>
@@ -63,15 +62,64 @@
 
 
                     </ul>
-                    <div class="bnt-box">
-                        <i-button>查看更多</i-button>
-                    </div>
+                    @if (Model.job_list.Count == 6)
+                    {
+                        <div class="bnt-box" onclick="LoadMore(this)" data-pindex="2" data-divid="ul_join">
+                            <i-button>查看更多</i-button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>    
 
 <!-- Body End -->
+
+    <script>
+        function LoadMore(obj) {
+            var pindex = parseInt($(obj).attr("data-pindex"));
+            var datadivid = $(obj).attr("data-divid");
+            $.ajax({
+                url: "/Contact/LoadJob",
+                datatype: "json",
+                type: 'post',
+                data: { "page_index": pindex },
+                beforeSend: function () {
+                    $(obj).find('span').text("加载中...");
+                    $(obj).removeAttr("onclick");
+                },
+                success: function (result) {
+                    //函数体，数据发送成功回调
+                    console.log(result.data.length);
+
+                    if (result.data.length == 0) {
+                        $(obj).find('span').text("没有更多数据了");
+                    } else {
+                        //还有数据，继续加载
+                        $(obj).attr("onclick", "LoadMore(this)");
+                        $(obj).find('span').text("查看更多");
+                        var datahtml = "";
+
+                        $.each(result.data, function (i, item) {
+                            datahtml += "<li>";
+                            datahtml += "	<img src=\"http://www.langxing.com.cn:81"+item.ImgUrl+"\">";
+                            datahtml += "	<div class=\"box\">";
+                            datahtml += "		<span onclick=\"window.open('/Contact/Job?id=" + item.GetBase64ID+"')\" class=\"out-mid\"><i class=\"box-line\"></i><br>"+item.Title+"<i class=\"box-line box-line-u\"></i>";
+                            datahtml += "		</span></div></li>";
+
+                        });
+
+                        $("#" + datadivid).append(datahtml);
+
+                    }
+                    $(obj).attr("data-pindex", pindex + 1);
+                },
+                error: function () {
+                    $(obj).find('span').text("加载失败");
+                }
+            });
+        }
+    </script>
 
 <!-- Json中的Data数据 Begin -->
 @section json_data
