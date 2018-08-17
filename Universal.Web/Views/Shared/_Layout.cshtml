@@ -36,9 +36,9 @@
                         <i class="iconfont icon-search"></i>
                     </div>
                     <div v-if="searchShow" :class="closeSearchVal?'header-search-box':'header-search-box header-search-box-close'">
-                        <i-button icon="ios-search"></i-button>
-                        <i-input id="search-inp" value="@ViewData["SearchKeyWord"]" placeholder="SEARCH"></i-input>
-                        <i-button @@click="closeSearch"><i class="iconfont icon-close"></i></i-button>
+                        <i-button id="search-bnt" icon="ios-search"></i-button>
+                        <i-input id="search-inp" v-model="searchVal" value="@ViewData["SearchKeyWord"]" placeholder="SEARCH"></i-input>
+                        <i-button><i class="iconfont icon-close"></i></i-button>
                     </div>
                     <div v-else class="header-nav" @@mouseleave="sunList=false;activeName=''">
                         <ul class="header-nav-ul clearfix">
@@ -232,6 +232,7 @@
             },
             created() {
                 this.getNavList();
+                @RenderSection("json_created", required:false)
             },
             methods: {
                 activeNavShow(name) {
@@ -261,16 +262,22 @@
                         this.activeSun = Object.assign({}, this.navList[ct.nav]['sun']);
                     }
                 },
-                searchInput() {                    
+                searchInput() {
                     this.searchShow = !this.searchShow;
                     this.closeSearchVal = !this.closeSearchVal;
                     var _this = this;
                     setTimeout(function () {
-                        $("#search-inp .ivu-input").focus();
-                        $("#search-inp .ivu-input").focusout(function () {
+                        $("#search-inp .ivu-input").focus().blur(function () {
+                            setTimeout(function(){
                             _this.closeSearch();
+                            },300);
                         });
-                    }, 200);
+                        $("#search-bnt").bind("mousedown",function(){
+                            if(_this.searchVal!=''){
+                                window.open("/Contact/Search?word="+_this.searchVal);
+                            }
+                        })
+                    }, 300);
                 },
                 navSunHover() {
                     $(function () {
@@ -312,6 +319,10 @@
                             }
                         }
                     }
+                },
+                submitSearch(){
+                    console.log(123);
+                    window.open("/Contact/Search?word="+this.searchVal);
                 }
             }
         });

@@ -82,6 +82,17 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.SourceLinkUrl)</label>
+
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(p => p.SourceLinkUrl, (object)new { @class = "form-control", placeholder = "" })
+                            <span class="help-block m-b-none">点击来源后在新标签打开</span>
+                        </div>
+                        <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.SourceLinkUrl)</label>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Author)</label>
 
                         <div class="col-sm-3">

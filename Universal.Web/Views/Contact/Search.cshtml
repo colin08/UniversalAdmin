@@ -20,62 +20,67 @@
             <div class="sz-banner page-container-min-width"></div>
             <div class="page-container-min-width bg-color">
                 <div class="page-container-width">
+                    <div class="search-box-self">
+                        <i-input v-model="searchPageVal" placeholder="">
+                            <i-button @@click="searchPageSubmit" slot="append" icon="ios-search"></i-button>
+                        </i-input>                        
+                    </div>
                     <tabs value="name1">
                         <tab-pane label="案例" name="name1">
-                            <p class="search-txt">找到32条结果</p>
+                            <p class="search-txt">找到 <span class="hot-read-font">{{alList.total}}</span> 条与搜索关键字“ <span class="hot-read-font">@ViewData["SearchKeyWord"]</span> ”有关的案例</p>
                             <ul class="product-list clearfix"></ul>
                             <ul class="product-list xm-product-list clearfix">
-                                <li v-for="item in 6">
+                                <li v-for="item in alList.data">
                                     <div class="product-style">
                                         <div class="pic-box">
-                                            <img src="/Assets/jf/images/index1.jpg">
-                                            <div class="pic-link">
+                                            <img :src="item.img_url">
+                                            <a :href="item.open_url" class="pic-link">
                                                 <span class="out-mid">
                                                     <i class="box-line"></i><br>
                                                     查看详情
                                                     <i class="box-line box-line-u"></i>
                                                 </span>
-                                            </div>
+                                            </a>
                                         </div>
                                         <div class="txt-box">
-                                            <p class="pro-pdt">恒大项目</p>
+                                            <p class="pro-pdt">{{item.title}}</p>
                                             <p class="pro-pdl">
-                                                <span>时间：2017.11.26</span>
-                                                <span>地点：深圳-福田</span>
+                                                <span>时间：{{item.time}}</span>
+                                                <span>地点：{{item.address}}</span>
                                             </p>
                                             <div class="pro-line"></div>
-                                            <p class="pro-pdd clearfix"><i class="iconfont icon-jiantou1-copy bounce"></i>Details</p>
+                                            <p class="pro-pdd clearfix"><a :href="item.open_url" class="iconfont icon-jiantou1-copy bounce"></a>Details</p>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
-                            <Page :total="100" />
+                            <Page v-if="alList.total>6" @@on-change="pageChange" :total="alList.total" page-size="6"  />
                         </tab-pane>
                         <tab-pane label="新闻资讯" name="name2">
-                            <p class="search-txt">找到32条结果</p>
+                            <p class="search-txt">找到 <span class="hot-read-font">{{newsList.total}}</span> 条与搜索关键字“ <span class="hot-read-font">@ViewData["SearchKeyWord"]</span> ”有关的资讯</p>
                             <ul class="product-list news-product-list clearfix">
-                                <li v-for="item in 6">
+                                <li v-for="item in newsList.data">
                                     <div class="product-style">
                                         <div class="pic-box">
-                                            <img src="/Assets/jf/images/index1.jpg">
-                                            <div class="pic-link">
+                                            <img :src="item.img_url">
+                                            <a :href="item.open_url" class="pic-link">
                                                 <span class="out-mid">
                                                     <i class="box-line"></i><br>
                                                     查看详情
                                                     <i class="box-line box-line-u"></i>
                                                 </span>
-                                            </div>
+                                            </a>
                                         </div>
                                         <div class="txt-box">
-                                            <p class="pro-pdt">恒大项目</p>
+                                            <p class="pro-pdt">{{item.title}}</p>
                                             <p class="pro-pdl">
-                                                新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好新闻简介在这里看看就好
+                                                {{item.summary}}
                                             </p>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
-                            <Page :total="100" />
+                            <Page v-if="newsList.total>6" @@on-change="pageChange" :total="newsList.total" page-size="6"  />
                         </tab-pane>
                     </tabs>
                 </div>
@@ -88,7 +93,23 @@
 <!-- Json中的Data数据 Begin -->
 @section json_data
 {
-
+    alHs:{
+        page:1,
+        type:1,//1.案例，2.新闻
+        word:'@ViewData["SearchKeyWord"]'
+    },
+    newsHs:{
+        page:1,
+        type:2,//1.案例，2.新闻
+        word:'@ViewData["SearchKeyWord"]'
+    },
+    alList:{
+        total:''
+    },//案例列表
+    newsList:{
+        total:''
+    },//新闻列表
+    searchPageVal:'',
 }
 <!-- Json中的Data数据 End -->
 
@@ -99,20 +120,60 @@
 }
 <!-- Json中的mounted数据 End -->
 
+<!-- Json中的created数据 Begin -->
+@section json_created
+{
+    this.getAL();
+    this.getNews();
+}
+<!-- Json中的created数据 End -->
+
 <!-- Json中的methods数据 Begin -->
 @section json_methods
 {
-    searchInput(){
-          this.searchShow=!this.searchShow;
-          this.closeSearchVal=!this.closeSearchVal;
-          var _this=this;
-          setTimeout(function(){
-              $("#search-inp .ivu-input").focus();
-              $("#search-inp .ivu-input").focusout(function(){
-                  _this.closeSearch();
-              });
-          },200);
-      },
+    getAL(){
+        var _this=this;
+        $.ajax({
+            type:'get',
+            url:'/Contact/LoadSearch',
+            data: _this.alHs,
+            dataType: 'json',
+            success: function (data) {
+                _this.alList=data;
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+            }
+        })
+    },
+    pageChange(pageNum){
+        this.alHs.page=pageNum;
+        this.getAL();
+    },
+    getNews(){
+        var _this=this;
+        $.ajax({
+            type:'get',
+            url:'/Contact/LoadSearch',
+            data: _this.newsHs,
+            dataType: 'json',
+            success: function (data) {
+                _this.newsList=data;
+                console.log(_this.newsList);
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+            }
+        })
+    },
+    pageChangeNews(pageNum){
+        this.newsHs.page=pageNum;
+        this.getNews();
+    },
+    searchPageSubmit(){
+        if(this.searchPageVal==''){
+            return false;
+        }
+        window.location.href="/Contact/Search?word="+this.searchPageVal;
+    },
 }
 <!-- Json中的methods数据 End -->
 

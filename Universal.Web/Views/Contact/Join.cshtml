@@ -29,7 +29,7 @@
                         {
                             <carousel-item>
                                 <div class="demo-carousel">
-                                    <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                                    <a @Html.Raw(item.GetClickUrl)><img src="@item.ImgUrl" /></a>
                                 </div>
                             </carousel-item>
                         }
@@ -38,7 +38,7 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@(WorkContext.WebSiteConfig.SiteUrl+Model.banner_list.First().ImgUrl))">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
                     <div class="page-container-width">
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         @foreach (var item in Model.job_list)
                         {
                             <li>
-                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                <img src="@item.ImgUrl">
                                 <div class="box">
                                     <span class="out-mid" onclick="window.open('/Contact/Job?id=@item.GetBase64ID')">
                                         <i class="box-line"></i><br>
@@ -102,7 +102,7 @@
 
                         $.each(result.data, function (i, item) {
                             datahtml += "<li>";
-                            datahtml += "	<img src=\"http://www.langxing.com.cn:81"+item.ImgUrl+"\">";
+                            datahtml += "	<img src=\""+item.ImgUrl+"\">";
                             datahtml += "	<div class=\"box\">";
                             datahtml += "		<span onclick=\"window.open('/Contact/Job?id=" + item.GetBase64ID+"')\" class=\"out-mid\"><i class=\"box-line\"></i><br>"+item.Title+"<i class=\"box-line box-line-u\"></i>";
                             datahtml += "		</span></div></li>";

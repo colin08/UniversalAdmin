@@ -333,8 +333,8 @@
 }
 .page_index .lv5 .r-pic{
     width: 960px;
-    height: 712px;
-    margin: 24px auto; 
+    height: 760px;
+    /* margin: 24px auto;  */
     overflow: hidden;
     /* background: url(./../images/index/8.jpg) center no-repeat; */
     position: relative;
@@ -378,7 +378,7 @@
     margin: auto;
     transition: all 0.5s;
     width: 960px;
-    height: 712px;
+    height: 760px;
 }
 .page_index .lv5 .r-pic:hover img{
     transform: scale(1.05);
@@ -403,19 +403,19 @@
 .page_index .lv6 .ct-w1{
     width: 1080px;
     height: 760px;
-    padding: 24px 0;
+    padding:0;
     overflow: hidden;
 }
 .page_index .lv6 .l6-pic{
     width: 1080px;
-    height: 712px;
+    height: 760px;
     padding: 330px 486px;
     position: relative;
     background: #000;
 }
 .page_index .lv6 .l6-pic .bg-img{
     width: 1080px;
-    height: 712px;
+    height: 760px;
 }
 .page_index .lv6 .l6-link{
     position: relative;

@@ -41,6 +41,7 @@
     color: #fff;
     font-size: 16px;
     line-height: 16px;
+    display: none;
 }
 .page_join .list .out-mid{
     display: inline-block;
@@ -54,6 +55,9 @@
 .page_join .list .box-line-u{
     border-top: none;
     border-bottom: 2px solid #ff0000;
+}
+.page_join .list li:hover .box{
+    display: block;
 }
 .page_join .list li:hover .box-line{
     animation-name: lineAni;

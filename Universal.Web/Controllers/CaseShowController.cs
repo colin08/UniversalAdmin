@@ -42,7 +42,7 @@ namespace Universal.Web.Controllers
         public JsonResult LoadCase(int page_index, int category_id, int type)
         {
             int page_size = 6;
-            UnifiedResultEntity<List<Entity.CaseShow>> result_model = new UnifiedResultEntity<List<Entity.CaseShow>>();
+            UnifiedResultEntity<List<Models.SearchCase>> result_model = new UnifiedResultEntity<List<Models.SearchCase>>();
             if (type != 1 && type != 2)
             {
                 result_model.msgbox = "非法类别";
@@ -60,9 +60,16 @@ namespace Universal.Web.Controllers
                 default:
                     break;
             }
+            var db_data = BLL.BLLCaseShow.GetWebPageList(page_size, page_index, category_id, ttt);
+            List<Models.SearchCase> result_list = new List<Models.SearchCase>();
+            foreach (var item in db_data)
+            {
+                string open_url = "/CaseShow/Detail?id=" + item.GetBase64ID;
+                result_list.Add(new Models.SearchCase(item.ImgUrl, open_url, item.Title, item.Time, item.Address));
+            }
             result_model.msg = 1;
             result_model.msgbox = "ok";
-            result_model.data = BLL.BLLCaseShow.GetWebPageList(page_size, page_index, category_id, ttt);
+            result_model.data = result_list;
             return Json(result_model, JsonRequestBehavior.AllowGet);
         }
 
@@ -104,6 +111,30 @@ namespace Universal.Web.Controllers
             if (result_model == null) return ErrorView("找不到相关合作企业NULL");
             return View(result_model);
         }
+
+        /// <summary>
+        /// 分页加载更多企业案例
+        /// </summary>
+        /// <param name="page_index"></param>
+        /// <param name="id">合作企业ID</param>
+        /// <returns></returns>
+        public JsonResult LoadTeamWordCase(int page_index, int id)
+        {
+            int page_size = 6;
+            UnifiedResultEntity<List<Models.SearchCase>> result_model = new UnifiedResultEntity<List<Models.SearchCase>>();
+            var db_data = BLL.BLLCaseShow.GetWebTeamWordPageList(page_size, page_index, id);
+            List<Models.SearchCase> result_list = new List<Models.SearchCase>();
+            foreach (var item in db_data)
+            {
+                string open_url = "/CaseShow/Detail?id=" + item.GetBase64ID;
+                result_list.Add(new Models.SearchCase(item.ImgUrl, open_url, item.Title, item.Time, item.Address));
+            }
+            result_model.msg = 1;
+            result_model.msgbox = "ok";
+            result_model.data = result_list;
+            return Json(result_model, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }

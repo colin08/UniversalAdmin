@@ -24,7 +24,7 @@
                     {
                         <carousel-item>
                             <div class="demo-carousel">
-                                <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                                <a @Html.Raw(item.GetClickUrl)><img src="@item.ImgUrl" /></a>
                             </div>
                         </carousel-item>
                     }                    
@@ -75,7 +75,7 @@
                     {
                         <li>
                             <div class="logo-li">
-                                <img class="l2" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" onclick="location.href='/CaseShow/TeamWork?id=@item.GetBase64ID'">
+                                <img class="l2" src="@item.ImgUrl" onclick="location.href='/CaseShow/TeamWork?id=@item.GetBase64ID'">
                             </div>
                         </li>
                     }
@@ -140,7 +140,7 @@
                 </div>
                 <div class="ct-w fr">
                     <div class="r-pic">
-                        <img src="@(WorkContext.WebSiteConfig.SiteUrl+Model.shuzi.image_url)" class="bg-img">
+                        <img src="@Model.shuzi.image_url" class="bg-img">
                         <div class="r-link" onclick="location.href='/Home/Category?t=Digital-Display'">
                             <span class="line-span"></span>
                             <span class="txt-span">查看详情</span>
@@ -153,7 +153,7 @@
             <div class="main-container-width clearfix">
                 <div class="ct-w1 fl">
                     <div class="l6-pic">
-                        <img src="@(WorkContext.WebSiteConfig.SiteUrl + Model.chuangyi.image_url)" class="bg-img">
+                        <img src="@Model.chuangyi.image_url" class="bg-img">
                         <div class="l6-link" onclick="location.href='/Home/Category?t=Creative-Vision'">
                             <span class="line-span"></span>
                             <span class="txt-span">查看详情</span>
@@ -192,7 +192,7 @@
                         <i-col span="8">
                             <div class="pic-box">
                                 <div class="pub-pic-trans">
-                                    <img class="trans-img" src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                    <img class="trans-img" src="@item.ImgUrl">
                                     <div class="trans-link" onclick="location.href='/Contact/NewsDetail?id=@item.GetBase64ID'">
                                         <p class="trans-link-txt">查看详情</p>
                                         <span class="trans-link-line"></span>

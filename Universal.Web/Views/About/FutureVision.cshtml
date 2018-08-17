@@ -29,7 +29,7 @@
                         {
                             <carousel-item>
                                 <div class="demo-carousel">
-                                    <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                                    <a @Html.Raw(item.GetClickUrl)><img src="@item.ImgUrl" /></a>
                                 </div>
                             </carousel-item>
                         }
@@ -38,7 +38,7 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@(WorkContext.WebSiteConfig.SiteUrl+Model.banner_list.First().ImgUrl))">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
                     <div class="page-container-width">
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     {
                         <div class="mid clearfix">
                             <div class="mid-box">
-                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                <img src="@item.ImgUrl">
                             </div>
                             <div class="mid-box">
                                 <div class="mid-txt">
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                             <div class="mid-box">
-                                <img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)">
+                                <img src="@item.ImgUrl">
                             </div>
                         </div>
                     }

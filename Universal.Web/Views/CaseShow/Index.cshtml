@@ -28,7 +28,7 @@
                         {
                             <carousel-item>
                                 <div class="demo-carousel">
-                                    <a @Html.Raw(item.GetClickUrl)><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)" /></a>
+                                    <a @Html.Raw(item.GetClickUrl)><img src="@item.ImgUrl" /></a>
                                 </div>
                             </carousel-item>
                         }                    
@@ -37,7 +37,7 @@
                 }
                 else
                 {
-                    <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@(WorkContext.WebSiteConfig.SiteUrl+Model.banner_list.First().ImgUrl));height:948px;">
+                    <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl);height:948px;">
                         <div class="page-container-width">
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             <li>
                                 <div class="product-style">
                                     <div class="pic-box">
-                                        <img src="@(WorkContext.WebSiteConfig.SiteUrl+ item.ImgUrl)">
+                                        <img src="@item.ImgUrl">
                                         <div class="pic-link">
                                             <span class="out-mid" onclick="window.open('/CaseShow/Detail?id=@item.GetBase64ID')">
                                                 <i class="box-line"></i><br>
@@ -97,7 +97,7 @@
                             <li>
                                 <div class="product-style" style="background-color:white;">
                                     <div class="pic-box">
-                                        <img src="@(WorkContext.WebSiteConfig.SiteUrl+ item.ImgUrl)">
+                                        <img src="@item.ImgUrl">
                                         <div class="pic-link">
                                             <span class="out-mid" onclick="window.open('/CaseShow/Detail?id=@item.GetBase64ID')">
                                                 <i class="box-line"></i><br>
@@ -167,21 +167,21 @@
                                 datahtml += "	<div class=\"product-style\" style=\"background-color: white;\">";
                             }
                             datahtml += "		<div class=\"pic-box\">";
-                            datahtml += "			<img src=\"" + item.ImgUrl + "\">";
+                            datahtml += "			<img src=\"" + item.img_url + "\">";
                             datahtml += "			<div class=\"pic-link\">";
-                            datahtml += "				<span onclick=\"window.open('/CaseShow/Detail?id=" + item.GetBase64ID + "')\" class=\"out-mid\">";
+                            datahtml += "				<span onclick=\"window.open('" + item.open_url+"')\" class=\"out-mid\">";
                             datahtml += "					<i class=\"box-line\"></i><br>查看详情<i class=\"box-line box-line-u\"></i>";
                             datahtml += "				</span>";
                             datahtml += "			</div>";
                             datahtml += "		</div>";
                             datahtml += "		<div class=\"txt-box\">";
-                            datahtml += "			<p class=\"pro-pdt\" style=\"font-weight: bold;\">" + item.Title + "</p>";
+                            datahtml += "			<p class=\"pro-pdt\" style=\"font-weight: bold;\">" + item.title + "</p>";
                             datahtml += "			<p class=\"pro-pdl\">";
-                            datahtml += "				<span>时间：" + item.Time + "</span>";
-                            datahtml += "				<span>地点：" + item.Address + "</span>";
+                            datahtml += "				<span>时间：" + item.time + "</span>";
+                            datahtml += "				<span>地点：" + item.address + "</span>";
                             datahtml += "			</p>";
                             datahtml += "			<div class=\"pro-line\"></div>";
-                            datahtml += "			<p onclick=\"location.href='/CaseShow/Detail?id=" + item.GetBase64ID + "'\" class=\"pro-pdd clearfix\"><i class=\"iconfont icon-jiantou1-copy bounce\"></i>Details</p>";
+                            datahtml += "			<p onclick=\"location.href='" + item.open_url +"'\" class=\"pro-pdd clearfix\"><i class=\"iconfont icon-jiantou1-copy bounce\"></i>Details</p>";
                             datahtml += "		</div>";
                             datahtml += "	</div>";
                             datahtml += "</li>";

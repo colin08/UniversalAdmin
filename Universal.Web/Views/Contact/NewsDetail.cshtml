@@ -21,13 +21,22 @@
 
     <div class="main page_newdetail">
         <div class="main-content">
-            <div class="sz-banner page-container-min-width" style="background: url(@(WorkContext.WebSiteConfig.SiteUrl+Model.ImgUrlBig)) center no-repeat;">
+            <div class="sz-banner page-container-min-width" style="background: url(@Model.ImgUrlBig) center no-repeat;">
             </div>
             <div class="page-container-width bgcolor">
                 <div class="page-mid">
                     <div class="default-li">
                         <p class="d-p-dt" style="font-weight:bold;">@Model.Title</p>
-                        <p class="d-p-dl" style="font-size:12px; font-weight:800;">@Model.LastUpdateTime.ToShortDateString()  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;信息来源: @Model.Source</p>
+                        <p class="d-p-dl" style="font-size:12px; font-weight:800;">@Model.LastUpdateTime.ToShortDateString()  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;信息来源: 
+                        @if (!string.IsNullOrWhiteSpace(Model.SourceLinkUrl))
+                        {
+                            @:<a href="@Model.SourceLinkUrl" target="_blank">@Model.Source</a>
+                        }
+                        else
+                        {
+                            @:@Model.Source
+                        }
+                        </p>
                         <div class="d-line"></div>
                         <div class="d-p-dd" id="youzi-font">
                             @Html.Raw(Model.Content)

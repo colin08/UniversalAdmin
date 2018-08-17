@@ -111,12 +111,53 @@ namespace Universal.BLL
                 var team_work_entity = db.TeamWorks.Where(p => p.Status && p.ID == id).AsNoTracking().FirstOrDefault();
                 if (team_work_entity == null) return null;
                 result_model.team_work_info = team_work_entity;
-                string strSql = "select * from CaseShow where Status =1 AND ID in(select CaseShow_ID FROM TeamWorkCaseShow where TeamWork_ID = 1) ORDER BY Weight DESC";
-                result_model.case_show_list = db.CaseShows.SqlQuery(strSql).ToList();
+                result_model.case_show_list = LoadTeamWorkPageList(db, 6, 1, id);
 
                 //CacheHelper.Insert(cache_key, result_model, 1200);
             }
             return result_model;
+        }
+
+        /// <summary>
+        /// 分页加载案例
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="id">企业ID</param>
+        /// <returns></returns>
+        private static List<Entity.CaseShow> LoadTeamWorkPageList(DataCore.EFDBContext db, int page_size, int page_index, int id)
+        {
+            if (page_size <= 0) page_size = 6;
+            if (page_index <= 0) page_index = 1;
+            int begin_index = (page_index - 1) * page_size + 1;
+            int end_index = page_size * page_index;
+
+            bool clear = false;
+            if (db == null)
+            {
+                db = new DataCore.EFDBContext();
+                clear = true;
+            }
+
+            var result_list = new List<Entity.CaseShow>();
+
+            string strSql = "select * from (select ROW_NUMBER() OVER(ORDER BY Weight Desc) as row, * from (SELECT* FROM[dbo].[CaseShow] WHERE Status = 1 AND ID in(select CaseShow_ID FROM TeamWorkCaseShow where TeamWork_ID = " + id.ToString() + ")) as Y) as T where row BETWEEN " + begin_index.ToString() + " and " + end_index.ToString() + "";
+            result_list = db.CaseShows.SqlQuery(strSql).ToList();
+            if (clear) db.Dispose();
+            return result_list;
+        }
+
+        /// <summary>
+        /// 提供给前端的分页方法
+        /// </summary>
+        /// <param name="page_size"></param>
+        /// <param name="page_index"></param>
+        /// <param name="id">企业ID</param>
+        /// <returns></returns>
+        public static List<Entity.CaseShow> GetWebTeamWordPageList(int page_size, int page_index,int id)
+        {
+            return LoadTeamWorkPageList(null, page_size, page_index,id);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@
             @foreach (var item in Model)
             {
                 <div class="pic-category">
-                    <a href="/CaseShow/Index?t=@ViewData["CallName"]&e=@item.CallName"><img src="@(WorkContext.WebSiteConfig.SiteUrl+item.ImgUrl)"></a>
+                    <a href="/CaseShow/Index?t=@ViewData["CallName"]&e=@item.CallName"><img src="@item.ImgUrl"></a>
                 </div>
             }
             

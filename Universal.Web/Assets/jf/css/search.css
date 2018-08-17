@@ -10,6 +10,26 @@
 }
 .page_search .page-container-width{
     padding: 10px 360px;
+    position: relative;
+    z-index: 1;
+}
+.page_search .search-box-self{
+    width: 468px;
+    height: 38px;
+    position: absolute;
+    z-index: 2;
+    top: 25px;
+    right: 360px;
+}
+.page_search .search-box-self .ivu-input{
+    height: 37px;
+}
+.page_search .search-box-self .ivu-icon{
+    font-size: 18px;
+}
+.page_search .search-box-self .ivu-input:focus,.page_search .search-box-self .ivu-input:hover{
+    border-color: #ff0000;
+    box-shadow: 0px 0 0;
 }
 .page_search  .search-txt{
     font-size:14px;
