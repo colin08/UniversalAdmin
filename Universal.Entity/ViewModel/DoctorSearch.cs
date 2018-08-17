@@ -26,7 +26,7 @@ namespace Universal.Entity.ViewModel
         /// <summary>
         /// 所属区域ID
         /// </summary>
-        public int area_id { get; set; }
+        public int? area_id { get; set; }
         
         /// <summary>
         /// 所属区域名称

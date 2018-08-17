@@ -111,7 +111,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         public ActionResult Edit(Entity.MedicalItem entity)
         {
             var isAdd = entity.ID == 0 ? true : false;
-
+            Load();
             BLL.BaseBLL<Entity.MedicalItem> bll = new BLL.BaseBLL<Entity.MedicalItem>();
 
             //数据验证
@@ -134,6 +134,11 @@ namespace Universal.Web.Areas.Admin.Controllers
                     return PromptView("/admin/MedicalItem", "404", "Not Found", "信息不存在或已被删除", 5);
                 }
 
+            }
+
+            if(entity.MedicalItemCategoryID == 0)
+            {
+                ModelState.AddModelError("MedicalItemCategoryID", "请选择所属分类");
             }
 
             if (ModelState.IsValid)
