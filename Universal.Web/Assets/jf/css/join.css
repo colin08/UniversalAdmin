@@ -49,12 +49,12 @@
 .page_join .list .box-line{
     width: 100%;
     height: 12px;
-    border-top: 2px solid #ff0000;
+    border-top: 2px solid #fff;
     display: inline-block;
 }
 .page_join .list .box-line-u{
     border-top: none;
-    border-bottom: 2px solid #ff0000;
+    border-bottom: 2px solid #fff;
 }
 .page_join .list li:hover .box{
     display: block;
@@ -82,7 +82,7 @@
     padding-right: 50px;
 }
 .page_join .bnt-box .ivu-btn:hover{
-    border-color: #333;
-    background-color:#333;
+    border-color: #E60012;
+    background-color:#E60012;
     color:#fff;
 }

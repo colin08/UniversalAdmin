@@ -16,7 +16,9 @@ namespace Universal.Tools
     public enum ConfigFileEnum
     {
         [Description("~/App_Data/WebSite.config")]
-        SiteConfig = 1
+        SiteConfig = 1,
+        [Description("~/App_Data/CompanyProfile.config")]
+        CompanyProfile
     }
 
     /// <summary>
@@ -33,6 +35,15 @@ namespace Universal.Tools
         public static WebSiteModel GetSiteModel()
         {
             return LoadConfig<WebSiteModel>(ConfigFileEnum.SiteConfig);
+        }
+
+        /// <summary>
+        /// 获取站点配置文件
+        /// </summary>
+        /// <returns></returns>
+        public static WebSiteModel GetCompanyProfileModel()
+        {
+            return LoadConfig<WebSiteModel>(ConfigFileEnum.CompanyProfile);
         }
 
         /// <summary>
@@ -192,6 +203,104 @@ namespace Universal.Tools
 
         #endregion
 
+    }
+
+
+    /// <summary>
+    /// 公司简介实体
+    /// </summary>
+    public class CompanyProfileModel
+    {
+        [Display(Name = "标题")]
+        public string JJTitle { get; set; }
+
+        [Display(Name = "二级标题")]
+        public string JJTitleEr { get; set; }
+
+
+        [Display(Name = "介绍内容")]
+        public string JJDesc { get; set; }
+
+
+        [Display(Name = "我们的客户")]
+        public string JJKeHu { get; set; }
+
+        [Display(Name = "客户介绍")]
+        public string JJKeHuDesc { get; set; }
+
+        [Display(Name = "客户数量")]
+        public int JJKeHuNum { get; set; }
+
+
+        [Display(Name = "500强企业数量")]
+        public int JJKeHuQiang { get; set; }
+
+
+        [Display(Name = "上市企业数量")]
+        public int JJKeHuShi { get; set; }
+
+
+        [Display(Name = "办公环境")]
+        public string JJBanGong { get; set; }
+
+
+        [Display(Name = "办公环境介绍")]
+        public string JJBGDesc { get; set; }
+
+
+        [Display(Name = "办公面积")]
+        public string JJBGMJ { get; set; }
+
+
+        [Display(Name = "办公图片")]
+        public string JJBGImg { get; set; }
+
+
+        [Display(Name = "1左侧标题")]
+        public string JJOneLeftTitle { get; set; }
+
+
+        [Display(Name = "1左侧内容")]
+        public string JJOneLeftDesc { get; set; }
+
+
+        [Display(Name = "1左侧图片")]
+        public string JJOneLeftImg { get; set; }
+
+
+        [Display(Name = "1右侧标题")]
+        public string JJOneRightTitle { get; set; }
+
+
+        [Display(Name = "1右侧内容")]
+        public string JJOneRightDesc { get; set; }
+
+
+        [Display(Name = "1右侧图片")]
+        public string JJOneRightImg { get; set; }
+
+        [Display(Name = "2左侧标题")]
+        public string JJTwoLeftTitle { get; set; }
+
+
+        [Display(Name = "2左侧内容")]
+        public string JJTwoLeftDesc { get; set; }
+
+
+        [Display(Name = "2左侧图片")]
+        public string JJTwoLeftImg { get; set; }
+
+
+        [Display(Name = "2右侧标题")]
+        public string JJTwoRightTitle { get; set; }
+
+
+        [Display(Name = "2右侧内容")]
+        public string JJTwoRightDesc { get; set; }
+
+
+        [Display(Name = "2右侧图片")]
+        public string JJTwoRightImg { get; set; }
     }
 
 }

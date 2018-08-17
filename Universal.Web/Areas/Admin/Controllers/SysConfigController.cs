@@ -62,6 +62,60 @@ namespace Universal.Web.Areas.Admin.Controllers
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [AdminPermission("站点配置文件", "编辑公司介绍页面")]
+        public ActionResult CompanyProfile()
+        {
+            var model = ConfigHelper.LoadConfig<CompanyProfileModel>(ConfigFileEnum.CompanyProfile,false);
+            model.JJDesc = WebHelper.UrlDecode(model.JJDesc);
+            model.JJBGDesc = WebHelper.UrlDecode(model.JJBGDesc);
+            model.JJOneLeftDesc = WebHelper.UrlDecode(model.JJOneLeftDesc);
+            model.JJOneRightDesc = WebHelper.UrlDecode(model.JJOneRightDesc);
+            model.JJTwoLeftDesc = WebHelper.UrlDecode(model.JJTwoLeftDesc);
+            model.JJTwoRightDesc = WebHelper.UrlDecode(model.JJTwoRightDesc);
+            return View(model);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [AdminPermission("站点配置文件", "保存公司介绍信息")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CompanyProfile(CompanyProfileModel entity)
+        {
+            if (ModelState.IsValid)
+            {
+
+                entity.JJDesc = WebHelper.UrlEncode(entity.JJDesc);
+                entity.JJBGDesc = WebHelper.UrlEncode(entity.JJBGDesc);
+                entity.JJOneLeftDesc = WebHelper.UrlEncode(entity.JJOneLeftDesc);
+                entity.JJOneRightDesc = WebHelper.UrlEncode(entity.JJOneRightDesc);
+                entity.JJTwoLeftDesc = WebHelper.UrlEncode(entity.JJTwoLeftDesc);
+                entity.JJTwoRightDesc = WebHelper.UrlEncode(entity.JJTwoRightDesc);
+
+                if (ConfigHelper.SaveConfig(ConfigFileEnum.CompanyProfile, entity))
+                {
+                    AddAdminLogs(Entity.SysLogMethodType.Update, "修改公司介绍");
+                    return PromptView("/admin/SysConfig/CompanyProfile", "OK", "Success", "修改成功", 3);
+                }
+                else
+                {
+                    return PromptView("/admin/SysConfig/CompanyProfile", "500", "Error", "保存失败，可能是没有权限操作数据库", 3);
+                }
+            }
+            else
+            {
+                return View(entity);
+            }
+        }
+
+
         //[AdminPermission("站点配置文件","回收应用程序池")]
         [HttpPost]
         public JsonResult AppPoolRecycle()

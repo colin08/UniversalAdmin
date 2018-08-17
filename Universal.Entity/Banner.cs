@@ -8,6 +8,8 @@ namespace Universal.Entity
 {
     public enum BannerLinkType
     {
+        [Description("无动作")]
+        none=0,
         [Description("外部网页")]
         web_url = 1,
         [Description("案例展示")]
@@ -42,6 +44,7 @@ namespace Universal.Entity
             this.AddTime = DateTime.Now;
             this.LastUpdateTime = DateTime.Now;
             this.Remark = "";
+            this.LinkVal = "N";
         }
 
         public int ID { get; set; }
@@ -86,6 +89,8 @@ namespace Universal.Entity
             {
                 switch (LinkType)
                 {
+                    case BannerLinkType.none:
+                        return "";
                     case BannerLinkType.web_url:
                         return " href='" + LinkVal + "' target='_blank'";
                     case BannerLinkType.case_show:

@@ -155,6 +155,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\CompanyProfile.config" />
     <None Include="App_Data\WebSite.config" />
     <Content Include="App_Data\mailtemplate\demo.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -322,6 +323,12 @@
     <Content Include="Assets\jf\css\timeline.css" />
     <Content Include="Assets\jf\css\xmdetail.css" />
     <Content Include="Assets\jf\images\404.jpg" />
+    <Content Include="Assets\jf\images\AA1.png" />
+    <Content Include="Assets\jf\images\AA2.png" />
+    <Content Include="Assets\jf\images\AA3.png" />
+    <Content Include="Assets\jf\images\AA4.png" />
+    <Content Include="Assets\jf\images\AA5.png" />
+    <Content Include="Assets\jf\images\AAAA.png" />
     <Content Include="Assets\jf\images\ewcode.jpg" />
     <Content Include="Assets\jf\images\index1.jpg" />
     <Content Include="Assets\jf\images\index\2.jpg" />
@@ -879,6 +886,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompanyProfile.cs" />
     <Compile Include="Models\SearchCase.cs" />
     <Compile Include="Models\SearchNews.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -959,6 +967,7 @@
     <Content Include="Areas\Admin\Views\CaseShow\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Honour\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Honour\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SysConfig\CompanyProfile.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <Content Include="Views\CaseShow\Index.cshtml" />
     <Content Include="Views\About\Summary.cshtml" />

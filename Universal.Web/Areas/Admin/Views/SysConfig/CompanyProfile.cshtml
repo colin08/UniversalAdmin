@@ -1,0 +1,565 @@
+﻿@model Universal.Tools.CompanyProfileModel
+@{
+    ViewBag.Title = "公司介绍";
+}
+
+<!--头部脚本-->
+@section head
+{
+
+}
+
+<!--头部脚本 end-->
+
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>公司介绍</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-refresh" onclick="javascript: location.reload()"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><strong>公司介绍</strong></li>
+        </ol>
+    </div>
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">信息配置</a></li>
+        <li><a data-toggle="tab" href="#tab-2">第一行</a></li>
+        <li><a data-toggle="tab" href="#tab-3">第二行</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTitle)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJTitle, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTitle)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTitleEr)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJTitleEr, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTitleEr)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJDesc, (object)new { @class = "form-control", rows = "8", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJKeHu)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJKeHu, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJKeHu)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJKeHuDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJKeHuDesc, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJKeHuDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJKeHuNum)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJKeHuNum, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJKeHuNum)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJKeHuQiang)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJKeHuQiang, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJKeHuQiang)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJKeHuShi)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJKeHuShi, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJKeHuShi)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJBanGong)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJBanGong, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJBanGong)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJBGDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJBGDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJBGDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJBGMJ)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJBGMJ, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJBGMJ)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJBGImg)</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.JJBGImg)
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传图片
+                        </button>
+                        <span class="help-block m-b-none">建议尺寸:320*480</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.JJBGImg)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.JJBGImg))
+                                {
+                                    @:
+                                    <li><img src="@Model.JJBGImg" ids="0" class="@Html.NameFor(p => p.JJBGImg)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.JJBGImg)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneLeftTitle)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJOneLeftTitle, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneLeftTitle)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneLeftDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJOneLeftDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneLeftDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneLeftImg)</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.JJOneLeftImg)
+
+                        <button type="button" class="btn btn-info " onclick="upload2()">
+                            <i class="fa fa-upload"></i> 上传图片
+                        </button>
+                        <span class="help-block m-b-none">建议尺寸:320*480</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.JJOneLeftImg)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.JJOneLeftImg))
+                                {
+                                    @:
+                                    <li><img src="@Model.JJOneLeftImg" ids="0" class="@Html.NameFor(p => p.JJOneLeftImg)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.JJOneLeftImg)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneRightTitle)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJOneRightTitle, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneRightTitle)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneRightDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJOneRightDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneRightDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneRightImg)</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.JJOneRightImg)
+
+                        <button type="button" class="btn btn-info " onclick="upload3()">
+                            <i class="fa fa-upload"></i> 上传图片
+                        </button>
+                        <span class="help-block m-b-none">建议尺寸:320*480</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.JJOneRightImg)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.JJOneRightImg))
+                                {
+                                    @:
+                                    <li><img src="@Model.JJOneRightImg" ids="0" class="@Html.NameFor(p => p.JJOneRightImg)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.JJOneRightImg)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-3" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoLeftTitle)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJTwoLeftTitle, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoLeftTitle)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoLeftDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJTwoLeftDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoLeftDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoLeftImg)</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.JJTwoLeftImg)
+
+                        <button type="button" class="btn btn-info " onclick="upload4()">
+                            <i class="fa fa-upload"></i> 上传图片
+                        </button>
+                        <span class="help-block m-b-none">建议尺寸:320*480</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.JJTwoLeftImg)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.JJTwoLeftImg))
+                                {
+                                    @:
+                                    <li><img src="@Model.JJTwoLeftImg" ids="0" class="@Html.NameFor(p => p.JJTwoLeftImg)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.JJTwoLeftImg)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoRightTitle)</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.JJTwoRightTitle, (object)new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoRightTitle)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoRightDesc)</label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.JJTwoRightDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoRightDesc)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoRightImg)</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.JJTwoRightImg)
+
+                        <button type="button" class="btn btn-info " onclick="upload5()">
+                            <i class="fa fa-upload"></i> 上传图片
+                        </button>
+                        <span class="help-block m-b-none">建议尺寸:320*480</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">图片预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.JJTwoRightImg)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.JJTwoRightImg))
+                                {
+                                    @:
+                                    <li><img src="@Model.JJTwoRightImg" ids="0" class="@Html.NameFor(p => p.JJTwoRightImg)List" width="250" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.JJTwoRightImg)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存变更</button>&nbsp;
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+
+        function upload() {
+            var total = $(".@Html.NameFor(p=>p.JJBGImg)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "cp", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.JJBGImg), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.JJBGImg)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.JJBGImg)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.JJBGImg)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.JJBGImg)ListData").append(img_te);
+            }
+        }
+
+
+        function upload2() {
+            var total = $(".@Html.NameFor(p=>p.JJOneLeftImg)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "cp", num = 1,call_func= "set_upload_file2", call_back_ele = Html.NameFor(p=>p.JJOneLeftImg), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file2(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.JJOneLeftImg)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.JJOneLeftImg)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.JJOneLeftImg)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.JJOneLeftImg)ListData").append(img_te);
+            }
+        }
+
+
+
+        function upload3() {
+            var total = $(".@Html.NameFor(p=>p.JJOneRightImg)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "cp", num = 1,call_func= "set_upload_file3", call_back_ele = Html.NameFor(p=>p.JJOneRightImg), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file3(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.JJOneRightImg)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.JJOneRightImg)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.JJOneRightImg)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.JJOneRightImg)ListData").append(img_te);
+            }
+        }
+
+
+
+        function upload4() {
+            var total = $(".@Html.NameFor(p=>p.JJTwoLeftImg)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "cp", num = 1,call_func= "set_upload_file4", call_back_ele = Html.NameFor(p=>p.JJTwoLeftImg), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file4(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.JJTwoLeftImg)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.JJTwoLeftImg)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.JJTwoLeftImg)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.JJTwoLeftImg)ListData").append(img_te);
+            }
+        }
+
+
+        function upload5() {
+            var total = $(".@Html.NameFor(p=>p.JJTwoRightImg)List").size();
+            if (total >= 1) {
+                layer.msg("已有图片，请先删除现有的", { icon: 2 });
+                return;
+            }
+
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: true,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "cp", num = 1,call_func= "set_upload_file5", call_back_ele = Html.NameFor(p=>p.JJTwoRightImg), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file5(path) {
+            if (path.length != 0) {
+                $("#@Html.NameFor(p=>p.JJTwoRightImg)ListData").html("");
+                var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.JJTwoRightImg)List' width='250px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.JJTwoRightImg)')\">删除</a></li>";
+                $("#@Html.NameFor(p=>p.JJTwoRightImg)ListData").append(img_te);
+            }
+        }
+
+        function CKTap(obj,hid_id)
+        {
+            if ($(obj).is(":checked"))
+                $("#"+hid_id).val("true");
+            else
+                $("#" + hid_id).val("false");
+
+        }
+
+        $(function () {
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->

@@ -13,6 +13,27 @@ namespace Universal.BLL
     /// </summary>
     public class BLLAbout
     {
+
+        /// <summary>
+        /// 获取公司简介Banner
+        /// </summary>
+        /// <returns></returns>
+        public static List<Entity.Banner> GetCompanyProfileBannerList()
+        {
+            //string cache_key = "CACHE_ABOUT_CompanyProfile";
+            //var cache_model = CacheHelper.Get<Entity.Banner>(cache_key);
+            //if (cache_model != null) return cache_model;
+
+            var result_model = new List<Entity.Banner>();
+            using (var db = new DataCore.EFDBContext())
+            {
+                result_model = db.Banners.SqlQuery("select * from Banner where Status=1 AND CategoryID =(select ID from Category where CallName = 'Company-Profile')  ORDER BY Weight DESC").ToList();
+                //if(result_model != null) CacheHelper.Insert(cache_key, result_model, 1200);
+            }
+            return result_model;
+        }
+
+
         /// <summary>
         /// 获取荣誉列表
         /// </summary>

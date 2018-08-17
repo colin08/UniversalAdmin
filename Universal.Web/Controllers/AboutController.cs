@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Universal.Tools;
 using Universal.Web.Framework;
 
 namespace Universal.Web.Controllers
@@ -20,7 +21,20 @@ namespace Universal.Web.Controllers
         {
             WorkContext.CategoryMark = "About";
             WorkContext.CategoryErMark = "Company-Profile";
-            return View();
+            var banner_list = BLL.BLLAbout.GetCompanyProfileBannerList();
+            Models.CompanyProfile result_model = new Models.CompanyProfile();
+
+            var config_model = ConfigHelper.LoadConfig<CompanyProfileModel>(ConfigFileEnum.CompanyProfile, false);
+            config_model.JJDesc = WebHelper.UrlDecode(config_model.JJDesc);
+            config_model.JJBGDesc = WebHelper.UrlDecode(config_model.JJBGDesc);
+            config_model.JJOneLeftDesc = WebHelper.UrlDecode(config_model.JJOneLeftDesc);
+            config_model.JJOneRightDesc = WebHelper.UrlDecode(config_model.JJOneRightDesc);
+            config_model.JJTwoLeftDesc = WebHelper.UrlDecode(config_model.JJTwoLeftDesc);
+            config_model.JJTwoRightDesc = WebHelper.UrlDecode(config_model.JJTwoRightDesc);
+
+            result_model.banner_list = banner_list;
+            result_model.SiteConfig = config_model;
+            return View(result_model);
         }
 
         /// <summary>

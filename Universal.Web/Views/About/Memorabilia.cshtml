@@ -55,15 +55,23 @@
                     </div>
                     @foreach (var item in Model.time_line_list)
                     {
-                        <div class="time-line-lv active">
+                        <div class="time-line-lv active"
+                             @if(string.IsNullOrWhiteSpace(item.ImgUrl))
+                             {
+                                 @: style="height: 120px;"
+                             }
+                             >
                             <i class="iconfont icon-circle2yuanquan"></i>
                             <i class="iconfont icon-circleyuanquan"></i>
                             <div class="l-h l-lh"></div>
                             <div class="time-date-box">
                                 <p class="t-p-dt">@item.Title</p>
                                 <p class="t-p-dl">@item.Content</p>
-                                <div class="data-line"><span></span></div>
-                                <img class="t-p-dd" src="@item.ImgUrl">
+                                @if (!string.IsNullOrWhiteSpace(item.ImgUrl))
+                                {
+                                    <div class="data-line"><span></span></div>
+                                    <img class="t-p-dd" src="@item.ImgUrl">
+                                }
                             </div>
                         </div>
                     }

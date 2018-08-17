@@ -86,6 +86,12 @@
                             <a class="nav-link J_menuItem" href="/Admin/JoinUS/Index"><i class="fa fa-bars"></i> <span class="nav-label">招聘管理</span></a>
                         </li>
                     }
+                    @if (CheckAdminPower("SysConfig/CompanyProfile", false))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/SysConfig/CompanyProfile"><i class="fa fa-bars"></i><span class="nav-label">公司介绍</span></a>
+                        </li>
+                    }
                     @if (CheckAdminPower("TimeLine/Index", false))
                     {
                         <li>
