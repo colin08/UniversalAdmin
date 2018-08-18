@@ -6,7 +6,7 @@
 <!--头部脚本-->
 @section head
 {
-
+    @Styles.Render("~/Content/froala_editor")
 }
 
 <!--头部脚本 end-->
@@ -70,10 +70,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJDesc, (object)new { @class = "form-control", rows = "8", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -133,10 +133,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJBGDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJBGDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJBGDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJBGDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -196,10 +196,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneLeftDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJOneLeftDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneLeftDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJOneLeftDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -247,10 +247,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJOneRightDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJOneRightDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJOneRightDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJOneRightDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -303,10 +303,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoLeftDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJTwoLeftDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoLeftDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoLeftDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -354,10 +354,10 @@
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.JJTwoRightDesc)</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         @Html.TextAreaFor(p => p.JJTwoRightDesc, (object)new { @class = "form-control", rows = "6", placeholder = "" })
                     </div>
-                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoRightDesc)</label>
+                    <label class="col-sm-5 label_msg"> @Html.ValidationMessageFor(p => p.JJTwoRightDesc)</label>
                 </div>
                 <div class="hr-line-dashed"></div>
                 
@@ -409,6 +409,7 @@
 @section foot
 {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/froala_editor")
 
     <script type="text/javascript">
 
@@ -554,7 +555,12 @@
         }
 
         $(function () {
-
+            InitFroalaTextAreaSimple("JJDesc");
+            InitFroalaTextAreaSimple("JJBGDesc");
+            InitFroalaTextAreaSimple("JJOneLeftDesc");
+            InitFroalaTextAreaSimple("JJOneRightDesc");
+            InitFroalaTextAreaSimple("JJTwoLeftDesc");
+            InitFroalaTextAreaSimple("JJTwoRightDesc");
         @if(!ViewData.ModelState.IsValid)
         {
             @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });

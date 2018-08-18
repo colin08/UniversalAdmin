@@ -234,6 +234,18 @@ function InitFroalaTextArea(TextAreaID) {
         fileAllowedTypes: ['*']
     });
 }
+
+function InitFroalaTextAreaSimple(TextAreaID) {
+    $('#' + TextAreaID + '').froalaEditor({
+        toolbarInline: false,
+        language: 'zh_cn',
+        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'fontSize', 'paragraphFormat', 'align', 'outdent', 'indent', 'insertHR', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+        heightMin: 200,
+        heightMax: 300,
+        placeholderText: '请输入内容'
+    });
+}
+
 /** 富文本编辑器 end  **/
 
 //文件下载

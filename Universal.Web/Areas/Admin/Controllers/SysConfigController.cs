@@ -31,6 +31,8 @@ namespace Universal.Web.Areas.Admin.Controllers
         [AdminPermission("站点配置文件", "编辑配置文件页面")]
         public ActionResult Modify()
         {
+            WebSite.HonorDesc = WebHelper.UrlDecode(WebSite.HonorDesc);
+            WebSite.HonorRightDesc = WebHelper.UrlDecode(WebSite.HonorRightDesc);
             return View(WebSite);
         }
 
@@ -41,11 +43,13 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [AdminPermission("站点配置文件", "保存修改的配置文件")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         public ActionResult Modify(WebSiteModel entity)
         {
             if (ModelState.IsValid)
             {
+                entity.HonorDesc = WebHelper.UrlEncode(entity.HonorDesc);
+                entity.HonorRightDesc = WebHelper.UrlEncode(entity.HonorRightDesc);
                 if (ConfigHelper.SaveConfig(ConfigFileEnum.SiteConfig, entity))
                 {
                     AddAdminLogs(Entity.SysLogMethodType.Update, "修改配置文件");
@@ -86,7 +90,7 @@ namespace Universal.Web.Areas.Admin.Controllers
         /// <returns></returns>
         [AdminPermission("站点配置文件", "保存公司介绍信息")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         public ActionResult CompanyProfile(CompanyProfileModel entity)
         {
             if (ModelState.IsValid)

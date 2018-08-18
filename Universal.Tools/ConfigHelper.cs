@@ -163,6 +163,10 @@ namespace Universal.Tools
 
         //#endregion
 
+
+        [Display(Name ="联系QQ号")]
+        public string QQNum { get; set; }
+
         [Display(Name = "职位咨询电话"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符")]
         public string JobTel { get; set; }
 
@@ -186,23 +190,44 @@ namespace Universal.Tools
 
         #region 邮件配置
 
-        [Display(Name = "SMTP邮件服务器"),Required(ErrorMessage ="不能为空"),MaxLength(100,ErrorMessage ="不能超过100个字符")]
+        //,MaxLength(100,ErrorMessage ="不能超过100个字符")
+        [Display(Name = "SMTP邮件服务器")]
         public string EmailHost { get; set; }
-        
-        [Display(Name ="SMTP端口"),Required(ErrorMessage ="不能为空"),Range(10, 65535,ErrorMessage = "端口范围10-65535")]
+
+        //Range(10, 65535,ErrorMessage = "端口范围10-65535")
+        [Display(Name ="SMTP端口")]
         public int EmailPort { get; set; }
         
         [Display(Name = "是否启用SSL")]
         public bool EmailEnableSsl { get; set; }
-
-        [Display(Name = "发送账户"),Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符"),RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?",ErrorMessage ="邮箱格式错误")]
+        //,Required(ErrorMessage ="不能为空"),MaxLength(50,ErrorMessage ="不能超过50个字符"),RegularExpression(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?",ErrorMessage ="邮箱格式错误")
+        [Display(Name = "发送账户")]
         public string EmailFrom { get; set; }
-        
-        [Display(Name = "账户密码"),Required(ErrorMessage ="不能为空"),MaxLength(255,ErrorMessage ="不能超过255个字符")]
+
+        //,Required(ErrorMessage ="不能为空"),MaxLength(255,ErrorMessage ="不能超过255个字符")
+        [Display(Name = "账户密码")]
         public string EmailPwd { get; set; }       
 
         #endregion
 
+        [Display(Name ="标题")]
+        public string HonorTitle { get; set; }
+
+        [Display(Name = "二级标题")]
+        public string HonorTitleEr { get; set; }
+
+        [Display(Name = "简单介绍")]
+        public string HonorDesc { get; set; }
+
+        [Display(Name = "右侧标题")]
+        public string HonorRightTitle { get; set; }
+
+        [Display(Name = "右侧时间")]
+        public string HonorRightTime { get; set; }
+
+        [Display(Name = "右侧内容")]
+        public string HonorRightDesc { get; set; }
+                
     }
 
 

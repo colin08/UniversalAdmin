@@ -806,6 +806,7 @@
     <Content Include="bin\Universal.Web.Framework.dll" />
     <Content Include="bin\Universal.Web.XML" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Shared\官网导航预留.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

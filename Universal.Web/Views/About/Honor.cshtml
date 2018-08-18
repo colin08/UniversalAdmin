@@ -46,28 +46,20 @@
         <div class="page-container-width bgcolor">
             <div class="lv1 clearfix">
                 <div class="ls">
-                    <p class="l-p-dt">朗形荣誉</p>
-                    <p class="l-p-dl">中国创意视觉与数字展示领航者</p>
+                    <p class="l-p-dt">@WorkContext.WebSiteConfig.HonorTitle</p>
+                    <p class="l-p-dl">@WorkContext.WebSiteConfig.HonorTitleEr</p>
                     <div class="page-pub-line"></div>
-                    <p class="l-p-dd">琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书琳琅满目的荣誉证书</p>
+                    <p class="l-p-dd">
+                        @Html.Raw(WorkContext.WebSiteConfig.HonorDesc)
+                    </p>
                 </div>
                 <div class="rs">
                     <div class="bg">
-                        <p class="r-p-dt">HONOR</p>
-                        <p class="r-p-dl">2000-2017</p>
+                        <p class="r-p-dt">@WorkContext.WebSiteConfig.HonorRightTitle</p>
+                        <p class="r-p-dl">@WorkContext.WebSiteConfig.HonorRightTime</p>
                         <div class="liner"></div>
                         <div class="r-p-dd">
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>朗形公司国家高新科技企业</p>
-                            <p>......</p>
+                            @Html.Raw(WorkContext.WebSiteConfig.HonorRightDesc)
                         </div>
                     </div>
                 </div>
