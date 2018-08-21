@@ -47,7 +47,7 @@
                     if (i_time_line == 9)
                     {
                         <div class="sun_li red-bg" onclick="location.href='/About/Memorabilia'">
-                            <span class="sp-tt">@WorkContext.WebSiteConfig.TimeLineRedCenterTop</span>
+                            <span class="sp-tt" style="font-weight:bold;">@WorkContext.WebSiteConfig.TimeLineRedCenterTop</span>
                             <span>@WorkContext.WebSiteConfig.TimeLineRedCenterDesc</span>
                         </div>
                     }
@@ -68,8 +68,8 @@
         </div>
         <div class="lv4">
             <div class="main-container-width pd">
-                <p class="ppt">合作企业</p>
-                <p class="upt">@WorkContext.WebSiteConfig.TeamWorkDesc<br>······</p>
+                <p class="ppt" style="font-weight:bold;">合作企业</p>
+                <p class="upt" style="font-weight:bold;">@WorkContext.WebSiteConfig.TeamWorkDesc<br>······</p>
                 <ul class="list clearfix">
                     @foreach (var item in Model.team_work_list)
                     {
@@ -122,9 +122,9 @@
         <div class="lv5">
             <div class="main-container-width clearfix">
                 <div class="ct-w fl">
-                    <p class="l-dt">@Model.shuzi.title</p>
+                    <p class="l-dt" style="font-weight:bold;">@Model.shuzi.title</p>
                     <div class="l-line"></div>
-                    <p class="l-dl">@Model.shuzi.title_er</p>
+                    <p class="l-dl" style="font-weight:bold;">@Model.shuzi.title_er</p>
                     <p class="l-dd">@Model.shuzi.summary</p>
                     <div class="bnt-list">
                         <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=Digital-Brand-Pavilion'">数字品牌馆</i-button>
@@ -132,8 +132,6 @@
                         <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=City-Planning-Hall'">城市规划馆</i-button>
                         <br />
                         <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=Digital-Engineering-Simulation'">数字工程仿真</i-button>
-                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=VR-Interactive-Experience'">VR交互体验</i-button>
-                        <i-button onclick="javascript: location.href='/CaseShow/Index?t=Digital-Display&e=AR-Interactive-Entertainment'">AR互动娱乐</i-button>
                     </div>
 
                     <p><i class="iconfont icon-jiantou1-copy bounce" onclick="location.href='/Home/Category?t=Digital-Display'"></i></p>
@@ -161,9 +159,9 @@
                     </div>
                 </div>
                 <div class="ct-w2 fr">
-                    <p class="l-dt">@Model.chuangyi.title</p>
+                    <p class="l-dt" style="font-weight:bold;">@Model.chuangyi.title</p>
                     <div class="l-line"></div>
-                    <p class="l-dl">@Model.chuangyi.title_er</p>
+                    <p class="l-dl" style="font-weight:bold;">@Model.chuangyi.title_er</p>
                     <p class="l-dd">@Model.chuangyi.summary</p>
                     <div class="bnt-list">
                         <i-button onclick="javascript: location.href='/CaseShow/Index?t=Creative-Vision&e=Visual-Animation'">视频动画</i-button>
@@ -182,10 +180,10 @@
             <div class="l7-center">
                 <div class="l7-tt clearfix">
                     <i class="iconfont icon-jiantou1-copy bounce fr" onclick="location.href='/Contact/News'"></i>
-                    <span>最新资讯</span>
+                    <span style="font-weight:bold;">最新资讯</span>
                 </div>
                 <div class="und-line"></div>
-                <p class="und-txt">传递最新资讯，记录行业成长......</p>
+                <p class="und-txt" style="font-weight:bold;">传递最新资讯，记录行业成长......</p>
                 <row :gutter="9">
                     @foreach (var item in Model.news_list)
                     {

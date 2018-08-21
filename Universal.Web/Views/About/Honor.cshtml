@@ -37,7 +37,7 @@
         }
         else
         {
-            <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+            <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)" onclick="@Model.banner_list.First().GetDivClickUrl">
                 <div class="page-container-width">
                 </div>
             </div>
@@ -46,20 +46,20 @@
         <div class="page-container-width bgcolor">
             <div class="lv1 clearfix">
                 <div class="ls">
-                    <p class="l-p-dt">@WorkContext.WebSiteConfig.HonorTitle</p>
-                    <p class="l-p-dl">@WorkContext.WebSiteConfig.HonorTitleEr</p>
+                    <p class="l-p-dt" style="font-weight:bold;">@WorkContext.WebSiteConfig.HonorTitle</p>
+                    <p class="l-p-dl" style="font-weight:bold;">@WorkContext.WebSiteConfig.HonorTitleEr</p>
                     <div class="page-pub-line"></div>
                     <p class="l-p-dd">
-                        @Html.Raw(WorkContext.WebSiteConfig.HonorDesc)
+                        @Html.Raw(Universal.Tools.WebHelper.UrlDecode(WorkContext.WebSiteConfig.HonorDesc))
                     </p>
                 </div>
                 <div class="rs">
                     <div class="bg">
-                        <p class="r-p-dt">@WorkContext.WebSiteConfig.HonorRightTitle</p>
-                        <p class="r-p-dl">@WorkContext.WebSiteConfig.HonorRightTime</p>
+                        <p class="r-p-dt" style="font-weight:bold;">@WorkContext.WebSiteConfig.HonorRightTitle</p>
+                        <p class="r-p-dl" style="font-weight:bold;">@WorkContext.WebSiteConfig.HonorRightTime</p>
                         <div class="liner"></div>
                         <div class="r-p-dd">
-                            @Html.Raw(WorkContext.WebSiteConfig.HonorRightDesc)
+                            @Html.Raw(Universal.Tools.WebHelper.UrlDecode(WorkContext.WebSiteConfig.HonorRightDesc))
                         </div>
                     </div>
                 </div>

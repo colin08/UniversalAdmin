@@ -38,7 +38,7 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)" onclick="@Model.banner_list.First().GetDivClickUrl">
                     <div class="page-container-width">
                     </div>
                 </div>
@@ -58,9 +58,9 @@
                             </div>
                             <div class="mid-box">
                                 <div class="mid-txt">
-                                    <p class="t-p-dt">@item.Title</p>
-                                    <div class="page-pub-line">让世界因创意更生动</div>
-                                    <p class="t-p-dl">@item.ErTitle</p>
+                                    <p class="t-p-dt" style="font-weight:bold;">@item.Title</p>
+                                    <div class="page-pub-line" style="font-weight:bold;">让世界因创意更生动</div>
+                                    <p class="t-p-dl" style="font-weight:bold;">@item.ErTitle</p>
                                     <p class="t-p-dd">@item.Content</p>
                                     <p class="t-p-dd">@item.Content2</p>
                                 </div>
@@ -72,9 +72,9 @@
                         <div class="mid clearfix">
                             <div class="mid-box">
                                 <div class="mid-txt">
-                                    <p class="t-p-dt">@item.Title</p>
-                                    <div class="page-pub-line">让世界因创意更生动</div>
-                                    <p class="t-p-dl">@item.ErTitle</p>
+                                    <p class="t-p-dt" style="font-weight:bold;">@item.Title</p>
+                                    <div class="page-pub-line" style="font-weight:bold;">让世界因创意更生动</div>
+                                    <p class="t-p-dl" style="font-weight:bold;">@item.ErTitle</p>
                                     <p class="t-p-dd">@item.Content</p>
                                     <p class="t-p-dd">@item.Content2</p>
                                 </div>

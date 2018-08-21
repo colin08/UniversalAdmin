@@ -39,7 +39,7 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)"  onclick="@Model.banner_list.First().GetDivClickUrl">
                     <div class="page-container-width">
                     </div>
                 </div>
@@ -48,17 +48,17 @@
             <div class="page-container-width bgcolor">
                 <div class="lv1 clearfix" style="height:700px;">
                     <div class="ls">
-                        <p class="l-dt">@Model.SiteConfig.JJTitle</p>
-                        <p class="l-dl">@Model.SiteConfig.JJTitleEr</p>
+                        <p class="l-dt" style="font-weight:bold;">@Model.SiteConfig.JJTitle</p>
+                        <p class="l-dl" style="font-weight:bold;">@Model.SiteConfig.JJTitleEr</p>
                         <div class="page-pub-line"></div>
                         <p class="l-dd">
                             @Html.Raw(Model.SiteConfig.JJDesc)
                         </p>
                     </div>
                     <div class="rs">
-                        <p class="r-dt">@Model.SiteConfig.JJKeHu</p>
+                        <p class="r-dt" style="font-weight:bold;">@Model.SiteConfig.JJKeHu</p>
                         <div class="page-pub-line"></div>
-                        <p class="r-dl">@Model.SiteConfig.JJKeHuDesc</p>
+                        <p class="r-dl" style="font-weight:bold;">@Model.SiteConfig.JJKeHuDesc</p>
                         <div class="r-dd">
                             <row :gutter="76">
                                 <i-col span="8">
@@ -80,7 +80,7 @@
 
                 <div class="lv2 clearfix">
                     <div class="ls">
-                        <p class="l-p-dt">@Model.SiteConfig.JJBanGong</p>
+                        <p class="l-p-dt" style="font-weight:bold;">@Model.SiteConfig.JJBanGong</p>
                         <div class="page-pub-line"></div>
                         <p class="l-p-dl">
                             @Html.Raw(Model.SiteConfig.JJBGDesc)
@@ -92,34 +92,62 @@
                     </div>
                     <img src="@Model.SiteConfig.JJBGImg" class="r-pic">
                 </div>
-                <div class="lv3 clearfix">
-                    <div class="ls" style="background:url(@Model.SiteConfig.JJOneLeftImg)">
+                <!-- <div class="lv3 clearfix">
+                    <div class="ls" style="background-image:url(@Model.SiteConfig.JJOneLeftImg)">
                         <p class="r-p-tt">@Model.SiteConfig.JJOneLeftTitle</p>
                         <p class="r-p-txt">
                             @Html.Raw(Model.SiteConfig.JJOneLeftDesc)
                         </p>
                     </div>
-                    <div class="rs" style="background:url(@Model.SiteConfig.JJOneRightImg)">
+                    <div class="rs" style="background-image:url(@Model.SiteConfig.JJOneRightImg)">
                         <p class="r-p-tt">@Model.SiteConfig.JJOneRightTitle</p>
                         <p class="r-p-txt">
                             @Html.Raw(Model.SiteConfig.JJOneRightDesc)
                         </p>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="lv5 clearfix">
-                    <div class="ls" style="background:url(@Model.SiteConfig.JJTwoLeftImg)">
-                        <p class="l-p-dt">@Model.SiteConfig.JJTwoLeftTitle</p>
-                        <p class="l-p-dl">
-                            @Html.Raw(Model.SiteConfig.JJTwoLeftDesc)
-                        </p>
+                <div class="lv5 about-active clearfix">
+                    <div class="ls lshover">
+                        <div class="lv5-bg" style="background-image:url(@Model.SiteConfig.JJOneLeftImg)"></div>
+                        <div class="txt-box-a">
+                            <p class="l-p-dt" style="font-weight:bold;">@Model.SiteConfig.JJOneLeftTitle</p>
+                            <div class="l-p-dl">
+                                @Html.Raw(Model.SiteConfig.JJOneLeftDesc)
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="rs" style="background:url(@Model.SiteConfig.JJTwoRightImg)">
-                        <p class="r-p-tt">@Model.SiteConfig.JJTwoRightTitle</p>
-                        <p class="r-p-txt">
-                            @Html.Raw(Model.SiteConfig.JJTwoRightDesc)
-                        </p>
+                    <div class="ls rs">
+                        <div class="lv5-bg" style="background-image:url(@Model.SiteConfig.JJOneRightImg)"></div>
+                        <div class="txt-box-a">
+                            <p class="l-p-dt" style="font-weight:bold;">@Model.SiteConfig.JJOneRightTitle</p>
+                            <div class="l-p-dl">
+                                @Html.Raw(Model.SiteConfig.JJOneRightDesc)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lv5 about-active clearfix">
+                    <div class="ls">
+                        <div class="lv5-bg" style="background-image:url(@Model.SiteConfig.JJTwoLeftImg)"></div>
+                        <div class="txt-box-a">
+                            <p class="l-p-dt" style="font-weight:bold;">@Model.SiteConfig.JJTwoLeftTitle</p>
+                            <div class="l-p-dl">
+                                @Html.Raw(Model.SiteConfig.JJTwoLeftDesc)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ls rs lshover">
+                        <div class="lv5-bg" style="background-image:url(@Model.SiteConfig.JJTwoRightImg)"></div>
+                        <div class="txt-box-a">
+                            <p class="l-p-dt" style="font-weight:bold;">@Model.SiteConfig.JJTwoRightTitle</p>
+                            <div class="l-p-dl">
+                                @Html.Raw(Model.SiteConfig.JJTwoRightDesc)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,6 +167,7 @@
 {
     this.pushBntNum();
     this.moviceModel();
+    this.aboutBgCon();
 }
 <!-- Json中的mounted数据 End -->
 <!-- Json中的methods数据 Begin -->
@@ -174,6 +203,14 @@
                 $(this).children().first().before('<span>0'+(index*1+1)+'</span>');
             });
         })
+    },
+    aboutBgCon(){
+        $(function(){
+            $(".about-active").children().hover(function(){
+                $(this).siblings().removeClass("lshover");
+                $(this).addClass("lshover");
+            },function(){});
+        });
     },
 }
 <!-- Json中的methods数据 End -->

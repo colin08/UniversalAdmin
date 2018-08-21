@@ -38,16 +38,16 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)" onclick="@Model.banner_list.First().GetDivClickUrl">
                     <div class="page-container-width">
                     </div>
                 </div>
             }
             <div class="lv1 page-container-min-width">
                 <div class="page-container-width">
-                    <p class="list-tt">朗形动态</p>
+                    <p class="list-tt" style="font-weight:bold;">朗形动态</p>
                     <div class="page-pub-line"></div>
-                    <p class="list-und">传递最新咨询，记录行业成长......</p>
+                    <p class="list-und" style="font-weight:bold;">传递最新咨询，记录行业成长......</p>
                     <ul class="product-list clearfix" id="ul_news_lx">
                         @foreach (var item in Model.new_list_lx)
                         {
@@ -85,9 +85,9 @@
             </div>
             <div class="lv2 page-container-min-width">
                 <div class="page-container-width">
-                    <p class="list-tt">行业资讯</p>
+                    <p class="list-tt" style="font-weight:bold;">行业资讯</p>
                     <div class="page-pub-line"></div>
-                    <p class="list-und">传递最新资讯，记录行业成长......</p>
+                    <p class="list-und" style="font-weight:bold;">传递最新资讯，记录行业成长......</p>
                     <ul class="product-list clearfix" id="ul_news_hy">
                         @foreach (var item in Model.new_list_hy)
                         {

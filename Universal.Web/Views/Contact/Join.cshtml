@@ -38,7 +38,7 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)" onclick="@Model.banner_list.First().GetDivClickUrl">
                     <div class="page-container-width">
                     </div>
                 </div>

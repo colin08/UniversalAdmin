@@ -38,16 +38,16 @@
             }
             else
             {
-                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)">
+                <div class="sz-banner page-container-min-width sz-banner-bg1" style="background-image:url(@Model.banner_list.First().ImgUrl)" onclick="@Model.banner_list.First().GetDivClickUrl">
                     <div class="page-container-width">
                     </div>
                 </div>
             }
 
             <div class="page-container-width bgcolor">
-                <p class="page-tt">Development path</p>
+                <p class="page-tt" style="font-weight:bold;">Development path</p>
                 <div class="sp-line"><span></span></div>
-                <p class="page-dl">2000年成立至今</p>
+                <p class="page-dl" style="font-weight:bold;">2000年成立至今</p>
                 <div class="time-line">
                     <div class="time-line-lv">
                         <i class="iconfont icon-circle2yuanquan"></i>
@@ -65,7 +65,7 @@
                             <i class="iconfont icon-circleyuanquan"></i>
                             <div class="l-h l-lh"></div>
                             <div class="time-date-box">
-                                <p class="t-p-dt">@item.Title</p>
+                                <p class="t-p-dt" style="font-weight:bold;">@item.Title</p>
                                 <p class="t-p-dl">@item.Content</p>
                                 @if (!string.IsNullOrWhiteSpace(item.ImgUrl))
                                 {
@@ -79,7 +79,7 @@
                         <div class="l-h"></div>
                     </div>
                 </div>
-                <p class="page-dd">Future</p>
+                <p class="page-dd" style="font-weight:bold;">Future</p>
             </div>
         </div>
     </div>
