@@ -707,6 +707,7 @@
     <Content Include="Areas\MP\Views\Doctors\AdvisoryReply.cshtml" />
     <Content Include="Areas\Admin\Views\MedicalItemCategory\Index.cshtml" />
     <Content Include="Areas\Admin\Views\MedicalItemCategory\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MPDoctor\SelectClinic.cshtml" />
     <None Include="Web.WebFTP.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -754,6 +755,7 @@
     <Compile Include="Areas\Admin\Models\ViewModelClinicList.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelCloudTags.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelConsultationSettlementList.cs" />
+    <Compile Include="Areas\Admin\Models\ViewModelEditMPDoctor.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogAPIAction.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogMethod.cs" />
     <Compile Include="Areas\Admin\Models\ViewModelLogException.cs" />

@@ -80,7 +80,7 @@
                     <th>接受咨询</th>
                     <th>咨询价格</th>
                     <th>排序数字</th>
-                    @*<th>操作</th>*@
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,9 +98,9 @@
                         <td><i class="glyphicon glyphicon-@(item.CanAdvisory ? "ok": "ban-circle")"></i></td>
                         <td>@item.AdvisoryPrice.ToString("F2")</td>
                         <td>@item.Weight</td>
-                        @*<td>
-                            <a class="btn btn-sm btn-white" href="/Admin/MPDoctor/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
-                        </td>*@
+                        <td>
+                            <a class="btn btn-sm btn-white" onclick="to_edit(@item.ID)" href="javascript:void(0)"><i class="glyphicon glyphicon-edit"></i> 修改</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -127,6 +127,18 @@ else
         function Search()
         {
             location.href = "?page=1&role=" + $("#role").val() + "&word=" + encodeURIComponent($("#txt_word").val());
+        }
+        //前往编辑
+        function to_edit(id) {
+            var url = "/admin/MPDoctor/SelectClinic?id=" + id;
+            layer.open({
+                type: 2,
+                title: '先确定所属诊所',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['400px', '300px'],
+                content: url
+            });
         }
 
     laypage({

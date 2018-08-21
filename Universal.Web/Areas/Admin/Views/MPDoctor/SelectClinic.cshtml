@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "先选择所属诊所";
+}
+<!--头部脚本-->
+@section head
+{
+
+}
+<!--头部脚本 end-->
+
+@section nav
+{
+}
+
+<!--Main Body-->
+<div class="clients-list">
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        <div style="margin-top:20px;"></div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">选择所属诊所</label>
+            <div class="col-sm-2">
+                <select id="select_machine" class="form-control" style="margin-top:10px;padding: 0;">
+                    @foreach (var item in (List<SelectListItem>)ViewData["ClinicList"])
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+
+            </div>
+            <label class="col-sm-4 label_msg"></label>
+        </div>
+        <div class="hr-line-dashed"></div>
+
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-2">
+                <button class="btn btn-info" type="button" onclick="goedit()">继续编辑</button>&nbsp;
+            </div>
+        </div>
+
+    </form>
+</div>
+<!-- Main Body end-->
+<!--底部脚本-->
+
+@section foot
+{
+    <script type="text/javascript">
+        var data_id= @ViewData["id"];
+
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        function goedit()
+        {
+            var copy_machine_id = $("#select_machine").val();
+            if (copy_machine_id == 0)
+            {
+                layer.msg('请先确定该医生所属哪个诊所', { icon: 5 });
+                return;
+            }
+
+            parent.location.href = "/Admin/MPDoctor/Edit?clinic_id=" + copy_machine_id + "&id=" + data_id;            
+
+        }
+    </script>
+}
+<!--底部脚本 end-->

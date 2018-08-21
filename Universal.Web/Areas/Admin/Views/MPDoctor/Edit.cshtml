@@ -1,7 +1,311 @@
-﻿
+﻿@model Universal.Web.Areas.Admin.Models.ViewModelEditMPDoctor
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑医生资料";
 }
 
-<h2>Edit</h2>
+<!--头部脚本-->
+@section head
+{
+    @Styles.Render("~/Content/icheck")
+    @Styles.Render("~/Content/multiselect")
+}
 
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+{
+    <div class="ibox-title">
+        <h5>@ViewBag.Title</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="@Url.Action("Index", "MPDoctor", new { Area = "Admin" })">医生管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航 end -->
+<!--Main Body-->
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li><a data-toggle="tab" href="#tab-2">医生信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p => p.id)
+        @Html.HiddenFor(p=>p.shanchang)
+        @Html.HiddenFor(p=>p.dep_ids)
+        @Html.HiddenFor(p=>p.clinic_id)
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.real_name, new { @class = "form-control", placeholder = "医生真实姓名" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.real_name)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号码</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.telphone, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.telphone)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像</label>
+
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(p => p.Avatar)
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头像预览</label>
+
+                    <div class="col-sm-10">
+                        <div class="img_list">
+                            <ul id="@Html.NameFor(p => p.Avatar)ListData">
+                                @if (!string.IsNullOrWhiteSpace(Model.Avatar))
+                                {
+                                    @:
+                                    <li><img src="@Model.Avatar" ids="0" class="@Html.NameFor(p => p.Avatar)List" width="150" /><a href="javascript:void(0)" onclick="DelPic(this,'@Html.NameFor(p => p.Avatar)')">删除</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别 </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "1", Model.Gender == Universal.Entity.MPUserGenderType.male ? (object)new { id = "rb_gender_1", @checked = true } : (object)new { id = "rb_gender_1" }) <i></i> 男</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "2", Model.Gender == Universal.Entity.MPUserGenderType.female ? (object)new { id = "rb_gender_2", @checked = true } : (object)new { id = "rb_gender_2" }) <i></i> 女</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Gender, "0", Model.Gender == Universal.Entity.MPUserGenderType.unknown ? (object)new { id = "rb_gender_0", @checked = true } : (object)new { id = "rb_gender_0" }) <i></i> 未知</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">状态 </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, true, new { @id = "rb_status_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.Status, false, new { @id = "rb_status_2" }) <i></i> 禁用</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div style="margin-top:20px;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">在线咨询开关 </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.can_adv, true, new { @id = "rb_ad_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.can_adv, false, new { @id = "rb_ad_2" }) <i></i> 关闭</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">咨询单价 </label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.adv_price, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.adv_price)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">所属科室</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("depMultiple", ViewData["depList"] as List<SelectListItem>, new { multiple = "multiple" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.dep_ids)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">擅长标签</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("shanchangMultiple", ViewData["shanchangList"] as List<SelectListItem>, new { multiple = "multiple" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.shanchang)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">头衔</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.touxian, new { @class = "form-control", placeholder = "" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.touxian)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">医生简介 </label>
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.show_me, new { @class = "form-control", placeholder = "", rows = "5" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.show_me)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/icheck")
+    @Scripts.Render("~/bundles/multiselect")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#shanchangMultiple").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                filterPlaceholder: '搜索',
+                maxHeight: 300,
+                onChange: function (option, checked) {
+                    var selected = [];
+                    $('#shanchangMultiple option:selected').each(function () {
+                        selected.push([$(this).val(), $(this).data('order')]);
+                    });
+
+                    selected.sort(function (a, b) {
+                        return a[1] - b[1];
+                    });
+                    var text = '';
+                    for (var i = 0; i < selected.length; i++) {
+                        text += selected[i][0] + ',';
+                    }
+                    text = text.substring(0, text.length - 1);
+                    $("#shanchang").val(text);
+                }
+            });
+
+            $("#depMultiple").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                filterPlaceholder: '搜索',
+                maxHeight: 300,
+                onChange: function (option, checked) {
+                    var selected = [];
+                    $('#depMultiple option:selected').each(function () {
+                        selected.push([$(this).val(), $(this).data('order')]);
+                    });
+
+                    selected.sort(function (a, b) {
+                        return a[1] - b[1];
+                    });
+                    var text = '';
+                    for (var i = 0; i < selected.length; i++) {
+                        text += selected[i][0] + ',';
+                    }
+                    text = text.substring(0, text.length - 1);
+                    $("#dep_ids").val(text);
+                }
+            });
+        });
+    function upload() {
+        var total = $(".@Html.NameFor(p=>p.Avatar)List").size();
+        if (total >= 1) {
+            layer.msg("已有头像，请先删除现有的", { icon: 2 });
+            return;
+        }
+
+        layer.open({
+            type: 2,
+            area: ['700px', '530px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ['@Url.Action("UploadFile", "Tools", new { type = Universal.Web.Framework.Admin_Upload_Type.OnePicture, folder = "mpavatar", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.Avatar), Area = "Admin" })', 'no']
+        });
+    }
+
+    //回掉方法，参数固定
+    function set_upload_file(path) {
+        if (path.length != 0) {
+            $("#@Html.NameFor(p=>p.Avatar)ListData").html("");
+            var img_te = "<li><img src='" + path + "' ids='0' class='@Html.NameFor(p=>p.Avatar)List' width='150px' /><a href='javascript:void(0)' onclick=\"DelPic(this,'@Html.NameFor(p=>p.Avatar)')\">删除</a></li>";
+            $("#@Html.NameFor(p=>p.Avatar)ListData").append(img_te);
+        }
+    }
+
+
+    $(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        @if(!ViewData.ModelState.IsValid)
+        {
+            @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+        }
+    });
+    </script>
+}
+<!--底部脚本 end-->
